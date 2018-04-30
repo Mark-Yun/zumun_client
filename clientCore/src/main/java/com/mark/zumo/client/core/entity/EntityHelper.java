@@ -1,4 +1,4 @@
-package com.mark.zumo.client.core.util;
+package com.mark.zumo.client.core.entity;
 
 import android.util.Log;
 

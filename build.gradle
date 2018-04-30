@@ -45,6 +45,7 @@ ext {
     runner = '1.0.2'
     esspressoCore = '3.0.2'
     stream = '1.0.1'
+    nearby = '15.0.0'
 }
 
 def applications = [project('customerClient'), project('storeClient'), project('storeServer')]
@@ -101,6 +102,8 @@ configure(libraries) {
         testImplementation "junit:junit:$junit"
         androidTestImplementation "com.android.support.test:runner:$runner"
         androidTestImplementation "com.android.support.test.espresso:espresso-core:$esspressoCore"
+
+        compile "com.google.android.gms:play-services-nearby:$nearby"
     }
 }
 

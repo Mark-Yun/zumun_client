@@ -3,7 +3,6 @@ package com.mark.zumo.client.core.entity;
 import android.arch.persistence.room.Entity;
 
 import com.mark.zumo.client.core.entity.user.StoreUser;
-import com.mark.zumo.client.core.util.EntityHelper;
 
 /**
  * Created by mark on 18. 4. 30.
