@@ -1,6 +1,12 @@
 android {
     compileSdkVersion rootProject.ext.compileSdk
 
+    signingConfigs {
+        debug {
+            storeFile file('../keystore/debug.keystore')
+        }
+    }
+
     defaultConfig {
         applicationId "com.mark.zumo.client.customer"
         minSdkVersion rootProject.ext.minSdk

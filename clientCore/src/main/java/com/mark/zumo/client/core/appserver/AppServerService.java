@@ -19,5 +19,8 @@ public interface AppServerService {
             .build();
 
     @GET("users/{id}")
-    Call<User> getUser(@Path("id") long id);
+    Call<User> findById(@Path("id") long id);
+
+    @GET("users/{name}")
+    Call<User> findByName(@Path("name") String name);
 }
