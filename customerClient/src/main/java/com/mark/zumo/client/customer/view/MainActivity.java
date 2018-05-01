@@ -12,7 +12,7 @@ import com.mark.zumo.client.customer.viewmodel.SampleViewModel;
  * Created by mark on 18. 4. 30.
  */
 
-public class SampleActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity {
     private SampleViewModel sampleViewModel;
 
     @Override
