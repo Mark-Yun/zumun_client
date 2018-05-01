@@ -1,0 +1,21 @@
+package com.mark.zumo.client.core.p2p;
+
+import com.google.android.gms.nearby.connection.AdvertisingOptions;
+import com.google.android.gms.nearby.connection.DiscoveryOptions;
+import com.google.android.gms.nearby.connection.Strategy;
+
+/**
+ * Created by mark on 18. 5. 1.
+ */
+
+class Options {
+    private static final Strategy P2P_CONNECTION_STRATEGY = Strategy.P2P_CLUSTER;
+    static final AdvertisingOptions ADVERTISING = new AdvertisingOptions.Builder()
+            .setStrategy(P2P_CONNECTION_STRATEGY)
+            .build();
+    static final DiscoveryOptions DISCOVERY = new DiscoveryOptions.Builder()
+            .setStrategy(P2P_CONNECTION_STRATEGY)
+            .build();
+    private static final int P2P_MESSAGE_STRATEGY = com.google.android.gms.nearby.messages.Strategy.DISTANCE_TYPE_DEFAULT;
+
+}
