@@ -1,4 +1,4 @@
-package com.mark.zumo;
+package com.mark.zumo.client.customer;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;

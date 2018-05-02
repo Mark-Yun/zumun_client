@@ -1,4 +1,4 @@
-package com.mark.zumo;
+package com.mark.zumo.client.customer;
 
 import org.junit.Test;
 
