@@ -8,11 +8,11 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.mark.zumo.client.R;
 import com.mark.zumo.client.core.entity.Store;
 import com.mark.zumo.client.core.entity.user.CustomerUser;
 import com.mark.zumo.client.core.p2p.P2pClient;
 import com.mark.zumo.client.core.p2p.P2pServer;
+import com.mark.zumo.client.customer.R;
 
 import java.util.Set;
 

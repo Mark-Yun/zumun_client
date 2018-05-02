@@ -5,8 +5,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 
-import com.mark.zumo.client.R;
-
+import com.mark.zumo.client.customer.R;
 /**
  * Created by Goboogi on 18. 5. 1.
  */

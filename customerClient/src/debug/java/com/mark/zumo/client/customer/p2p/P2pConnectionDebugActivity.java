@@ -4,7 +4,7 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 
-import com.mark.zumo.client.R;
+import com.mark.zumo.client.customer.R;
 
 
 /**
