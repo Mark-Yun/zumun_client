@@ -33,7 +33,7 @@ import io.reactivex.Observable;
  * Created by mark on 18. 4. 30.
  */
 
-public class P2pClient extends MessageListener {
+public class P2pClient {
 
     private static final String TAG = "P2pClient";
     private static final long TIME_OUT = 5000;
@@ -54,10 +54,8 @@ public class P2pClient extends MessageListener {
         return Nearby.getMessagesClient(activity);
     }
 
-    public Observable<Set<Store>> findStore() {
+    public Observable<Set<Store>> subscribe() {
         return Observable.create(emitter -> {
-            clear();
-
             observable = new SetObservable<>();
             observable.addObserver((o, arg) -> emitter.onNext(observable.set));
             messageClient().subscribe(messageListener);
@@ -97,7 +95,7 @@ public class P2pClient extends MessageListener {
         };
     }
 
-    public void stopFindingStore() {
+    public void unsubscribe() {
         messageClient().unsubscribe(messageListener);
         clear();
     }

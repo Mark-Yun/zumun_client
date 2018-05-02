@@ -55,14 +55,20 @@ class SetObservable<T> extends java.util.Observable implements Set<T> {
     @Override
     public boolean add(T o) {
         boolean added = set.add(o);
-        if (added) notifyObservers();
+        if (added) {
+            setChanged();
+            notifyObservers();
+        }
         return added;
     }
 
     @Override
     public boolean remove(Object o) {
         boolean removed = set.remove(o);
-        if (removed) notifyObservers();
+        if (removed) {
+            setChanged();
+            notifyObservers(null);
+        }
         return removed;
     }
 
@@ -74,21 +80,30 @@ class SetObservable<T> extends java.util.Observable implements Set<T> {
     @Override
     public boolean addAll(@NonNull Collection c) {
         boolean addedAll = set.addAll(c);
-        if (addedAll) notifyObservers();
+        if (addedAll) {
+            setChanged();
+            notifyObservers(null);
+        }
         return addedAll;
     }
 
     @Override
     public boolean retainAll(@NonNull Collection c) {
         boolean retainAll = set.retainAll(c);
-        if (retainAll) notifyObservers();
+        if (retainAll) {
+            setChanged();
+            notifyObservers(null);
+        }
         return retainAll;
     }
 
     @Override
     public boolean removeAll(@NonNull Collection c) {
         boolean removeAll = set.removeAll(c);
-        if (removeAll) notifyObservers();
+        if (removeAll) {
+            setChanged();
+            notifyObservers(null);
+        }
         return removeAll;
     }
 

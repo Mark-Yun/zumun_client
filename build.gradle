@@ -32,7 +32,7 @@ ext {
 
     java = '1.7'
     support = '27.1.1'
-    playService = '11.8.0'
+    playService = '15.0.0'
     viewModel = '1.1.1'
     room = '1.0.0'
     butterKnife = '8.8.1'
@@ -45,7 +45,6 @@ ext {
     runner = '1.0.2'
     esspressoCore = '3.0.2'
     stream = '1.0.1'
-    nearby = '15.0.0'
 }
 
 def applications = [project('customerClient'), project('storeClient'), project('storeServer')]
@@ -60,6 +59,7 @@ configure(applications) {
         implementation "com.android.support:design:$support"
         implementation "com.android.support:cardview-v7:$support"
         implementation "com.android.support:recyclerview-v7:$support"
+
         implementation "com.google.android.gms:play-services-places:$playService"
 
         testImplementation "junit:junit:$junit"
@@ -103,7 +103,7 @@ configure(libraries) {
         androidTestImplementation "com.android.support.test:runner:$runner"
         androidTestImplementation "com.android.support.test.espresso:espresso-core:$esspressoCore"
 
-        compile "com.google.android.gms:play-services-nearby:$nearby"
+        implementation "com.google.android.gms:play-services-nearby:$playService"
     }
 }
 

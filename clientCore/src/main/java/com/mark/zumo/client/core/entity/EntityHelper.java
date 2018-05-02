@@ -13,7 +13,7 @@ public class EntityHelper {
     private static final String TAG = "EntityHelper";
 
     public static String toString(Object object, Class clazz) {
-        String ret = clazz.getSimpleName() + " ";
+        String ret = clazz.getSimpleName() + " [";
         Field[] declaredFields = clazz.getDeclaredFields();
         for (Field field : declaredFields) {
             String name = field.getName();
@@ -26,6 +26,6 @@ public class EntityHelper {
             ret += name + "=" + value + ", ";
         }
 
-        return ret;
+        return ret + "]";
     }
 }
