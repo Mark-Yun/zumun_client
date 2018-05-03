@@ -55,6 +55,7 @@ public class P2pClient {
     }
 
     public Observable<Set<Store>> subscribe() {
+        Log.d(TAG, "subscribe: ");
         return Observable.create(emitter -> {
             observable = new SetObservable<>();
             observable.addObserver((o, arg) -> emitter.onNext(observable.set));
@@ -96,6 +97,7 @@ public class P2pClient {
     }
 
     public void unsubscribe() {
+        Log.d(TAG, "unsubscribe: ");
         messageClient().unsubscribe(messageListener);
         clear();
     }
