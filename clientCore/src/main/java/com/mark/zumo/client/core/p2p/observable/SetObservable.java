@@ -1,4 +1,4 @@
-package com.mark.zumo.client.core.p2p;
+package com.mark.zumo.client.core.p2p.observable;
 
 import android.support.annotation.NonNull;
 
@@ -11,11 +11,11 @@ import java.util.Set;
  * Created by mark on 18. 5. 1.
  */
 
-class SetObservable<T> extends java.util.Observable implements Set<T> {
+public class SetObservable<T> extends java.util.Observable implements Set<T> {
 
-    final Set<T> set;
+    public final Set<T> set;
 
-    SetObservable() {
+    public SetObservable() {
         this.set = new HashSet<>();
     }
 

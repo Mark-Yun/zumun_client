@@ -14,9 +14,4 @@ public class StoreUser extends User {
     public StoreUser(long id, String name, long createdDate) {
         super(id, name, createdDate);
     }
-
-    @Override
-    public String toString() {
-        return EntityHelper.toString(this, this.getClass());
-    }
 }

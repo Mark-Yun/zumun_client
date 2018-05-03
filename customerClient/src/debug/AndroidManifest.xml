@@ -14,7 +14,6 @@
             </intent-filter>
         </activity>
 
-        <activity android:name="com.mark.zumo.client.customer.p2p.P2pMessageDebugActivity" />
-        <activity android:name="com.mark.zumo.client.customer.p2p.P2pConnectionDebugActivity" />
+        <activity android:name="com.mark.zumo.client.customer.p2p.P2pDebugActivity" />
     </application>
 </manifest>

@@ -43,7 +43,46 @@
             android:layout_weight="1"
             android:text="Stop SUBSCRIBE" />
     </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
 
+        <Button
+            android:id="@+id/start_advertising"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Start ADVERTISING" />
+
+        <Button
+            android:id="@+id/stop_advertising"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Stop ADVERTISING" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/acquire_menu_items"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="acquire MenuItems" />
+
+        <Button
+            android:id="@+id/stop_discovery"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Stop DISCOVERY" />
+    </LinearLayout>
+    
     <TextView
         android:id="@+id/console"
         android:layout_width="match_parent"

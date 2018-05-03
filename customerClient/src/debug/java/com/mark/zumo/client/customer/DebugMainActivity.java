@@ -7,8 +7,7 @@ import android.support.annotation.Nullable;
 import android.view.View;
 import android.widget.Button;
 
-import com.mark.zumo.client.customer.p2p.P2pConnectionDebugActivity;
-import com.mark.zumo.client.customer.p2p.P2pMessageDebugActivity;
+import com.mark.zumo.client.customer.p2p.P2pDebugActivity;
 
 /**
  * Created by mark on 18. 5. 2.
@@ -21,19 +20,13 @@ public class DebugMainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.debug_main_activity);
 
-        Button p2pConnectionDebug = findViewById(R.id.p2p_connection_debug_activity);
-        Button p2pMessageDebug = findViewById(R.id.p2p_message_debug_activity);
+        Button p2pDebug = findViewById(R.id.p2p_debug_activity);
 
-        p2pConnectionDebug.setOnClickListener(this::onClickConnectionDebug);
-        p2pMessageDebug.setOnClickListener(this::onClickMessageDebug);
+        p2pDebug.setOnClickListener(this::onClickP2pDebug);
     }
 
-    private void onClickMessageDebug(View v) {
-        startDebugActivity(P2pMessageDebugActivity.class);
-    }
-
-    private void onClickConnectionDebug(View v) {
-        startDebugActivity(P2pConnectionDebugActivity.class);
+    private void onClickP2pDebug(View v) {
+        startDebugActivity(P2pDebugActivity.class);
     }
 
     private void startDebugActivity(Class clazz) {

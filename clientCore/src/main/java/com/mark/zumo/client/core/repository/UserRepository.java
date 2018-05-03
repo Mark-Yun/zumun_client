@@ -7,6 +7,7 @@ import com.mark.zumo.client.core.appserver.AppServerServiceProvider;
 import com.mark.zumo.client.core.dao.AppDatabase;
 import com.mark.zumo.client.core.dao.AppDatabaseProvider;
 import com.mark.zumo.client.core.dao.UserDao;
+import com.mark.zumo.client.core.entity.user.CustomerUser;
 import com.mark.zumo.client.core.entity.user.User;
 
 import io.reactivex.Observable;
@@ -42,7 +43,7 @@ public class UserRepository {
         return AppServerServiceProvider.INSTANCE.service;
     }
 
-    public Observable findById(long id) {
+    public Observable<User> findById(long id) {
         return Observable.create(e -> {
             User user1 = userDao().findById(id);
             if (user1 != null)
@@ -56,7 +57,13 @@ public class UserRepository {
         });
     }
 
-    public Observable findByName(String name) {
+    public Observable<CustomerUser> findCustomerUserById(long id) {
+        return Observable.create(e -> {
+            e.onNext(new CustomerUser(4124, "TEST", 0));
+        });
+    }
+
+    public Observable<User> findByName(String name) {
         return Observable.create(e -> {
             User user1 = userDao().findByName(name);
             if (user1 != null)

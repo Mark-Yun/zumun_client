@@ -17,6 +17,6 @@ public class CustomerUser extends User {
 
     @Override
     public String toString() {
-        return EntityHelper.toString(this, this.getClass());
+        return super.toString();
     }
 }

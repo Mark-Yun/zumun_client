@@ -5,15 +5,9 @@
     android:orientation="vertical">
 
     <Button
-        android:id="@+id/p2p_connection_debug_activity"
+        android:id="@+id/p2p_debug_activity"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="P2p Connection debug" />
-
-    <Button
-        android:id="@+id/p2p_message_debug_activity"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="P2p Message debug" />
+        android:text="P2p debug" />
 
 </LinearLayout>
