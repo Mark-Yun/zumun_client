@@ -9,6 +9,7 @@ import com.google.android.gms.nearby.connection.Strategy;
  */
 
 class Options {
+    static final String SERVICE_ID = "com.mark.zumo";
     private static final Strategy P2P_CONNECTION_STRATEGY = Strategy.P2P_STAR;
     static final AdvertisingOptions ADVERTISING = new AdvertisingOptions.Builder()
             .setStrategy(P2P_CONNECTION_STRATEGY)
@@ -17,7 +18,5 @@ class Options {
             .setStrategy(P2P_CONNECTION_STRATEGY)
             .build();
     private static final int P2P_MESSAGE_STRATEGY = com.google.android.gms.nearby.messages.Strategy.DISTANCE_TYPE_DEFAULT;
-
-    public static final String SERVICE_ID = "com.mark.zumo";
 
 }

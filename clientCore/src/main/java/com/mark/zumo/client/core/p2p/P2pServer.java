@@ -136,7 +136,6 @@ public class P2pServer {
                             // We've been disconnected from this endpoint. No more data can be
                             // sent or received.
                             Log.d(TAG, "onDisconnected: endpointId=" + endpointId);
-                            e.onComplete();
                         }
                     }, Options.ADVERTISING)
                     .addOnSuccessListener(this::onSuccessAdvertising)
@@ -171,6 +170,7 @@ public class P2pServer {
 
     private Observable<Payload> acceptConnection(String endpointId) {
         return Observable.create(e -> {
+            Log.d(TAG, "acceptConnection: endpointId=" + endpointId);
             connectionsClient().acceptConnection(endpointId,
                     new PayloadCallback() {
                         @Override
