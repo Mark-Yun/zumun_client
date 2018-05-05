@@ -14,21 +14,20 @@ import java.util.Arrays;
 /**
  * Created by mark on 18. 5. 5.
  */
-class PacketHelper<T extends BasePacket> {
+class PacketHelper {
     private static final String TAG = "PacketHelper";
 
     PacketHelper() {
-        //Empty Body
     }
 
-    T deserializeInternal(byte[] data) {
+    Object deserializeInternal(byte[] data) {
         byte[] newData = Arrays.copyOfRange(data, 4, data.length);
 
         try {
             ByteArrayInputStream in = new ByteArrayInputStream(newData);
             ObjectInputStream is = new ObjectInputStream(in);
             Object o = is.readObject();
-            T retObject = (T) o;
+            Object retObject = o;
             in.close();
             is.close();
             return retObject;
@@ -39,7 +38,7 @@ class PacketHelper<T extends BasePacket> {
         return null;
     }
 
-    byte[] serializeInternal(T object) {
+    byte[] serializeInternal(PacketType packetType, Object object) {
         try {
             ByteArrayOutputStream out = new ByteArrayOutputStream();
             ObjectOutputStream os = new ObjectOutputStream(out);
@@ -48,7 +47,7 @@ class PacketHelper<T extends BasePacket> {
             os.close();
             out.close();
 
-            byte[] typeAsByte = object.type().getBytes();
+            byte[] typeAsByte = packetType.getBytes();
             return ArrayUtils.concatByteArrays(typeAsByte, bytes);
         } catch (IOException e) {
             Log.e(TAG, "serialize: ", e);

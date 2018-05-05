@@ -24,7 +24,7 @@ import com.mark.zumo.client.core.entity.MenuItem;
 import com.mark.zumo.client.core.entity.Store;
 import com.mark.zumo.client.core.entity.user.CustomerUser;
 import com.mark.zumo.client.core.p2p.observable.SetObservable;
-import com.mark.zumo.client.core.p2p.packet.MenuItemsPacket;
+import com.mark.zumo.client.core.p2p.packet.Packet;
 
 import java.util.List;
 import java.util.Set;
@@ -253,8 +253,8 @@ public class P2pClient {
     private Single<List<MenuItem>> convertMenuItemFromPayload(Payload payload) {
         return Single.create(e -> {
             byte[] bytes = payload.asBytes();
-            MenuItemsPacket menuItemsPacket = MenuItemsPacket.deserialize(bytes);
-            e.onSuccess(menuItemsPacket.menuItems);
+            Packet<List<MenuItem>> menuItemsPacket = new Packet<>(bytes);
+            e.onSuccess(menuItemsPacket.get());
         });
     }
 

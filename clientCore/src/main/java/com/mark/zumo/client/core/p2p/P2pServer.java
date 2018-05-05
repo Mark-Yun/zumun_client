@@ -15,11 +15,13 @@ import com.google.android.gms.nearby.connection.PayloadCallback;
 import com.google.android.gms.nearby.connection.PayloadTransferUpdate;
 import com.google.android.gms.nearby.messages.Message;
 import com.google.android.gms.nearby.messages.MessagesClient;
+import com.mark.zumo.client.core.entity.MenuItem;
 import com.mark.zumo.client.core.entity.Store;
-import com.mark.zumo.client.core.p2p.packet.MenuItemsPacket;
+import com.mark.zumo.client.core.p2p.packet.Packet;
 import com.mark.zumo.client.core.repository.MenuItemRepository;
 import com.mark.zumo.client.core.repository.UserRepository;
 
+import java.util.List;
 import java.util.concurrent.Executors;
 
 import io.reactivex.Observable;
@@ -106,8 +108,8 @@ public class P2pServer {
                                     // We're connected! Can now start sending and receiving data.
                                     Log.d(TAG, "onConnectionResult: STATUS_OK");
                                     MenuItemRepository.from(activity).getMenuItemsOfStore(store)
-                                            .map(MenuItemsPacket::new)
-                                            .flatMap(menuItem -> sendPayload(endpointId, menuItem))
+                                            .map(Packet<List<MenuItem>>::new)
+                                            .flatMap(packet -> sendPayload(endpointId, packet))
                                             .subscribeOn(Schedulers.from(Executors.newScheduledThreadPool(5)))
                                             .observeOn(AndroidSchedulers.mainThread())
                                             .subscribe(payload -> Log.d(TAG, "Payload Sent Success"));
@@ -147,9 +149,9 @@ public class P2pServer {
         connectionsClient().disconnectFromEndpoint(endpointId);
     }
 
-    private Single<Payload> sendPayload(String endpointId, MenuItemsPacket packet) {
+    private Single<Payload> sendPayload(String endpointId, Packet<List<MenuItem>> packet) {
         return Single.create(e -> {
-            Payload payload = Payload.fromBytes(packet.serialize());
+            Payload payload = Payload.fromBytes(packet.asByteArray());
             connectionsClient().sendPayload(endpointId, payload)
                     .addOnSuccessListener(aVoid -> onSuccessSendPayload(e, endpointId, payload))
                     .addOnFailureListener(Runnable::run, this::onFailureSendPayload);
