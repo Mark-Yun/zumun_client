@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -110,7 +109,7 @@ public class P2pDebugActivity extends Activity {
         p2pServer.findCustomer()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(payload -> Log.d(TAG, "startAdvertising: " + payload));
+                .subscribe(this::updateConsole);
     }
 
     private void stopAdvertising(View view) {

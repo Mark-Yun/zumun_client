@@ -16,6 +16,7 @@ import com.google.android.gms.nearby.connection.PayloadTransferUpdate;
 import com.google.android.gms.nearby.messages.Message;
 import com.google.android.gms.nearby.messages.MessagesClient;
 import com.mark.zumo.client.core.entity.MenuItem;
+import com.mark.zumo.client.core.entity.Order;
 import com.mark.zumo.client.core.entity.Store;
 import com.mark.zumo.client.core.p2p.packet.Packet;
 import com.mark.zumo.client.core.repository.MenuItemRepository;
@@ -80,7 +81,10 @@ public class P2pServer {
     public Observable<String> findCustomer() {
         return startAdvertising()
                 .flatMap(this::acceptConnection)
-                .map(payload -> payload.getId() + "");
+                .map(Payload::asBytes)
+                .map(Packet<Order>::new)
+                .map(Packet::get)
+                .map(Order::toString);
     }
 
     private Observable<String> startAdvertising() {
@@ -166,7 +170,6 @@ public class P2pServer {
     private void onFailureSendPayload(Exception e) {
         Log.e(TAG, "onFailureSendPayload: ", e);
     }
-
 
     private Observable<Payload> acceptConnection(String endpointId) {
         return Observable.create(e -> {
