@@ -16,10 +16,17 @@ import com.google.android.gms.nearby.connection.PayloadTransferUpdate;
 import com.google.android.gms.nearby.messages.Message;
 import com.google.android.gms.nearby.messages.MessagesClient;
 import com.mark.zumo.client.core.entity.Store;
-import com.mark.zumo.client.core.entity.user.CustomerUser;
+import com.mark.zumo.client.core.p2p.packet.MenuItemsPacket;
+import com.mark.zumo.client.core.repository.MenuItemRepository;
 import com.mark.zumo.client.core.repository.UserRepository;
 
+import java.util.concurrent.Executors;
+
 import io.reactivex.Observable;
+import io.reactivex.Single;
+import io.reactivex.SingleEmitter;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * Created by mark on 18. 4. 30.
@@ -68,7 +75,13 @@ public class P2pServer {
         Log.e(TAG, "onFailureAdvertising: ", e);
     }
 
-    public Observable<CustomerUser> startAdvertising() {
+    public Observable<String> findCustomer() {
+        return startAdvertising()
+                .flatMap(this::acceptConnection)
+                .map(payload -> payload.getId() + "");
+    }
+
+    private Observable<String> startAdvertising() {
         return Observable.create(e -> {
             connectionsClient().startAdvertising(store.name, Options.SERVICE_ID,
                     new ConnectionLifecycleCallback() {
@@ -81,44 +94,8 @@ public class P2pServer {
                                     + " endpointName=" + connectionInfo.getEndpointName()
                                     + "]");
 
-                            long userId = Long.parseLong(connectionInfo.getEndpointName());
-                            userRepository.findCustomerUserById(userId).subscribe(e::onNext);
-
                             //TODO Auth customer
-                            connectionsClient().acceptConnection(endpointId,
-                                    new PayloadCallback() {
-                                        @Override
-                                        public void onPayloadReceived(@NonNull String endpointId1, @NonNull Payload payload) {
-                                            Log.d(TAG, "onPayloadReceived: endpointId=" + endpointId1
-                                                    + " Payload["
-                                                    + " id=" + payload.getId()
-                                                    + " type=" + payload.getType()
-                                                    + " length=" + payload.asBytes().length
-                                                    + "]");
-                                        }
-
-                                        @Override
-                                        public void onPayloadTransferUpdate(@NonNull String payload, @NonNull PayloadTransferUpdate update) {
-
-                                            Log.d(TAG, "onPayloadTransferUpdate: payload=" + payload
-                                                    + " PayloadTransferUpdate["
-                                                    + " payloadId=" + update.getPayloadId()
-                                                    + " bytesTransferred=" + update.getBytesTransferred()
-                                                    + " status=" + update.getStatus()
-                                                    + " totalBytes=" + update.getTotalBytes()
-                                                    + "]");
-                                        }
-                                    })
-                                    .addOnSuccessListener(this::onSuccessAcceptConnection)
-                                    .addOnFailureListener(this::onFailureAcceptConnection);
-                        }
-
-                        private void onSuccessAcceptConnection(Void unusedResult) {
-                            Log.d(TAG, "onSuccessAcceptConnection: ");
-                        }
-
-                        private void onFailureAcceptConnection(Exception e) {
-                            Log.e(TAG, "onFailureAcceptConnection: ", e);
+                            e.onNext(endpointId);
                         }
 
                         @Override
@@ -128,7 +105,13 @@ public class P2pServer {
                                 case ConnectionsStatusCodes.STATUS_OK:
                                     // We're connected! Can now start sending and receiving data.
                                     Log.d(TAG, "onConnectionResult: STATUS_OK");
-                                    //TODO: Send File
+                                    MenuItemRepository.from(activity).getMenuItemsOfStore(store)
+                                            .map(MenuItemsPacket::new)
+                                            .flatMap(menuItem -> sendPayload(endpointId, menuItem))
+                                            .subscribeOn(Schedulers.from(Executors.newScheduledThreadPool(5)))
+                                            .observeOn(AndroidSchedulers.mainThread())
+                                            .subscribe(payload -> Log.d(TAG, "Payload Sent Success"));
+
                                     break;
                                 case ConnectionsStatusCodes.STATUS_CONNECTION_REJECTED:
                                     // The connection was rejected by one or both sides.
@@ -141,7 +124,7 @@ public class P2pServer {
                             }
 
                             Log.d(TAG, "onConnectionResult: endpointId=" + endpointId
-                                    + "ConnectionResolution["
+                                    + " ConnectionResolution["
                                     + " status=" + result1.getStatus()
                                     + "]");
                         }
@@ -151,11 +134,78 @@ public class P2pServer {
                             // We've been disconnected from this endpoint. No more data can be
                             // sent or received.
                             Log.d(TAG, "onDisconnected: endpointId=" + endpointId);
+                            e.onComplete();
                         }
                     }, Options.ADVERTISING)
                     .addOnSuccessListener(this::onSuccessAdvertising)
                     .addOnFailureListener(this::onFailureAdvertising);
         });
+    }
+
+    private void disconnectConnection(@NonNull String endpointId) {
+        Log.d(TAG, "disconnectConnection: endpointId=" + endpointId);
+        connectionsClient().disconnectFromEndpoint(endpointId);
+    }
+
+    private Single<Payload> sendPayload(String endpointId, MenuItemsPacket packet) {
+        return Single.create(e -> {
+            Payload payload = Payload.fromBytes(packet.serialize());
+            connectionsClient().sendPayload(endpointId, payload)
+                    .addOnSuccessListener(aVoid -> onSuccessSendPayload(e, endpointId, payload))
+                    .addOnFailureListener(Runnable::run, this::onFailureSendPayload);
+        });
+    }
+
+    private void onSuccessSendPayload(SingleEmitter<Payload> emitter, String endpointId, Payload payload) {
+        Log.d(TAG, "onSuccessSendPayload: endpointId=" + endpointId
+                + " payloadSize=" + payload.asBytes().length);
+        emitter.onSuccess(payload);
+    }
+
+    private void onFailureSendPayload(Exception e) {
+        Log.e(TAG, "onFailureSendPayload: ", e);
+    }
+
+
+    private Observable<Payload> acceptConnection(String endpointId) {
+        return Observable.create(e -> {
+            connectionsClient().acceptConnection(endpointId,
+                    new PayloadCallback() {
+                        @Override
+                        public void onPayloadReceived(@NonNull String endpointId1, @NonNull Payload payload) {
+                            Log.d(TAG, "onPayloadReceived: endpointId=" + endpointId1
+                                    + " Payload["
+                                    + " id=" + payload.getId()
+                                    + " type=" + payload.getType()
+                                    + " length=" + payload.asBytes().length
+                                    + "]");
+
+                            e.onNext(payload);
+                        }
+
+                        @Override
+                        public void onPayloadTransferUpdate(@NonNull String payload, @NonNull PayloadTransferUpdate update) {
+
+//                            Log.d(TAG, "onPayloadTransferUpdate: payload=" + payload
+//                                    + " PayloadTransferUpdate["
+//                                    + " payloadId=" + update.getPayloadId()
+//                                    + " bytesTransferred=" + update.getBytesTransferred()
+//                                    + " status=" + update.getStatus()
+//                                    + " totalBytes=" + update.getTotalBytes()
+//                                    + "]");
+                        }
+                    })
+                    .addOnSuccessListener(this::onSuccessAcceptConnection)
+                    .addOnFailureListener(this::onFailureAcceptConnection);
+        });
+    }
+
+    private void onSuccessAcceptConnection(Void unusedResult) {
+        Log.d(TAG, "onSuccessAcceptConnection: ");
+    }
+
+    private void onFailureAcceptConnection(Exception e) {
+        Log.e(TAG, "onFailureAcceptConnection: ", e);
     }
 
     public void stopAdvertising() {

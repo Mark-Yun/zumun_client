@@ -23,12 +23,14 @@ import com.google.android.gms.nearby.messages.MessagesClient;
 import com.mark.zumo.client.core.entity.MenuItem;
 import com.mark.zumo.client.core.entity.Store;
 import com.mark.zumo.client.core.entity.user.CustomerUser;
-import com.mark.zumo.client.core.p2p.observable.EndpointInfoObservable;
 import com.mark.zumo.client.core.p2p.observable.SetObservable;
+import com.mark.zumo.client.core.p2p.packet.MenuItemsPacket;
 
+import java.util.List;
 import java.util.Set;
 
 import io.reactivex.Observable;
+import io.reactivex.Single;
 
 /**
  * Created by mark on 18. 4. 30.
@@ -44,7 +46,8 @@ public class P2pClient {
 
     private SetObservable<Store> storeObservable;
     private MessageListener messageListener;
-    private EndpointInfoObservable endpointInfoObservable;
+
+    private String currentEndpointId;
 
     public P2pClient(Activity activity, CustomerUser currentUser) {
         this.activity = activity;
@@ -119,9 +122,9 @@ public class P2pClient {
         return Nearby.getConnectionsClient(activity);
     }
 
-    private Observable<String> startDiscovery() {
+    private Single<String> startDiscovery() {
         Log.d(TAG, "startDiscovery: ");
-        return Observable.create(e -> {
+        return Single.create(e -> {
             connectionsClient().startDiscovery(Options.SERVICE_ID, new EndpointDiscoveryCallback() {
                 @Override
                 public void onEndpointFound(@NonNull String endpointId, @NonNull DiscoveredEndpointInfo endpointInfo) {
@@ -132,7 +135,7 @@ public class P2pClient {
                             + "]");
 
                     //TODO Auth Store by endpointInfo
-                    e.onNext(endpointId);
+                    e.onSuccess(endpointId);
                 }
 
                 @Override
@@ -150,21 +153,20 @@ public class P2pClient {
         connectionsClient().stopDiscovery();
     }
 
-    private Observable<String> requestConnection(String endPointId) {
+    private Single<String> requestConnection(String endPointId) {
         Log.d(TAG, "requestConnection: " + endPointId);
-        return Observable.create(e -> {
+        return Single.create(e -> {
             connectionsClient().requestConnection(String.valueOf(customerUser.id), endPointId, new ConnectionLifecycleCallback() {
                 @Override
                 public void onConnectionInitiated(@NonNull String endpointId1, @NonNull ConnectionInfo connectionInfo) {
                     // Automatically accept the connection on both sides.
-                    //Nearby.getConnectionsClient(context).acceptConnection(endpointId, mPayloadCallback);
-                    //TODO: Auth
                     Log.d(TAG, "onConnectionInitiated: endpointID=" + endpointId1
                             + "ConnectionInfo["
                             + " authenticationToken=" + connectionInfo.getAuthenticationToken()
                             + " endpointName=" + connectionInfo.getEndpointName()
                             + "]");
-                    e.onNext(endpointId1);
+                    //TODO: Auth
+                    e.onSuccess(endpointId1);
                 }
 
                 @Override
@@ -174,6 +176,7 @@ public class P2pClient {
                         case ConnectionsStatusCodes.STATUS_OK:
                             // We're connected! Can now start sending and receiving data.
                             Log.d(TAG, "onConnectionResult: STATUS_OK");
+                            currentEndpointId = endpointId1;
                             break;
                         case ConnectionsStatusCodes.STATUS_CONNECTION_REJECTED:
                             // The connection was rejected by one or both sides.
@@ -205,9 +208,9 @@ public class P2pClient {
         });
     }
 
-    private Observable<Payload> acceptConnection(String endpointId) {
+    private Single<Payload> acceptConnection(String endpointId) {
         Log.d(TAG, "acceptConnection: endpointId=" + endpointId);
-        return Observable.create(e -> {
+        return Single.create(e -> {
             connectionsClient().acceptConnection(endpointId, new PayloadCallback() {
                 @Override
                 public void onPayloadReceived(@NonNull String endpointId1, @NonNull Payload payload) {
@@ -218,35 +221,50 @@ public class P2pClient {
                             + " length=" + payload.asBytes().length
                             + "]");
                     //TODO: Auth Endpoint1
+                    e.onSuccess(payload);
                 }
 
                 @Override
-                public void onPayloadTransferUpdate(@NonNull String payload, @NonNull PayloadTransferUpdate update) {
+                public void onPayloadTransferUpdate(@NonNull String payloadId, @NonNull PayloadTransferUpdate update) {
 
-                    Log.d(TAG, "onPayloadTransferUpdate:" + payload
-                            + " PayloadTransferUpdate["
-                            + "payloadId=" + update.getPayloadId()
-                            + " bytesTransferred=" + update.getBytesTransferred()
-                            + " status=" + update.getStatus()
-                            + " totalBytes=" + update.getTotalBytes()
-                            + "]");
+//                    Log.d(TAG, "onPayloadTransferUpdate:" + payloadId
+//                            + " PayloadTransferUpdate["
+//                            + "payloadId=" + update.getPayloadId()
+//                            + " bytesTransferred=" + update.getBytesTransferred()
+//                            + " status=" + update.getStatus()
+//                            + " totalBytes=" + update.getTotalBytes()
+//                            + "]");
                 }
-            });
+            })
+                    .addOnSuccessListener(this::onSuccessAcceptConnection)
+                    .addOnFailureListener(this::onFailureAcceptConnection);
         });
     }
 
-    private Observable<MenuItem> convertMenuItemFromPayload(Payload payload) {
-        return Observable.create(e -> {
+    private void onSuccessAcceptConnection(Void unusedResult) {
+        Log.d(TAG, "onSuccessAcceptConnection: ");
+        stopDiscovery();
+    }
 
+    private void onFailureAcceptConnection(@NonNull Exception e) {
+        Log.e(TAG, "onFailureAcceptConnection: ", e);
+    }
+
+    private Single<List<MenuItem>> convertMenuItemFromPayload(Payload payload) {
+        return Single.create(e -> {
+            byte[] bytes = payload.asBytes();
+            MenuItemsPacket menuItemsPacket = MenuItemsPacket.deserialize(bytes);
+            e.onSuccess(menuItemsPacket.menuItems);
         });
     }
 
-    public Observable<MenuItem> acquireMenuItems() {
+    public Single<List<MenuItem>> acquireMenuItems() {
         Log.d(TAG, "acquireMenuItems:");
         return startDiscovery()
-                .switchMap(P2pClient.this::requestConnection)
-                .switchMap(P2pClient.this::acceptConnection)
-                .switchMap(P2pClient.this::convertMenuItemFromPayload);
+                .flatMap(this::requestConnection)
+                .flatMap(this::acceptConnection)
+                .flatMap(this::convertMenuItemFromPayload)
+                .doOnSuccess(menuItemList -> connectionsClient().disconnectFromEndpoint(currentEndpointId));
     }
 
     private void onDiscoverySuccess(Void unusedResult) {
