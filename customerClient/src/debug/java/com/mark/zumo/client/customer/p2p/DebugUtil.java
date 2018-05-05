@@ -2,6 +2,7 @@ package com.mark.zumo.client.customer.p2p;
 
 import android.os.Build;
 
+import com.mark.zumo.client.core.entity.Order;
 import com.mark.zumo.client.core.entity.Store;
 import com.mark.zumo.client.core.entity.user.CustomerUser;
 
@@ -9,13 +10,17 @@ import com.mark.zumo.client.core.entity.user.CustomerUser;
  * Created by mark on 18. 5. 3.
  */
 
-public class DebugUtil {
+class DebugUtil {
 
-    public static CustomerUser testCustomerUser() {
+    static CustomerUser testCustomerUser() {
         return new CustomerUser(0, Build.MODEL, 0);
     }
 
-    public static Store testStore() {
+    static Store testStore() {
         return new Store(5, Build.MODEL, 0, 0, 31, 31);
+    }
+
+    static Order testOrder() {
+        return new Order(1, 2, 3, null, 5, 100);
     }
 }

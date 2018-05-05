@@ -2,13 +2,7 @@ package com.mark.zumo.client.core.entity;
 
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
-import android.util.Log;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.io.Serializable;
 
 /**
@@ -33,31 +27,6 @@ public class MenuItem implements Serializable {
         this.price = price;
         this.createdDate = createdDate;
         this.modifiedDate = modifiedDate;
-    }
-
-    public static MenuItem deserialize(byte[] data) throws IOException, ClassNotFoundException {
-        ByteArrayInputStream in = new ByteArrayInputStream(data);
-        ObjectInputStream is = new ObjectInputStream(in);
-        MenuItem menuItem = (MenuItem) is.readObject();
-        in.close();
-        is.close();
-        return menuItem;
-    }
-
-    public byte[] serialize() {
-        try {
-            ByteArrayOutputStream out = new ByteArrayOutputStream();
-            ObjectOutputStream os = new ObjectOutputStream(out);
-            os.writeObject(this);
-            byte[] bytes = out.toByteArray();
-            os.close();
-            out.close();
-
-            return bytes;
-        } catch (IOException e) {
-            Log.e(TAG, "serialize: ", e);
-            return null;
-        }
     }
 
     @Override

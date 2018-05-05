@@ -3,6 +3,7 @@ package com.mark.zumo.client.core.entity;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -10,7 +11,7 @@ import java.util.List;
  */
 
 @Entity
-public class Order {
+public class Order implements Serializable {
 
     @PrimaryKey public final long id;
     public final long customerUserSessionId;

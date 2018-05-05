@@ -248,9 +248,10 @@ public class P2pClient {
                             Single.just(order)
                                     .map(Packet<Order>::new)
                                     .flatMap(packet -> sendPayload(endpointId1, packet))
+                                    .doOnSuccess(unUsed -> connectionsClient().disconnectFromEndpoint(endpointId1))
                                     .subscribeOn(Schedulers.from(Executors.newScheduledThreadPool(5)))
                                     .observeOn(AndroidSchedulers.mainThread())
-                                    .subscribe(payload -> Log.d(TAG, "Payload Sent Success"));
+                                    .subscribe(payload -> e.onSuccess("Send Payload Success" + payload));
                             break;
                         case ConnectionsStatusCodes.STATUS_CONNECTION_REJECTED:
                             // The connection was rejected by one or both sides.
@@ -364,6 +365,14 @@ public class P2pClient {
                 .flatMap(this::convertMenuItemFromPayload)
                 .doOnSuccess(menuItemList -> connectionsClient().disconnectFromEndpoint(currentEndpointId))
                 .doOnSuccess(unUsedResult -> currentEndpointId = null);
+    }
+
+    public Single<String> sendOrder(Order order, long storeId) {
+        return Single.just(endPointMap.get(storeId))
+                .flatMap(endpointId -> requestOrderConnection(endpointId, order))
+                .flatMap(this::acceptConnection)
+                .map(Payload::getId)
+                .map(String::valueOf);
     }
 
     private void onDiscoverySuccess(Void unusedResult) {
