@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Zumo</string>
+    <string name="kakao_api_key">265e130b23d5b75316022561ec01ea5e</string>
 </resources>
