@@ -4,6 +4,7 @@ import android.arch.persistence.room.Dao;
 import android.arch.persistence.room.Delete;
 import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.Query;
+import android.arch.persistence.room.Update;
 
 import com.mark.zumo.client.core.entity.user.User;
 
@@ -17,20 +18,19 @@ import io.reactivex.Flowable;
 
 @Dao
 public interface UserDao {
-    @Query("SELECT * FROM user")
+    String TABLE_NAME = "user";
+
+    @Query("SELECT * FROM " + TABLE_NAME)
     Flowable<List<User>> getAll();
 
-    @Query("SELECT * FROM user WHERE id IN (:userIds)")
-    Flowable<User> getAllByIds(int[] userIds);
-
-    @Query("SELECT * FROM user WHERE name LIKE :name LIMIT 1")
-    Flowable<User> findByName(String name);
-
-    @Query("SELECT * FROM user WHERE id LIKE :id LIMIT 1")
+    @Query("SELECT * FROM " + TABLE_NAME + " WHERE id LIKE :id LIMIT 1")
     Flowable<User> findById(long id);
 
     @Insert
     void insertAll(User... users);
+
+    @Update
+    void update(User user);
 
     @Delete
     void delete(User user);

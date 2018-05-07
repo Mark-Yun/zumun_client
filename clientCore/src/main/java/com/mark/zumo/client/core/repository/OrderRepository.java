@@ -6,7 +6,7 @@ import com.mark.zumo.client.core.appserver.AppServerService;
 import com.mark.zumo.client.core.appserver.AppServerServiceProvider;
 import com.mark.zumo.client.core.dao.AppDatabase;
 import com.mark.zumo.client.core.dao.AppDatabaseProvider;
-import com.mark.zumo.client.core.dao.OrderDao;
+import com.mark.zumo.client.core.dao.MenuOrderDao;
 
 /**
  * Created by mark on 18. 4. 30.
@@ -31,7 +31,7 @@ public class OrderRepository {
         return instance;
     }
 
-    private OrderDao orderDao() {
+    private MenuOrderDao orderDao() {
         return database.orderDao();
     }
 

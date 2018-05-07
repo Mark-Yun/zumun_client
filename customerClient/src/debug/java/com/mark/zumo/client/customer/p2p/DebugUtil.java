@@ -2,7 +2,7 @@ package com.mark.zumo.client.customer.p2p;
 
 import android.os.Build;
 
-import com.mark.zumo.client.core.entity.Order;
+import com.mark.zumo.client.core.entity.MenuOrder;
 import com.mark.zumo.client.core.entity.Store;
 import com.mark.zumo.client.core.entity.user.CustomerUser;
 
@@ -20,7 +20,7 @@ class DebugUtil {
         return new Store(5, Build.MODEL, 0, 0, 31, 31);
     }
 
-    static Order testOrder() {
-        return new Order(1, 2, 3, null, 5, 100);
+    static MenuOrder testOrder() {
+        return new MenuOrder(1, 2, 3, null, 5, 100);
     }
 }

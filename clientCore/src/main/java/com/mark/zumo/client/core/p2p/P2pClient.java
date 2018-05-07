@@ -21,7 +21,7 @@ import com.google.android.gms.nearby.messages.Message;
 import com.google.android.gms.nearby.messages.MessageListener;
 import com.google.android.gms.nearby.messages.MessagesClient;
 import com.mark.zumo.client.core.entity.MenuItem;
-import com.mark.zumo.client.core.entity.Order;
+import com.mark.zumo.client.core.entity.MenuOrder;
 import com.mark.zumo.client.core.entity.Store;
 import com.mark.zumo.client.core.entity.user.CustomerUser;
 import com.mark.zumo.client.core.p2p.observable.SetObservable;
@@ -219,7 +219,7 @@ public class P2pClient {
         });
     }
 
-    private Single<String> requestOrderConnection(String endPointId, Order order) {
+    private Single<String> requestOrderConnection(String endPointId, MenuOrder menuOrder) {
         Log.d(TAG, "requestConnection: " + endPointId);
         return Single.create(e -> {
             connectionsClient().requestConnection(String.valueOf(customerUser.id), endPointId, new ConnectionLifecycleCallback() {
@@ -245,8 +245,8 @@ public class P2pClient {
                             Log.d(TAG, "onConnectionResult: STATUS_OK");
                             currentEndpointId = endpointId1;
 
-                            Single.just(order)
-                                    .map(Packet<Order>::new)
+                            Single.just(menuOrder)
+                                    .map(Packet<MenuOrder>::new)
                                     .flatMap(packet -> sendPayload(endpointId1, packet))
                                     .doOnSuccess(unUsed -> connectionsClient().disconnectFromEndpoint(endpointId1))
                                     .subscribeOn(Schedulers.from(Executors.newScheduledThreadPool(5)))
@@ -283,7 +283,7 @@ public class P2pClient {
         });
     }
 
-    private Single<Payload> sendPayload(String endpointId, Packet<Order> packet) {
+    private Single<Payload> sendPayload(String endpointId, Packet<MenuOrder> packet) {
         return Single.create(e -> {
             Payload payload = Payload.fromBytes(packet.asByteArray());
             connectionsClient().sendPayload(endpointId, payload)
@@ -367,9 +367,9 @@ public class P2pClient {
                 .doOnSuccess(unUsedResult -> currentEndpointId = null);
     }
 
-    public Single<String> sendOrder(Order order, long storeId) {
+    public Single<String> sendOrder(MenuOrder menuOrder, long storeId) {
         return Single.just(endPointMap.get(storeId))
-                .flatMap(endpointId -> requestOrderConnection(endpointId, order))
+                .flatMap(endpointId -> requestOrderConnection(endpointId, menuOrder))
                 .flatMap(this::acceptConnection)
                 .map(Payload::getId)
                 .map(String::valueOf);

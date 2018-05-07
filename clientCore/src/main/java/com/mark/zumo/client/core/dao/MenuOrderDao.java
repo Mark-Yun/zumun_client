@@ -6,7 +6,7 @@ import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.Query;
 import android.arch.persistence.room.Update;
 
-import com.mark.zumo.client.core.entity.session.CustomerUserSession;
+import com.mark.zumo.client.core.entity.MenuOrder;
 
 import java.util.List;
 
@@ -17,21 +17,21 @@ import io.reactivex.Flowable;
  */
 
 @Dao
-public interface CustomerUserSessionDao {
-    String TABLE_NAME = "customer_user_session";
+public interface MenuOrderDao {
+    String TABLE_NAME = "menu_order";
 
     @Query("SELECT * FROM " + TABLE_NAME)
-    Flowable<List<CustomerUserSession>> getAll();
+    Flowable<List<MenuOrder>> getAll();
 
     @Query("SELECT * FROM " + TABLE_NAME + " WHERE id LIKE :id LIMIT 1")
-    Flowable<CustomerUserSession> findById(long id);
+    Flowable<MenuOrder> findById(long id);
 
     @Insert
-    void insertAll(CustomerUserSession... users);
+    void insertAll(MenuOrder... users);
 
     @Update
-    void update(CustomerUserSession user);
+    void update(MenuOrder user);
 
     @Delete
-    void delete(CustomerUserSession user);
+    void delete(MenuOrder user);
 }

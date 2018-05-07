@@ -9,7 +9,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.mark.zumo.client.core.entity.MenuItem;
-import com.mark.zumo.client.core.entity.Order;
+import com.mark.zumo.client.core.entity.MenuOrder;
 import com.mark.zumo.client.core.entity.Store;
 import com.mark.zumo.client.core.entity.user.CustomerUser;
 import com.mark.zumo.client.core.p2p.P2pClient;
@@ -35,7 +35,7 @@ public class P2pDebugActivity extends Activity {
 
     private CustomerUser currentUser;
     private Store testStore;
-    private Order testOrder;
+    private MenuOrder testMenuOrder;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -44,7 +44,7 @@ public class P2pDebugActivity extends Activity {
 
         currentUser = DebugUtil.testCustomerUser();
         testStore = DebugUtil.testStore();
-        testOrder = DebugUtil.testOrder();
+        testMenuOrder = DebugUtil.testOrder();
 
         p2pClient = new P2pClient(this, currentUser);
         p2pServer = new P2pServer(this, testStore);
@@ -79,11 +79,11 @@ public class P2pDebugActivity extends Activity {
     }
 
     private void sendOrder(View v) {
-        p2pClient.sendOrder(testOrder, testStore.id)
+        p2pClient.sendOrder(testMenuOrder, testStore.id)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(this::updateConsole);
-        initConsole("Send Order...");
+        initConsole("Send MenuOrder...");
     }
 
     private void startPublish(View v) {

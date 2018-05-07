@@ -3,13 +3,14 @@ package com.mark.zumo.client.core.entity.session;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
 
+import com.mark.zumo.client.core.dao.CustomerUserSessionDao;
 import com.mark.zumo.client.core.entity.EntityHelper;
 
 /**
  * Created by mark on 18. 4. 30.
  */
 
-@Entity
+@Entity(tableName = CustomerUserSessionDao.TABLE_NAME)
 public class CustomerUserSession {
 
     @PrimaryKey public final long id;

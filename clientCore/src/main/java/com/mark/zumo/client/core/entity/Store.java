@@ -3,11 +3,13 @@ package com.mark.zumo.client.core.entity;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
 
+import com.mark.zumo.client.core.dao.StoreDao;
+
 /**
  * Created by mark on 18. 4. 30.
  */
 
-@Entity
+@Entity(tableName = StoreDao.TABLE_NAME)
 public class Store {
 
     @PrimaryKey public final long id;
