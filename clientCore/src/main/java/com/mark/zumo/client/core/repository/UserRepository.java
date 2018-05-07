@@ -45,35 +45,16 @@ public class UserRepository {
 
     public Observable<User> findById(long id) {
         return Observable.create(e -> {
-            User user1 = userDao().findById(id);
-            if (user1 != null)
-                e.onNext(user1);
-
-            User user2 = service().findById(id).execute().body();
-            if (user2 != null)
-                e.onNext(user2);
-
-            e.onComplete();
         });
     }
 
     public Observable<CustomerUser> findCustomerUserById(long id) {
         return Observable.create(e -> {
-            e.onNext(new CustomerUser(4124, "TEST", 0));
         });
     }
 
     public Observable<User> findByName(String name) {
         return Observable.create(e -> {
-            User user1 = userDao().findByName(name);
-            if (user1 != null)
-                e.onNext(user1);
-
-            User user2 = service().findByName(name).execute().body();
-            if (user2 != null)
-                e.onNext(user2);
-
-            e.onComplete();
         });
     }
 }

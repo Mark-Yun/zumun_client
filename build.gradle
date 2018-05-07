@@ -22,7 +22,6 @@ allprojects {
         jcenter()
         mavenCentral()
     }
-
 }
 
 ext {
@@ -59,15 +58,6 @@ configure(applications) {
         implementation "com.android.support:cardview-v7:$support"
         implementation "com.android.support:recyclerview-v7:$support"
 
-        implementation "com.google.android.gms:play-services-places:$playService"
-
-        testImplementation "junit:junit:$junit"
-        androidTestImplementation "com.android.support.test:runner:$runner"
-        androidTestImplementation "com.android.support.test.espresso:espresso-core:$esspressoCore"
-
-        implementation "io.reactivex.rxjava2:rxandroid:$rxAndroid"
-        implementation "io.reactivex.rxjava2:rxjava:$rxJava"
-
         implementation "android.arch.lifecycle:extensions:$viewModel"
         annotationProcessor "android.arch.lifecycle:compiler:$viewModel"
 
@@ -89,16 +79,21 @@ configure(libraries) {
     dependencies {
         implementation "com.squareup.retrofit2:retrofit:$retrofit"
         implementation "com.squareup.retrofit2:converter-gson:$retrofit"
+        implementation "com.squareup.retrofit2:adapter-rxjava:$retrofit"
 
         implementation "io.reactivex.rxjava2:rxandroid:$rxAndroid"
         implementation "io.reactivex.rxjava2:rxjava:$rxJava"
 
         implementation "android.arch.persistence.room:runtime:$room"
+        implementation "android.arch.persistence.room:rxjava2:$room"
         annotationProcessor "android.arch.persistence.room:compiler:$room"
 
-        testImplementation "junit:junit:$junit"
-        androidTestImplementation "com.android.support.test:runner:$runner"
-        androidTestImplementation "com.android.support.test.espresso:espresso-core:$esspressoCore"
+        api "io.reactivex.rxjava2:rxandroid:$rxAndroid"
+        api "io.reactivex.rxjava2:rxjava:$rxJava"
+
+        testApi "junit:junit:$junit"
+        androidTestApi "com.android.support.test:runner:$runner"
+        androidTestApi "com.android.support.test.espresso:espresso-core:$esspressoCore"
 
         implementation "com.google.android.gms:play-services-nearby:$playService"
     }

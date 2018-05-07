@@ -9,6 +9,8 @@ import com.mark.zumo.client.core.entity.user.User;
 
 import java.util.List;
 
+import io.reactivex.Flowable;
+
 /**
  * Created by mark on 18. 4. 30.
  */
@@ -16,16 +18,16 @@ import java.util.List;
 @Dao
 public interface UserDao {
     @Query("SELECT * FROM user")
-    List<User> getAll();
+    Flowable<List<User>> getAll();
 
     @Query("SELECT * FROM user WHERE id IN (:userIds)")
-    List<User> getAllByIds(int[] userIds);
+    Flowable<User> getAllByIds(int[] userIds);
 
     @Query("SELECT * FROM user WHERE name LIKE :name LIMIT 1")
-    User findByName(String name);
+    Flowable<User> findByName(String name);
 
     @Query("SELECT * FROM user WHERE id LIKE :id LIMIT 1")
-    User findById(long id);
+    Flowable<User> findById(long id);
 
     @Insert
     void insertAll(User... users);

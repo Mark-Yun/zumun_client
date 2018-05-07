@@ -2,8 +2,9 @@ package com.mark.zumo.client.core.appserver;
 
 import com.mark.zumo.client.core.entity.user.User;
 
-import retrofit2.Call;
+import io.reactivex.Single;
 import retrofit2.Retrofit;
+import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.http.GET;
 import retrofit2.http.Path;
@@ -16,11 +17,12 @@ public interface AppServerService {
     Retrofit retrofit = new Retrofit.Builder()
             .baseUrl("TODO: input server url")
             .addConverterFactory(GsonConverterFactory.create())
+            .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
             .build();
 
     @GET("users/{id}")
-    Call<User> findById(@Path("id") long id);
+    Single<User> findById(@Path("id") long id);
 
     @GET("users/{name}")
-    Call<User> findByName(@Path("name") String name);
+    Single<User> findByName(@Path("name") String name);
 }

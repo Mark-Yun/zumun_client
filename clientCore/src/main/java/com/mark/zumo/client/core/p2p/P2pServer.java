@@ -78,8 +78,11 @@ public class P2pServer {
         Log.e(TAG, "onFailureAdvertising: ", e);
     }
 
-    public Observable<String> findCustomer() {
-        return startAdvertising()
+    public Observable<String> findCustomer(Store store) {
+        return Observable.just(store)
+                .map(store1 -> store1.id)
+                .map(String::valueOf)
+                .flatMap(this::startAdvertising)
                 .flatMap(this::acceptConnection)
                 .map(Payload::asBytes)
                 .map(Packet<Order>::new)
@@ -87,9 +90,9 @@ public class P2pServer {
                 .map(Order::toString);
     }
 
-    private Observable<String> startAdvertising() {
+    private Observable<String> startAdvertising(String nickName) {
         return Observable.create(e -> {
-            connectionsClient().startAdvertising(store.name, Options.SERVICE_ID,
+            connectionsClient().startAdvertising(nickName, Options.SERVICE_ID,
                     new ConnectionLifecycleCallback() {
                         @Override
                         public void onConnectionInitiated(@NonNull String endpointId, @NonNull ConnectionInfo connectionInfo) {
