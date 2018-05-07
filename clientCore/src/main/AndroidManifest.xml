@@ -1,1 +1,9 @@
-<manifest package="com.mark.zumo.client.core" />
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.mark.zumo.client.core">
+
+    <application>
+        <meta-data
+            android:name="com.google.android.nearby.messages.API_KEY"
+            android:value="@string/google_api_key" />
+    </application>
+</manifest>

@@ -26,6 +26,7 @@ import com.mark.zumo.client.core.entity.Store;
 import com.mark.zumo.client.core.entity.user.CustomerUser;
 import com.mark.zumo.client.core.p2p.observable.SetObservable;
 import com.mark.zumo.client.core.p2p.packet.Packet;
+import com.mark.zumo.client.core.p2p.packet.Request;
 
 import java.util.List;
 import java.util.Map;
@@ -163,63 +164,7 @@ public class P2pClient {
         connectionsClient().stopDiscovery();
     }
 
-    private Single<String> requestConnection(String endPointId) {
-        Log.d(TAG, "requestConnection: " + endPointId);
-        return Single.create(e -> {
-            connectionsClient().requestConnection(String.valueOf(customerUser.id), endPointId, new ConnectionLifecycleCallback() {
-                @Override
-                public void onConnectionInitiated(@NonNull String endpointId1, @NonNull ConnectionInfo connectionInfo) {
-                    // Automatically accept the connection on both sides.
-                    Log.d(TAG, "onConnectionInitiated: endpointID=" + endpointId1
-                            + "ConnectionInfo["
-                            + " authenticationToken=" + connectionInfo.getAuthenticationToken()
-                            + " endpointName=" + connectionInfo.getEndpointName()
-                            + "]");
-                    //TODO: Auth
-                    saveConnectionInfo(endpointId1, connectionInfo);
-                    e.onSuccess(endpointId1);
-                }
-
-                @Override
-                public void onConnectionResult(@NonNull String endpointId1, @NonNull ConnectionResolution result1) {
-                    int statusCode = result1.getStatus().getStatusCode();
-                    switch (statusCode) {
-                        case ConnectionsStatusCodes.STATUS_OK:
-                            // We're connected! Can now start sending and receiving data.
-                            Log.d(TAG, "onConnectionResult: STATUS_OK");
-                            currentEndpointId = endpointId1;
-                            break;
-                        case ConnectionsStatusCodes.STATUS_CONNECTION_REJECTED:
-                            // The connection was rejected by one or both sides.
-                            Log.d(TAG, "onConnectionResult: STATUS_CONNECTION_REJECTED");
-                            e.onError(new RuntimeException("TODO: STATUS_CONNECTION_REJECTED"));
-                            break;
-                        case ConnectionsStatusCodes.STATUS_ERROR:
-                            // The connection broke before it was able to be accepted.
-                            Log.d(TAG, "onConnectionResult: STATUS_ERROR");
-                            e.onError(new RuntimeException("TODO: STATUS_ERROR"));
-                            break;
-                    }
-
-                    Log.d(TAG, "onConnectionResult: endpointId=" + endpointId1
-                            + "ConnectionResolution["
-                            + " status=" + result1.getStatus()
-                            + "]");
-                }
-
-                @Override
-                public void onDisconnected(@NonNull String endpointId1) {
-                    // We've been disconnected from this endpoint. No more data can be
-                    // sent or received.
-                    Log.d(TAG, "onDisconnected: endpointId=" + endpointId1);
-                }
-            })
-                    .addOnSuccessListener(this::onRequestConnectionSuccess)
-                    .addOnFailureListener(this::onRequestConnectionFailure);
-        });
-    }
-
-    private Single<String> requestOrderConnection(String endPointId, MenuOrder menuOrder) {
+    private Single<String> requestConnection(String endPointId, Packet request) {
         Log.d(TAG, "requestConnection: " + endPointId);
         return Single.create(e -> {
             connectionsClient().requestConnection(String.valueOf(customerUser.id), endPointId, new ConnectionLifecycleCallback() {
@@ -245,10 +190,8 @@ public class P2pClient {
                             Log.d(TAG, "onConnectionResult: STATUS_OK");
                             currentEndpointId = endpointId1;
 
-                            Single.just(menuOrder)
-                                    .map(Packet<MenuOrder>::new)
+                            Single.just(request)
                                     .flatMap(packet -> sendPayload(endpointId1, packet))
-                                    .doOnSuccess(unUsed -> connectionsClient().disconnectFromEndpoint(endpointId1))
                                     .subscribeOn(Schedulers.from(Executors.newScheduledThreadPool(5)))
                                     .observeOn(AndroidSchedulers.mainThread())
                                     .subscribe(payload -> e.onSuccess("Send Payload Success" + payload));
@@ -359,8 +302,10 @@ public class P2pClient {
 
     public Single<List<MenuItem>> acquireMenuItems() {
         Log.d(TAG, "acquireMenuItems:");
+        Packet<Request> packet = new Packet<>(Request.REQ_MENU_ITEM_LIST);
+
         return startDiscovery()
-                .flatMap(this::requestConnection)
+                .flatMap(endpointId -> requestConnection(endpointId, packet))
                 .flatMap(this::acceptConnection)
                 .flatMap(this::convertMenuItemFromPayload)
                 .doOnSuccess(menuItemList -> connectionsClient().disconnectFromEndpoint(currentEndpointId))
@@ -368,9 +313,12 @@ public class P2pClient {
     }
 
     public Single<String> sendOrder(MenuOrder menuOrder, long storeId) {
-        return Single.just(endPointMap.get(storeId))
-                .flatMap(endpointId -> requestOrderConnection(endpointId, menuOrder))
+        String endpointId = endPointMap.get(storeId);
+        Packet<MenuOrder> packet = new Packet<>(menuOrder);
+        return requestConnection(endpointId, packet)
                 .flatMap(this::acceptConnection)
+                .doOnSuccess(menuItemList -> connectionsClient().disconnectFromEndpoint(currentEndpointId))
+                .doOnSuccess(unUsedResult -> currentEndpointId = null)
                 .map(Payload::getId)
                 .map(String::valueOf);
     }

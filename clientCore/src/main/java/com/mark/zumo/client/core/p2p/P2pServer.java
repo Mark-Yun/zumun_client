@@ -18,18 +18,19 @@ import com.google.android.gms.nearby.messages.MessagesClient;
 import com.mark.zumo.client.core.entity.MenuItem;
 import com.mark.zumo.client.core.entity.MenuOrder;
 import com.mark.zumo.client.core.entity.Store;
+import com.mark.zumo.client.core.p2p.packet.CombinedResult;
 import com.mark.zumo.client.core.p2p.packet.Packet;
+import com.mark.zumo.client.core.p2p.packet.PacketType;
+import com.mark.zumo.client.core.p2p.packet.Request;
+import com.mark.zumo.client.core.p2p.packet.Response;
 import com.mark.zumo.client.core.repository.MenuItemRepository;
 import com.mark.zumo.client.core.repository.UserRepository;
 
 import java.util.List;
-import java.util.concurrent.Executors;
 
 import io.reactivex.Observable;
 import io.reactivex.Single;
 import io.reactivex.SingleEmitter;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.schedulers.Schedulers;
 
 /**
  * Created by mark on 18. 4. 30.
@@ -80,14 +81,11 @@ public class P2pServer {
 
     public Observable<String> findCustomer(Store store) {
         return Observable.just(store)
-                .map(store1 -> store1.id)
+                .map(storeConsumer -> storeConsumer.id)
                 .map(String::valueOf)
                 .flatMap(this::startAdvertising)
                 .flatMap(this::acceptConnection)
-                .map(Payload::asBytes)
-                .map(Packet<MenuOrder>::new)
-                .map(Packet::get)
-                .map(MenuOrder::toString);
+                .flatMap(this::processPayload);
     }
 
     private Observable<String> startAdvertising(String nickName) {
@@ -114,13 +112,6 @@ public class P2pServer {
                                 case ConnectionsStatusCodes.STATUS_OK:
                                     // We're connected! Can now start sending and receiving data.
                                     Log.d(TAG, "onConnectionResult: STATUS_OK");
-                                    MenuItemRepository.from(activity).getMenuItemsOfStore(store)
-                                            .map(Packet<List<MenuItem>>::new)
-                                            .flatMap(packet -> sendPayload(endpointId, packet))
-                                            .subscribeOn(Schedulers.from(Executors.newScheduledThreadPool(5)))
-                                            .observeOn(AndroidSchedulers.mainThread())
-                                            .subscribe(payload -> Log.d(TAG, "Payload Sent Success"));
-
                                     break;
                                 case ConnectionsStatusCodes.STATUS_CONNECTION_REJECTED:
                                     // The connection was rejected by one or both sides.
@@ -155,13 +146,22 @@ public class P2pServer {
         connectionsClient().disconnectFromEndpoint(endpointId);
     }
 
-    private Single<Payload> sendPayload(String endpointId, Packet<List<MenuItem>> packet) {
+    private Single<Payload> sendPayload(String endpointId, Packet packet) {
+        Log.d(TAG, "sendPayload: endpointId=" + endpointId + " " + packet);
         return Single.create(e -> {
             Payload payload = Payload.fromBytes(packet.asByteArray());
             connectionsClient().sendPayload(endpointId, payload)
                     .addOnSuccessListener(aVoid -> onSuccessSendPayload(e, endpointId, payload))
                     .addOnFailureListener(Runnable::run, this::onFailureSendPayload);
         });
+    }
+
+    private Single<String> sendMenuItems(String endPointId) {
+        Log.d(TAG, "sendMenuItems: endPointId=" + endPointId);
+        return MenuItemRepository.from(activity).getMenuItemsOfStore(store)
+                .map(Packet<List<MenuItem>>::new)
+                .flatMap(packet -> sendPayload(endPointId, packet))
+                .map(payload -> String.valueOf(payload.getId()));
     }
 
     private void onSuccessSendPayload(SingleEmitter<Payload> emitter, String endpointId, Payload payload) {
@@ -174,7 +174,7 @@ public class P2pServer {
         Log.e(TAG, "onFailureSendPayload: ", e);
     }
 
-    private Observable<Payload> acceptConnection(String endpointId) {
+    private Observable<CombinedResult<String, Payload>> acceptConnection(String endpointId) {
         return Observable.create(e -> {
             Log.d(TAG, "acceptConnection: endpointId=" + endpointId);
             connectionsClient().acceptConnection(endpointId,
@@ -188,7 +188,7 @@ public class P2pServer {
                                     + " length=" + payload.asBytes().length
                                     + "]");
 
-                            e.onNext(payload);
+                            e.onNext(new CombinedResult<>(endpointId1, payload));
                         }
 
                         @Override
@@ -205,6 +205,57 @@ public class P2pServer {
                     })
                     .addOnSuccessListener(this::onSuccessAcceptConnection)
                     .addOnFailureListener(this::onFailureAcceptConnection);
+        });
+    }
+
+    private Observable<String> processPayload(final CombinedResult<String, Payload> combinedResult) {
+        Payload payload = combinedResult.r;
+        String endPointId = combinedResult.t;
+
+        Packet packet = new Packet(payload.asBytes());
+        Log.d(TAG, "processPayload: " + packet);
+
+        PacketType packetType = packet.getPacketType();
+        switch (packetType) {
+            case MENU_ORDER:
+                Packet<MenuOrder> menuOrderPacket = (Packet<MenuOrder>) packet;
+                Packet<Response> responsePacket = new Packet<>(Response.SUCCESS);
+                return Single.just(menuOrderPacket)
+                        .doOnSuccess(unUsed ->
+                                sendPayload(endPointId, responsePacket)
+                                        .subscribe()
+                        )
+                        .map(Packet::get)
+                        .map(MenuOrder::toString)
+                        .toObservable();
+
+            case REQUEST:
+                if (packet.get() instanceof Request) {
+                    CombinedResult<String, Packet<Request>> result = new CombinedResult<>(endPointId, (Packet<Request>) packet);
+                    return processOnRequest(result);
+                }
+                break;
+        }
+        throw new UnsupportedOperationException();
+    }
+
+    private Observable<String> processOnRequest(CombinedResult<String, Packet<Request>> result) {
+        Log.d(TAG, "processOnRequest: " + result);
+        Request request = result.r.get();
+        String endPointId = result.t;
+        Single<String> task;
+        switch (request) {
+            case REQ_MENU_ITEM_LIST:
+                task = sendMenuItems(endPointId);
+                break;
+
+            default:
+                throw new UnsupportedOperationException();
+        }
+
+        return Observable.create(e -> {
+            task.doOnSuccess(e::onNext)
+                    .subscribe();
         });
     }
 

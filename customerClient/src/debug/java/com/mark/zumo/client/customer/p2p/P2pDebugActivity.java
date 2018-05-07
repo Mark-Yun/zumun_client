@@ -154,11 +154,12 @@ public class P2pDebugActivity extends Activity {
     }
 
     private void updateConsole(String text) {
-        String newText = console.getText() + text;
+        String newText = console.getText() + text + "n";
         console.setText(newText);
     }
 
     private void initConsole(String text) {
-        console.setText(text);
+        String newText = text + "\n";
+        console.setText(newText);
     }
 }

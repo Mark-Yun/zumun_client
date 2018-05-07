@@ -1,5 +1,7 @@
 package com.mark.zumo.client.core.p2p.packet;
 
+import com.mark.zumo.client.core.entity.EntityHelper;
+
 /**
  * Created by mark on 18. 5. 5.
  */
@@ -41,7 +43,16 @@ public class Packet<T> {
         return helper;
     }
 
+    public PacketType getPacketType() {
+        return packetType;
+    }
+
     private byte[] serialize() {
         return helper().serializeInternal(packetType, object);
+    }
+
+    @Override
+    public String toString() {
+        return EntityHelper.toString(this, Packet.class);
     }
 }

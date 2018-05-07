@@ -1,7 +1,6 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 
 buildscript {
-
     repositories {
         google()
         jcenter()
@@ -21,6 +20,7 @@ allprojects {
         google()
         jcenter()
         mavenCentral()
+        maven { url 'http://devrepo.kakao.com:8088/nexus/content/groups/public/' }
     }
 }
 
@@ -43,6 +43,7 @@ ext {
     junit = '4.12'
     runner = '1.0.2'
     esspressoCore = '3.0.2'
+    kakao = '1.7.1'
 }
 
 def applications = [project('customerClient'), project('storeClient'), project('storeServer')]
@@ -96,6 +97,8 @@ configure(libraries) {
         androidTestApi "com.android.support.test.espresso:espresso-core:$esspressoCore"
 
         implementation "com.google.android.gms:play-services-nearby:$playService"
+
+        api "com.kakao.sdk:usermgmt:$kakao"
     }
 }
 

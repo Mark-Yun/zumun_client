@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">client_core</string>
     <string name="google_api_key">AIzaSyBG1TvGy6sHkwhQewFnWIXbDzjXwnrp310</string>
+    <string name="kakao_api_key">265e130b23d5b75316022561ec01ea5e</string>
 </resources>

@@ -9,7 +9,9 @@ import java.util.List;
  * Created by mark on 18. 5. 5.
  */
 public enum PacketType {
-    ORDER,
+    MENU_ORDER,
+    REQUEST,
+    RESPONSE,
     MENU_ITEM_LIST;
 
     public static int byteToInt(byte[] arr) {
@@ -34,10 +36,14 @@ public enum PacketType {
             if (isMenuItemListType(tAsList))
                 return MENU_ITEM_LIST;
         } else if (t instanceof MenuOrder) {
-            return ORDER;
+            return MENU_ORDER;
+        } else if (t instanceof Request) {
+            return REQUEST;
+        } else if (t instanceof Response) {
+            return RESPONSE;
         }
 
-        throw new UnsupportedOperationException();
+        throw new UnsupportedOperationException("unsupported type-" + t);
     }
 
     private static boolean isMenuItemListType(List<?> list) {

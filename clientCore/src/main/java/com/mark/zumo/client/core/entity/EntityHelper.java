@@ -13,7 +13,7 @@ public class EntityHelper {
     private static final String TAG = "EntityHelper";
 
     public static String toString(Object object, Class clazz) {
-        String ret = clazz.getSimpleName() + " [";
+        String ret = clazz.getSimpleName() + "[";
         Field[] declaredFields = clazz.getDeclaredFields();
         for (Field field : declaredFields) {
             String name = field.getName();
@@ -21,7 +21,7 @@ public class EntityHelper {
             try {
                 value = field.get(object);
             } catch (IllegalAccessException e) {
-                Log.e(TAG, "toString: ", e);
+                Log.e(TAG, "toString: " + e.getMessage());
             }
             ret += name + "=" + value + ", ";
         }
