@@ -10,9 +10,17 @@ import com.mark.zumo.client.core.signup.kakao.KakaoSdkAdapter;
  */
 
 public class CustomerClientApp extends Application {
+
+    private static CustomerClientApp instance;
+
+    public static CustomerClientApp getContext() {
+        return instance;
+    }
+
     @Override
     public void onCreate() {
         super.onCreate();
+        instance = this;
         KakaoSDK.init(new KakaoSdkAdapter(this));
     }
 }

@@ -15,16 +15,13 @@ import com.mark.zumo.client.core.signup.SessionCallback;
  * Created by mark on 18. 5. 7.
  */
 
-public class KakaoSessionCallback implements ISessionCallback, SessionCallback {
+public class KakaoSessionCallback implements ISessionCallback {
 
-    @Override
-    public void onSuccess(int resultCode) {
+    public static final String TAG = "KakaoSessionCallback";
+    private SessionCallback sessionCallback;
 
-    }
-
-    @Override
-    public void onFailure(int resultCode) {
-
+    public KakaoSessionCallback(SessionCallback sessionCallback) {
+        this.sessionCallback = sessionCallback;
     }
 
     @Override
@@ -57,10 +54,10 @@ public class KakaoSessionCallback implements ISessionCallback, SessionCallback {
                 //로그인에 성공하면 로그인한 사용자의 일련번호, 닉네임, 이미지url등을 리턴합니다.
                 //사용자 ID는 보안상의 문제로 제공하지 않고 일련번호는 제공합니다.
 
-                Log.e("UserProfile", userProfile.toString());
-                Log.e("UserProfile", userProfile.getId() + "");
-
-                long number = userProfile.getId();
+                Log.d(TAG, "onSuccess");
+                boolean isEmailVerified = userProfile.getEmailVerified();
+                String email = userProfile.getEmail();
+                userProfile.getServiceUserId();
             }
         });
 

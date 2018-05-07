@@ -11,12 +11,11 @@ public class SessionCallbackFactory {
 
     public static final int KAKAO = 0;
 
-    public static SessionCallback create(int type) {
+    public static void create(int type, SessionCallback sessionCallback) {
         switch (type) {
             case KAKAO:
-                KakaoSessionCallback kakaoSessionCallback = new KakaoSessionCallback();
+                KakaoSessionCallback kakaoSessionCallback = new KakaoSessionCallback(sessionCallback);
                 Session.getCurrentSession().addCallback(kakaoSessionCallback);
-                return kakaoSessionCallback;
         }
 
         throw new UnsupportedOperationException();

@@ -10,6 +10,13 @@ import com.mark.zumo.client.core.signup.kakao.KakaoSdkAdapter;
  */
 
 public class StoreClientApp extends Application {
+
+    private static StoreClientApp instance;
+
+    private static StoreClientApp getContext() {
+        return instance;
+    }
+
     @Override
     public void onCreate() {
         super.onCreate();
