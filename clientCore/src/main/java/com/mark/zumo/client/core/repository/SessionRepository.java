@@ -9,6 +9,8 @@ import com.mark.zumo.client.core.dao.AppDatabaseProvider;
 import com.mark.zumo.client.core.dao.CustomerUserSessionDao;
 import com.mark.zumo.client.core.dao.StoreSessionDao;
 
+import io.reactivex.Single;
+
 /**
  * Created by mark on 18. 4. 30.
  */
@@ -42,5 +44,11 @@ public class SessionRepository {
 
     private StoreSessionDao storeSessionDao() {
         return database.storeSessionDao();
+    }
+
+    public Single<String> requestSessionId(String id, String password) {
+        return Single.create(e -> {
+
+        });
     }
 }

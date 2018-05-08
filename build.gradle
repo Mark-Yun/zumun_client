@@ -87,7 +87,6 @@ configure(libraries) {
 
         implementation "android.arch.persistence.room:runtime:$room"
         implementation "android.arch.persistence.room:rxjava2:$room"
-        annotationProcessor "android.arch.persistence.room:compiler:$room"
 
         api "io.reactivex.rxjava2:rxandroid:$rxAndroid"
         api "io.reactivex.rxjava2:rxjava:$rxJava"

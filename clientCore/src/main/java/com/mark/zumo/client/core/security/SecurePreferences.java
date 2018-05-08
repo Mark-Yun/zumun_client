@@ -1,4 +1,4 @@
-package com.mark.zumo.client.core.preference;
+package com.mark.zumo.client.core.security;
 
 /**
  * Created by mark on 18. 5. 7.
