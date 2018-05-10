@@ -11,7 +11,7 @@ public class Packet<T> {
     private T object;
     private byte[] bytes;
     private PacketType packetType;
-    private PacketHelper helper;
+    private PacketHelper<T> helper;
 
     public Packet(T object) {
         this.object = object;
@@ -34,12 +34,12 @@ public class Packet<T> {
     }
 
     private T deserialize(byte[] bytes) {
-        Object o = helper().deserializeInternal(bytes);
-        return (T) o;
+        T t = helper().deserializeInternal(bytes);
+        return t;
     }
 
-    private PacketHelper helper() {
-        if (helper == null) helper = new PacketHelper();
+    private PacketHelper<T> helper() {
+        if (helper == null) helper = new PacketHelper<>();
         return helper;
     }
 

@@ -15,7 +15,6 @@ import com.google.android.gms.nearby.connection.PayloadCallback;
 import com.google.android.gms.nearby.connection.PayloadTransferUpdate;
 import com.google.android.gms.nearby.messages.Message;
 import com.google.android.gms.nearby.messages.MessagesClient;
-import com.mark.zumo.client.core.entity.MenuItem;
 import com.mark.zumo.client.core.entity.MenuOrder;
 import com.mark.zumo.client.core.entity.Store;
 import com.mark.zumo.client.core.p2p.packet.CombinedResult;
@@ -26,11 +25,12 @@ import com.mark.zumo.client.core.p2p.packet.Response;
 import com.mark.zumo.client.core.repository.MenuItemRepository;
 import com.mark.zumo.client.core.repository.UserRepository;
 
-import java.util.List;
+import java.util.concurrent.Executors;
 
 import io.reactivex.Observable;
 import io.reactivex.Single;
 import io.reactivex.SingleEmitter;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * Created by mark on 18. 4. 30.
@@ -85,7 +85,8 @@ public class P2pServer {
                 .map(String::valueOf)
                 .flatMap(this::startAdvertising)
                 .flatMap(this::acceptConnection)
-                .flatMap(this::processPayload);
+                .flatMap(this::processPayload)
+                .subscribeOn(Schedulers.from(Executors.newFixedThreadPool(4)));
     }
 
     private Observable<String> startAdvertising(String nickName) {
@@ -159,7 +160,7 @@ public class P2pServer {
     private Single<String> sendMenuItems(String endPointId) {
         Log.d(TAG, "sendMenuItems: endPointId=" + endPointId);
         return MenuItemRepository.from(activity).getMenuItemsOfStore(store)
-                .map(Packet<List<MenuItem>>::new)
+                .map(Packet::new)
                 .flatMap(packet -> sendPayload(endPointId, packet))
                 .map(payload -> String.valueOf(payload.getId()));
     }

@@ -1,11 +1,13 @@
-package com.mark.zumo.client.customer.view;
+package com.mark.zumo.client.customer.view.signup;
 
 import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 
 import com.mark.zumo.client.customer.R;
+import com.mark.zumo.client.customer.view.signup.fragment.SignUpButtonFragment;
 import com.mark.zumo.client.customer.viewmodel.SignUpViewModel;
 
 /**
@@ -13,6 +15,7 @@ import com.mark.zumo.client.customer.viewmodel.SignUpViewModel;
  */
 
 public class SignUpActivity extends AppCompatActivity {
+
     private SignUpViewModel signUpViewModel;
 
     @Override
@@ -20,5 +23,16 @@ public class SignUpActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         signUpViewModel = ViewModelProviders.of(this).get(SignUpViewModel.class);
         setContentView(R.layout.activity_sign_up);
+
+        inflateButtonFragment();
+    }
+
+    private void inflateButtonFragment() {
+        Fragment signUpButtonFragment = Fragment.instantiate(this, SignUpButtonFragment.class.getName());
+
+        getSupportFragmentManager()
+                .beginTransaction()
+                .add(R.id.sign_up_button_fragment, signUpButtonFragment)
+                .commit();
     }
 }

@@ -16,8 +16,10 @@ public class SessionCallbackFactory {
             case KAKAO:
                 KakaoSessionCallback kakaoSessionCallback = new KakaoSessionCallback(sessionCallback);
                 Session.getCurrentSession().addCallback(kakaoSessionCallback);
-        }
+                break;
 
-        throw new UnsupportedOperationException();
+            default:
+                throw new UnsupportedOperationException();
+        }
     }
 }

@@ -7,7 +7,7 @@ import com.mark.zumo.client.core.repository.SessionRepository;
 import com.mark.zumo.client.core.repository.UserRepository;
 import com.mark.zumo.client.core.security.EncryptionUtil;
 import com.mark.zumo.client.core.security.SecurePreferences;
-import com.mark.zumo.client.customer.CustomerClientApp;
+import com.mark.zumo.client.core.util.context.ContextHolder;
 
 import io.reactivex.Single;
 
@@ -27,7 +27,7 @@ public enum SessionManager {
     private SecurePreferences securePreferences;
 
     SessionManager() {
-        context = CustomerClientApp.getContext();
+        context = ContextHolder.getContext();
 
         sessionRepository = SessionRepository.from(context);
         userRepository = UserRepository.from(context);
@@ -68,7 +68,8 @@ public enum SessionManager {
 
     public Single<Boolean> isSessionValid() {
         return Single.create(e -> {
-
+            //TODO: remove Test Data
+            e.onSuccess(false);
         });
     }
 }

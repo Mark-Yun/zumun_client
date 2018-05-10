@@ -308,6 +308,7 @@ public class P2pClient {
                 .flatMap(endpointId -> requestConnection(endpointId, packet))
                 .flatMap(this::acceptConnection)
                 .flatMap(this::convertMenuItemFromPayload)
+                .subscribeOn(Schedulers.io())
                 .doOnSuccess(menuItemList -> connectionsClient().disconnectFromEndpoint(currentEndpointId))
                 .doOnSuccess(unUsedResult -> currentEndpointId = null);
     }

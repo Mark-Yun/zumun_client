@@ -14,13 +14,13 @@ import java.util.Arrays;
 /**
  * Created by mark on 18. 5. 5.
  */
-class PacketHelper {
+class PacketHelper<T> {
     private static final String TAG = "PacketHelper";
 
     PacketHelper() {
     }
 
-    Object deserializeInternal(byte[] data) {
+    T deserializeInternal(byte[] data) {
         byte[] newData = Arrays.copyOfRange(data, 4, data.length);
 
         try {
@@ -30,7 +30,7 @@ class PacketHelper {
             Object retObject = o;
             in.close();
             is.close();
-            return retObject;
+            return (T) retObject;
         } catch (IOException | ClassNotFoundException e) {
             Log.e(TAG, "deserializeInternal: ", e);
         }
@@ -38,7 +38,7 @@ class PacketHelper {
         return null;
     }
 
-    byte[] serializeInternal(PacketType packetType, Object object) {
+    byte[] serializeInternal(PacketType packetType, T object) {
         try {
             ByteArrayOutputStream out = new ByteArrayOutputStream();
             ObjectOutputStream os = new ObjectOutputStream(out);
