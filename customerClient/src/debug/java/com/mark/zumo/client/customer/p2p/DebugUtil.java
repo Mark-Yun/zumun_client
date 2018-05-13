@@ -4,7 +4,7 @@ import android.os.Build;
 
 import com.mark.zumo.client.core.entity.MenuOrder;
 import com.mark.zumo.client.core.entity.Store;
-import com.mark.zumo.client.core.entity.user.CustomerUser;
+import com.mark.zumo.client.core.entity.user.GuestUser;
 
 /**
  * Created by mark on 18. 5. 3.
@@ -12,8 +12,8 @@ import com.mark.zumo.client.core.entity.user.CustomerUser;
 
 class DebugUtil {
 
-    static CustomerUser testCustomerUser() {
-        return new CustomerUser(0, Build.MODEL, 0);
+    static GuestUser testCustomerUser() {
+        return new GuestUser(0, Build.MODEL, 0);
     }
 
     static Store testStore() {

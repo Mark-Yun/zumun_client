@@ -7,7 +7,7 @@ import com.mark.zumo.client.core.appserver.AppServerServiceProvider;
 import com.mark.zumo.client.core.dao.AppDatabase;
 import com.mark.zumo.client.core.dao.AppDatabaseProvider;
 import com.mark.zumo.client.core.dao.UserDao;
-import com.mark.zumo.client.core.entity.user.CustomerUser;
+import com.mark.zumo.client.core.entity.user.GuestUser;
 import com.mark.zumo.client.core.entity.user.User;
 
 import io.reactivex.Observable;
@@ -48,7 +48,7 @@ public class UserRepository {
         });
     }
 
-    public Observable<CustomerUser> findCustomerUserById(long id) {
+    public Observable<GuestUser> findCustomerUserById(long id) {
         return Observable.create(e -> {
         });
     }

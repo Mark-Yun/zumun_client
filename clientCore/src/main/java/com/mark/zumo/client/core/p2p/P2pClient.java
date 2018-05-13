@@ -23,7 +23,7 @@ import com.google.android.gms.nearby.messages.MessagesClient;
 import com.mark.zumo.client.core.entity.MenuItem;
 import com.mark.zumo.client.core.entity.MenuOrder;
 import com.mark.zumo.client.core.entity.Store;
-import com.mark.zumo.client.core.entity.user.CustomerUser;
+import com.mark.zumo.client.core.entity.user.GuestUser;
 import com.mark.zumo.client.core.p2p.observable.SetObservable;
 import com.mark.zumo.client.core.p2p.packet.Packet;
 import com.mark.zumo.client.core.p2p.packet.Request;
@@ -50,7 +50,7 @@ public class P2pClient {
     private static final long TIME_OUT = 5000;
 
     private Activity activity;
-    private CustomerUser customerUser;
+    private GuestUser guestUser;
 
     private SetObservable<Store> storeObservable;
     private MessageListener messageListener;
@@ -59,9 +59,9 @@ public class P2pClient {
 
     private Map<Long, String> endPointMap;
 
-    public P2pClient(Activity activity, CustomerUser currentUser) {
+    public P2pClient(Activity activity, GuestUser currentUser) {
         this.activity = activity;
-        this.customerUser = currentUser;
+        this.guestUser = currentUser;
         messageListener = messageListener();
         endPointMap = new ConcurrentHashMap<>();
     }
@@ -167,7 +167,7 @@ public class P2pClient {
     private Single<String> requestConnection(String endPointId, Packet request) {
         Log.d(TAG, "requestConnection: " + endPointId);
         return Single.create(e -> {
-            connectionsClient().requestConnection(String.valueOf(customerUser.id), endPointId, new ConnectionLifecycleCallback() {
+            connectionsClient().requestConnection(String.valueOf(guestUser.id), endPointId, new ConnectionLifecycleCallback() {
                 @Override
                 public void onConnectionInitiated(@NonNull String endpointId1, @NonNull ConnectionInfo connectionInfo) {
                     // Automatically accept the connection on both sides.

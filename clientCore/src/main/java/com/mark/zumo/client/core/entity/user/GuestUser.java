@@ -9,9 +9,9 @@ import com.mark.zumo.client.core.dao.UserDao;
  */
 
 @Entity(tableName = UserDao.TABLE_NAME)
-public class CustomerUser extends User {
+public class GuestUser extends User {
 
-    public CustomerUser(long id, String name, long createdDate) {
+    public GuestUser(long id, String name, long createdDate) {
         super(id, name, createdDate);
     }
 

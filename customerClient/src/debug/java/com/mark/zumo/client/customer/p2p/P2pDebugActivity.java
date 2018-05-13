@@ -11,7 +11,7 @@ import android.widget.TextView;
 import com.mark.zumo.client.core.entity.MenuItem;
 import com.mark.zumo.client.core.entity.MenuOrder;
 import com.mark.zumo.client.core.entity.Store;
-import com.mark.zumo.client.core.entity.user.CustomerUser;
+import com.mark.zumo.client.core.entity.user.GuestUser;
 import com.mark.zumo.client.core.p2p.P2pClient;
 import com.mark.zumo.client.core.p2p.P2pServer;
 import com.mark.zumo.client.customer.R;
@@ -33,7 +33,7 @@ public class P2pDebugActivity extends Activity {
     private P2pServer p2pServer;
     private P2pClient p2pClient;
 
-    private CustomerUser currentUser;
+    private GuestUser currentUser;
     private Store testStore;
     private MenuOrder testMenuOrder;
 
