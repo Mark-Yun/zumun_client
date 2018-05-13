@@ -15,14 +15,14 @@ import retrofit2.http.Path;
 
 public interface AppServerService {
     Retrofit retrofit = new Retrofit.Builder()
-            .baseUrl("TODO: input server url")
+            .baseUrl("https://faca5l5t89.execute-api.ap-northeast-2.amazonaws.com/zumo_api")
             .addConverterFactory(GsonConverterFactory.create())
             .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
             .build();
 
-    @GET("users/{id}")
-    Single<User> findById(@Path("id") long id);
+    @GET("users/guest/create")
+    Single<String> createGuestUser();
 
-    @GET("users/{name}")
-    Single<User> findByName(@Path("name") String name);
+    @POST("users/guest/delete")
+    Single<Void> deleteGuestUser();
 }
