@@ -56,18 +56,51 @@ public class MenuItemRepository {
     public Single<List<MenuItem>> getMenuItemsOfStore(Store store) {
         return Single.fromCallable(() -> {
             //TODO: remove test data
-            Drawable drawable = context.getResources().getDrawable(R.drawable.test_menu_image);
-            Bitmap bitmap = ((BitmapDrawable) drawable).getBitmap();
-            ByteArrayOutputStream stream = new ByteArrayOutputStream();
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
-            byte[] bytes = stream.toByteArray();
+            List<FakeData> dataList = createFakeData();
 
             List<MenuItem> menuItemList = new ArrayList<>();
-            for (int i = 0; i < 10; i++) {
-                MenuItem menuItem = new MenuItem((long) i, "test_name", bytes, store.id, 500, 0, 0);
+            int i = 0;
+            for (FakeData data : dataList) {
+                MenuItem menuItem = new MenuItem((long) i++, data.name, getByteArrayOfDrawable(data.drawableId), store.id, data.price, 0, 0);
                 menuItemList.add(menuItem);
             }
             return menuItemList;
         });
+    }
+
+    private byte[] getByteArrayOfDrawable(int id) {
+        Drawable drawable = context.getResources().getDrawable(id);
+        Bitmap bitmap = ((BitmapDrawable) drawable).getBitmap();
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+        return stream.toByteArray();
+    }
+
+    private List<FakeData> createFakeData() {
+        //TODO: remove test data
+        List<FakeData> resultList = new ArrayList<>();
+        resultList.add(new FakeData(R.drawable.data_1_ice, "아이스 카페 라떼", 4500));
+        resultList.add(new FakeData(R.drawable.data_1_hot, "카페 라떼", 4500));
+        resultList.add(new FakeData(R.drawable.data_2_ice, "아이스 카페 모카", 4500));
+        resultList.add(new FakeData(R.drawable.data_2_hot, "카페 모카", 4500));
+        resultList.add(new FakeData(R.drawable.data_3_hot, "에스프레", 4500));
+        resultList.add(new FakeData(R.drawable.data_4_ice, "아이스 카라멜 마키아또", 4500));
+        resultList.add(new FakeData(R.drawable.data_4_hot, "카라멜 마키아또", 4500));
+        resultList.add(new FakeData(R.drawable.data_5_ice, "아이스 카페 아메리카노", 4500));
+        resultList.add(new FakeData(R.drawable.data_5_hot, "카페 아메리카노", 4500));
+        return resultList;
+    }
+
+    private class FakeData {
+        public int drawableId;
+        public String name;
+        public int price;
+
+        public FakeData(int drawableId, String name, int price) {
+            //TODO: remove test data
+            this.drawableId = drawableId;
+            this.name = name;
+            this.price = price;
+        }
     }
 }

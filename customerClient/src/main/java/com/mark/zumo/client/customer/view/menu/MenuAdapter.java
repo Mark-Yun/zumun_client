@@ -12,8 +12,10 @@ import com.bumptech.glide.Glide;
 import com.mark.zumo.client.core.entity.MenuItem;
 import com.mark.zumo.client.customer.R;
 
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -44,8 +46,8 @@ class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.ViewHolder> {
     public void onBindViewHolder(@NonNull final ViewHolder viewHolder, final int position) {
         //TODO: remove Test data
         MenuItem menuItem = menuItemList.get(position);
-        viewHolder.name.setText("Name : " + menuItem.name);
-        viewHolder.price.setText("Price : " + menuItem.price);
+        viewHolder.name.setText(menuItem.name);
+        viewHolder.price.setText(NumberFormat.getNumberInstance(Locale.KOREA).format(menuItem.price));
 
         Glide.with(viewHolder.rootView)
                 .load(menuItem.image)
