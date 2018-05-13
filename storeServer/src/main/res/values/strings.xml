@@ -1,4 +1,10 @@
 <resources>
     <string name="app_name">store_server</string>
-    <string name="kakao_api_key">3751c8113c6ee44a84bac0281d387033</string>
+
+    <!--sign up-->
+    <string name="edit_text_hint_email">E-mail</string>
+    <string name="button_sign_in">SIGN IN</string>
+    <string name="button_sign_up">SIGN UP</string>
+    <string name="text_view_go_to_sign_up">Go To Sign Up >></string>
+    <string name="text_view_back_to_sign_in">&lt;&lt;Back To Sign In</string>
 </resources>

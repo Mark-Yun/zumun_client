@@ -13,6 +13,7 @@ import android.view.MenuItem;
 import android.view.Window;
 
 import com.mark.zumo.server.store.R;
+import com.mark.zumo.server.store.view.signup.SignUpActivity;
 import com.mark.zumo.server.store.viewmodel.SignUpViewModel;
 
 import butterknife.ButterKnife;
