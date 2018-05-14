@@ -13,7 +13,7 @@ import com.mark.zumo.client.core.entity.user.GuestUser;
 class DebugUtil {
 
     static GuestUser testCustomerUser() {
-        return new GuestUser(0, Build.MODEL, 0);
+        return new GuestUser();
     }
 
     static Store testStore() {
