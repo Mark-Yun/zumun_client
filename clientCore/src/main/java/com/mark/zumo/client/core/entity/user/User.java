@@ -3,23 +3,19 @@ package com.mark.zumo.client.core.entity.user;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
 
-import com.mark.zumo.client.core.dao.UserDao;
+import com.mark.zumo.client.core.dao.GuestUserDao;
 import com.mark.zumo.client.core.entity.EntityHelper;
 
 /**
  * Created by mark on 18. 4. 30.
  */
 
-@Entity(tableName = UserDao.TABLE_NAME)
+@Entity(tableName = GuestUserDao.TABLE_NAME)
 public class User {
     @PrimaryKey public final long id;
-    public final String name;
-    public final long createdDate;
 
-    public User(long id, String name, long createdDate) {
+    public User(long id) {
         this.id = id;
-        this.name = name;
-        this.createdDate = createdDate;
     }
 
     @Override

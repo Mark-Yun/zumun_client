@@ -9,14 +9,14 @@ import com.mark.zumo.client.core.entity.MenuOrder;
 import com.mark.zumo.client.core.entity.Store;
 import com.mark.zumo.client.core.entity.session.CustomerUserSession;
 import com.mark.zumo.client.core.entity.session.StoreSession;
-import com.mark.zumo.client.core.entity.user.User;
+import com.mark.zumo.client.core.entity.user.GuestUser;
 
 /**
  * Created by mark on 18. 4. 30.
  */
 @Database(
         entities = {
-                MenuItem.class, MenuOrder.class, CustomerUserSession.class, Store.class, User.class, StoreSession.class
+                MenuItem.class, MenuOrder.class, CustomerUserSession.class, Store.class, GuestUser.class, StoreSession.class
         }, version = 1)
 @TypeConverters({Converters.class})
 public abstract class AppDatabase extends RoomDatabase {
@@ -27,5 +27,5 @@ public abstract class AppDatabase extends RoomDatabase {
     public abstract CustomerUserSessionDao customerUserSessionDao();
     public abstract StoreSessionDao storeSessionDao();
     public abstract StoreDao storeDao();
-    public abstract UserDao userDao();
+    public abstract GuestUserDao guestUserDao();
 }

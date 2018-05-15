@@ -10,7 +10,7 @@ import com.mark.zumo.client.core.entity.MenuItem;
 
 import java.util.List;
 
-import io.reactivex.Flowable;
+import io.reactivex.Maybe;
 
 /**
  * Created by mark on 18. 4. 30.
@@ -21,10 +21,10 @@ public interface MenuItemDao {
     String TABLE_NAME = "menu_item";
 
     @Query("SELECT * FROM " + TABLE_NAME)
-    Flowable<List<MenuItem>> getAll();
+    Maybe<List<MenuItem>> getAll();
 
     @Query("SELECT * FROM " + TABLE_NAME + " WHERE id LIKE :id LIMIT 1")
-    Flowable<MenuItem> findById(long id);
+    Maybe<MenuItem> findById(long id);
 
     @Insert
     void insertAll(MenuItem... users);

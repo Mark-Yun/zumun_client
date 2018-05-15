@@ -8,9 +8,9 @@ import com.mark.zumo.client.core.entity.EntityHelper;
 
 public class Packet<T> {
 
-    private T object;
-    private byte[] bytes;
-    private PacketType packetType;
+    private final T object;
+    private final byte[] bytes;
+    private final PacketType packetType;
     private PacketHelper<T> helper;
 
     public Packet(T object) {
@@ -34,8 +34,7 @@ public class Packet<T> {
     }
 
     private T deserialize(byte[] bytes) {
-        T t = helper().deserializeInternal(bytes);
-        return t;
+        return helper().deserializeInternal(bytes);
     }
 
     private PacketHelper<T> helper() {

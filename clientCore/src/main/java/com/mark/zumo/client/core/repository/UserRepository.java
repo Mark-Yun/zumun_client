@@ -6,7 +6,7 @@ import com.mark.zumo.client.core.appserver.AppServerService;
 import com.mark.zumo.client.core.appserver.AppServerServiceProvider;
 import com.mark.zumo.client.core.dao.AppDatabase;
 import com.mark.zumo.client.core.dao.AppDatabaseProvider;
-import com.mark.zumo.client.core.dao.UserDao;
+import com.mark.zumo.client.core.dao.GuestUserDao;
 import com.mark.zumo.client.core.entity.user.GuestUser;
 import com.mark.zumo.client.core.entity.user.User;
 
@@ -35,8 +35,8 @@ public class UserRepository {
         return instance;
     }
 
-    private UserDao userDao() {
-        return database.userDao();
+    private GuestUserDao userDao() {
+        return database.guestUserDao();
     }
 
     private AppServerService service() {

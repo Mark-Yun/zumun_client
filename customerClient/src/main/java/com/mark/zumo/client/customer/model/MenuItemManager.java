@@ -1,7 +1,6 @@
 package com.mark.zumo.client.customer.model;
 
 import android.app.Activity;
-import android.content.Context;
 import android.os.Build;
 
 import com.mark.zumo.client.core.entity.MenuItem;
@@ -22,14 +21,12 @@ import io.reactivex.Single;
 public enum MenuItemManager {
     INSTANCE;
 
-    private Context context;
     private MenuItemRepository menuItemRepository;
 
     private P2pClient p2pClient;
 
     MenuItemManager() {
-        context = ContextHolder.getContext();
-        menuItemRepository = MenuItemRepository.from(context);
+        menuItemRepository = MenuItemRepository.from(ContextHolder.getContext());
     }
 
     public Single<List<MenuItem>> acquireMenuItem(Activity activity, GuestUser guestUser) {

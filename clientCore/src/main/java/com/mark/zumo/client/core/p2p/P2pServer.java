@@ -23,7 +23,6 @@ import com.mark.zumo.client.core.p2p.packet.PacketType;
 import com.mark.zumo.client.core.p2p.packet.Request;
 import com.mark.zumo.client.core.p2p.packet.Response;
 import com.mark.zumo.client.core.repository.MenuItemRepository;
-import com.mark.zumo.client.core.repository.UserRepository;
 
 import java.util.concurrent.Executors;
 
@@ -44,13 +43,9 @@ public class P2pServer {
     private Store store;
     private Message storeMessage;
 
-    private UserRepository userRepository;
-
     public P2pServer(Activity activity, Store store) {
         this.activity = activity;
         this.store = store;
-
-        userRepository = UserRepository.from(activity);
     }
 
     public void publish() {
@@ -71,6 +66,7 @@ public class P2pServer {
         storeMessage = null;
     }
 
+    @SuppressWarnings("unused")
     private void onSuccessAdvertising(Void unusedResult) {
         Log.d(TAG, "onSuccessAdvertising:");
     }
@@ -90,56 +86,55 @@ public class P2pServer {
     }
 
     private Observable<String> startAdvertising(String nickName) {
-        return Observable.create(e -> {
-            connectionsClient().startAdvertising(nickName, Options.SERVICE_ID,
-                    new ConnectionLifecycleCallback() {
-                        @Override
-                        public void onConnectionInitiated(@NonNull String endpointId, @NonNull ConnectionInfo connectionInfo) {
-                            // Automatically accept the connection on both sides.
-                            Log.d(TAG, "onConnectionInitiated: endpointID=" + endpointId
-                                    + "ConnectionInfo["
-                                    + " authenticationToken=" + connectionInfo.getAuthenticationToken()
-                                    + " endpointName=" + connectionInfo.getEndpointName()
-                                    + "]");
+        return Observable.create(e ->
+                connectionsClient().startAdvertising(nickName, Options.SERVICE_ID,
+                        new ConnectionLifecycleCallback() {
+                            @Override
+                            public void onConnectionInitiated(@NonNull String endpointId, @NonNull ConnectionInfo connectionInfo) {
+                                // Automatically accept the connection on both sides.
+                                Log.d(TAG, "onConnectionInitiated: endpointID=" + endpointId
+                                        + "ConnectionInfo["
+                                        + " authenticationToken=" + connectionInfo.getAuthenticationToken()
+                                        + " endpointName=" + connectionInfo.getEndpointName()
+                                        + "]");
 
-                            //TODO Auth customer
-                            e.onNext(endpointId);
-                        }
-
-                        @Override
-                        public void onConnectionResult(@NonNull String endpointId, @NonNull ConnectionResolution result1) {
-                            int statusCode = result1.getStatus().getStatusCode();
-                            switch (statusCode) {
-                                case ConnectionsStatusCodes.STATUS_OK:
-                                    // We're connected! Can now start sending and receiving data.
-                                    Log.d(TAG, "onConnectionResult: STATUS_OK");
-                                    break;
-                                case ConnectionsStatusCodes.STATUS_CONNECTION_REJECTED:
-                                    // The connection was rejected by one or both sides.
-                                    Log.d(TAG, "onConnectionResult: STATUS_CONNECTION_REJECTED");
-                                    break;
-                                case ConnectionsStatusCodes.STATUS_ERROR:
-                                    // The connection broke before it was able to be accepted.
-                                    Log.d(TAG, "onConnectionResult: STATUS_ERROR");
-                                    break;
+                                //TODO Auth customer
+                                e.onNext(endpointId);
                             }
 
-                            Log.d(TAG, "onConnectionResult: endpointId=" + endpointId
-                                    + " ConnectionResolution["
-                                    + " status=" + result1.getStatus()
-                                    + "]");
-                        }
+                            @Override
+                            public void onConnectionResult(@NonNull String endpointId, @NonNull ConnectionResolution result1) {
+                                int statusCode = result1.getStatus().getStatusCode();
+                                switch (statusCode) {
+                                    case ConnectionsStatusCodes.STATUS_OK:
+                                        // We're connected! Can now start sending and receiving data.
+                                        Log.d(TAG, "onConnectionResult: STATUS_OK");
+                                        break;
+                                    case ConnectionsStatusCodes.STATUS_CONNECTION_REJECTED:
+                                        // The connection was rejected by one or both sides.
+                                        Log.d(TAG, "onConnectionResult: STATUS_CONNECTION_REJECTED");
+                                        break;
+                                    case ConnectionsStatusCodes.STATUS_ERROR:
+                                        // The connection broke before it was able to be accepted.
+                                        Log.d(TAG, "onConnectionResult: STATUS_ERROR");
+                                        break;
+                                }
 
-                        @Override
-                        public void onDisconnected(@NonNull String endpointId) {
-                            // We've been disconnected from this endpoint. No more data can be
-                            // sent or received.
-                            Log.d(TAG, "onDisconnected: endpointId=" + endpointId);
-                        }
-                    }, Options.ADVERTISING)
-                    .addOnSuccessListener(this::onSuccessAdvertising)
-                    .addOnFailureListener(this::onFailureAdvertising);
-        });
+                                Log.d(TAG, "onConnectionResult: endpointId=" + endpointId
+                                        + " ConnectionResolution["
+                                        + " status=" + result1.getStatus()
+                                        + "]");
+                            }
+
+                            @Override
+                            public void onDisconnected(@NonNull String endpointId) {
+                                // We've been disconnected payloadFrom this endpoint. No more data can be
+                                // sent or received.
+                                Log.d(TAG, "onDisconnected: endpointId=" + endpointId);
+                            }
+                        }, Options.ADVERTISING)
+                        .addOnSuccessListener(this::onSuccessAdvertising)
+                        .addOnFailureListener(this::onFailureAdvertising));
     }
 
     private void disconnectConnection(@NonNull String endpointId) {
@@ -150,7 +145,7 @@ public class P2pServer {
     private Single<Payload> sendPayload(String endpointId, Packet packet) {
         Log.d(TAG, "sendPayload: endpointId=" + endpointId + " " + packet);
         return Single.create(e -> {
-            Payload payload = Payload.fromBytes(packet.asByteArray());
+            Payload payload = NearbyUtil.payloadFrom(packet);
             connectionsClient().sendPayload(endpointId, payload)
                     .addOnSuccessListener(aVoid -> onSuccessSendPayload(e, endpointId, payload))
                     .addOnFailureListener(Runnable::run, this::onFailureSendPayload);
@@ -166,8 +161,7 @@ public class P2pServer {
     }
 
     private void onSuccessSendPayload(SingleEmitter<Payload> emitter, String endpointId, Payload payload) {
-        Log.d(TAG, "onSuccessSendPayload: endpointId=" + endpointId
-                + " payloadSize=" + payload.asBytes().length);
+        Log.d(TAG, "onSuccessSendPayload: endpointId=" + endpointId);
         emitter.onSuccess(payload);
     }
 
@@ -186,7 +180,6 @@ public class P2pServer {
                                     + " Payload["
                                     + " id=" + payload.getId()
                                     + " type=" + payload.getType()
-                                    + " length=" + payload.asBytes().length
                                     + "]");
 
                             e.onNext(new CombinedResult<>(endpointId1, payload));
@@ -209,11 +202,12 @@ public class P2pServer {
         });
     }
 
+    @SuppressWarnings("unchecked")
     private Observable<String> processPayload(final CombinedResult<String, Payload> combinedResult) {
         Payload payload = combinedResult.r;
         String endPointId = combinedResult.t;
 
-        Packet packet = new Packet(payload.asBytes());
+        Packet packet = new Packet(NearbyUtil.bytesFrom(payload));
         Log.d(TAG, "processPayload: " + packet);
 
         PacketType packetType = packet.getPacketType();
@@ -254,12 +248,10 @@ public class P2pServer {
                 throw new UnsupportedOperationException();
         }
 
-        return Observable.create(e -> {
-            task.doOnSuccess(e::onNext)
-                    .subscribe();
-        });
+        return Observable.create(e -> task.doOnSuccess(e::onNext).subscribe());
     }
 
+    @SuppressWarnings("unused")
     private void onSuccessAcceptConnection(Void unusedResult) {
         Log.d(TAG, "onSuccessAcceptConnection: ");
     }

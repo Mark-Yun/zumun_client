@@ -10,7 +10,7 @@ import com.mark.zumo.client.core.entity.MenuOrder;
 
 import java.util.List;
 
-import io.reactivex.Flowable;
+import io.reactivex.Maybe;
 
 /**
  * Created by mark on 18. 4. 30.
@@ -21,10 +21,10 @@ public interface MenuOrderDao {
     String TABLE_NAME = "menu_order";
 
     @Query("SELECT * FROM " + TABLE_NAME)
-    Flowable<List<MenuOrder>> getAll();
+    Maybe<List<MenuOrder>> getAll();
 
     @Query("SELECT * FROM " + TABLE_NAME + " WHERE id LIKE :id LIMIT 1")
-    Flowable<MenuOrder> findById(long id);
+    Maybe<MenuOrder> findById(long id);
 
     @Insert
     void insertAll(MenuOrder... users);

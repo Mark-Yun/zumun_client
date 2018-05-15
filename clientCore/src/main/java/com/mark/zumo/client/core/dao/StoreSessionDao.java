@@ -10,7 +10,7 @@ import com.mark.zumo.client.core.entity.session.StoreSession;
 
 import java.util.List;
 
-import io.reactivex.Flowable;
+import io.reactivex.Maybe;
 
 /**
  * Created by mark on 18. 4. 30.
@@ -21,10 +21,10 @@ public interface StoreSessionDao {
     String TABLE_NAME = "store_session";
 
     @Query("SELECT * FROM " + TABLE_NAME)
-    Flowable<List<StoreSession>> getAll();
+    Maybe<List<StoreSession>> getAll();
 
     @Query("SELECT * FROM " + TABLE_NAME + " WHERE id LIKE :id LIMIT 1")
-    Flowable<StoreSession> findById(long id);
+    Maybe<StoreSession> findById(long id);
 
     @Insert
     void insertAll(StoreSession... users);

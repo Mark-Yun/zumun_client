@@ -6,32 +6,32 @@ import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.Query;
 import android.arch.persistence.room.Update;
 
-import com.mark.zumo.client.core.entity.user.User;
+import com.mark.zumo.client.core.entity.user.GuestUser;
 
 import java.util.List;
 
-import io.reactivex.Flowable;
+import io.reactivex.Maybe;
 
 /**
  * Created by mark on 18. 4. 30.
  */
 
 @Dao
-public interface UserDao {
-    String TABLE_NAME = "user";
+public interface GuestUserDao {
+    String TABLE_NAME = "guest_user";
 
     @Query("SELECT * FROM " + TABLE_NAME)
-    Flowable<List<User>> getAll();
+    Maybe<List<GuestUser>> getAll();
 
-    @Query("SELECT * FROM " + TABLE_NAME + " WHERE id LIKE :id LIMIT 1")
-    Flowable<User> findById(long id);
+    @Query("SELECT * FROM " + TABLE_NAME + " WHERE uuid LIKE :uuid LIMIT 1")
+    Maybe<GuestUser> findByUuid(String uuid);
 
     @Insert
-    void insertAll(User... users);
+    void insertAll(GuestUser... users);
 
     @Update
-    void update(User user);
+    void update(GuestUser user);
 
     @Delete
-    void delete(User user);
+    void delete(GuestUser user);
 }

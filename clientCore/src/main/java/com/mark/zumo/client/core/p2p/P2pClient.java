@@ -2,6 +2,7 @@ package com.mark.zumo.client.core.p2p;
 
 import android.app.Activity;
 import android.support.annotation.NonNull;
+import android.support.v4.util.SimpleArrayMap;
 import android.util.Log;
 
 import com.google.android.gms.nearby.Nearby;
@@ -29,9 +30,7 @@ import com.mark.zumo.client.core.p2p.packet.Packet;
 import com.mark.zumo.client.core.p2p.packet.Request;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Executors;
 
 import io.reactivex.Observable;
@@ -47,7 +46,6 @@ import io.reactivex.schedulers.Schedulers;
 public class P2pClient {
 
     private static final String TAG = "P2pClient";
-    private static final long TIME_OUT = 5000;
 
     private Activity activity;
     private GuestUser guestUser;
@@ -57,13 +55,13 @@ public class P2pClient {
 
     private String currentEndpointId;
 
-    private Map<Long, String> endPointMap;
+    private SimpleArrayMap<Long, String> endPointMap = new SimpleArrayMap<>();
+    private SimpleArrayMap<String, Payload> incomingPayloads = new SimpleArrayMap<>();
 
     public P2pClient(Activity activity, GuestUser currentUser) {
         this.activity = activity;
         this.guestUser = currentUser;
         messageListener = messageListener();
-        endPointMap = new ConcurrentHashMap<>();
     }
 
     private MessagesClient messageClient() {
@@ -135,28 +133,27 @@ public class P2pClient {
 
     private Single<String> startDiscovery() {
         Log.d(TAG, "startDiscovery: ");
-        return Single.create(e -> {
-            connectionsClient().startDiscovery(Options.SERVICE_ID, new EndpointDiscoveryCallback() {
-                @Override
-                public void onEndpointFound(@NonNull String endpointId, @NonNull DiscoveredEndpointInfo endpointInfo) {
-                    Log.d(TAG, "onEndpointFound: endpointId=" + endpointId
-                            + " DiscoveredEndpointInfo["
-                            + "endpointName=" + endpointInfo.getEndpointName()
-                            + " serviceId=" + endpointInfo.getServiceId()
-                            + "]");
+        return Single.create(e ->
+                connectionsClient().startDiscovery(Options.SERVICE_ID, new EndpointDiscoveryCallback() {
+                    @Override
+                    public void onEndpointFound(@NonNull String endpointId, @NonNull DiscoveredEndpointInfo endpointInfo) {
+                        Log.d(TAG, "onEndpointFound: endpointId=" + endpointId
+                                + " DiscoveredEndpointInfo["
+                                + "endpointName=" + endpointInfo.getEndpointName()
+                                + " serviceId=" + endpointInfo.getServiceId()
+                                + "]");
 
-                    //TODO Auth Store by endpointInfo
-                    e.onSuccess(endpointId);
-                }
+                        //TODO Auth Store by endpointInfo
+                        e.onSuccess(endpointId);
+                    }
 
-                @Override
-                public void onEndpointLost(@NonNull String endpointId) {
-                    Log.d(TAG, "onEndpointLost: endpointId=" + endpointId);
-                }
-            }, Options.DISCOVERY)
-                    .addOnSuccessListener(this::onDiscoverySuccess)
-                    .addOnFailureListener(this::onDiscoveryFailure);
-        });
+                    @Override
+                    public void onEndpointLost(@NonNull String endpointId) {
+                        Log.d(TAG, "onEndpointLost: endpointId=" + endpointId);
+                    }
+                }, Options.DISCOVERY)
+                        .addOnSuccessListener(this::onDiscoverySuccess)
+                        .addOnFailureListener(this::onDiscoveryFailure));
     }
 
     public void stopDiscovery() {
@@ -164,71 +161,70 @@ public class P2pClient {
         connectionsClient().stopDiscovery();
     }
 
-    private Single<String> requestConnection(String endPointId, Packet request) {
+    private Single<String> requestConnection(String endPointId, Packet packet) {
         Log.d(TAG, "requestConnection: " + endPointId);
-        return Single.create(e -> {
-            connectionsClient().requestConnection(String.valueOf(guestUser.id), endPointId, new ConnectionLifecycleCallback() {
-                @Override
-                public void onConnectionInitiated(@NonNull String endpointId1, @NonNull ConnectionInfo connectionInfo) {
-                    // Automatically accept the connection on both sides.
-                    Log.d(TAG, "onConnectionInitiated: endpointID=" + endpointId1
-                            + "ConnectionInfo["
-                            + " authenticationToken=" + connectionInfo.getAuthenticationToken()
-                            + " endpointName=" + connectionInfo.getEndpointName()
-                            + "]");
-                    //TODO: Auth
-                    saveConnectionInfo(endpointId1, connectionInfo);
-                    e.onSuccess(endpointId1);
-                }
-
-                @Override
-                public void onConnectionResult(@NonNull String endpointId1, @NonNull ConnectionResolution result1) {
-                    int statusCode = result1.getStatus().getStatusCode();
-                    switch (statusCode) {
-                        case ConnectionsStatusCodes.STATUS_OK:
-                            // We're connected! Can now start sending and receiving data.
-                            Log.d(TAG, "onConnectionResult: STATUS_OK");
-                            currentEndpointId = endpointId1;
-
-                            Single.just(request)
-                                    .flatMap(packet -> sendPayload(endpointId1, packet))
-                                    .subscribeOn(Schedulers.from(Executors.newScheduledThreadPool(5)))
-                                    .observeOn(AndroidSchedulers.mainThread())
-                                    .subscribe(payload -> e.onSuccess("Send Payload Success" + payload));
-                            break;
-                        case ConnectionsStatusCodes.STATUS_CONNECTION_REJECTED:
-                            // The connection was rejected by one or both sides.
-                            Log.d(TAG, "onConnectionResult: STATUS_CONNECTION_REJECTED");
-                            e.onError(new RuntimeException("TODO: STATUS_CONNECTION_REJECTED"));
-                            break;
-                        case ConnectionsStatusCodes.STATUS_ERROR:
-                            // The connection broke before it was able to be accepted.
-                            Log.d(TAG, "onConnectionResult: STATUS_ERROR");
-                            e.onError(new RuntimeException("TODO: STATUS_ERROR"));
-                            break;
+        return Single.create(e -> connectionsClient().requestConnection(String.valueOf(guestUser.getUuid()), endPointId,
+                new ConnectionLifecycleCallback() {
+                    @Override
+                    public void onConnectionInitiated(@NonNull String endpointId1, @NonNull ConnectionInfo connectionInfo) {
+                        // Automatically accept the connection on both sides.
+                        Log.d(TAG, "onConnectionInitiated: endpointID=" + endpointId1
+                                + " ConnectionInfo["
+                                + " authenticationToken=" + connectionInfo.getAuthenticationToken()
+                                + " endpointName=" + connectionInfo.getEndpointName()
+                                + "]");
+                        //TODO: Auth
+                        saveConnectionInfo(endpointId1, connectionInfo);
+                        e.onSuccess(endpointId1);
                     }
 
-                    Log.d(TAG, "onConnectionResult: endpointId=" + endpointId1
-                            + "ConnectionResolution["
-                            + " status=" + result1.getStatus()
-                            + "]");
-                }
+                    @Override
+                    public void onConnectionResult(@NonNull String endpointId1, @NonNull ConnectionResolution result1) {
+                        int statusCode = result1.getStatus().getStatusCode();
+                        switch (statusCode) {
+                            case ConnectionsStatusCodes.STATUS_OK:
+                                // We're connected! Can now start sending and receiving data.
+                                Log.d(TAG, "onConnectionResult: STATUS_OK");
+                                currentEndpointId = endpointId1;
 
-                @Override
-                public void onDisconnected(@NonNull String endpointId1) {
-                    // We've been disconnected from this endpoint. No more data can be
-                    // sent or received.
-                    Log.d(TAG, "onDisconnected: endpointId=" + endpointId1);
-                }
-            })
-                    .addOnSuccessListener(this::onRequestConnectionSuccess)
-                    .addOnFailureListener(this::onRequestConnectionFailure);
-        });
+                                Single.just(packet)
+                                        .flatMap(packet -> sendPayload(endpointId1, packet))
+                                        .subscribeOn(Schedulers.from(Executors.newScheduledThreadPool(5)))
+                                        .observeOn(AndroidSchedulers.mainThread())
+                                        .subscribe(payload -> e.onSuccess("Send Payload Success" + payload));
+                                break;
+                            case ConnectionsStatusCodes.STATUS_CONNECTION_REJECTED:
+                                // The connection was rejected by one or both sides.
+                                Log.d(TAG, "onConnectionResult: STATUS_CONNECTION_REJECTED");
+                                e.onError(new RuntimeException("TODO: STATUS_CONNECTION_REJECTED"));
+                                break;
+                            case ConnectionsStatusCodes.STATUS_ERROR:
+                                // The connection broke before it was able to be accepted.
+                                Log.d(TAG, "onConnectionResult: STATUS_ERROR");
+                                e.onError(new RuntimeException("TODO: STATUS_ERROR"));
+                                break;
+                        }
+
+                        Log.d(TAG, "onConnectionResult: endpointId=" + endpointId1
+                                + "ConnectionResolution["
+                                + " status=" + result1.getStatus()
+                                + "]");
+                    }
+
+                    @Override
+                    public void onDisconnected(@NonNull String endpointId1) {
+                        // We've been disconnected payloadFrom this endpoint. No more data can be
+                        // sent or received.
+                        Log.d(TAG, "onDisconnected: endpointId=" + endpointId1);
+                    }
+                })
+                .addOnSuccessListener(this::onRequestConnectionSuccess)
+                .addOnFailureListener(this::onRequestConnectionFailure));
     }
 
     private Single<Payload> sendPayload(String endpointId, Packet<MenuOrder> packet) {
         return Single.create(e -> {
-            Payload payload = Payload.fromBytes(packet.asByteArray());
+            Payload payload = NearbyUtil.payloadFrom(packet);
             connectionsClient().sendPayload(endpointId, payload)
                     .addOnSuccessListener(aVoid -> onSuccessSendPayload(e, endpointId, payload))
                     .addOnFailureListener(Runnable::run, this::onFailureSendPayload);
@@ -236,8 +232,7 @@ public class P2pClient {
     }
 
     private void onSuccessSendPayload(SingleEmitter<Payload> emitter, String endpointId, Payload payload) {
-        Log.d(TAG, "onSuccessSendPayload: endpointId=" + endpointId
-                + " payloadSize=" + payload.asBytes().length);
+        Log.d(TAG, "onSuccessSendPayload: endpointId=" + endpointId);
         emitter.onSuccess(payload);
     }
 
@@ -252,37 +247,54 @@ public class P2pClient {
 
     private Single<Payload> acceptConnection(String endpointId) {
         Log.d(TAG, "acceptConnection: endpointId=" + endpointId);
-        return Single.create(e -> {
-            connectionsClient().acceptConnection(endpointId, new PayloadCallback() {
-                @Override
-                public void onPayloadReceived(@NonNull String endpointId1, @NonNull Payload payload) {
-                    Log.d(TAG, "onPayloadReceived: endpointId=" + endpointId1
-                            + " Payload["
-                            + " id=" + payload.getId()
-                            + " type=" + payload.getType()
-                            + " length=" + payload.asBytes().length
-                            + "]");
-                    //TODO: Auth Endpoint1
-                    e.onSuccess(payload);
-                }
+        return Single.create(e ->
+                connectionsClient().acceptConnection(endpointId, new PayloadCallback() {
+                    @Override
+                    public void onPayloadReceived(@NonNull String endpointId1, @NonNull Payload payload) {
+                        Log.d(TAG, "onPayloadReceived: endpointId=" + endpointId1
+                                + " Payload["
+                                + " id=" + payload.getId()
+                                + " type=" + payload.getType()
+                                + "]");
+                        //TODO: Auth Endpoint1
 
-                @Override
-                public void onPayloadTransferUpdate(@NonNull String payloadId, @NonNull PayloadTransferUpdate update) {
+                        switch (payload.getType()) {
+                            case Payload.Type.BYTES:
+                                e.onSuccess(payload);
 
-//                    Log.d(TAG, "onPayloadTransferUpdate:" + payloadId
-//                            + " PayloadTransferUpdate["
-//                            + "payloadId=" + update.getPayloadId()
-//                            + " bytesTransferred=" + update.getBytesTransferred()
-//                            + " status=" + update.getStatus()
-//                            + " totalBytes=" + update.getTotalBytes()
-//                            + "]");
-                }
-            })
-                    .addOnSuccessListener(this::onSuccessAcceptConnection)
-                    .addOnFailureListener(this::onFailureAcceptConnection);
-        });
+                            case Payload.Type.STREAM:
+                                incomingPayloads.put(endpointId1, payload);
+                                break;
+                            case Payload.Type.FILE:
+                                incomingPayloads.put(endpointId1, payload);
+                                break;
+                        }
+                    }
+
+                    @Override
+                    public void onPayloadTransferUpdate(@NonNull String endpointId, @NonNull PayloadTransferUpdate update) {
+
+                        Log.d(TAG, "onPayloadTransferUpdate:" + endpointId
+                                + " PayloadTransferUpdate["
+                                + "payloadId=" + update.getPayloadId()
+                                + " bytesTransferred=" + update.getBytesTransferred()
+                                + " status=" + update.getStatus()
+                                + " totalBytes=" + update.getTotalBytes()
+                                + "]");
+
+                        if (update.getStatus() == PayloadTransferUpdate.Status.SUCCESS) {
+                            Payload payload = incomingPayloads.get(endpointId);
+                            if (payload != null && payload.getType() != Payload.Type.BYTES) {
+                                e.onSuccess(payload);
+                            }
+                        }
+                    }
+                })
+                        .addOnSuccessListener(this::onSuccessAcceptConnection)
+                        .addOnFailureListener(this::onFailureAcceptConnection));
     }
 
+    @SuppressWarnings("unused")
     private void onSuccessAcceptConnection(Void unusedResult) {
         Log.d(TAG, "onSuccessAcceptConnection: ");
         stopDiscovery();
@@ -292,9 +304,9 @@ public class P2pClient {
         Log.e(TAG, "onFailureAcceptConnection: ", e);
     }
 
-    private Single<List<MenuItem>> convertMenuItemFromPayload(Payload payload) {
+    private Single<List<MenuItem>> convertMenuItemFromPayload(final Payload payload) {
         return Single.create(e -> {
-            byte[] bytes = payload.asBytes();
+            byte[] bytes = NearbyUtil.bytesFrom(payload);
             Packet<List<MenuItem>> menuItemsPacket = new Packet<>(bytes);
             e.onSuccess(menuItemsPacket.get());
         });
@@ -324,6 +336,7 @@ public class P2pClient {
                 .map(String::valueOf);
     }
 
+    @SuppressWarnings("unused")
     private void onDiscoverySuccess(Void unusedResult) {
         Log.d(TAG, "onDiscoverySuccess:");
     }
@@ -332,6 +345,7 @@ public class P2pClient {
         Log.e(TAG, "onDiscoveryFailure: ", e);
     }
 
+    @SuppressWarnings("unused")
     private void onRequestConnectionSuccess(Void unusedResult) {
         Log.d(TAG, "onRequestConnectionSuccess:");
     }

@@ -1,6 +1,8 @@
 package com.mark.zumo.client.core.entity.user;
 
 import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.PrimaryKey;
+import android.support.annotation.NonNull;
 
 import com.mark.zumo.client.core.dao.GuestUserDao;
 import com.mark.zumo.client.core.entity.EntityHelper;
@@ -12,13 +14,15 @@ import com.mark.zumo.client.core.entity.EntityHelper;
 @Entity(tableName = GuestUserDao.TABLE_NAME)
 public class GuestUser {
 
+    @PrimaryKey @NonNull
     private String uuid;
 
+    @NonNull
     public String getUuid() {
         return uuid;
     }
 
-    public void setUuid(final String uuid) {
+    public void setUuid(@NonNull final String uuid) {
         this.uuid = uuid;
     }
 

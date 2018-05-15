@@ -1,7 +1,5 @@
 package com.mark.zumo.client.core.entity;
 
-import android.util.Log;
-
 import java.lang.reflect.Field;
 
 /**
@@ -10,20 +8,15 @@ import java.lang.reflect.Field;
 
 public class EntityHelper {
 
-    private static final String TAG = "EntityHelper";
-
     public static String toString(Object object, Class clazz) {
-        String ret = clazz.getSimpleName() + "[";
+        StringBuilder ret = new StringBuilder(clazz.getSimpleName() + "[");
         Field[] declaredFields = clazz.getDeclaredFields();
         for (Field field : declaredFields) {
             String name = field.getName();
-            Object value = null;
             try {
-                value = field.get(object);
-            } catch (IllegalAccessException e) {
-                Log.e(TAG, "toString: " + e.getMessage());
+                ret.append(name).append("=").append(field.get(object)).append(", ");
+            } catch (IllegalAccessException ignored) {
             }
-            ret += name + "=" + value + ", ";
         }
 
         return ret + "]";

@@ -8,7 +8,6 @@ buildscript {
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:3.1.2'
-        classpath "me.tatarka:gradle-retrolambda:3.7.0"
 
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
@@ -42,16 +41,21 @@ ext {
     junit = '4.12'
     runner = '1.0.2'
     esspressoCore = '3.0.2'
+    commonsio = '2.6'
+    multidex = '1.0.3'
 }
 
 def applications = [project('customerClient'), project('storeClient'), project('storeServer')]
 configure(applications) {
     apply plugin: 'com.android.application'
-    apply plugin: 'me.tatarka.retrolambda'
 
     android {
         lintOptions {
-            disable 'LongLogTag'
+            disable 'LongLogTag', 'CheckResult'
+        }
+
+        defaultConfig {
+            multiDexEnabled true
         }
     }
     dependencies {
@@ -63,7 +67,7 @@ configure(applications) {
         implementation "com.android.support:recyclerview-v7:$support"
 
         implementation "android.arch.lifecycle:extensions:$viewModel"
-        annotationProcessor "android.arch.lifecycle:compiler:$viewModel"
+        annotationProcessor "android.arch.lifecycle:common-java8:$viewModel"
 
         implementation "com.jakewharton:butterknife:$butterKnife"
         annotationProcessor "com.jakewharton:butterknife-compiler:$butterKnife"
@@ -72,17 +76,29 @@ configure(applications) {
         annotationProcessor "com.github.bumptech.glide:compiler:$glide"
 
         implementation "com.android.support.constraint:constraint-layout:$constraintLayout"
+        implementation "com.android.support:multidex:$multidex"
+
+        testImplementation "junit:junit:$junit"
+        androidTestImplementation "com.android.support.test:runner:$runner"
+        androidTestImplementation "com.android.support.test.espresso:espresso-core:$esspressoCore"
     }
 }
 
 def libraries = [project('clientCore')]
 configure(libraries) {
     apply plugin: 'com.android.library'
-    apply plugin: 'me.tatarka.retrolambda'
 
     android {
         lintOptions {
-            disable 'LongLogTag'
+            disable 'LongLogTag', 'CheckResult'
+        }
+
+        defaultConfig {
+            javaCompileOptions {
+                annotationProcessorOptions {
+                    arguments = ["room.schemaLocation": "$projectDir/schemas".toString()]
+                }
+            }
         }
     }
     dependencies {
@@ -100,11 +116,12 @@ configure(libraries) {
         api "io.reactivex.rxjava2:rxandroid:$rxAndroid"
         api "io.reactivex.rxjava2:rxjava:$rxJava"
 
-        testApi "junit:junit:$junit"
-        androidTestApi "com.android.support.test:runner:$runner"
-        androidTestApi "com.android.support.test.espresso:espresso-core:$esspressoCore"
+        testImplementation "junit:junit:$junit"
+        androidTestImplementation "com.android.support.test:runner:$runner"
+        androidTestImplementation "com.android.support.test.espresso:espresso-core:$esspressoCore"
 
         implementation "com.google.android.gms:play-services-nearby:$playService"
+        implementation "commons-io:commons-io:$commonsio"
     }
 }
 
