@@ -7,9 +7,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.lsjwzh.widget.recyclerviewpager.TabLayoutSupport;
 import com.mark.zumo.client.core.entity.MenuOrder;
 import com.mark.zumo.server.store.R;
+import com.mark.zumo.server.store.view.order.widget.TabLayoutSupport;
 
 import java.util.ArrayList;
 import java.util.List;

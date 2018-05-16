@@ -12,9 +12,9 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.lsjwzh.widget.recyclerviewpager.RecyclerViewPager;
-import com.lsjwzh.widget.recyclerviewpager.TabLayoutSupport;
 import com.mark.zumo.client.core.entity.MenuOrder;
 import com.mark.zumo.server.store.R;
+import com.mark.zumo.server.store.view.order.widget.TabLayoutSupport;
 import com.mark.zumo.server.store.viewmodel.OrderViewModel;
 
 import java.util.List;
@@ -59,7 +59,6 @@ public class OrderConsoleFragment extends Fragment {
         orderPage.setAdapter(orderPageAdapter);
 
         TabLayoutSupport.setupWithViewPager(orderTab, orderPage, orderPageAdapter);
-        orderPage.addOnPageChangedListener((i, i1) -> orderTab.setScrollPosition(i1, 0.5f, true));
     }
 
     private void bindLiveData() {
@@ -69,6 +68,12 @@ public class OrderConsoleFragment extends Fragment {
     private void onLoadMenuOrderList(List<MenuOrder> menuOrderList) {
         orderPageAdapter.setMenuOrderList(menuOrderList);
         orderPageAdapter.notifyItemInserted(menuOrderList.size() - 1);
-        TabLayoutSupport.setupWithViewPager(orderTab, orderPage, orderPageAdapter);
+        notifyTabLayoutItemInserted(orderTab, orderPageAdapter);
+    }
+
+    private void notifyTabLayoutItemInserted(@NonNull TabLayout tabLayout,
+                                             @NonNull TabLayoutSupport.ViewPagerTabLayoutAdapter viewPagerTabLayoutAdapter) {
+        int count = viewPagerTabLayoutAdapter.getItemCount();
+        tabLayout.addTab(tabLayout.newTab().setText(viewPagerTabLayoutAdapter.getPageTitle(count - 1)));
     }
 }

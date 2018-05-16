@@ -36,4 +36,5 @@ dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation 'com.github.lsjwzh.RecyclerViewPager:lib:v1.1.2@aar'
     implementation 'com.github.lsjwzh.RecyclerViewPager:tablayoutsupport:v1.1.2@aar'
+    implementation 'com.jpardogo.materialtabstrip:library:1.1.1'
 }

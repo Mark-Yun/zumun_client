@@ -4,16 +4,17 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <android.support.design.widget.TabLayout
+    <com.mark.zumo.server.store.view.order.widget.CenteringTabLayout
         android:id="@+id/order_tab"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toTopOf="@+id/order_page"
         app:layout_constraintTop_toTopOf="parent"
         app:tabGravity="fill"
-        app:tabIndicatorColor="@color/colorPrimaryDark"
+        app:tabIndicatorColor="@color/colorAccent"
         app:tabMode="scrollable"
-        app:tabSelectedTextColor="@color/colorAccent" />
+        app:tabSelectedTextColor="@color/tabSelectedTextColor"
+        app:tabTextColor="@color/colorTextDisable" />
 
     <com.lsjwzh.widget.recyclerviewpager.RecyclerViewPager
         android:id="@+id/order_page"
