@@ -17,5 +17,17 @@ public interface AppServerService {
     Single<GuestUser> createGuestUser();
 
     @POST("users/guest/delete")
-    Single<Void> deleteGuestUser();
+    Single<Void> deleteGuestUser(uuid);
+    
+    @POST("menu/get")
+    Single<Void> getMenuItem(store_uuid);
+    
+    @POST("menu/create")
+    Single<Void> addMenuItem(store_uuid, menu_name, menu_price);
+    
+    @POST("store/create")
+    Single<Void> createStore(store_name, longitude = 0, latitude = 0);
+    
+    @POST("store/get") // test, get all store uuid
+    Single<Void> getStoreInfo();
 }
