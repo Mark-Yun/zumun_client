@@ -28,7 +28,7 @@ public class SignUpActivity extends AppCompatActivity {
 
     private void inflateView() {
         getSupportFragmentManager().beginTransaction()
-                .add(R.id.main_fragment, Fragment.instantiate(this, SignInFragment.class.getName()))
+                .add(R.id.console_fragment, Fragment.instantiate(this, SignInFragment.class.getName()))
                 .commit();
     }
 }
