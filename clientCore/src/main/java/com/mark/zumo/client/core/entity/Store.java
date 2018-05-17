@@ -12,18 +12,14 @@ import com.mark.zumo.client.core.dao.StoreDao;
 @Entity(tableName = StoreDao.TABLE_NAME)
 public class Store {
 
-    @PrimaryKey public final long id;
+    @PrimaryKey public final String id;
     public final String name;
-    public final long storeOwnerId;
-    public final long createdDate;
     public final long latitude;
     public final long longitude;
 
-    public Store(long id, String name, long storeOwnerId, long createdDate, long latitude, long longitude) {
+    private Store(final String id, final String name, final long latitude, final long longitude) {
         this.id = id;
         this.name = name;
-        this.storeOwnerId = storeOwnerId;
-        this.createdDate = createdDate;
         this.latitude = latitude;
         this.longitude = longitude;
     }

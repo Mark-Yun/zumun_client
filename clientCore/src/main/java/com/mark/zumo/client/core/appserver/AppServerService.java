@@ -1,10 +1,16 @@
 package com.mark.zumo.client.core.appserver;
 
+import com.mark.zumo.client.core.entity.MenuItem;
+import com.mark.zumo.client.core.entity.Store;
 import com.mark.zumo.client.core.entity.user.GuestUser;
 
+import java.util.List;
+
 import io.reactivex.Single;
+import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
+import retrofit2.http.Query;
 
 /**
  * Created by mark on 18. 4. 30.
@@ -17,17 +23,17 @@ public interface AppServerService {
     Single<GuestUser> createGuestUser();
 
     @POST("users/guest/delete")
-    Single<Void> deleteGuestUser(uuid);
-    
-    @POST("menu/get")
-    Single<Void> getMenuItem(store_uuid);
-    
+    Single<Void> deleteGuestUser(@Query("uuid") String uuid);
+
+    @GET("menu/get")
+    Single<List<MenuItem>> getMenuItemList(@Query("store_uuid") String storeUuid);
+
     @POST("menu/create")
-    Single<Void> addMenuItem(store_uuid, menu_name, menu_price);
-    
+    Single<MenuItem> createMenuItem(@Body MenuItem menuItem);
+
     @POST("store/create")
-    Single<Void> createStore(store_name, longitude = 0, latitude = 0);
-    
-    @POST("store/get") // test, get all store uuid
-    Single<Void> getStoreInfo();
+    Single<Store> createStore(@Body Store store);
+
+    @GET("store/get")
+    Single<Store> getStore();
 }
