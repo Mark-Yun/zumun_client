@@ -45,10 +45,18 @@ public class OrderConsoleFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_order_console, container, false);
         ButterKnife.bind(this, view);
 
+        inflateControllerFragment();
         inflateOrderPage();
         bindLiveData();
 
         return view;
+    }
+
+    private void inflateControllerFragment() {
+        Fragment controllerFragment = Fragment.instantiate(getContext(), OrderControllerFragment.class.getName());
+        getFragmentManager().beginTransaction()
+                .add(R.id.order_controller, controllerFragment)
+                .commit();
     }
 
     private void inflateOrderPage() {

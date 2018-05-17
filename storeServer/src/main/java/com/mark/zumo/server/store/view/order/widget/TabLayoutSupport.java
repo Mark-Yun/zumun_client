@@ -48,8 +48,8 @@ public class TabLayoutSupport {
         private int mPagerLeftBeforeScroll;
 
         public TabLayoutOnPageChangeListener(TabLayout tabLayout, RecyclerViewPager viewPager) {
-            this.mTabLayoutRef = new WeakReference(tabLayout);
-            this.mViewPagerRef = new WeakReference(viewPager);
+            this.mTabLayoutRef = new WeakReference<>(tabLayout);
+            this.mViewPagerRef = new WeakReference<>(viewPager);
         }
 
         @Override

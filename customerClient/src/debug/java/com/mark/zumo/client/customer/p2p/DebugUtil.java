@@ -17,7 +17,7 @@ class DebugUtil {
     }
 
     static Store testStore() {
-        return new Store(5, Build.MODEL, 0, 0, 31, 31);
+        return new Store("TEST", Build.MODEL, 0, 0);
     }
 
     static MenuOrder testOrder() {

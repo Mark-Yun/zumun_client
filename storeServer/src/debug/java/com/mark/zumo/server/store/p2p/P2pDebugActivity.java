@@ -79,7 +79,7 @@ public class P2pDebugActivity extends Activity {
     }
 
     private void sendOrder(View v) {
-        p2pClient.sendOrder(testMenuOrder, testStore.id)
+        p2pClient.sendOrder(testMenuOrder, testStore.uuid)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(this::updateConsole);

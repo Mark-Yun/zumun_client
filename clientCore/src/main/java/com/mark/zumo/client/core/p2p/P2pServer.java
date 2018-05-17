@@ -77,7 +77,7 @@ public class P2pServer {
 
     public Observable<String> findCustomer(Store store) {
         return Observable.just(store)
-                .map(storeConsumer -> storeConsumer.id)
+                .map(storeConsumer -> storeConsumer.uuid)
                 .map(String::valueOf)
                 .flatMap(this::startAdvertising)
                 .flatMap(this::acceptConnection)
@@ -178,7 +178,7 @@ public class P2pServer {
                         public void onPayloadReceived(@NonNull String endpointId1, @NonNull Payload payload) {
                             Log.d(TAG, "onPayloadReceived: endpointId=" + endpointId1
                                     + " Payload["
-                                    + " id=" + payload.getId()
+                                    + " uuid=" + payload.getId()
                                     + " type=" + payload.getType()
                                     + "]");
 

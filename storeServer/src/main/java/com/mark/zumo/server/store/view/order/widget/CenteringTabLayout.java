@@ -32,6 +32,6 @@ public class CenteringTabLayout extends TabLayout {
         if (firstTab == null || lastTab == null) {
             return;
         }
-        ViewCompat.setPaddingRelative(getChildAt(0), (getWidth() / 2) - (firstTab.getWidth() / 2), 0, (getWidth() / 2) - (lastTab.getWidth() / 2), 0);
+        ViewCompat.setPaddingRelative(getChildAt(0), (getWidth() / 4) - (firstTab.getWidth() / 2), 0, (getWidth() * 3 / 4) - (lastTab.getWidth() / 2), 0);
     }
 }

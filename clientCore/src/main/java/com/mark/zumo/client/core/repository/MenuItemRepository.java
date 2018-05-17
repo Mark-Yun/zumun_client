@@ -61,7 +61,7 @@ public class MenuItemRepository {
             List<MenuItem> menuItemList = new ArrayList<>();
             int i = 0;
             for (FakeData data : dataList) {
-                MenuItem menuItem = new MenuItem((long) i++, data.name, getByteArrayOfDrawable(data.drawableId), store.id, data.price, 0, 0);
+                MenuItem menuItem = new MenuItem(String.valueOf(i++), data.name, "TEST", data.price);
                 menuItemList.add(menuItem);
             }
             return menuItemList;

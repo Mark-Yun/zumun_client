@@ -7,7 +7,6 @@ import android.support.v7.app.AppCompatActivity;
 
 import com.mark.zumo.server.store.R;
 import com.mark.zumo.server.store.view.order.OrderConsoleFragment;
-import com.mark.zumo.server.store.view.order.OrderControllerFragment;
 
 import butterknife.ButterKnife;
 
@@ -27,11 +26,9 @@ public class MainActivity extends AppCompatActivity {
 
     private void inflateFragments() {
         Fragment consoleFragment = Fragment.instantiate(this, OrderConsoleFragment.class.getName());
-        Fragment controllerFragment = Fragment.instantiate(this, OrderControllerFragment.class.getName());
 
         getSupportFragmentManager().beginTransaction()
                 .add(R.id.console_fragment, consoleFragment)
-                .add(R.id.controller_fragment, controllerFragment)
                 .commit();
     }
 }

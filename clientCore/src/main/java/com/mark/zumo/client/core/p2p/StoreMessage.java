@@ -21,22 +21,18 @@ class StoreMessage {
         String rawMessage = new String(content);
         String[] splitContent = rawMessage.split(SPLIT);
 
-        long id = Long.parseLong(splitContent[0]);
+        String id = splitContent[0];
         String name = splitContent[1];
-        long storeOwnerId = Long.parseLong(splitContent[2]);
-        long createdDate = Long.parseLong(splitContent[3]);
-        long latitude = Long.parseLong(splitContent[4]);
-        long longitude = Long.parseLong(splitContent[5]);
+        long latitude = Long.parseLong(splitContent[2]);
+        long longitude = Long.parseLong(splitContent[3]);
 
-        Store store = new Store(id, name, storeOwnerId, createdDate, latitude, longitude);
+        Store store = new Store(id, name, latitude, longitude);
         return new StoreMessage(store);
     }
 
     Message toMessage() {
-        String rawMessage = store.id + SPLIT
+        String rawMessage = store.uuid + SPLIT
                 + store.name + SPLIT
-                + store.storeOwnerId + SPLIT
-                + store.createdDate + SPLIT
                 + store.latitude + SPLIT
                 + store.longitude + SPLIT;
 

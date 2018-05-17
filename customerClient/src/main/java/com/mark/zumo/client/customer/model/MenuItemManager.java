@@ -44,7 +44,7 @@ public enum MenuItemManager {
 
     private Single<Store> currentStore() {
         //TODO: impl
-        return Single.fromCallable(() -> new Store(5, Build.MODEL, 0, 0, 31, 31));
+        return Single.fromCallable(() -> new Store("TEST", Build.MODEL, 0, 0));
     }
 
     public void clearClient() {

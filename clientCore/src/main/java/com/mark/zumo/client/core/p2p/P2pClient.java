@@ -55,7 +55,7 @@ public class P2pClient {
 
     private String currentEndpointId;
 
-    private SimpleArrayMap<Long, String> endPointMap = new SimpleArrayMap<>();
+    private SimpleArrayMap<String, String> endPointMap = new SimpleArrayMap<>();
     private SimpleArrayMap<String, Payload> incomingPayloads = new SimpleArrayMap<>();
 
     public P2pClient(Activity activity, GuestUser currentUser) {
@@ -241,7 +241,7 @@ public class P2pClient {
     }
 
     private void saveConnectionInfo(@NonNull String endpointId1, @NonNull ConnectionInfo connectionInfo) {
-        long storeId = Long.parseLong(connectionInfo.getEndpointName());
+        String storeId = connectionInfo.getEndpointName();
         endPointMap.put(storeId, endpointId1);
     }
 
@@ -253,7 +253,7 @@ public class P2pClient {
                     public void onPayloadReceived(@NonNull String endpointId1, @NonNull Payload payload) {
                         Log.d(TAG, "onPayloadReceived: endpointId=" + endpointId1
                                 + " Payload["
-                                + " id=" + payload.getId()
+                                + " uuid=" + payload.getId()
                                 + " type=" + payload.getType()
                                 + "]");
                         //TODO: Auth Endpoint1
@@ -325,8 +325,8 @@ public class P2pClient {
                 .doOnSuccess(unUsedResult -> currentEndpointId = null);
     }
 
-    public Single<String> sendOrder(MenuOrder menuOrder, long storeId) {
-        String endpointId = endPointMap.get(storeId);
+    public Single<String> sendOrder(MenuOrder menuOrder, String storeUuid) {
+        String endpointId = endPointMap.get(storeUuid);
         Packet<MenuOrder> packet = new Packet<>(menuOrder);
         return requestConnection(endpointId, packet)
                 .flatMap(this::acceptConnection)

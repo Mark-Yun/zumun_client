@@ -23,7 +23,7 @@ public interface StoreDao {
     @Query("SELECT * FROM " + TABLE_NAME)
     Maybe<List<Store>> getAll();
 
-    @Query("SELECT * FROM " + TABLE_NAME + " WHERE id LIKE :id LIMIT 1")
+    @Query("SELECT * FROM " + TABLE_NAME + " WHERE uuid LIKE :id LIMIT 1")
     Maybe<Store> findById(long id);
 
     @Insert

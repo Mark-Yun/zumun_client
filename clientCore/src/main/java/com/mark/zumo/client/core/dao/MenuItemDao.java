@@ -23,8 +23,8 @@ public interface MenuItemDao {
     @Query("SELECT * FROM " + TABLE_NAME)
     Maybe<List<MenuItem>> getAll();
 
-    @Query("SELECT * FROM " + TABLE_NAME + " WHERE id LIKE :id LIMIT 1")
-    Maybe<MenuItem> findById(long id);
+    @Query("SELECT * FROM " + TABLE_NAME + " WHERE uuid LIKE :uuid LIMIT 1")
+    Maybe<MenuItem> findByUuid(String uuid);
 
     @Insert
     void insertAll(MenuItem... users);

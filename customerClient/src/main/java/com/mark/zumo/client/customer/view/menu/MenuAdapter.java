@@ -8,7 +8,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
 import com.mark.zumo.client.core.entity.MenuItem;
 import com.mark.zumo.client.customer.R;
 
@@ -48,10 +47,6 @@ class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.ViewHolder> {
         MenuItem menuItem = menuItemList.get(position);
         viewHolder.name.setText(menuItem.name);
         viewHolder.price.setText(NumberFormat.getNumberInstance(Locale.KOREA).format(menuItem.price));
-
-        Glide.with(viewHolder.rootView)
-                .load(menuItem.image)
-                .into(viewHolder.image);
     }
 
     @Override

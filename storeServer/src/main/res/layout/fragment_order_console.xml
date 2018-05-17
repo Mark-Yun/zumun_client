@@ -18,15 +18,29 @@
 
     <com.lsjwzh.widget.recyclerviewpager.RecyclerViewPager
         android:id="@+id/order_page"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="0dp"
         android:clipToPadding="false"
+
         android:paddingLeft="15dp"
         android:paddingRight="15dp"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/order_controller"
+        app:layout_constraintHorizontal_weight="1"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/order_tab"
         app:layout_constraintVertical_weight="1"
         app:rvp_singlePageFling="true"
         app:rvp_triggerOffset="0.1" />
+
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/order_controller"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_weight="1"
+        app:layout_constraintStart_toEndOf="@+id/order_page"
+        app:layout_constraintTop_toBottomOf="@+id/order_tab"
+        app:layout_constraintVertical_weight="1" />
 </android.support.constraint.ConstraintLayout>

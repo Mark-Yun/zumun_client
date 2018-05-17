@@ -2,16 +2,16 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "aeb055049ae939e12ac0dc079a49bf45",
+    "identityHash": "e0cfacf359ed6d67117e67588101a6cd",
     "entities": [
       {
         "tableName": "menu_item",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `name` TEXT, `image` BLOB, `storeId` INTEGER NOT NULL, `price` INTEGER NOT NULL, `createdDate` INTEGER NOT NULL, `modifiedDate` INTEGER NOT NULL, PRIMARY KEY(`id`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`uuid` TEXT NOT NULL, `name` TEXT, `storeId` TEXT, `price` INTEGER NOT NULL, PRIMARY KEY(`uuid`))",
         "fields": [
           {
-            "fieldPath": "id",
-            "columnName": "id",
-            "affinity": "INTEGER",
+            "fieldPath": "uuid",
+            "columnName": "uuid",
+            "affinity": "TEXT",
             "notNull": true
           },
           {
@@ -21,39 +21,21 @@
             "notNull": false
           },
           {
-            "fieldPath": "image",
-            "columnName": "image",
-            "affinity": "BLOB",
-            "notNull": false
-          },
-          {
             "fieldPath": "storeId",
             "columnName": "storeId",
-            "affinity": "INTEGER",
-            "notNull": true
+            "affinity": "TEXT",
+            "notNull": false
           },
           {
             "fieldPath": "price",
             "columnName": "price",
             "affinity": "INTEGER",
             "notNull": true
-          },
-          {
-            "fieldPath": "createdDate",
-            "columnName": "createdDate",
-            "affinity": "INTEGER",
-            "notNull": true
-          },
-          {
-            "fieldPath": "modifiedDate",
-            "columnName": "modifiedDate",
-            "affinity": "INTEGER",
-            "notNull": true
           }
         ],
         "primaryKey": {
           "columnNames": [
-            "id"
+            "uuid"
           ],
           "autoGenerate": false
         },
@@ -150,12 +132,12 @@
       },
       {
         "tableName": "store",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `name` TEXT, `storeOwnerId` INTEGER NOT NULL, `createdDate` INTEGER NOT NULL, `latitude` INTEGER NOT NULL, `longitude` INTEGER NOT NULL, PRIMARY KEY(`id`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`uuid` TEXT NOT NULL, `name` TEXT, `latitude` INTEGER NOT NULL, `longitude` INTEGER NOT NULL, PRIMARY KEY(`uuid`))",
         "fields": [
           {
-            "fieldPath": "id",
-            "columnName": "id",
-            "affinity": "INTEGER",
+            "fieldPath": "uuid",
+            "columnName": "uuid",
+            "affinity": "TEXT",
             "notNull": true
           },
           {
@@ -163,18 +145,6 @@
             "columnName": "name",
             "affinity": "TEXT",
             "notNull": false
-          },
-          {
-            "fieldPath": "storeOwnerId",
-            "columnName": "storeOwnerId",
-            "affinity": "INTEGER",
-            "notNull": true
-          },
-          {
-            "fieldPath": "createdDate",
-            "columnName": "createdDate",
-            "affinity": "INTEGER",
-            "notNull": true
           },
           {
             "fieldPath": "latitude",
@@ -191,7 +161,7 @@
         ],
         "primaryKey": {
           "columnNames": [
-            "id"
+            "uuid"
           ],
           "autoGenerate": false
         },
@@ -259,7 +229,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"aeb055049ae939e12ac0dc079a49bf45\")"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"e0cfacf359ed6d67117e67588101a6cd\")"
     ]
   }
 }

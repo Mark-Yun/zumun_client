@@ -2,6 +2,7 @@ package com.mark.zumo.client.core.entity;
 
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
+import android.support.annotation.NonNull;
 
 import com.mark.zumo.client.core.dao.MenuItemDao;
 
@@ -16,12 +17,12 @@ public class MenuItem implements Serializable {
 
     private static final String TAG = "MenuItem";
 
-    @PrimaryKey public final String uuid;
+    @PrimaryKey @NonNull public final String uuid;
     public final String name;
-    public final long storeId;
+    public final String storeId;
     public final int price;
 
-    private MenuItem(final String uuid, final String name, final long storeId, final int price) {
+    public MenuItem(final String uuid, final String name, final String storeId, final int price) {
         this.uuid = uuid;
         this.name = name;
         this.storeId = storeId;
