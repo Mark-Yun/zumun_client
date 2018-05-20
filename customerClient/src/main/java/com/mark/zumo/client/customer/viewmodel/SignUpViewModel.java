@@ -19,7 +19,7 @@ public class SignUpViewModel extends AndroidViewModel {
 
     private SessionManager sessionManager;
 
-    public SignUpViewModel(@NonNull Application application) {
+    SignUpViewModel(@NonNull Application application) {
         super(application);
         sessionManager = SessionManager.INSTANCE;
     }

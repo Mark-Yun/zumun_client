@@ -24,7 +24,7 @@ public class MenuItemViewModel extends AndroidViewModel {
     private UserManager userManager;
     private Disposable disposable;
 
-    public MenuItemViewModel(@NonNull final Application application) {
+    MenuItemViewModel(@NonNull final Application application) {
         super(application);
         menuItemManager = MenuItemManager.INSTANCE;
         userManager = UserManager.INSTANCE;

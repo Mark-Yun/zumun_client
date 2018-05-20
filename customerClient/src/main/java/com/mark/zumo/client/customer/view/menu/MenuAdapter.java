@@ -9,6 +9,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.mark.zumo.client.core.entity.MenuItem;
+import com.mark.zumo.client.core.util.glide.GlideApp;
+import com.mark.zumo.client.core.util.glide.GlideUtils;
 import com.mark.zumo.client.customer.R;
 
 import java.text.NumberFormat;
@@ -47,6 +49,12 @@ class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.ViewHolder> {
         MenuItem menuItem = menuItemList.get(position);
         viewHolder.name.setText(menuItem.name);
         viewHolder.price.setText(NumberFormat.getNumberInstance(Locale.KOREA).format(menuItem.price));
+        //TODO: remove test data
+        GlideApp.with(viewHolder.itemView.getContext())
+                .load(R.drawable.data_1_ice)
+                .apply(GlideUtils.menuImageOptions())
+                .transition(GlideUtils.menuTransitionOptions())
+                .into(viewHolder.image);
     }
 
     @Override
@@ -61,11 +69,9 @@ class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.ViewHolder> {
         @BindView(R.id.name) TextView name;
         @BindView(R.id.price) TextView price;
         @BindView(R.id.image) ImageView image;
-        View rootView;
 
         private ViewHolder(final View itemView) {
             super(itemView);
-            rootView = itemView;
             ButterKnife.bind(this, itemView);
         }
     }
