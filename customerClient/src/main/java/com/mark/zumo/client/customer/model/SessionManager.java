@@ -2,8 +2,11 @@ package com.mark.zumo.client.customer.model;
 
 import android.content.Context;
 
+import com.mark.zumo.client.core.appserver.AppServerService;
+import com.mark.zumo.client.core.appserver.AppServerServiceProvider;
 import com.mark.zumo.client.core.repository.SessionRepository;
 import com.mark.zumo.client.core.repository.UserRepository;
+import com.mark.zumo.client.core.security.EncryptionContract;
 import com.mark.zumo.client.core.security.EncryptionUtil;
 import com.mark.zumo.client.core.security.SecurePreferences;
 import com.mark.zumo.client.core.util.context.ContextHolder;
@@ -23,27 +26,35 @@ public enum SessionManager {
     private SessionRepository sessionRepository;
     private UserRepository userRepository;
     private SecurePreferences securePreferences;
+    private AppServerService appServerService;
+    private AppServerServiceProvider appServerServiceProvider;
 
     SessionManager() {
         Context context = ContextHolder.getContext();
 
         sessionRepository = SessionRepository.from(context);
         userRepository = UserRepository.from(context);
-        securePreferences = new SecurePreferences(context, EncryptionUtil.PREFERENCE_NAME, EncryptionUtil.SECURE_KEY, true);
+        appServerServiceProvider = AppServerServiceProvider.INSTANCE;
+
+        buildSessionHeader();
+    }
+
+    private void buildSessionHeader() {
+        sessionRepository.getSessionId().doOnSuccess(appServerServiceProvider::buildSessionHeader);
     }
 
     public void saveToCache(String email, String password, byte[] key) throws Exception {
-        securePreferences.put(EncryptionUtil.PREF_KEY_EMAIL, email);
-        securePreferences.put(EncryptionUtil.PREF_KEY_PKEY, new String(key));
+        securePreferences.put(EncryptionContract.PREF_KEY_EMAIL, email);
+        securePreferences.put(EncryptionContract.PREF_KEY_KEY, new String(key));
 
         byte[] encryptedPassword = EncryptionUtil.encrypt(key, password.getBytes());
-        securePreferences.put(EncryptionUtil.PREF_KEY_PASSWORD, new String(encryptedPassword));
+        securePreferences.put(EncryptionContract.PREF_KEY_PASSWORD, new String(encryptedPassword));
     }
 
     public Single<Boolean> isSessionValid() {
         return Single.create(e -> {
-
             e.onSuccess(false);
         });
     }
+
 }

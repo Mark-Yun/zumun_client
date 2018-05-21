@@ -7,9 +7,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 
-import com.mark.zumo.client.core.entity.user.GuestUser;
-import com.mark.zumo.client.core.security.EncryptionUtil;
-import com.mark.zumo.client.core.security.SecurePreferences;
+import com.mark.zumo.client.core.repository.SessionRepository;
 import com.mark.zumo.client.core.util.context.ContextHolder;
 
 import io.reactivex.Single;
@@ -29,7 +27,6 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public enum AppServerServiceProvider {
     INSTANCE;
 
-    private static final String KEY_GUEST_USER_UUID = "guest_user_uuid";
     private static final String TAG = "AppServerServiceProvider";
     private static final String KEY_ANDROID_SDK = "android_sdk";
     private static final String KEY_MODEL = "model";
@@ -44,12 +41,11 @@ public enum AppServerServiceProvider {
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .build()
                 .create(AppServerService.class);
+    }
 
-        Single.zip(buildHeaderData(),
-                context().flatMap(this::securePreferences)
-                        .flatMap(this::getGuestUserUuid)
-                        .onErrorResumeNext(this::acquireGuestUserUuid)
-                , this::addGuestUuid)
+    public void buildSessionHeader(String uuid) {
+        buildDefaultHeader()
+                .flatMap(bundle -> addGuestUuid(bundle, uuid))
                 .flatMap(this::interceptor)
                 .flatMap(this::okHttpClient)
                 .flatMap(this::appServerService)
@@ -96,7 +92,7 @@ public enum AppServerServiceProvider {
         );
     }
 
-    private Single<Bundle> buildHeaderData() {
+    private Single<Bundle> buildDefaultHeader() {
         //TODO: Impl
         return Single.fromCallable(() -> {
             Bundle bundle = new Bundle();
@@ -119,42 +115,10 @@ public enum AppServerServiceProvider {
         }
     }
 
-    private Single<SecurePreferences> securePreferences(final Context context) {
-        return Single.fromCallable(() -> new SecurePreferences(context, EncryptionUtil.PREFERENCE_NAME, EncryptionUtil.SECURE_KEY, true));
-    }
-
-    private Single<Context> context() {
-        return Single.fromCallable(ContextHolder::getContext);
-    }
-
-    private Single<String> acquireGuestUserUuid(Throwable throwable) {
-        Log.d(TAG, "acquireGuestUserUuid: " + throwable.getMessage());
-
-        return Single.zip(
-                context().flatMap(this::securePreferences)
-                , service.createGuestUser().map(GuestUser::getUuid)
-                , this::saveGuestUserUuid);
-    }
-
-    private String saveGuestUserUuid(final SecurePreferences securePreferences, final String uuid) {
-        Log.d(TAG, "saveGuestUserUuid: uuid-" + uuid);
-        securePreferences.put(KEY_GUEST_USER_UUID, uuid);
-        return uuid;
-    }
-
-    private Single<String> getGuestUserUuid(final SecurePreferences securePreferences) {
-        return Single.create(e -> {
-            String guestUserUuid = securePreferences.getString(KEY_GUEST_USER_UUID);
-            if (guestUserUuid == null || guestUserUuid.isEmpty()) {
-                e.onError(new RuntimeException("Not exist"));
-            } else {
-                e.onSuccess(guestUserUuid);
-            }
+    private Single<Bundle> addGuestUuid(Bundle bundle, String uuid) {
+        return Single.fromCallable(() -> {
+            bundle.putString(SessionRepository.KEY_GUEST_USER_UUID, uuid);
+            return bundle;
         });
-    }
-
-    private Bundle addGuestUuid(Bundle bundle, String uuid) {
-        bundle.putString(KEY_GUEST_USER_UUID, uuid);
-        return bundle;
     }
 }

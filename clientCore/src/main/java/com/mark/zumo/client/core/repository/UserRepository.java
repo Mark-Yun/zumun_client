@@ -7,10 +7,6 @@ import com.mark.zumo.client.core.appserver.AppServerServiceProvider;
 import com.mark.zumo.client.core.dao.AppDatabase;
 import com.mark.zumo.client.core.dao.AppDatabaseProvider;
 import com.mark.zumo.client.core.dao.GuestUserDao;
-import com.mark.zumo.client.core.entity.user.GuestUser;
-import com.mark.zumo.client.core.entity.user.User;
-
-import io.reactivex.Observable;
 
 /**
  * Created by mark on 18. 4. 30.
@@ -41,20 +37,5 @@ public class UserRepository {
 
     private AppServerService service() {
         return AppServerServiceProvider.INSTANCE.service;
-    }
-
-    public Observable<User> findById(long id) {
-        return Observable.create(e -> {
-        });
-    }
-
-    public Observable<GuestUser> findCustomerUserById(long id) {
-        return Observable.create(e -> {
-        });
-    }
-
-    public Observable<User> findByName(String name) {
-        return Observable.create(e -> {
-        });
     }
 }

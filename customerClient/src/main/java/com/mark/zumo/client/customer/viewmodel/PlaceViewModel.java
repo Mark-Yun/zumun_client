@@ -19,7 +19,7 @@ import io.reactivex.schedulers.Schedulers;
  */
 public class PlaceViewModel extends AndroidViewModel {
 
-    StoreManager storeManager;
+    private StoreManager storeManager;
 
     public PlaceViewModel(@NonNull final Application application) {
         super(application);
