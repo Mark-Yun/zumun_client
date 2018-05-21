@@ -21,6 +21,15 @@ public final class GlideUtils {
         return DrawableTransitionOptions.withCrossFade();
     }
 
+    public static DrawableTransitionOptions storeCoverTransitionOptions() {
+        return DrawableTransitionOptions.withCrossFade();
+    }
+
+    public static RequestOptions storeCoverImageOptions() {
+        return RequestOptions.centerCropTransform()
+                .format(DecodeFormat.PREFER_ARGB_8888);
+    }
+
     public static RequestOptions menuImageOptions() {
         return RequestOptions.fitCenterTransform();
     }

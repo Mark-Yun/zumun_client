@@ -2,16 +2,16 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "e0cfacf359ed6d67117e67588101a6cd",
+    "identityHash": "0f460e040e2e1790c1110f30e581b3e7",
     "entities": [
       {
         "tableName": "menu_item",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`uuid` TEXT NOT NULL, `name` TEXT, `storeId` TEXT, `price` INTEGER NOT NULL, PRIMARY KEY(`uuid`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`uuid` BLOB NOT NULL, `name` TEXT, `storeId` TEXT, `price` INTEGER NOT NULL, PRIMARY KEY(`uuid`))",
         "fields": [
           {
             "fieldPath": "uuid",
             "columnName": "uuid",
-            "affinity": "TEXT",
+            "affinity": "BLOB",
             "notNull": true
           },
           {
@@ -132,12 +132,12 @@
       },
       {
         "tableName": "store",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`uuid` TEXT NOT NULL, `name` TEXT, `latitude` INTEGER NOT NULL, `longitude` INTEGER NOT NULL, PRIMARY KEY(`uuid`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`uuid` BLOB NOT NULL, `name` TEXT, `latitude` INTEGER NOT NULL, `longitude` INTEGER NOT NULL, PRIMARY KEY(`uuid`))",
         "fields": [
           {
             "fieldPath": "uuid",
             "columnName": "uuid",
-            "affinity": "TEXT",
+            "affinity": "BLOB",
             "notNull": true
           },
           {
@@ -229,7 +229,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"e0cfacf359ed6d67117e67588101a6cd\")"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"0f460e040e2e1790c1110f30e581b3e7\")"
     ]
   }
 }

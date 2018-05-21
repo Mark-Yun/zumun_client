@@ -1,13 +1,13 @@
 package com.mark.zumo.client.customer.model;
 
 import android.app.Activity;
-import android.os.Build;
 
 import com.mark.zumo.client.core.entity.MenuItem;
 import com.mark.zumo.client.core.entity.Store;
 import com.mark.zumo.client.core.entity.user.GuestUser;
 import com.mark.zumo.client.core.p2p.P2pClient;
 import com.mark.zumo.client.core.repository.MenuItemRepository;
+import com.mark.zumo.client.core.util.DebugUtil;
 import com.mark.zumo.client.core.util.context.ContextHolder;
 
 import java.util.List;
@@ -44,7 +44,7 @@ public enum MenuItemManager {
 
     private Single<Store> currentStore() {
         //TODO: impl
-        return Single.fromCallable(() -> new Store("TEST", Build.MODEL, 0, 0));
+        return Single.fromCallable(DebugUtil::store);
     }
 
     public void clearClient() {
