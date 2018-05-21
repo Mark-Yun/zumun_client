@@ -4,10 +4,10 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.AppCompatActivity;
 import android.transition.AutoTransition;
 import android.view.Window;
 
+import com.mark.zumo.client.core.app.BaseActivity;
 import com.mark.zumo.client.customer.R;
 
 import butterknife.ButterKnife;
@@ -16,7 +16,7 @@ import butterknife.ButterKnife;
  * Created by mark on 18. 4. 30.
  */
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends BaseActivity {
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {

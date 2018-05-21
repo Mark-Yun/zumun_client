@@ -3,8 +3,8 @@ package com.mark.zumo.server.store.view;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.AppCompatActivity;
 
+import com.mark.zumo.client.core.app.BaseActivity;
 import com.mark.zumo.server.store.R;
 import com.mark.zumo.server.store.view.order.OrderConsoleFragment;
 
@@ -13,7 +13,7 @@ import butterknife.ButterKnife;
 /**
  * Created by mark on 18. 5. 13.
  */
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends BaseActivity {
     @Override
     protected void onCreate(@Nullable final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

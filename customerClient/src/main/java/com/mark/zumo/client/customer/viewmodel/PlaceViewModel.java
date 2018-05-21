@@ -21,7 +21,7 @@ public class PlaceViewModel extends AndroidViewModel {
 
     StoreManager storeManager;
 
-    PlaceViewModel(@NonNull final Application application) {
+    public PlaceViewModel(@NonNull final Application application) {
         super(application);
 
         storeManager = StoreManager.INSTANCE;

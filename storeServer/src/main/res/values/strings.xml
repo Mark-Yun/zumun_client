@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">store_server</string>
+    <string name="app_name">Store Server</string>
 
     <!--sign up-->
     <string name="edit_text_hint_email">E-mail</string>

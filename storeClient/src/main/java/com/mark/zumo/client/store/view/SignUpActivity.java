@@ -3,8 +3,8 @@ package com.mark.zumo.client.store.view;
 import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
 
+import com.mark.zumo.client.core.app.BaseActivity;
 import com.mark.zumo.client.store.R;
 import com.mark.zumo.client.store.viewmodel.SignUpViewModel;
 
@@ -12,7 +12,7 @@ import com.mark.zumo.client.store.viewmodel.SignUpViewModel;
  * Created by mark on 18. 5. 7.
  */
 
-public class SignUpActivity extends AppCompatActivity {
+public class SignUpActivity extends BaseActivity {
     private SignUpViewModel signUpViewModel;
 
     @Override

@@ -9,7 +9,7 @@ import android.support.annotation.NonNull;
  * Created by mark on 18. 5. 10.
  */
 public class MainViewModel extends AndroidViewModel {
-    private MainViewModel(@NonNull final Application application) {
+    public MainViewModel(@NonNull final Application application) {
         super(application);
     }
 

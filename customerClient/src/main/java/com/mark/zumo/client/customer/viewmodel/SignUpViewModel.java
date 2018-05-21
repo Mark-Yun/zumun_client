@@ -19,11 +19,10 @@ public class SignUpViewModel extends AndroidViewModel {
 
     private SessionManager sessionManager;
 
-    SignUpViewModel(@NonNull Application application) {
+    public SignUpViewModel(@NonNull Application application) {
         super(application);
         sessionManager = SessionManager.INSTANCE;
     }
-
 
     public LiveData<Boolean> isSessionValid() {
         MutableLiveData<Boolean> existSession = new MutableLiveData<>();

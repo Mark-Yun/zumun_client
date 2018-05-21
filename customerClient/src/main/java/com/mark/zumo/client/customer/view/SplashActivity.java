@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.Window;
 
+import com.mark.zumo.client.core.app.BaseActivity;
 import com.mark.zumo.client.customer.R;
 import com.mark.zumo.client.customer.view.main.MainActivity;
 import com.mark.zumo.client.customer.view.signup.SignUpActivity;
@@ -23,7 +24,7 @@ import butterknife.ButterKnife;
  * Created by Goboogi on 18. 5. 1.
  */
 
-public class SplashActivity extends AppCompatActivity {
+public class SplashActivity extends BaseActivity {
 
     public static final String TAG = "SplashActivity";
     private static final int SPLASH_DISPLAY_LENGTH = 1000;

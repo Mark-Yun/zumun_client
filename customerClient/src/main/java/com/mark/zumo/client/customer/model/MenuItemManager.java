@@ -48,6 +48,10 @@ public enum MenuItemManager {
     }
 
     public void clearClient() {
+        if (p2pClient == null) {
+            return;
+        }
+
         p2pClient.stopDiscovery();
         p2pClient = null;
     }
