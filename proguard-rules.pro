@@ -44,3 +44,12 @@
 }
 # for DexGuard only
 #-keepresourcexmlelements manifest/application/meta-data@value=GlideModule
+
+# for Samsung pay
+-dontwarn com.samsung.android.sdk.samsungpay.**
+-keep class com.samsung.android.sdk.** { *; }
+-keep interface com.samsung.android.sdk.** { *; }
+
+-keepresourcexmlelements manifest/application/meta-data@name=debug_mode
+-keepresourcexmlelements manifest/application/meta-data@name=spay_debug_api_key
+-keepresourcexmlelements manifest/application/meta-data@name=spay_sdk_api_level
