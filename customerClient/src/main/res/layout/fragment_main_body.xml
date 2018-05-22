@@ -11,6 +11,9 @@
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toTopOf="@+id/view_pager"
         app:layout_constraintTop_toTopOf="parent"
+        app:tabIndicatorColor="@color/colorAccent"
+        app:tabTextColor="@color/colorSecondaryText"
+        app:tabSelectedTextColor="@color/colorTextDark"
         design:tabMode="fixed">
 
         <android.support.design.widget.TabItem
