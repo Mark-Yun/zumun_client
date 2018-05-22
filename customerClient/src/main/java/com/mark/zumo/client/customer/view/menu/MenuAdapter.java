@@ -2,6 +2,7 @@ package com.mark.zumo.client.customer.view.menu;
 
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,6 +28,7 @@ import butterknife.ButterKnife;
  */
 class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.ViewHolder> {
 
+    public static final String TAG = "MenuAdapter";
     private List<Menu> menuList;
     private MenuViewModel menuViewModel;
 
@@ -52,13 +54,14 @@ class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.ViewHolder> {
         Menu menu = menuList.get(position);
         viewHolder.name.setText(menu.name);
         viewHolder.price.setText(NumberFormat.getNumberInstance(Locale.KOREA).format(menu.price));
-        //TODO: remove test data
+
         GlideApp.with(viewHolder.itemView.getContext())
-                .load(R.drawable.data_1_ice)
+                .load(menu.imageUrl)
                 .apply(GlideUtils.menuImageOptions())
                 .transition(GlideUtils.menuTransitionOptions())
                 .into(viewHolder.image);
 
+        Log.d(TAG, "onBindViewHolder: " + menu.imageUrl);
         viewHolder.itemView.setOnClickListener(v -> menuViewModel.addMenuToCart(menu));
     }
 

@@ -53,7 +53,7 @@ public class SessionRepository {
     }
 
     private String saveGuestUserUuid(final SecurePreferences securePreferences, final String uuid) {
-        Log.d(TAG, "saveGuestUserUuid: uuid-" + uuid);
+        Log.d(TAG, "saveGuestUserUuid: menu_uuid-" + uuid);
         securePreferences.put(SessionRepository.KEY_GUEST_USER_UUID, uuid);
         return uuid;
     }

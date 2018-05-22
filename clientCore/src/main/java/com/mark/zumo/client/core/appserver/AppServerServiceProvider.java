@@ -7,6 +7,8 @@ import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.mark.zumo.client.core.repository.SessionRepository;
 import com.mark.zumo.client.core.util.context.ContextHolder;
 
@@ -35,9 +37,14 @@ public enum AppServerServiceProvider {
     public AppServerService service;
 
     AppServerServiceProvider() {
+
+        Gson gson = new GsonBuilder()
+                .setLenient()
+                .create();
+
         service = new Retrofit.Builder()
                 .baseUrl(AppServerService.URL)
-                .addConverterFactory(GsonConverterFactory.create())
+                .addConverterFactory(GsonConverterFactory.create(gson))
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .build()
                 .create(AppServerService.class);
@@ -55,9 +62,14 @@ public enum AppServerServiceProvider {
     }
 
     private Single<AppServerService> appServerService(final OkHttpClient okHttpClient) {
+
+        Gson gson = new GsonBuilder()
+                .setLenient()
+                .create();
+
         return Single.fromCallable(() -> new Retrofit.Builder()
                 .baseUrl(AppServerService.URL)
-                .addConverterFactory(GsonConverterFactory.create())
+                .addConverterFactory(GsonConverterFactory.create(gson))
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .client(okHttpClient)
                 .build()
@@ -82,10 +94,12 @@ public enum AppServerServiceProvider {
                         String value = bundle.getString(key);
                         builder.header(key, value);
                     }
+                    builder.header("Content-type", "application/json");
 
                     Request request = builder
                             .method(original.method(), original.body())
                             .build();
+
 
                     return chain.proceed(request);
                 }

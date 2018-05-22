@@ -8,6 +8,7 @@ import com.mark.zumo.client.core.util.context.ContextHolder;
 import java.util.List;
 
 import io.reactivex.Observable;
+import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 
@@ -35,5 +36,9 @@ public enum StoreManager {
 
     public Observable<List<Store>> latestVisitStore() {
         return storeRepository.latestVisitStore();
+    }
+
+    public Single<Store> getStore(String storeUuid) {
+        return storeRepository.getStore(storeUuid);
     }
 }

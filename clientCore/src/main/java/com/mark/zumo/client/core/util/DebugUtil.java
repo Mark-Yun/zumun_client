@@ -11,7 +11,6 @@ import com.mark.zumo.client.core.entity.user.GuestUser;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.UUID;
 
 /**
  * Created by mark on 18. 5. 3.
@@ -19,12 +18,14 @@ import java.util.UUID;
 
 public class DebugUtil {
 
+    public static final String TEST_STORE_UUID = "FD8BC4DD00B04E60A166A5FBD3454E8F";
+
     public static GuestUser guestUser() {
         return new GuestUser();
     }
 
     public static Store store() {
-        return new Store("a0ed5bd122624ccd9ca72958232c72c0", Build.MODEL, 0, 0);
+        return new Store(TEST_STORE_UUID, Build.MODEL, 0, 0, null, null);
     }
 
     public static MenuOrder menuOrder() {
@@ -33,21 +34,21 @@ public class DebugUtil {
 
     public static List<Store> storeList() {
         Store[] stores = {
-                new Store(UUID.randomUUID(), "test1", 15, 15),
-                new Store(UUID.randomUUID(), "testStore2", 15, 15),
-                new Store(UUID.randomUUID(), "testTestStore3", 15, 15),
-                new Store(UUID.randomUUID(), "COCOCOCOCOCOCO_@#!@$*I@", 15, 15),
-                new Store(UUID.randomUUID(), "LAIIEJ!F#IFJASDJFP(!O@$I!P(", 15, 15),
-                new Store(UUID.randomUUID(), "test1", 15, 15),
-                new Store(UUID.randomUUID(), "testStore2", 15, 15),
-                new Store(UUID.randomUUID(), "testTestStore3", 15, 15),
-                new Store(UUID.randomUUID(), "COCOCOCOCOCOCO_@#!@$*I@", 15, 15),
-                new Store(UUID.randomUUID(), "LAIIEJ!F#IFJASDJFP(!O@$I!P(", 15, 15),
-                new Store(UUID.randomUUID(), "test1", 15, 15),
-                new Store(UUID.randomUUID(), "testStore2", 15, 15),
-                new Store(UUID.randomUUID(), "testTestStore3", 15, 15),
-                new Store(UUID.randomUUID(), "COCOCOCOCOCOCO_@#!@$*I@", 15, 15),
-                new Store(UUID.randomUUID(), "LAIIEJ!F#IFJASDJFP(!O@$I!P(", 15, 15)
+                new Store(TEST_STORE_UUID, "test1", 15, 15, null, null),
+                new Store(TEST_STORE_UUID, "testStore2", 15, 15, null, null),
+                new Store(TEST_STORE_UUID, "testTestStore3", 15, 15, null, null),
+                new Store(TEST_STORE_UUID, "COCOCOCOCOCOCO_@#!@$*I@", 15, 15, null, null),
+                new Store(TEST_STORE_UUID, "LAIIEJ!F#IFJASDJFP(!O@$I!P(", 15, 15, null, null),
+                new Store(TEST_STORE_UUID, "test1", 15, 15, null, null),
+                new Store(TEST_STORE_UUID, "testStore2", 15, 15, null, null),
+                new Store(TEST_STORE_UUID, "testTestStore3", 15, 15, null, null),
+                new Store(TEST_STORE_UUID, "COCOCOCOCOCOCO_@#!@$*I@", 15, 15, null, null),
+                new Store(TEST_STORE_UUID, "LAIIEJ!F#IFJASDJFP(!O@$I!P(", 15, 15, null, null),
+                new Store(TEST_STORE_UUID, "test1", 15, 15, null, null),
+                new Store(TEST_STORE_UUID, "testStore2", 15, 15, null, null),
+                new Store(TEST_STORE_UUID, "testTestStore3", 15, 15, null, null),
+                new Store(TEST_STORE_UUID, "COCOCOCOCOCOCO_@#!@$*I@", 15, 15, null, null),
+                new Store(TEST_STORE_UUID, "LAIIEJ!F#IFJASDJFP(!O@$I!P(", 15, 15, null, null)
         };
         return new ArrayList<>(Arrays.asList(stores));
     }
@@ -57,7 +58,7 @@ public class DebugUtil {
 
         List<Menu> menuList = new ArrayList<>();
         for (FakeData data : dataList) {
-            Menu menu = new Menu(UUID.randomUUID(), data.name, "TEST", data.price);
+            Menu menu = new Menu("TEST", "TEST", data.name, data.price, "TT");
             menuList.add(menu);
         }
 

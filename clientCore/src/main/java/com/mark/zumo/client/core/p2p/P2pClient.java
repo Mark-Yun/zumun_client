@@ -21,7 +21,6 @@ import com.google.android.gms.nearby.messages.Distance;
 import com.google.android.gms.nearby.messages.Message;
 import com.google.android.gms.nearby.messages.MessageListener;
 import com.google.android.gms.nearby.messages.MessagesClient;
-import com.mark.zumo.client.core.dao.Converters;
 import com.mark.zumo.client.core.entity.Menu;
 import com.mark.zumo.client.core.entity.MenuOrder;
 import com.mark.zumo.client.core.entity.Store;
@@ -32,7 +31,6 @@ import com.mark.zumo.client.core.p2p.packet.Request;
 
 import java.util.List;
 import java.util.Set;
-import java.util.UUID;
 import java.util.concurrent.Executors;
 
 import io.reactivex.Observable;
@@ -57,7 +55,7 @@ public class P2pClient {
 
     private String currentEndpointId;
 
-    private SimpleArrayMap<UUID, String> endPointMap = new SimpleArrayMap<>();
+    private SimpleArrayMap<String, String> endPointMap = new SimpleArrayMap<>();
     private SimpleArrayMap<String, Payload> incomingPayloads = new SimpleArrayMap<>();
 
     public P2pClient(Activity activity, GuestUser currentUser) {
@@ -244,8 +242,7 @@ public class P2pClient {
 
     private void saveConnectionInfo(@NonNull String endpointId1, @NonNull ConnectionInfo connectionInfo) {
         String storeId = connectionInfo.getEndpointName();
-        UUID uuid = Converters.fromBinary(storeId.getBytes());
-        endPointMap.put(uuid, endpointId1);
+        endPointMap.put(storeId, endpointId1);
     }
 
     private Single<Payload> acceptConnection(String endpointId) {
@@ -256,7 +253,7 @@ public class P2pClient {
                     public void onPayloadReceived(@NonNull String endpointId1, @NonNull Payload payload) {
                         Log.d(TAG, "onPayloadReceived: endpointId=" + endpointId1
                                 + " Payload["
-                                + " uuid=" + payload.getId()
+                                + " menu_uuid=" + payload.getId()
                                 + " type=" + payload.getType()
                                 + "]");
                         //TODO: Auth Endpoint1
@@ -328,7 +325,7 @@ public class P2pClient {
                 .doOnSuccess(unUsedResult -> currentEndpointId = null);
     }
 
-    public Single<String> sendOrder(MenuOrder menuOrder, UUID storeUuid) {
+    public Single<String> sendOrder(MenuOrder menuOrder, String storeUuid) {
         String endpointId = endPointMap.get(storeUuid);
         Packet<MenuOrder> packet = new Packet<>(menuOrder);
         return requestConnection(endpointId, packet)

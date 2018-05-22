@@ -92,18 +92,17 @@ public class MenuFragment extends Fragment {
     }
 
     private void inflateStoreCover() {
-        onLoadStoreCover(null);
+        menuViewModel.getStore(DebugUtil.TEST_STORE_UUID).observe(this, this::onLoadStore);
     }
 
-    private void onLoadStoreCover(Store store) {
-        //TODO REMOVE TEST DATA
-        GlideApp.with(getActivity())
-                .load(R.drawable.blue_bottle_coffee_nakameguro_1)
+    private void onLoadStore(Store store) {
+        GlideApp.with(this)
+                .load(store.coverImageUrl)
                 .apply(GlideUtils.storeCoverImageOptions())
                 .transition(GlideUtils.storeCoverTransitionOptions())
                 .into(storeCoverImage);
 
-        storeCoverTitle.setText("Remove This Data");
+        storeCoverTitle.setText(store.name);
     }
 
     private void onLoadCart(Cart cart) {

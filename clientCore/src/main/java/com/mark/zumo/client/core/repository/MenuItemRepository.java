@@ -9,7 +9,6 @@ import com.mark.zumo.client.core.dao.AppDatabaseProvider;
 import com.mark.zumo.client.core.dao.MenuItemDao;
 import com.mark.zumo.client.core.entity.Menu;
 import com.mark.zumo.client.core.entity.Store;
-import com.mark.zumo.client.core.util.DebugUtil;
 
 import java.util.List;
 
@@ -21,6 +20,7 @@ import io.reactivex.Single;
 
 public class MenuItemRepository {
 
+    public static final String TAG = "MenuItemRepository";
     private volatile static MenuItemRepository instance;
 
     private AppDatabase database;
@@ -50,6 +50,6 @@ public class MenuItemRepository {
 
     public Single<List<Menu>> getMenuItemsOfStore(Store store) {
         //TODO: remove test data
-        return Single.fromCallable(DebugUtil::menuItemList);
+        return appServerService().getMenuItemList(store.uuid);
     }
 }

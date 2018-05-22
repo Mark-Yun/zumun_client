@@ -23,9 +23,9 @@ public interface AppServerService {
     Single<GuestUser> createGuestUser();
 
     @POST("users/guest/delete")
-    Single<Void> deleteGuestUser(@Query("uuid") String uuid);
+    Single<Void> deleteGuestUser(@Query("menu_uuid") String uuid);
 
-    @POST("menu/get")
+    @GET("menu/get")
     Single<List<Menu>> getMenuItemList(@Query("store_uuid") String storeUuid);
 
     @POST("menu/create")
@@ -35,5 +35,5 @@ public interface AppServerService {
     Single<Store> createStore(@Body Store store);
 
     @GET("store/get")
-    Single<Store> getAllStore();
+    Single<Store> getStore(@Query("store_uuid") String storeUuid);
 }

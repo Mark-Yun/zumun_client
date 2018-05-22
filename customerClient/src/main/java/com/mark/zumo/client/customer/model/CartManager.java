@@ -4,7 +4,6 @@ import com.mark.zumo.client.customer.model.entity.Cart;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.UUID;
 
 /**
  * Created by mark on 18. 5. 22.
@@ -12,13 +11,13 @@ import java.util.UUID;
 public enum CartManager {
     INSTANCE;
 
-    private Map<UUID, Cart> storeCartMap;
+    private Map<String, Cart> storeCartMap;
 
     CartManager() {
         storeCartMap = new HashMap<>();
     }
 
-    public Cart getCart(UUID storeUuid) {
+    public Cart getCart(String storeUuid) {
         if (!storeCartMap.containsKey(storeUuid)) {
             Cart cart = new Cart();
             storeCartMap.put(storeUuid, cart);

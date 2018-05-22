@@ -2,40 +2,46 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "0f460e040e2e1790c1110f30e581b3e7",
+    "identityHash": "0a946a62ab031daa74f3c266e61bd8dc",
     "entities": [
       {
         "tableName": "menu_item",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`uuid` BLOB NOT NULL, `name` TEXT, `storeId` TEXT, `price` INTEGER NOT NULL, PRIMARY KEY(`uuid`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`menu_uuid` TEXT NOT NULL, `menu_name` TEXT, `store_uuid` TEXT, `menu_price` INTEGER NOT NULL, `image_url` TEXT, PRIMARY KEY(`menu_uuid`))",
         "fields": [
           {
             "fieldPath": "uuid",
-            "columnName": "uuid",
-            "affinity": "BLOB",
+            "columnName": "menu_uuid",
+            "affinity": "TEXT",
             "notNull": true
           },
           {
             "fieldPath": "name",
-            "columnName": "name",
+            "columnName": "menu_name",
             "affinity": "TEXT",
             "notNull": false
           },
           {
-            "fieldPath": "storeId",
-            "columnName": "storeId",
+            "fieldPath": "storeUuid",
+            "columnName": "store_uuid",
             "affinity": "TEXT",
             "notNull": false
           },
           {
             "fieldPath": "price",
-            "columnName": "price",
+            "columnName": "menu_price",
             "affinity": "INTEGER",
             "notNull": true
+          },
+          {
+            "fieldPath": "imageUrl",
+            "columnName": "image_url",
+            "affinity": "TEXT",
+            "notNull": false
           }
         ],
         "primaryKey": {
           "columnNames": [
-            "uuid"
+            "menu_uuid"
           ],
           "autoGenerate": false
         },
@@ -132,17 +138,17 @@
       },
       {
         "tableName": "store",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`uuid` BLOB NOT NULL, `name` TEXT, `latitude` INTEGER NOT NULL, `longitude` INTEGER NOT NULL, PRIMARY KEY(`uuid`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`store_uuid` TEXT NOT NULL, `store_name` TEXT, `latitude` INTEGER NOT NULL, `longitude` INTEGER NOT NULL, `cover_image_url` TEXT, `thumbnail_image_url` TEXT, PRIMARY KEY(`store_uuid`))",
         "fields": [
           {
             "fieldPath": "uuid",
-            "columnName": "uuid",
-            "affinity": "BLOB",
+            "columnName": "store_uuid",
+            "affinity": "TEXT",
             "notNull": true
           },
           {
             "fieldPath": "name",
-            "columnName": "name",
+            "columnName": "store_name",
             "affinity": "TEXT",
             "notNull": false
           },
@@ -157,11 +163,23 @@
             "columnName": "longitude",
             "affinity": "INTEGER",
             "notNull": true
+          },
+          {
+            "fieldPath": "coverImageUrl",
+            "columnName": "cover_image_url",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "thumbnailUrl",
+            "columnName": "thumbnail_image_url",
+            "affinity": "TEXT",
+            "notNull": false
           }
         ],
         "primaryKey": {
           "columnNames": [
-            "uuid"
+            "store_uuid"
           ],
           "autoGenerate": false
         },
@@ -229,7 +247,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"0f460e040e2e1790c1110f30e581b3e7\")"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"0a946a62ab031daa74f3c266e61bd8dc\")"
     ]
   }
 }

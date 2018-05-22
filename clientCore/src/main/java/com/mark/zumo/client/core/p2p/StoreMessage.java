@@ -26,7 +26,7 @@ class StoreMessage {
         long latitude = Long.parseLong(splitContent[2]);
         long longitude = Long.parseLong(splitContent[3]);
 
-        Store store = new Store(id, name, latitude, longitude);
+        Store store = new Store(id, name, latitude, longitude, null, null);
         return new StoreMessage(store);
     }
 

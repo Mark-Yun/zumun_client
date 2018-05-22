@@ -178,7 +178,7 @@ public class P2pServer {
                         public void onPayloadReceived(@NonNull String endpointId1, @NonNull Payload payload) {
                             Log.d(TAG, "onPayloadReceived: endpointId=" + endpointId1
                                     + " Payload["
-                                    + " uuid=" + payload.getId()
+                                    + " menu_uuid=" + payload.getId()
                                     + " type=" + payload.getType()
                                     + "]");
 

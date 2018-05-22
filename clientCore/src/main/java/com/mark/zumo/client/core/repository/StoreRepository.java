@@ -14,6 +14,7 @@ import com.mark.zumo.client.core.util.DebugUtil;
 import java.util.List;
 
 import io.reactivex.Observable;
+import io.reactivex.Single;
 
 /**
  * Created by mark on 18. 4. 30.
@@ -56,5 +57,9 @@ public class StoreRepository {
         return Observable.create(e -> {
             e.onNext(DebugUtil.storeList());
         });
+    }
+
+    public Single<Store> getStore(String storeUuid) {
+        return appServerService().getStore(storeUuid);
     }
 }

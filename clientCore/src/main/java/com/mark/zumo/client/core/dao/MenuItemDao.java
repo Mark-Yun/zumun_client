@@ -23,7 +23,7 @@ public interface MenuItemDao {
     @Query("SELECT * FROM " + TABLE_NAME)
     Maybe<List<Menu>> getAll();
 
-    @Query("SELECT * FROM " + TABLE_NAME + " WHERE uuid LIKE :uuid LIMIT 1")
+    @Query("SELECT * FROM " + TABLE_NAME + " WHERE menu_uuid LIKE :uuid LIMIT 1")
     Maybe<Menu> findByUuid(String uuid);
 
     @Insert
