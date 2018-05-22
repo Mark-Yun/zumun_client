@@ -32,6 +32,7 @@ import butterknife.OnClick;
  */
 public class MenuFragment extends Fragment {
 
+    public static final String TAG = "MenuFragment";
     @BindView(R.id.store_cover_image) ImageView storeCoverImage;
     @BindView(R.id.store_cover_title) TextView storeCoverTitle;
 
@@ -55,20 +56,21 @@ public class MenuFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_menu, container, false);
         ButterKnife.bind(this, rootView);
 
+        inflateStoreCover();
         inflateMenuRecyclerView();
         setupMenuItemObserver();
-        inflateStoreCover();
         return rootView;
     }
 
     private void inflateMenuRecyclerView() {
-        // use this setting to improve performance if you know that changes
-        // in content do not change the layout size of the RecyclerView
-        recyclerView.setHasFixedSize(true);
-
         // use a linear layout manager
         RecyclerView.LayoutManager layoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(layoutManager);
+
+        // use this setting to improve performance if you know that changes
+        // in content do not change the layout size of the RecyclerView
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setNestedScrollingEnabled(false);
 
         // specify an menuAdapter (see also next example)
         menuAdapter = new MenuAdapter();
