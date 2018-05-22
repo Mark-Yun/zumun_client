@@ -38,6 +38,16 @@ public class DebugUtil {
                 new Store(UUID.randomUUID(), "testTestStore3", 15, 15),
                 new Store(UUID.randomUUID(), "COCOCOCOCOCOCO_@#!@$*I@", 15, 15),
                 new Store(UUID.randomUUID(), "LAIIEJ!F#IFJASDJFP(!O@$I!P(", 15, 15),
+                new Store(UUID.randomUUID(), "test1", 15, 15),
+                new Store(UUID.randomUUID(), "testStore2", 15, 15),
+                new Store(UUID.randomUUID(), "testTestStore3", 15, 15),
+                new Store(UUID.randomUUID(), "COCOCOCOCOCOCO_@#!@$*I@", 15, 15),
+                new Store(UUID.randomUUID(), "LAIIEJ!F#IFJASDJFP(!O@$I!P(", 15, 15),
+                new Store(UUID.randomUUID(), "test1", 15, 15),
+                new Store(UUID.randomUUID(), "testStore2", 15, 15),
+                new Store(UUID.randomUUID(), "testTestStore3", 15, 15),
+                new Store(UUID.randomUUID(), "COCOCOCOCOCOCO_@#!@$*I@", 15, 15),
+                new Store(UUID.randomUUID(), "LAIIEJ!F#IFJASDJFP(!O@$I!P(", 15, 15)
         };
         return new ArrayList<>(Arrays.asList(stores));
     }
@@ -61,7 +71,15 @@ public class DebugUtil {
         resultList.add(new FakeData(R.drawable.data_1_hot, "카페 라떼", 4500));
         resultList.add(new FakeData(R.drawable.data_2_ice, "아이스 카페 모카", 4500));
         resultList.add(new FakeData(R.drawable.data_2_hot, "카페 모카", 4500));
-        resultList.add(new FakeData(R.drawable.data_3_hot, "에스프레", 4500));
+        resultList.add(new FakeData(R.drawable.data_3_hot, "에스프레소", 4500));
+        resultList.add(new FakeData(R.drawable.data_4_ice, "아이스 카라멜 마키아또", 4500));
+        resultList.add(new FakeData(R.drawable.data_4_hot, "카라멜 마키아또", 4500));
+        resultList.add(new FakeData(R.drawable.data_5_ice, "아이스 카페 아메리카노", 4500));
+        resultList.add(new FakeData(R.drawable.data_5_hot, "카페 아메리카노", 4500));
+        resultList.add(new FakeData(R.drawable.data_4_ice, "아이스 카라멜 마키아또", 4500));
+        resultList.add(new FakeData(R.drawable.data_4_hot, "카라멜 마키아또", 4500));
+        resultList.add(new FakeData(R.drawable.data_5_ice, "아이스 카페 아메리카노", 4500));
+        resultList.add(new FakeData(R.drawable.data_5_hot, "카페 아메리카노", 4500));
         resultList.add(new FakeData(R.drawable.data_4_ice, "아이스 카라멜 마키아또", 4500));
         resultList.add(new FakeData(R.drawable.data_4_hot, "카라멜 마키아또", 4500));
         resultList.add(new FakeData(R.drawable.data_5_ice, "아이스 카페 아메리카노", 4500));
