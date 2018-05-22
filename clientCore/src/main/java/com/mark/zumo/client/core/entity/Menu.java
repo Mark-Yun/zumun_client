@@ -14,16 +14,16 @@ import java.util.UUID;
  */
 
 @Entity(tableName = MenuItemDao.TABLE_NAME)
-public class MenuItem implements Serializable {
+public class Menu implements Serializable {
 
-    private static final String TAG = "MenuItem";
+    private static final String TAG = "Menu";
 
     @PrimaryKey @NonNull public final UUID uuid;
     public final String name;
     public final String storeId;
     public final int price;
 
-    public MenuItem(final UUID uuid, final String name, final String storeId, final int price) {
+    public Menu(final UUID uuid, final String name, final String storeId, final int price) {
         this.uuid = uuid;
         this.name = name;
         this.storeId = storeId;

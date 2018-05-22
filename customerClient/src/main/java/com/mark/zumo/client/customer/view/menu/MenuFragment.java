@@ -14,12 +14,14 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.mark.zumo.client.core.entity.MenuItem;
+import com.mark.zumo.client.core.entity.Menu;
 import com.mark.zumo.client.core.entity.Store;
+import com.mark.zumo.client.core.util.DebugUtil;
 import com.mark.zumo.client.core.util.glide.GlideApp;
 import com.mark.zumo.client.core.util.glide.GlideUtils;
 import com.mark.zumo.client.customer.R;
-import com.mark.zumo.client.customer.viewmodel.MenuItemViewModel;
+import com.mark.zumo.client.customer.model.entity.Cart;
+import com.mark.zumo.client.customer.viewmodel.MenuViewModel;
 
 import java.util.List;
 
@@ -33,6 +35,7 @@ import butterknife.OnClick;
 public class MenuFragment extends Fragment {
 
     public static final String TAG = "MenuFragment";
+
     @BindView(R.id.store_cover_image) ImageView storeCoverImage;
     @BindView(R.id.store_cover_title) TextView storeCoverTitle;
 
@@ -42,12 +45,12 @@ public class MenuFragment extends Fragment {
     @BindView(R.id.menu_recycler_view) RecyclerView recyclerView;
 
     private MenuAdapter menuAdapter;
-    private MenuItemViewModel menuItemViewModel;
+    private MenuViewModel menuViewModel;
 
     @Override
     public void onCreate(@Nullable final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        menuItemViewModel = ViewModelProviders.of(this).get(MenuItemViewModel.class);
+        menuViewModel = ViewModelProviders.of(this).get(MenuViewModel.class);
     }
 
     @Nullable
@@ -58,7 +61,7 @@ public class MenuFragment extends Fragment {
 
         inflateStoreCover();
         inflateMenuRecyclerView();
-        setupMenuItemObserver();
+        inflateCartBadge();
         return rootView;
     }
 
@@ -73,18 +76,19 @@ public class MenuFragment extends Fragment {
         recyclerView.setNestedScrollingEnabled(false);
 
         // specify an menuAdapter (see also next example)
-        menuAdapter = new MenuAdapter();
+        menuAdapter = new MenuAdapter(menuViewModel);
         recyclerView.setAdapter(menuAdapter);
+
+        menuViewModel.getMenuItemList(getActivity()).observe(this, this::onLoadMenuItemList);
     }
 
-    private void onLoadMenuItemList(List<MenuItem> menuItemList) {
-        menuAdapter.setMenuItemList(menuItemList);
+    private void inflateCartBadge() {
+        menuViewModel.getCart(DebugUtil.store().uuid).observe(this, this::onLoadCart);
+    }
+
+    private void onLoadMenuItemList(List<Menu> menuList) {
+        menuAdapter.setMenuList(menuList);
         menuAdapter.notifyDataSetChanged();
-    }
-
-    private void setupMenuItemObserver() {
-        menuItemViewModel.getMenuItemList(getActivity())
-                .observe(this, this::onLoadMenuItemList);
     }
 
     private void inflateStoreCover() {
@@ -100,6 +104,16 @@ public class MenuFragment extends Fragment {
                 .into(storeCoverImage);
 
         storeCoverTitle.setText("Remove This Data");
+    }
+
+    private void onLoadCart(Cart cart) {
+        int cartCount = cart.getCartCount();
+        cartBadgeText.setText(String.valueOf(cartCount));
+
+        boolean hasMenuInCart = cartCount > 0;
+        cartBadgeImage.setVisibility(hasMenuInCart ? View.VISIBLE : View.GONE);
+        cartBadgeText.setVisibility(hasMenuInCart ? View.VISIBLE : View.GONE);
+
     }
 
     @OnClick(R.id.store_cart_button)

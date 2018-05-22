@@ -6,7 +6,7 @@ import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.Query;
 import android.arch.persistence.room.Update;
 
-import com.mark.zumo.client.core.entity.MenuItem;
+import com.mark.zumo.client.core.entity.Menu;
 
 import java.util.List;
 
@@ -21,17 +21,17 @@ public interface MenuItemDao {
     String TABLE_NAME = "menu_item";
 
     @Query("SELECT * FROM " + TABLE_NAME)
-    Maybe<List<MenuItem>> getAll();
+    Maybe<List<Menu>> getAll();
 
     @Query("SELECT * FROM " + TABLE_NAME + " WHERE uuid LIKE :uuid LIMIT 1")
-    Maybe<MenuItem> findByUuid(String uuid);
+    Maybe<Menu> findByUuid(String uuid);
 
     @Insert
-    void insertAll(MenuItem... users);
+    void insertAll(Menu... users);
 
     @Update
-    void update(MenuItem user);
+    void update(Menu user);
 
     @Delete
-    void delete(MenuItem user);
+    void delete(Menu user);
 }

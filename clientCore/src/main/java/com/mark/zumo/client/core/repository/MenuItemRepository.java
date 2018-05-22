@@ -7,7 +7,7 @@ import com.mark.zumo.client.core.appserver.AppServerServiceProvider;
 import com.mark.zumo.client.core.dao.AppDatabase;
 import com.mark.zumo.client.core.dao.AppDatabaseProvider;
 import com.mark.zumo.client.core.dao.MenuItemDao;
-import com.mark.zumo.client.core.entity.MenuItem;
+import com.mark.zumo.client.core.entity.Menu;
 import com.mark.zumo.client.core.entity.Store;
 import com.mark.zumo.client.core.util.DebugUtil;
 
@@ -48,7 +48,7 @@ public class MenuItemRepository {
         return AppServerServiceProvider.INSTANCE.service;
     }
 
-    public Single<List<MenuItem>> getMenuItemsOfStore(Store store) {
+    public Single<List<Menu>> getMenuItemsOfStore(Store store) {
         //TODO: remove test data
         return Single.fromCallable(DebugUtil::menuItemList);
     }

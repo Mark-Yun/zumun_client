@@ -8,10 +8,11 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.mark.zumo.client.core.entity.MenuItem;
+import com.mark.zumo.client.core.entity.Menu;
 import com.mark.zumo.client.core.util.glide.GlideApp;
 import com.mark.zumo.client.core.util.glide.GlideUtils;
 import com.mark.zumo.client.customer.R;
+import com.mark.zumo.client.customer.viewmodel.MenuViewModel;
 
 import java.text.NumberFormat;
 import java.util.ArrayList;
@@ -26,14 +27,16 @@ import butterknife.ButterKnife;
  */
 class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.ViewHolder> {
 
-    private List<MenuItem> menuItemList;
+    private List<Menu> menuList;
+    private MenuViewModel menuViewModel;
 
-    MenuAdapter() {
-        menuItemList = new ArrayList<>();
+    MenuAdapter(MenuViewModel menuViewModel) {
+        menuList = new ArrayList<>();
+        this.menuViewModel = menuViewModel;
     }
 
-    public void setMenuItemList(final List<MenuItem> menuItemList) {
-        this.menuItemList = menuItemList;
+    public void setMenuList(final List<Menu> menuList) {
+        this.menuList = menuList;
     }
 
     @NonNull
@@ -46,20 +49,22 @@ class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.ViewHolder> {
     @Override
     public void onBindViewHolder(@NonNull final ViewHolder viewHolder, final int position) {
         //TODO: remove Test data
-        MenuItem menuItem = menuItemList.get(position);
-        viewHolder.name.setText(menuItem.name);
-        viewHolder.price.setText(NumberFormat.getNumberInstance(Locale.KOREA).format(menuItem.price));
+        Menu menu = menuList.get(position);
+        viewHolder.name.setText(menu.name);
+        viewHolder.price.setText(NumberFormat.getNumberInstance(Locale.KOREA).format(menu.price));
         //TODO: remove test data
         GlideApp.with(viewHolder.itemView.getContext())
                 .load(R.drawable.data_1_ice)
                 .apply(GlideUtils.menuImageOptions())
                 .transition(GlideUtils.menuTransitionOptions())
                 .into(viewHolder.image);
+
+        viewHolder.itemView.setOnClickListener(v -> menuViewModel.addMenuToCart(menu));
     }
 
     @Override
     public int getItemCount() {
-        return menuItemList.size();
+        return menuList.size();
     }
 
     // Provide a reference to the views for each data item

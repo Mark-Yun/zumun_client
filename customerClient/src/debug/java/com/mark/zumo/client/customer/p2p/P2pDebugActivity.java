@@ -8,7 +8,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.mark.zumo.client.core.entity.MenuItem;
+import com.mark.zumo.client.core.entity.Menu;
 import com.mark.zumo.client.core.entity.MenuOrder;
 import com.mark.zumo.client.core.entity.Store;
 import com.mark.zumo.client.core.entity.user.GuestUser;
@@ -136,8 +136,8 @@ public class P2pDebugActivity extends Activity {
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(menuItemList -> {
-                    for (MenuItem menuItem : menuItemList) {
-                        updateConsole(menuItem + "\n");
+                    for (Menu menu : menuItemList) {
+                        updateConsole(menu + "\n");
                     }
                 });
 

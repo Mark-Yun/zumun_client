@@ -4,7 +4,7 @@ import android.arch.persistence.room.Database;
 import android.arch.persistence.room.RoomDatabase;
 import android.arch.persistence.room.TypeConverters;
 
-import com.mark.zumo.client.core.entity.MenuItem;
+import com.mark.zumo.client.core.entity.Menu;
 import com.mark.zumo.client.core.entity.MenuOrder;
 import com.mark.zumo.client.core.entity.Store;
 import com.mark.zumo.client.core.entity.session.CustomerUserSession;
@@ -16,7 +16,7 @@ import com.mark.zumo.client.core.entity.user.GuestUser;
  */
 @Database(
         entities = {
-                MenuItem.class, MenuOrder.class, CustomerUserSession.class, Store.class, GuestUser.class, StoreSession.class
+                Menu.class, MenuOrder.class, CustomerUserSession.class, Store.class, GuestUser.class, StoreSession.class
         }, version = 1)
 @TypeConverters({Converters.class})
 public abstract class AppDatabase extends RoomDatabase {

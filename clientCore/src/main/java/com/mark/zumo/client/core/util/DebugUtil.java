@@ -3,7 +3,7 @@ package com.mark.zumo.client.core.util;
 import android.os.Build;
 
 import com.mark.zumo.client.core.R;
-import com.mark.zumo.client.core.entity.MenuItem;
+import com.mark.zumo.client.core.entity.Menu;
 import com.mark.zumo.client.core.entity.MenuOrder;
 import com.mark.zumo.client.core.entity.Store;
 import com.mark.zumo.client.core.entity.user.GuestUser;
@@ -24,7 +24,7 @@ public class DebugUtil {
     }
 
     public static Store store() {
-        return new Store(UUID.randomUUID(), Build.MODEL, 0, 0);
+        return new Store("a0ed5bd122624ccd9ca72958232c72c0", Build.MODEL, 0, 0);
     }
 
     public static MenuOrder menuOrder() {
@@ -52,16 +52,16 @@ public class DebugUtil {
         return new ArrayList<>(Arrays.asList(stores));
     }
 
-    public static List<MenuItem> menuItemList() {
+    public static List<Menu> menuItemList() {
         List<FakeData> dataList = createFakeData();
 
-        List<MenuItem> menuItemList = new ArrayList<>();
+        List<Menu> menuList = new ArrayList<>();
         for (FakeData data : dataList) {
-            MenuItem menuItem = new MenuItem(UUID.randomUUID(), data.name, "TEST", data.price);
-            menuItemList.add(menuItem);
+            Menu menu = new Menu(UUID.randomUUID(), data.name, "TEST", data.price);
+            menuList.add(menu);
         }
 
-        return menuItemList;
+        return menuList;
     }
 
     private static List<FakeData> createFakeData() {

@@ -1,6 +1,6 @@
 package com.mark.zumo.client.core.p2p.packet;
 
-import com.mark.zumo.client.core.entity.MenuItem;
+import com.mark.zumo.client.core.entity.Menu;
 import com.mark.zumo.client.core.entity.MenuOrder;
 
 import java.util.List;
@@ -48,7 +48,7 @@ public enum PacketType {
 
     private static boolean isMenuItemListType(List<?> list) {
         for (Object obj : list) {
-            if (!(obj instanceof MenuItem)) {
+            if (!(obj instanceof Menu)) {
                 return false;
             }
         }

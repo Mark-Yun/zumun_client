@@ -1,6 +1,6 @@
 package com.mark.zumo.client.core.appserver;
 
-import com.mark.zumo.client.core.entity.MenuItem;
+import com.mark.zumo.client.core.entity.Menu;
 import com.mark.zumo.client.core.entity.Store;
 import com.mark.zumo.client.core.entity.user.GuestUser;
 
@@ -25,15 +25,15 @@ public interface AppServerService {
     @POST("users/guest/delete")
     Single<Void> deleteGuestUser(@Query("uuid") String uuid);
 
-    @GET("menu/get")
-    Single<List<MenuItem>> getMenuItemList(@Query("store_uuid") String storeUuid);
+    @POST("menu/get")
+    Single<List<Menu>> getMenuItemList(@Query("store_uuid") String storeUuid);
 
     @POST("menu/create")
-    Single<MenuItem> createMenuItem(@Body MenuItem menuItem);
+    Single<Menu> createMenuItem(@Body Menu menu);
 
     @POST("store/create")
     Single<Store> createStore(@Body Store store);
 
     @GET("store/get")
-    Single<Store> getStore();
+    Single<Store> getAllStore();
 }

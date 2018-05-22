@@ -22,7 +22,7 @@ import com.google.android.gms.nearby.messages.Message;
 import com.google.android.gms.nearby.messages.MessageListener;
 import com.google.android.gms.nearby.messages.MessagesClient;
 import com.mark.zumo.client.core.dao.Converters;
-import com.mark.zumo.client.core.entity.MenuItem;
+import com.mark.zumo.client.core.entity.Menu;
 import com.mark.zumo.client.core.entity.MenuOrder;
 import com.mark.zumo.client.core.entity.Store;
 import com.mark.zumo.client.core.entity.user.GuestUser;
@@ -118,7 +118,7 @@ public class P2pClient {
         clearOnUnsubscribe();
     }
 
-//    public Observable<List<MenuItem>> loadMenuItemList(Store store) {
+//    public Observable<List<Menu>> loadMenuItemList(Store store) {
 //        return Observable.create(e -> {
 //
 //        });
@@ -307,15 +307,15 @@ public class P2pClient {
         Log.e(TAG, "onFailureAcceptConnection: ", e);
     }
 
-    private Single<List<MenuItem>> convertMenuItemFromPayload(final Payload payload) {
+    private Single<List<Menu>> convertMenuItemFromPayload(final Payload payload) {
         return Single.create(e -> {
             byte[] bytes = NearbyUtil.bytesFrom(payload);
-            Packet<List<MenuItem>> menuItemsPacket = new Packet<>(bytes);
+            Packet<List<Menu>> menuItemsPacket = new Packet<>(bytes);
             e.onSuccess(menuItemsPacket.get());
         });
     }
 
-    public Single<List<MenuItem>> acquireMenuItems() {
+    public Single<List<Menu>> acquireMenuItems() {
         Log.d(TAG, "acquireMenuItems:");
         Packet<Request> packet = new Packet<>(Request.REQ_MENU_ITEM_LIST);
 

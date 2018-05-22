@@ -2,7 +2,7 @@ package com.mark.zumo.client.customer.model;
 
 import android.app.Activity;
 
-import com.mark.zumo.client.core.entity.MenuItem;
+import com.mark.zumo.client.core.entity.Menu;
 import com.mark.zumo.client.core.entity.Store;
 import com.mark.zumo.client.core.entity.user.GuestUser;
 import com.mark.zumo.client.core.p2p.P2pClient;
@@ -29,7 +29,7 @@ public enum MenuItemManager {
         menuItemRepository = MenuItemRepository.from(ContextHolder.getContext());
     }
 
-    public Single<List<MenuItem>> acquireMenuItem(Activity activity, GuestUser guestUser) {
+    public Single<List<Menu>> acquireMenuItem(Activity activity, GuestUser guestUser) {
         //TODO: remove Test data
 //        return p2pClient(activity, guestUser)
 //                .flatMap(P2pClient::acquireMenuItems);
