@@ -9,10 +9,12 @@ import com.mark.zumo.client.core.dao.AppDatabaseProvider;
 import com.mark.zumo.client.core.dao.MenuDao;
 import com.mark.zumo.client.core.entity.Menu;
 import com.mark.zumo.client.core.entity.Store;
+import com.mark.zumo.client.core.entity.util.ListComparator;
 
 import java.util.List;
 
 import io.reactivex.Observable;
+import io.reactivex.ObservableOnSubscribe;
 
 /**
  * Created by mark on 18. 4. 30.
@@ -44,12 +46,12 @@ public class MenuItemRepository {
     }
 
     public Observable<List<Menu>> getMenuItemsOfStore(Store store) {
-        return Observable.create(e -> {
+        return Observable.create((ObservableOnSubscribe<List<Menu>>) e -> {
             String storeUuid = store.uuid;
             menuDao.findByStoreUuid(storeUuid).subscribe(e::onNext);
             appServerService.getMenuItemList(storeUuid)
                     .doOnSuccess(menuList -> menuDao.insertAll(menuList.toArray(new Menu[]{})))
                     .subscribe(e::onNext);
-        });
+        }).distinctUntilChanged(new ListComparator<>());
     }
 }

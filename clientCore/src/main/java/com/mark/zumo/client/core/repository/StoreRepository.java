@@ -8,11 +8,13 @@ import com.mark.zumo.client.core.appserver.AppServerServiceProvider;
 import com.mark.zumo.client.core.dao.AppDatabaseProvider;
 import com.mark.zumo.client.core.dao.StoreDao;
 import com.mark.zumo.client.core.entity.Store;
+import com.mark.zumo.client.core.entity.util.EntityComparator;
 import com.mark.zumo.client.core.util.DebugUtil;
 
 import java.util.List;
 
 import io.reactivex.Observable;
+import io.reactivex.ObservableOnSubscribe;
 
 /**
  * Created by mark on 18. 4. 30.
@@ -52,11 +54,11 @@ public class StoreRepository {
     }
 
     public Observable<Store> getStore(String storeUuid) {
-        return Observable.create(e -> {
+        return Observable.create((ObservableOnSubscribe<Store>) e -> {
             storeDao.findById(storeUuid).subscribe(e::onNext);
             appServerService.getStore(storeUuid)
                     .doOnSuccess(storeDao::insert)
                     .subscribe(e::onNext);
-        });
+        }).distinctUntilChanged(new EntityComparator<>());
     }
 }

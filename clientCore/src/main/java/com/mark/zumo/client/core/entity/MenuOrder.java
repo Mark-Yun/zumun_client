@@ -4,6 +4,7 @@ import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
 
 import com.mark.zumo.client.core.dao.MenuOrderDao;
+import com.mark.zumo.client.core.entity.util.EntityHelper;
 
 import java.io.Serializable;
 import java.util.List;

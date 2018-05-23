@@ -7,6 +7,7 @@ import android.support.annotation.NonNull;
 
 import com.google.gson.annotations.SerializedName;
 import com.mark.zumo.client.core.dao.StoreDao;
+import com.mark.zumo.client.core.entity.util.EntityHelper;
 
 /**
  * Created by mark on 18. 4. 30.

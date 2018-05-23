@@ -5,7 +5,7 @@ import android.arch.persistence.room.PrimaryKey;
 import android.support.annotation.NonNull;
 
 import com.mark.zumo.client.core.dao.GuestUserDao;
-import com.mark.zumo.client.core.entity.EntityHelper;
+import com.mark.zumo.client.core.entity.util.EntityHelper;
 
 /**
  * Created by mark on 18. 4. 30.

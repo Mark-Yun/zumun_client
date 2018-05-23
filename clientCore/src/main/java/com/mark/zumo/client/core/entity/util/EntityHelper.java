@@ -1,4 +1,4 @@
-package com.mark.zumo.client.core.entity;
+package com.mark.zumo.client.core.entity.util;
 
 import java.lang.reflect.Field;
 
