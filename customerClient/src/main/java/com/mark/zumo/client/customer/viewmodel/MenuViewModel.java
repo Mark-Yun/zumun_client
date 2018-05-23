@@ -82,6 +82,12 @@ public class MenuViewModel extends AndroidViewModel {
         currentCart.setValue(cart);
     }
 
+    public void removeLatestMenuFromCart() {
+        Cart cart = currentCart.getValue();
+        cart.removeMenu(cart.getCartCount() - 1);
+        currentCart.setValue(cart);
+    }
+
     public LiveData<Store> getStore(String storeUuid) {
         MutableLiveData<Store> storeLiveData = new MutableLiveData<>();
         storeManager.getStore(storeUuid)

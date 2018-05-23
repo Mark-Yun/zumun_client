@@ -3,8 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingStart="8dp"
-    android:paddingTop="8dp">
+    android:paddingStart="@dimen/card_view_menu_padding"
+    android:paddingTop="@dimen/card_view_menu_padding">
 
     <ImageView
         android:id="@+id/image"

@@ -1,6 +1,7 @@
 package com.mark.zumo.client.customer.view.menu;
 
 import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -50,7 +51,6 @@ class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.ViewHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull final ViewHolder viewHolder, final int position) {
-        //TODO: remove Test data
         Menu menu = menuList.get(position);
         viewHolder.name.setText(menu.name);
         viewHolder.price.setText(NumberFormat.getNumberInstance(Locale.KOREA).format(menu.price));
@@ -62,7 +62,15 @@ class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.ViewHolder> {
                 .into(viewHolder.image);
 
         Log.d(TAG, "onBindViewHolder: " + menu.imageUrl);
-        viewHolder.itemView.setOnClickListener(v -> menuViewModel.addMenuToCart(menu));
+        viewHolder.itemView.setOnClickListener(v -> onClickMenu(v, menu));
+    }
+
+    private void onClickMenu(final View itemView, final Menu menu) {
+        menuViewModel.addMenuToCart(menu);
+        String snackBarText = itemView.getContext().getString(R.string.added_to_cart, menu.name);
+        Snackbar.make(itemView, snackBarText, Snackbar.LENGTH_SHORT)
+                .setAction(R.string.cancel_action, v -> menuViewModel.removeLatestMenuFromCart())
+                .show();
     }
 
     @Override

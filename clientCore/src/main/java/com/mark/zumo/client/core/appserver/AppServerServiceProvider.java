@@ -5,6 +5,7 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.util.Log;
 
 import com.google.gson.Gson;
@@ -12,9 +13,11 @@ import com.google.gson.GsonBuilder;
 import com.mark.zumo.client.core.repository.SessionRepository;
 import com.mark.zumo.client.core.util.context.ContextHolder;
 
+import java.io.File;
+
 import io.reactivex.Single;
-import io.reactivex.annotations.NonNull;
 import io.reactivex.schedulers.Schedulers;
+import okhttp3.Cache;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -33,18 +36,27 @@ public enum AppServerServiceProvider {
     private static final String KEY_ANDROID_SDK = "android_sdk";
     private static final String KEY_MODEL = "model";
     private static final String KEY_MANUFACTURER = "manufacturer";
+    private static final int MAX_CACHE_SIZE = 10 * 1024 * 1024;
+    private static final String CONTENT_TYPE = "Content-type";
+    private static final String APPLICATION_JSON = "application/json";
 
     public AppServerService service;
 
     AppServerServiceProvider() {
+        service = appServerService();
+        buildDefaultHeader()
+                .flatMap(this::interceptor)
+                .flatMap(this::okHttpClient)
+                .flatMap(this::appServerService)
+                .subscribeOn(Schedulers.newThread())
+                .subscribe(appServerService -> this.service = appServerService
+                        , throwable -> Log.e(TAG, "AppServerServiceProvider: ", throwable));
+    }
 
-        Gson gson = new GsonBuilder()
-                .setLenient()
-                .create();
-
-        service = new Retrofit.Builder()
+    private AppServerService appServerService() {
+        return new Retrofit.Builder()
                 .baseUrl(AppServerService.URL)
-                .addConverterFactory(GsonConverterFactory.create(gson))
+                .addConverterFactory(gsonConverterFactory())
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .build()
                 .create(AppServerService.class);
@@ -62,26 +74,40 @@ public enum AppServerServiceProvider {
     }
 
     private Single<AppServerService> appServerService(final OkHttpClient okHttpClient) {
-
-        Gson gson = new GsonBuilder()
-                .setLenient()
-                .create();
-
         return Single.fromCallable(() -> new Retrofit.Builder()
                 .baseUrl(AppServerService.URL)
-                .addConverterFactory(GsonConverterFactory.create(gson))
+                .addConverterFactory(gsonConverterFactory())
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .client(okHttpClient)
                 .build()
                 .create(AppServerService.class));
     }
 
+    @NonNull
+    private GsonConverterFactory gsonConverterFactory() {
+        return GsonConverterFactory.create(gson());
+    }
+
+    @NonNull
+    private Gson gson() {
+        return new GsonBuilder()
+                .setLenient()
+                .create();
+    }
+
     private Single<OkHttpClient> okHttpClient(final Interceptor interceptor) {
         return Single.fromCallable(() ->
                 new OkHttpClient.Builder()
+                        .cache(cache())
                         .addInterceptor(interceptor)
                         .build()
         );
+    }
+
+    @NonNull
+    private Cache cache() {
+        File cacheDir = ContextHolder.getContext().getCacheDir();
+        return new Cache(cacheDir, MAX_CACHE_SIZE);
     }
 
     private Single<Interceptor> interceptor(@NonNull Bundle bundle) {
@@ -94,7 +120,7 @@ public enum AppServerServiceProvider {
                         String value = bundle.getString(key);
                         builder.header(key, value);
                     }
-                    builder.header("Content-type", "application/json");
+                    builder.header(CONTENT_TYPE, APPLICATION_JSON);
 
                     Request request = builder
                             .method(original.method(), original.body())
