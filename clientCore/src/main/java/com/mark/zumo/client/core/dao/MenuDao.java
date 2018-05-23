@@ -3,6 +3,7 @@ package com.mark.zumo.client.core.dao;
 import android.arch.persistence.room.Dao;
 import android.arch.persistence.room.Delete;
 import android.arch.persistence.room.Insert;
+import android.arch.persistence.room.OnConflictStrategy;
 import android.arch.persistence.room.Query;
 import android.arch.persistence.room.Update;
 
@@ -17,7 +18,7 @@ import io.reactivex.Maybe;
  */
 
 @Dao
-public interface MenuItemDao {
+public interface MenuDao {
     String TABLE_NAME = "menu_item";
 
     @Query("SELECT * FROM " + TABLE_NAME)
@@ -29,7 +30,7 @@ public interface MenuItemDao {
     @Query("SELECT * FROM " + TABLE_NAME + " WHERE store_uuid LIKE :storeUuid")
     Maybe<List<Menu>> findByStoreUuid(String storeUuid);
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertAll(Menu... menus);
 
     @Update

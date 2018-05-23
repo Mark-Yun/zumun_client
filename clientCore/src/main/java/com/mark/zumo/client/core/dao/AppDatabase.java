@@ -22,7 +22,7 @@ import com.mark.zumo.client.core.entity.user.GuestUser;
 public abstract class AppDatabase extends RoomDatabase {
     public static final String NAME = "com.mark.zumo";
 
-    public abstract MenuItemDao menuItemDao();
+    public abstract MenuDao menuItemDao();
     public abstract MenuOrderDao orderDao();
     public abstract CustomerUserSessionDao customerUserSessionDao();
     public abstract StoreSessionDao storeSessionDao();

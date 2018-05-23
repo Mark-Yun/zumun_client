@@ -3,6 +3,7 @@ package com.mark.zumo.client.core.dao;
 import android.arch.persistence.room.Dao;
 import android.arch.persistence.room.Delete;
 import android.arch.persistence.room.Insert;
+import android.arch.persistence.room.OnConflictStrategy;
 import android.arch.persistence.room.Query;
 import android.arch.persistence.room.Update;
 
@@ -26,10 +27,10 @@ public interface StoreDao {
     @Query("SELECT * FROM " + TABLE_NAME + " WHERE store_uuid LIKE :uuid LIMIT 1")
     Maybe<Store> findById(String uuid);
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertAll(Store... stores);
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insert(Store store);
 
     @Update
