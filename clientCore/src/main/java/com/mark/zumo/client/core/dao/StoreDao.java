@@ -23,15 +23,18 @@ public interface StoreDao {
     @Query("SELECT * FROM " + TABLE_NAME)
     Maybe<List<Store>> getAll();
 
-    @Query("SELECT * FROM " + TABLE_NAME + " WHERE store_uuid LIKE :id LIMIT 1")
-    Maybe<Store> findById(long id);
+    @Query("SELECT * FROM " + TABLE_NAME + " WHERE store_uuid LIKE :uuid LIMIT 1")
+    Maybe<Store> findById(String uuid);
 
     @Insert
-    void insertAll(Store... users);
+    void insertAll(Store... stores);
+
+    @Insert
+    void insert(Store store);
 
     @Update
-    void update(Store user);
+    void update(Store store);
 
     @Delete
-    void delete(Store user);
+    void delete(Store store);
 }

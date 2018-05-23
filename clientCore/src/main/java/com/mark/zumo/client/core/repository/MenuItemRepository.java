@@ -12,7 +12,7 @@ import com.mark.zumo.client.core.entity.Store;
 
 import java.util.List;
 
-import io.reactivex.Single;
+import io.reactivex.Observable;
 
 /**
  * Created by mark on 18. 4. 30.
@@ -24,10 +24,13 @@ public class MenuItemRepository {
     private volatile static MenuItemRepository instance;
 
     private AppDatabase database;
+    private MenuItemDao menuItemDao;
     private Context context;
+    private AppServerService appServerService;
 
     private MenuItemRepository(Context context) {
-        database = AppDatabaseProvider.getDatabase(context);
+        menuItemDao = AppDatabaseProvider.getDatabase(context).menuItemDao();
+        appServerService = AppServerServiceProvider.INSTANCE.service;
         this.context = context;
     }
 
@@ -40,16 +43,13 @@ public class MenuItemRepository {
         return instance;
     }
 
-    private MenuItemDao menuItemDao() {
-        return database.menuItemDao();
-    }
-
-    private AppServerService appServerService() {
-        return AppServerServiceProvider.INSTANCE.service;
-    }
-
-    public Single<List<Menu>> getMenuItemsOfStore(Store store) {
-        //TODO: remove test data
-        return appServerService().getMenuItemList(store.uuid);
+    public Observable<List<Menu>> getMenuItemsOfStore(Store store) {
+        return Observable.create(e -> {
+            String storeUuid = store.uuid;
+            menuItemDao.findByStoreUuid(storeUuid).subscribe(e::onNext);
+            appServerService.getMenuItemList(storeUuid)
+                    .doOnSuccess(menuList -> menuItemDao.insertAll(menuList.toArray(new Menu[]{})))
+                    .subscribe(e::onNext);
+        });
     }
 }

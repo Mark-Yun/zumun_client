@@ -154,7 +154,7 @@ public class P2pServer {
 
     private Single<String> sendMenuItems(String endPointId) {
         Log.d(TAG, "sendMenuItems: endPointId=" + endPointId);
-        return MenuItemRepository.from(activity).getMenuItemsOfStore(store)
+        return Single.fromObservable(MenuItemRepository.from(activity).getMenuItemsOfStore(store))
                 .map(Packet::new)
                 .flatMap(packet -> sendPayload(endPointId, packet))
                 .map(payload -> String.valueOf(payload.getId()));

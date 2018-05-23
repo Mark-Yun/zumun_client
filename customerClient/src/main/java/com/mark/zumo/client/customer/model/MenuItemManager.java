@@ -12,6 +12,7 @@ import com.mark.zumo.client.core.util.context.ContextHolder;
 
 import java.util.List;
 
+import io.reactivex.Observable;
 import io.reactivex.Single;
 
 /**
@@ -29,13 +30,13 @@ public enum MenuItemManager {
         menuItemRepository = MenuItemRepository.from(ContextHolder.getContext());
     }
 
-    public Single<List<Menu>> acquireMenuItem(Activity activity, GuestUser guestUser) {
+    public Observable<List<Menu>> acquireMenuItem(Activity activity, GuestUser guestUser) {
         //TODO: remove Test data
 //        return p2pClient(activity, guestUser)
 //                .flatMap(P2pClient::acquireMenuItems);
 
         return currentStore()
-                .flatMap(menuItemRepository::getMenuItemsOfStore);
+                .flatMapObservable(menuItemRepository::getMenuItemsOfStore);
     }
 
     private Single<P2pClient> p2pClient(Activity activity, GuestUser guestUser) {

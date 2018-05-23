@@ -47,7 +47,7 @@ public class MenuViewModel extends AndroidViewModel {
     public LiveData<List<Menu>> getMenuItemList(Activity activity) {
         MutableLiveData<List<Menu>> listMutableLiveData = new MutableLiveData<>();
         userManager.getCurrentUser()
-                .flatMapSingle(customerUser -> menuItemManager.acquireMenuItem(activity, customerUser))
+                .flatMap(customerUser -> menuItemManager.acquireMenuItem(activity, customerUser))
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(listMutableLiveData::setValue);
 

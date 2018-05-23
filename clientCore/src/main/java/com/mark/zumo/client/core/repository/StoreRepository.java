@@ -5,7 +5,6 @@ import android.location.Location;
 
 import com.mark.zumo.client.core.appserver.AppServerService;
 import com.mark.zumo.client.core.appserver.AppServerServiceProvider;
-import com.mark.zumo.client.core.dao.AppDatabase;
 import com.mark.zumo.client.core.dao.AppDatabaseProvider;
 import com.mark.zumo.client.core.dao.StoreDao;
 import com.mark.zumo.client.core.entity.Store;
@@ -14,7 +13,6 @@ import com.mark.zumo.client.core.util.DebugUtil;
 import java.util.List;
 
 import io.reactivex.Observable;
-import io.reactivex.Single;
 
 /**
  * Created by mark on 18. 4. 30.
@@ -24,10 +22,12 @@ public class StoreRepository {
 
     private volatile static StoreRepository instance;
 
-    private AppDatabase database;
+    private AppServerService appServerService;
+    private StoreDao storeDao;
 
     private StoreRepository(Context context) {
-        database = AppDatabaseProvider.getDatabase(context);
+        appServerService = AppServerServiceProvider.INSTANCE.service;
+        storeDao = AppDatabaseProvider.getDatabase(context).storeDao();
     }
 
     public static StoreRepository from(Context context) {
@@ -37,14 +37,6 @@ public class StoreRepository {
             }
         }
         return instance;
-    }
-
-    private StoreDao storeDao() {
-        return database.storeDao();
-    }
-
-    private AppServerService appServerService() {
-        return AppServerServiceProvider.INSTANCE.service;
     }
 
     public Observable<List<Store>> nearByStore(Location location) {
@@ -59,7 +51,12 @@ public class StoreRepository {
         });
     }
 
-    public Single<Store> getStore(String storeUuid) {
-        return appServerService().getStore(storeUuid);
+    public Observable<Store> getStore(String storeUuid) {
+        return Observable.create(e -> {
+            storeDao.findById(storeUuid).subscribe(e::onNext);
+            appServerService.getStore(storeUuid)
+                    .doOnSuccess(storeDao::insert)
+                    .subscribe(e::onNext);
+        });
     }
 }
