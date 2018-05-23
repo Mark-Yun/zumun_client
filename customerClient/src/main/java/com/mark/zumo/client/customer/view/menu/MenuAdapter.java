@@ -3,7 +3,6 @@ package com.mark.zumo.client.customer.view.menu;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,7 +18,6 @@ import com.mark.zumo.client.customer.viewmodel.MenuViewModel;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -29,7 +27,6 @@ import butterknife.ButterKnife;
  */
 class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.ViewHolder> {
 
-    public static final String TAG = "MenuAdapter";
     private List<Menu> menuList;
     private MenuViewModel menuViewModel;
 
@@ -53,7 +50,7 @@ class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.ViewHolder> {
     public void onBindViewHolder(@NonNull final ViewHolder viewHolder, final int position) {
         Menu menu = menuList.get(position);
         viewHolder.name.setText(menu.name);
-        viewHolder.price.setText(NumberFormat.getNumberInstance(Locale.KOREA).format(menu.price));
+        viewHolder.price.setText(NumberFormat.getCurrencyInstance().format(menu.price));
 
         GlideApp.with(viewHolder.itemView.getContext())
                 .load(menu.imageUrl)
@@ -61,14 +58,13 @@ class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.ViewHolder> {
                 .transition(GlideUtils.menuTransitionOptions())
                 .into(viewHolder.image);
 
-        Log.d(TAG, "onBindViewHolder: " + menu.imageUrl);
         viewHolder.itemView.setOnClickListener(v -> onClickMenu(v, menu));
     }
 
     private void onClickMenu(final View itemView, final Menu menu) {
         menuViewModel.addMenuToCart(menu);
         String snackBarText = itemView.getContext().getString(R.string.added_to_cart, menu.name);
-        Snackbar.make(itemView, snackBarText, Snackbar.LENGTH_SHORT)
+        Snackbar.make(itemView, snackBarText, Snackbar.LENGTH_LONG)
                 .setAction(R.string.cancel_action, v -> menuViewModel.removeLatestMenuFromCart())
                 .show();
     }
