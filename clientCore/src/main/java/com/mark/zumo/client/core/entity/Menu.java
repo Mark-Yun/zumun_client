@@ -18,7 +18,6 @@ import java.io.Serializable;
 @Entity(tableName = MenuDao.TABLE_NAME)
 public class Menu implements Serializable {
 
-
     @PrimaryKey @NonNull @SerializedName(Schema.uuid) @ColumnInfo(name = Schema.uuid)
     public final String uuid;
     @SerializedName(Schema.name) @ColumnInfo(name = Schema.name)

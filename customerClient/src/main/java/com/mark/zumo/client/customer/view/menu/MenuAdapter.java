@@ -1,5 +1,7 @@
 package com.mark.zumo.client.customer.view.menu;
 
+import android.content.Context;
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.RecyclerView;
@@ -59,6 +61,7 @@ class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.ViewHolder> {
                 .into(viewHolder.image);
 
         viewHolder.itemView.setOnClickListener(v -> onClickMenu(v, menu));
+        viewHolder.itemView.setOnLongClickListener(v -> onLongClickMenu(v, menu));
     }
 
     private void onClickMenu(final View itemView, final Menu menu) {
@@ -69,6 +72,13 @@ class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.ViewHolder> {
                 .show();
     }
 
+    private boolean onLongClickMenu(final View itemView, final Menu menu) {
+        Context context = itemView.getContext();
+        Intent intent = new Intent(context, MenuDetailActivity.class);
+        intent.putExtra(MenuDetailActivity.KEY_MENU_UUID, menu.uuid);
+        context.startActivity(intent);
+        return true;
+    }
     @Override
     public int getItemCount() {
         return menuList.size();

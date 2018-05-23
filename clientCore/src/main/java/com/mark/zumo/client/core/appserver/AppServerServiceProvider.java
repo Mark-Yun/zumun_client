@@ -36,7 +36,7 @@ public enum AppServerServiceProvider {
     private static final String KEY_ANDROID_SDK = "android_sdk";
     private static final String KEY_MODEL = "model";
     private static final String KEY_MANUFACTURER = "manufacturer";
-    private static final int MAX_CACHE_SIZE = 10 * 1024 * 1024;
+    private static final int MAX_CACHE_SIZE = 20 * 1024 * 1024;
     private static final String CONTENT_TYPE = "Content-type";
     private static final String APPLICATION_JSON = "application/json";
 

@@ -29,6 +29,7 @@
 
         <activity android:name=".view.signup.SignUpActivity" />
         <activity android:name=".view.cart.CartActivity" />
+        <activity android:name=".view.menu.MenuDetailActivity" />
     </application>
 
 </manifest>

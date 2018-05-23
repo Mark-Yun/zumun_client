@@ -1,6 +1,7 @@
 package com.mark.zumo.client.customer.view.menu;
 
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -12,7 +13,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.mark.zumo.client.core.entity.Menu;
 import com.mark.zumo.client.core.entity.Store;
@@ -21,6 +21,7 @@ import com.mark.zumo.client.core.util.glide.GlideApp;
 import com.mark.zumo.client.core.util.glide.GlideUtils;
 import com.mark.zumo.client.customer.R;
 import com.mark.zumo.client.customer.model.entity.Cart;
+import com.mark.zumo.client.customer.view.cart.CartActivity;
 import com.mark.zumo.client.customer.viewmodel.MenuViewModel;
 
 import java.util.List;
@@ -35,6 +36,7 @@ import butterknife.OnClick;
 public class MenuFragment extends Fragment {
 
     public static final String TAG = "MenuFragment";
+    public static final String KEY_STORE_UUID = "store_uuid";
 
     @BindView(R.id.store_cover_image) ImageView storeCoverImage;
     @BindView(R.id.store_cover_title) TextView storeCoverTitle;
@@ -47,10 +49,15 @@ public class MenuFragment extends Fragment {
     private MenuAdapter menuAdapter;
     private MenuViewModel menuViewModel;
 
+    private String storeUuid;
+
     @Override
     public void onCreate(@Nullable final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         menuViewModel = ViewModelProviders.of(this).get(MenuViewModel.class);
+        //TODO: remove test data
+//        storeUuid = getArguments().getString(KEY_STORE_UUID);
+        storeUuid = DebugUtil.TEST_STORE_UUID;
     }
 
     @Nullable
@@ -117,6 +124,8 @@ public class MenuFragment extends Fragment {
 
     @OnClick(R.id.store_cart_button)
     void onClickCartButton() {
-        Toast.makeText(getActivity(), "Cart Clicked!", Toast.LENGTH_SHORT).show();
+        Intent intent = new Intent(getContext(), CartActivity.class);
+        intent.putExtra(CartActivity.KEY_STORE_UUID, storeUuid);
+        startActivity(intent);
     }
 }
