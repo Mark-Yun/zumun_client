@@ -23,8 +23,8 @@ public interface MenuOrderDao {
     @Query("SELECT * FROM " + TABLE_NAME)
     Maybe<List<MenuOrder>> getAll();
 
-    @Query("SELECT * FROM " + TABLE_NAME + " WHERE id LIKE :id LIMIT 1")
-    Maybe<MenuOrder> findById(long id);
+    @Query("SELECT * FROM " + TABLE_NAME + " WHERE menu_order_uuid LIKE :uuid LIMIT 1")
+    Maybe<MenuOrder> findByUuid(String uuid);
 
     @Insert
     void insertAll(MenuOrder... users);

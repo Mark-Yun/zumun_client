@@ -4,6 +4,7 @@ import android.os.Build;
 
 import com.mark.zumo.client.core.R;
 import com.mark.zumo.client.core.entity.Menu;
+import com.mark.zumo.client.core.entity.MenuOption;
 import com.mark.zumo.client.core.entity.MenuOrder;
 import com.mark.zumo.client.core.entity.Store;
 import com.mark.zumo.client.core.entity.user.GuestUser;
@@ -11,6 +12,7 @@ import com.mark.zumo.client.core.entity.user.GuestUser;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * Created by mark on 18. 5. 3.
@@ -29,7 +31,7 @@ public class DebugUtil {
     }
 
     public static MenuOrder menuOrder() {
-        return new MenuOrder(1, 2, 3, null, 5, 100);
+        return new MenuOrder(UUID.randomUUID().toString(), UUID.randomUUID().toString(), UUID.randomUUID().toString());
     }
 
     public static List<Store> storeList() {
@@ -58,7 +60,7 @@ public class DebugUtil {
 
         List<Menu> menuList = new ArrayList<>();
         for (FakeData data : dataList) {
-            Menu menu = new Menu("TEST", "TEST", data.name, data.price, "TT");
+            Menu menu = new Menu("TEST", "TEST", "TEST", data.name, data.price, "TT");
             menuList.add(menu);
         }
 
@@ -99,5 +101,28 @@ public class DebugUtil {
             this.name = name;
             this.price = price;
         }
+    }
+
+    public static List<MenuOption> menuOptionList(String menuUuid) {
+        List<MenuOption> result = new ArrayList<>();
+        result.add(new MenuOption("TEST", menuUuid, "size", "small", -200));
+        result.add(new MenuOption("TEST", menuUuid, "size", "tall", 0));
+        result.add(new MenuOption("TEST", menuUuid, "size", "grande", 500));
+        result.add(new MenuOption("TEST", menuUuid, "시럽", "없음", 0));
+        result.add(new MenuOption("TEST", menuUuid, "시럽", "많이", 0));
+        result.add(new MenuOption("TEST", menuUuid, "test", "1", 1));
+        result.add(new MenuOption("TEST", menuUuid, "test", "2", 2));
+        result.add(new MenuOption("TEST", menuUuid, "test", "3", 3));
+        result.add(new MenuOption("TEST", menuUuid, "test", "4", 4));
+        result.add(new MenuOption("TEST", menuUuid, "test", "5", 5));
+        result.add(new MenuOption("TEST", menuUuid, "test", "6", 6));
+        result.add(new MenuOption("TEST", menuUuid, "1", "tall", 0));
+        result.add(new MenuOption("TEST", menuUuid, "2", "tall", 0));
+        result.add(new MenuOption("TEST", menuUuid, "3", "tall", 0));
+        result.add(new MenuOption("TEST", menuUuid, "4", "tall", 0));
+        result.add(new MenuOption("TEST", menuUuid, "5", "tall", 0));
+        result.add(new MenuOption("TEST", menuUuid, "6", "tall", 0));
+        result.add(new MenuOption("TEST", menuUuid, "7", "tall", 0));
+        return result;
     }
 }

@@ -12,7 +12,7 @@ import butterknife.ButterKnife;
 /**
  * Created by mark on 18. 5. 19.
  */
-public class HeaderViewHolder extends RecyclerView.ViewHolder {
+class HeaderViewHolder extends RecyclerView.ViewHolder {
 
     @BindView(R.id.title) TextView title;
 

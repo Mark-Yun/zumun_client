@@ -1,7 +1,5 @@
 package com.mark.zumo.client.customer.model.entity;
 
-import com.mark.zumo.client.core.entity.Menu;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,21 +7,21 @@ import java.util.List;
  * Created by mark on 18. 5. 22.
  */
 public class Cart {
-    private List<Menu> menuList;
+    private List<CartItem> cartItemList;
 
     public Cart() {
-        menuList = new ArrayList<>();
+        cartItemList = new ArrayList<>();
     }
 
-    public void addMenu(Menu menu) {
-        menuList.add(menu);
+    public void addCartItem(CartItem cartItem) {
+        cartItemList.add(cartItem);
     }
 
-    public void removeMenu(int position) {
-        menuList.remove(position);
+    public void removeCartItem(int position) {
+        cartItemList.remove(position);
     }
 
     public int getCartCount() {
-        return menuList.size();
+        return cartItemList.size();
     }
 }

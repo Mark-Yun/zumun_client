@@ -13,7 +13,7 @@ import butterknife.ButterKnife;
 /**
  * Created by mark on 18. 5. 19.
  */
-public class StoreViewHolder extends RecyclerView.ViewHolder {
+class StoreViewHolder extends RecyclerView.ViewHolder {
 
     @BindView(R.id.title) TextView title;
     @BindView(R.id.distance) TextView distance;

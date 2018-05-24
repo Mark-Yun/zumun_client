@@ -17,15 +17,15 @@ import java.io.Serializable;
 @Entity(tableName = MenuOptionDao.TABLE_NAME)
 public class MenuOption implements Serializable {
 
-    @PrimaryKey @NonNull @SerializedName("menu_option_uuid") @ColumnInfo(name = "menu_option_uuid")
+    @PrimaryKey @NonNull @SerializedName(Schema.uuid) @ColumnInfo(name = Schema.uuid)
     public final String uuid;
-    @SerializedName("menu_uuid") @ColumnInfo(name = "menu_uuid")
+    @SerializedName(Schema.menuUuid) @ColumnInfo(name = Schema.menuUuid)
     public final String menuUuid;
-    @SerializedName("option_name") @ColumnInfo(name = "option_name")
+    @SerializedName(Schema.name) @ColumnInfo(name = Schema.name)
     public final String name;
-    @SerializedName("option_value") @ColumnInfo(name = "option_value")
+    @SerializedName(Schema.value) @ColumnInfo(name = Schema.value)
     public final String value;
-    @SerializedName("option_price") @ColumnInfo(name = "option_price")
+    @SerializedName(Schema.price) @ColumnInfo(name = Schema.price)
     public final int price;
 
     public MenuOption(@NonNull final String uuid, final String menuUuid, final String name, final String value, final int price) {
@@ -34,5 +34,13 @@ public class MenuOption implements Serializable {
         this.name = name;
         this.value = value;
         this.price = price;
+    }
+
+    private interface Schema {
+        String uuid = "menu_option_uuid";
+        String menuUuid = "menu_uuid";
+        String name = "option_name";
+        String value = "option_value";
+        String price = "option_price";
     }
 }

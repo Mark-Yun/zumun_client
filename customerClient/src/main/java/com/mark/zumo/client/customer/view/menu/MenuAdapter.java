@@ -15,6 +15,7 @@ import com.mark.zumo.client.core.entity.Menu;
 import com.mark.zumo.client.core.util.glide.GlideApp;
 import com.mark.zumo.client.core.util.glide.GlideUtils;
 import com.mark.zumo.client.customer.R;
+import com.mark.zumo.client.customer.view.menu.detail.MenuDetailActivity;
 import com.mark.zumo.client.customer.viewmodel.MenuViewModel;
 
 import java.text.NumberFormat;

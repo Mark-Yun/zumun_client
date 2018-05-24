@@ -39,8 +39,8 @@ public class OrderPageAdapter extends RecyclerView.Adapter<OrderPageAdapter.View
     @Override
     public void onBindViewHolder(@NonNull final ViewHolder holder, final int position) {
         MenuOrder menuOrder = getMenuOrder(position);
-        holder.idTextView.setText("menu_uuid : " + menuOrder.id);
-        holder.priceTextView.setText("menu_price : " + menuOrder.totalPrice);
+        holder.idTextView.setText("menu_uuid : " + menuOrder.uuid);
+        holder.priceTextView.setText("menu_price : " + menuOrder.storeUuid);
     }
 
     private MenuOrder getMenuOrder(final int position) {
@@ -55,7 +55,7 @@ public class OrderPageAdapter extends RecyclerView.Adapter<OrderPageAdapter.View
     @Override
     public String getPageTitle(final int i) {
         MenuOrder menuOrder = getMenuOrder(i);
-        return "Order Number-" + menuOrder.id;
+        return "Order Number-" + menuOrder.uuid;
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder {

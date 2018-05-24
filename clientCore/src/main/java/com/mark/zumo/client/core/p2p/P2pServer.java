@@ -22,7 +22,7 @@ import com.mark.zumo.client.core.p2p.packet.Packet;
 import com.mark.zumo.client.core.p2p.packet.PacketType;
 import com.mark.zumo.client.core.p2p.packet.Request;
 import com.mark.zumo.client.core.p2p.packet.Response;
-import com.mark.zumo.client.core.repository.MenuItemRepository;
+import com.mark.zumo.client.core.repository.MenuRepository;
 
 import java.util.concurrent.Executors;
 
@@ -154,7 +154,7 @@ public class P2pServer {
 
     private Single<String> sendMenuItems(String endPointId) {
         Log.d(TAG, "sendMenuItems: endPointId=" + endPointId);
-        return Single.fromObservable(MenuItemRepository.from(activity).getMenuItemsOfStore(store))
+        return Single.fromObservable(MenuRepository.INSTANCE.getMenuItemsOfStore(store))
                 .map(Packet::new)
                 .flatMap(packet -> sendPayload(endPointId, packet))
                 .map(payload -> String.valueOf(payload.getId()));

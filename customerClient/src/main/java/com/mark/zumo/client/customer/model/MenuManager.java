@@ -3,31 +3,32 @@ package com.mark.zumo.client.customer.model;
 import android.app.Activity;
 
 import com.mark.zumo.client.core.entity.Menu;
+import com.mark.zumo.client.core.entity.MenuOption;
 import com.mark.zumo.client.core.entity.Store;
 import com.mark.zumo.client.core.entity.user.GuestUser;
 import com.mark.zumo.client.core.p2p.P2pClient;
-import com.mark.zumo.client.core.repository.MenuItemRepository;
+import com.mark.zumo.client.core.repository.MenuRepository;
 import com.mark.zumo.client.core.util.DebugUtil;
-import com.mark.zumo.client.core.util.context.ContextHolder;
 
 import java.util.List;
 
 import io.reactivex.Observable;
 import io.reactivex.Single;
+import io.reactivex.observables.GroupedObservable;
 
 /**
  * Created by mark on 18. 4. 30.
  */
 
-public enum MenuItemManager {
+public enum MenuManager {
     INSTANCE;
 
-    private MenuItemRepository menuItemRepository;
+    private MenuRepository menuRepository;
 
     private P2pClient p2pClient;
 
-    MenuItemManager() {
-        menuItemRepository = MenuItemRepository.from(ContextHolder.getContext());
+    MenuManager() {
+        menuRepository = MenuRepository.INSTANCE;
     }
 
     public Observable<List<Menu>> acquireMenuItem(Activity activity, GuestUser guestUser) {
@@ -36,7 +37,11 @@ public enum MenuItemManager {
 //                .flatMap(P2pClient::acquireMenuItems);
 
         return currentStore()
-                .flatMapObservable(menuItemRepository::getMenuItemsOfStore);
+                .flatMapObservable(menuRepository::getMenuItemsOfStore);
+    }
+
+    public Observable<Menu> getMenu(String uuid) {
+        return menuRepository.getMenu(uuid);
     }
 
     private Single<P2pClient> p2pClient(Activity activity, GuestUser guestUser) {
@@ -55,5 +60,9 @@ public enum MenuItemManager {
 
         p2pClient.stopDiscovery();
         p2pClient = null;
+    }
+
+    public Observable<GroupedObservable<String, MenuOption>> getMenuOptions(String menuUuid) {
+        return menuRepository.getMenuOptionGroupByMenu(menuUuid);
     }
 }

@@ -22,6 +22,8 @@ public class Menu implements Serializable {
     public final String uuid;
     @SerializedName(Schema.name) @ColumnInfo(name = Schema.name)
     public final String name;
+    @SerializedName(Schema.categoryName) @ColumnInfo(name = Schema.categoryName)
+    public final String categoryName;
     @SerializedName(Schema.storeUuid) @ColumnInfo(name = Schema.storeUuid)
     public final String storeUuid;
     @SerializedName(Schema.price) @ColumnInfo(name = Schema.price)
@@ -29,9 +31,12 @@ public class Menu implements Serializable {
     @SerializedName(Schema.imageUrl) @ColumnInfo(name = Schema.imageUrl)
     public final String imageUrl;
 
-    public Menu(@NonNull final String uuid, final String name, final String storeUuid, final int price, final String imageUrl) {
+    public Menu(@NonNull final String uuid, final String name, final String categoryName,
+                final String storeUuid, final int price, final String imageUrl) {
+
         this.uuid = uuid;
         this.name = name;
+        this.categoryName = categoryName;
         this.storeUuid = storeUuid;
         this.price = price;
         this.imageUrl = imageUrl;
@@ -48,5 +53,6 @@ public class Menu implements Serializable {
         String storeUuid = "store_uuid";
         String price = "menu_price";
         String imageUrl = "image_url";
+        String categoryName = "menu_category_name";
     }
 }

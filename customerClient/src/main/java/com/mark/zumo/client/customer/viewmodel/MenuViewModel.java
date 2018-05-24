@@ -10,10 +10,11 @@ import android.support.annotation.NonNull;
 import com.mark.zumo.client.core.entity.Menu;
 import com.mark.zumo.client.core.entity.Store;
 import com.mark.zumo.client.customer.model.CartManager;
-import com.mark.zumo.client.customer.model.MenuItemManager;
+import com.mark.zumo.client.customer.model.MenuManager;
 import com.mark.zumo.client.customer.model.StoreManager;
 import com.mark.zumo.client.customer.model.UserManager;
 import com.mark.zumo.client.customer.model.entity.Cart;
+import com.mark.zumo.client.customer.model.entity.CartItem;
 
 import java.util.HashMap;
 import java.util.List;
@@ -26,7 +27,8 @@ import io.reactivex.schedulers.Schedulers;
  * Created by mark on 18. 5. 10.
  */
 public class MenuViewModel extends AndroidViewModel {
-    private MenuItemManager menuItemManager;
+
+    private MenuManager menuManager;
     private UserManager userManager;
     private CartManager cartManager;
     private StoreManager storeManager;
@@ -36,7 +38,7 @@ public class MenuViewModel extends AndroidViewModel {
 
     public MenuViewModel(@NonNull final Application application) {
         super(application);
-        menuItemManager = MenuItemManager.INSTANCE;
+        menuManager = MenuManager.INSTANCE;
         userManager = UserManager.INSTANCE;
         cartManager = CartManager.INSTANCE;
         storeManager = StoreManager.INSTANCE;
@@ -47,7 +49,7 @@ public class MenuViewModel extends AndroidViewModel {
     public LiveData<List<Menu>> getMenuItemList(Activity activity) {
         MutableLiveData<List<Menu>> listMutableLiveData = new MutableLiveData<>();
         userManager.getCurrentUser()
-                .flatMap(customerUser -> menuItemManager.acquireMenuItem(activity, customerUser))
+                .flatMap(customerUser -> menuManager.acquireMenuItem(activity, customerUser))
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(listMutableLiveData::setValue);
 
@@ -56,7 +58,7 @@ public class MenuViewModel extends AndroidViewModel {
 
     @Override
     protected void onCleared() {
-        menuItemManager.clearClient();
+        menuManager.clearClient();
     }
 
     public LiveData<Cart> getCart(String storeUuid) {
@@ -72,19 +74,22 @@ public class MenuViewModel extends AndroidViewModel {
 
     public void addMenuToCart(Menu menu) {
         Cart cart = currentCart.getValue();
-        cart.addMenu(menu);
+        if (cart == null) return;
+        cart.addCartItem(CartItem.fromMenu(menu));
         currentCart.setValue(cart);
     }
 
     public void removeMenuFromCart(int position) {
         Cart cart = currentCart.getValue();
-        cart.removeMenu(position);
+        if (cart == null) return;
+        cart.removeCartItem(position);
         currentCart.setValue(cart);
     }
 
     public void removeLatestMenuFromCart() {
         Cart cart = currentCart.getValue();
-        cart.removeMenu(cart.getCartCount() - 1);
+        if (cart == null) return;
+        cart.removeCartItem(cart.getCartCount() - 1);
         currentCart.setValue(cart);
     }
 
