@@ -38,20 +38,9 @@ public class MenuDetailActivity extends AppCompatActivity {
     }
 
     @Override
-    public void onAttachedToWindow() {
-        super.onAttachedToWindow();
-        Navigator.setBlurLayoutVisible(true);
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        Navigator.setBlurLayoutVisible(false);
-    }
-
-    @Override
     public void finish() {
         super.finish();
+        Navigator.setBlurLayoutVisible(false);
         overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
     }
 }

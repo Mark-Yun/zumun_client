@@ -48,6 +48,12 @@ public class MainActivity extends BaseActivity {
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        Navigator.setBlurLayoutVisible(false);
+    }
+
+    @Override
     protected void onDestroy() {
         super.onDestroy();
         Navigator.setBlurFilter(null);

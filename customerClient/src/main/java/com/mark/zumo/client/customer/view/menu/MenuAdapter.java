@@ -18,6 +18,7 @@ import com.mark.zumo.client.core.entity.Menu;
 import com.mark.zumo.client.core.util.glide.GlideApp;
 import com.mark.zumo.client.core.util.glide.GlideUtils;
 import com.mark.zumo.client.customer.R;
+import com.mark.zumo.client.customer.view.Navigator;
 import com.mark.zumo.client.customer.view.menu.detail.MenuDetailActivity;
 import com.mark.zumo.client.customer.viewmodel.MenuViewModel;
 
@@ -86,6 +87,8 @@ class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.ViewHolder> {
         Intent intent = new Intent(context, MenuDetailActivity.class);
         intent.putExtra(MenuDetailActivity.KEY_MENU_UUID, menu.uuid);
         context.startActivity(intent);
+
+        Navigator.setBlurLayoutVisible(true);
         return true;
     }
 

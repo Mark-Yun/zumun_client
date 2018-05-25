@@ -21,6 +21,7 @@ public final class Navigator {
 
     public static void setBlurLayoutVisible(boolean visible) {
         if (blurLayout == null) return;
+        if ((blurLayout.getVisibility() == View.VISIBLE) == visible) return;
 
         int animRes = visible ? android.R.anim.fade_in : android.R.anim.fade_out;
         Animation animationFade = AnimationUtils.loadAnimation(ContextHolder.getContext(), animRes);
