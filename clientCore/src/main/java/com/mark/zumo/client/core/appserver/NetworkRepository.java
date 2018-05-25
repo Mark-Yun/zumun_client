@@ -7,6 +7,7 @@ import com.mark.zumo.client.core.entity.user.GuestUser;
 
 import java.util.List;
 
+import io.reactivex.Observable;
 import io.reactivex.Single;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
@@ -17,7 +18,7 @@ import retrofit2.http.Query;
  * Created by mark on 18. 4. 30.
  */
 
-public interface AppServerService {
+public interface NetworkRepository {
     String URL = "https://faca5l5t89.execute-api.ap-northeast-2.amazonaws.com/zumo_api/";
 
     @GET("users/guest/create")
@@ -27,7 +28,7 @@ public interface AppServerService {
     Single<Void> deleteGuestUser(@Query("menu_uuid") String uuid);
 
     @GET("menu/get")
-    Single<List<Menu>> getMenuItemList(@Query("store_uuid") String storeUuid);
+    Observable<List<Menu>> getMenuList(@Query("store_uuid") String storeUuid);
 
     @POST("menu/create")
     Single<Menu> createMenuItem(@Body Menu menu);
@@ -36,8 +37,8 @@ public interface AppServerService {
     Single<Store> createStore(@Body Store store);
 
     @GET("store/get")
-    Single<Store> getStore(@Query("store_uuid") String storeUuid);
+    Observable<Store> getStore(@Query("store_uuid") String storeUuid);
 
     @GET("option/get")
-    Single<List<MenuOption>> getMenuOption(@Query("menu_uuid") String uuid);
+    Observable<List<MenuOption>> getMenuOptionList(@Query("menu_uuid") String uuid);
 }

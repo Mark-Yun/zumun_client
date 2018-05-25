@@ -1,6 +1,7 @@
 package com.mark.zumo.client.customer.model;
 
 import com.mark.zumo.client.core.entity.user.GuestUser;
+import com.mark.zumo.client.core.util.DebugUtil;
 
 import io.reactivex.Observable;
 import io.reactivex.schedulers.Schedulers;
@@ -17,6 +18,6 @@ public enum UserManager {
 
     public Observable<GuestUser> getCurrentUser() {
         //TODO: remove Test Data
-        return Observable.just(new GuestUser()).subscribeOn(Schedulers.io());
+        return Observable.just(DebugUtil.guestUser()).subscribeOn(Schedulers.io());
     }
 }

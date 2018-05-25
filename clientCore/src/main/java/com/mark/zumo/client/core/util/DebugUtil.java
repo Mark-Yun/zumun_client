@@ -23,7 +23,7 @@ public class DebugUtil {
     public static final String TEST_STORE_UUID = "FD8BC4DD00B04E60A166A5FBD3454E8F";
 
     public static GuestUser guestUser() {
-        return new GuestUser();
+        return new GuestUser(UUID.randomUUID().toString());
     }
 
     public static Store store() {

@@ -2,11 +2,12 @@ package com.mark.zumo.client.core.repository;
 
 import android.content.Context;
 import android.location.Location;
+import android.util.Log;
 
-import com.mark.zumo.client.core.appserver.AppServerService;
 import com.mark.zumo.client.core.appserver.AppServerServiceProvider;
+import com.mark.zumo.client.core.appserver.NetworkRepository;
 import com.mark.zumo.client.core.dao.AppDatabaseProvider;
-import com.mark.zumo.client.core.dao.StoreDao;
+import com.mark.zumo.client.core.dao.DiskRepository;
 import com.mark.zumo.client.core.entity.Store;
 import com.mark.zumo.client.core.entity.util.EntityComparator;
 import com.mark.zumo.client.core.util.DebugUtil;
@@ -14,7 +15,7 @@ import com.mark.zumo.client.core.util.DebugUtil;
 import java.util.List;
 
 import io.reactivex.Observable;
-import io.reactivex.ObservableOnSubscribe;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * Created by mark on 18. 4. 30.
@@ -22,14 +23,15 @@ import io.reactivex.ObservableOnSubscribe;
 
 public class StoreRepository {
 
+    public static final String TAG = "StoreRepository";
     private volatile static StoreRepository instance;
 
-    private AppServerService appServerService;
-    private StoreDao storeDao;
+    private NetworkRepository networkRepository;
+    private DiskRepository diskRepository;
 
     private StoreRepository(Context context) {
-        appServerService = AppServerServiceProvider.INSTANCE.service;
-        storeDao = AppDatabaseProvider.getDatabase(context).storeDao();
+        networkRepository = AppServerServiceProvider.INSTANCE.networkRepository;
+        diskRepository = AppDatabaseProvider.INSTANCE.appDatabase.diskRepository();
     }
 
     public static StoreRepository from(Context context) {
@@ -54,11 +56,17 @@ public class StoreRepository {
     }
 
     public Observable<Store> getStore(String storeUuid) {
-        return Observable.create((ObservableOnSubscribe<Store>) e -> {
-            storeDao.findById(storeUuid).subscribe(e::onNext);
-            appServerService.getStore(storeUuid)
-                    .doOnSuccess(storeDao::insert)
-                    .subscribe(e::onNext);
-        }).distinctUntilChanged(new EntityComparator<>());
+        Observable<Store> storeDB = diskRepository.getStore(storeUuid).toObservable();
+        Observable<Store> storeApi = networkRepository.getStore(storeUuid)
+                .doOnNext(diskRepository::insert);
+
+        return Observable.merge(storeDB, storeApi)
+                .doOnError(this::onErrorOccurred)
+                .subscribeOn(Schedulers.io())
+                .distinctUntilChanged(new EntityComparator<>());
+    }
+
+    private void onErrorOccurred(Throwable throwable) {
+        Log.e(TAG, "onErrorOccurred: ", throwable);
     }
 }

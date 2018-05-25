@@ -25,6 +25,7 @@ import io.reactivex.schedulers.Schedulers;
  */
 public class MenuDetailViewModel extends AndroidViewModel {
 
+    public static final String TAG = "MenuDetailViewModel";
     private MenuManager menuManager;
     private Map<String, List<MenuOption>> menuOptionMap;
     private Map<String, MenuOption> selectedOptionMap;
@@ -53,16 +54,14 @@ public class MenuDetailViewModel extends AndroidViewModel {
 
     private void loadMenuOptions(MutableLiveData<Map<String, List<MenuOption>>> liveData, String menuUuid) {
         menuOptionMap.clear();
-//        menuOptionMap = new LinkedHashMap<>();
         selectedOptionMap.clear();
-//        selectedOptionMap = new HashMap<>();
 
         menuManager.getMenuOptions(menuUuid)
-                .subscribeOn(Schedulers.computation())
                 .flatMapSingle(Observable::toList)
-                .subscribe(menuOptions -> menuOptionMap.put(menuOptions.get(0).name, menuOptions),
-                        throwable -> Log.e("MenuDetailViewModel", "loadMenuOptions: ", throwable),
-                        () -> liveData.postValue(menuOptionMap));
+                .doOnNext(menuOptions -> Log.d(TAG, "loadMenuOptions: " + menuOptions.size()))
+                .doOnNext(menuOptions -> menuOptionMap.put(menuOptions.get(0).name, menuOptions))
+                .doOnComplete(() -> liveData.postValue(menuOptionMap))
+                .subscribe();
     }
 
     public void selectMenuOption(MenuOption menuOption) {

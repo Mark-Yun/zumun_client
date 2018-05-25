@@ -3,11 +3,10 @@ package com.mark.zumo.client.core.repository;
 import android.content.Context;
 import android.util.Log;
 
-import com.mark.zumo.client.core.appserver.AppServerService;
 import com.mark.zumo.client.core.appserver.AppServerServiceProvider;
+import com.mark.zumo.client.core.appserver.NetworkRepository;
 import com.mark.zumo.client.core.dao.AppDatabaseProvider;
-import com.mark.zumo.client.core.dao.MenuDao;
-import com.mark.zumo.client.core.dao.MenuOptionDao;
+import com.mark.zumo.client.core.dao.DiskRepository;
 import com.mark.zumo.client.core.entity.Menu;
 import com.mark.zumo.client.core.entity.MenuOption;
 import com.mark.zumo.client.core.entity.Store;
@@ -20,6 +19,7 @@ import java.util.List;
 import io.reactivex.Observable;
 import io.reactivex.ObservableOnSubscribe;
 import io.reactivex.observables.GroupedObservable;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * Created by mark on 18. 4. 30.
@@ -30,36 +30,43 @@ public enum MenuRepository {
 
     public static final String TAG = "MenuRepository";
 
-    private MenuDao menuDao;
-    private MenuOptionDao menuOptionDao;
+    private DiskRepository diskRepository;
     private Context context;
-    private AppServerService appServerService;
+    private NetworkRepository networkRepository;
 
     MenuRepository() {
         context = ContextHolder.getContext();
-        menuDao = AppDatabaseProvider.getDatabase(context).menuItemDao();
-        appServerService = AppServerServiceProvider.INSTANCE.service;
+
+        diskRepository = AppDatabaseProvider.INSTANCE.appDatabase.diskRepository();
+        networkRepository = AppServerServiceProvider.INSTANCE.networkRepository;
+    }
+
+    private void onErrorOccurred(Throwable throwable) {
+        Log.e(TAG, "onErrorOccurred: ", throwable);
     }
 
     public Observable<List<Menu>> getMenuItemsOfStore(Store store) {
-        return Observable.create((ObservableOnSubscribe<List<Menu>>) e -> {
-            String storeUuid = store.uuid;
-            menuDao.findByStoreUuid(storeUuid).subscribe(e::onNext);
-            appServerService.getMenuItemList(storeUuid)
-                    .doOnSuccess(menuDao::insertAll)
-                    .subscribe(e::onNext,
-                            throwable -> Log.e(TAG, "getMenuItemsOfStore: ", throwable));
-        }).distinctUntilChanged(new ListComparator<>());
+        String storeUuid = store.uuid;
+
+        Observable<List<Menu>> menuListDB = diskRepository.getMenuList(storeUuid).toObservable();
+        Observable<List<Menu>> menuListApi = networkRepository.getMenuList(storeUuid)
+                .doOnNext(diskRepository::insertMenuList);
+
+        return Observable.merge(menuListDB, menuListApi)
+                .doOnError(this::onErrorOccurred)
+                .subscribeOn(Schedulers.io())
+                .distinctUntilChanged(new ListComparator<>());
     }
 
     private Observable<List<MenuOption>> getMenuOptionsOfMenu(String menuUuid) {
-        return Observable.create((ObservableOnSubscribe<List<MenuOption>>) e -> {
-            menuOptionDao.findByMenuUuid(menuUuid).subscribe(e::onNext);
-            appServerService.getMenuOption(menuUuid)
-                    .doOnSuccess(menuOptionDao::insertAll)
-                    .subscribe(e::onNext,
-                            throwable -> Log.e(TAG, "getMenuOptionsOfMenu: ", throwable));
-        }).distinctUntilChanged(new ListComparator<>());
+        Observable<List<MenuOption>> menuOptionListDB = diskRepository.getMenuOptionList(menuUuid).toObservable();
+        Observable<List<MenuOption>> menuOptionListApi = networkRepository.getMenuOptionList(menuUuid)
+                .doOnNext(diskRepository::insertMenuOptionList);
+
+        return Observable.merge(menuOptionListDB, menuOptionListApi)
+                .doOnError(this::onErrorOccurred)
+                .subscribeOn(Schedulers.io())
+                .distinctUntilChanged(new ListComparator<>());
     }
 
     private Observable<MenuOption> getMenuOptionFromList(List<MenuOption> menuOptionList) {
@@ -78,7 +85,9 @@ public enum MenuRepository {
 
     public Observable<Menu> getMenu(final String uuid) {
         return Observable.create((ObservableOnSubscribe<Menu>) e -> {
-            menuDao.findByUuid(uuid).subscribe(e::onNext);
+            diskRepository.getMenu(uuid)
+                    .doOnSuccess(e::onNext)
+                    .subscribe();
         }).distinctUntilChanged(new EntityComparator<>());
     }
 }

@@ -1,6 +1,5 @@
 package com.mark.zumo.client.customer.view;
 
-import android.os.Handler;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -43,8 +42,6 @@ public final class Navigator {
             }
         });
         blurLayout.startAnimation(animationFade);
-
-        new Handler().postDelayed(() -> blurLayout.setVisibility(visible ? View.VISIBLE : View.GONE)
-                , animationFade.computeDurationHint());
+        blurLayout.setVisibility(visible ? View.VISIBLE : View.GONE);
     }
 }

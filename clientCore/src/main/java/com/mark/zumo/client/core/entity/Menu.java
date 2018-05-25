@@ -6,7 +6,6 @@ import android.arch.persistence.room.PrimaryKey;
 import android.support.annotation.NonNull;
 
 import com.google.gson.annotations.SerializedName;
-import com.mark.zumo.client.core.dao.MenuDao;
 import com.mark.zumo.client.core.entity.util.EntityHelper;
 
 import java.io.Serializable;
@@ -15,8 +14,9 @@ import java.io.Serializable;
  * Created by mark on 18. 4. 30.
  */
 
-@Entity(tableName = MenuDao.TABLE_NAME)
+@Entity(tableName = Menu.MENU_TABLE)
 public class Menu implements Serializable {
+    public static final String MENU_TABLE = "menu";
 
     @PrimaryKey @NonNull @SerializedName(Schema.uuid) @ColumnInfo(name = Schema.uuid)
     public final String uuid;

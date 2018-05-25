@@ -6,17 +6,19 @@ import android.arch.persistence.room.PrimaryKey;
 import android.support.annotation.NonNull;
 
 import com.google.gson.annotations.SerializedName;
-import com.mark.zumo.client.core.dao.MenuOrderDao;
 import com.mark.zumo.client.core.entity.util.EntityHelper;
 
 import java.io.Serializable;
+
+import static com.mark.zumo.client.core.entity.MenuOrder.TABLE;
 
 /**
  * Created by mark on 18. 4. 30.
  */
 
-@Entity(tableName = MenuOrderDao.TABLE_NAME)
+@Entity(tableName = TABLE)
 public class MenuOrder implements Serializable {
+    public static final String TABLE = "menu_order";
 
     @PrimaryKey @NonNull @ColumnInfo(name = Schema.uuid) @SerializedName(Schema.uuid)
     public final String uuid;

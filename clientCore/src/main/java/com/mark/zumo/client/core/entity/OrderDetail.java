@@ -6,15 +6,17 @@ import android.arch.persistence.room.PrimaryKey;
 import android.support.annotation.NonNull;
 
 import com.google.gson.annotations.SerializedName;
-import com.mark.zumo.client.core.dao.OrderDetailDao;
 
 import java.io.Serializable;
+
+import static com.mark.zumo.client.core.entity.OrderDetail.TABLE;
 
 /**
  * Created by mark on 18. 5. 22.
  */
-@Entity(tableName = OrderDetailDao.TABLE_NAME)
+@Entity(tableName = TABLE)
 public class OrderDetail implements Serializable {
+    public static final String TABLE = "order_detail";
 
     @PrimaryKey @NonNull @SerializedName(Schema.uuid) @ColumnInfo(name = Schema.uuid)
     public final String uuid;

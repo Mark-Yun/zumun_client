@@ -4,25 +4,21 @@ import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
 import android.support.annotation.NonNull;
 
-import com.mark.zumo.client.core.dao.GuestUserDao;
 import com.mark.zumo.client.core.entity.util.EntityHelper;
+
+import static com.mark.zumo.client.core.entity.user.GuestUser.TABLE;
 
 /**
  * Created by mark on 18. 4. 30.
  */
 
-@Entity(tableName = GuestUserDao.TABLE_NAME)
+@Entity(tableName = TABLE)
 public class GuestUser {
-
+    public static final String TABLE = "guest_user";
     @PrimaryKey @NonNull
-    private String uuid;
+    public final String uuid;
 
-    @NonNull
-    public String getUuid() {
-        return uuid;
-    }
-
-    public void setUuid(@NonNull final String uuid) {
+    public GuestUser(@NonNull final String uuid) {
         this.uuid = uuid;
     }
 

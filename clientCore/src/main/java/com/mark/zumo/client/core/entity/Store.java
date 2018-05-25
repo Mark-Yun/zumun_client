@@ -6,15 +6,17 @@ import android.arch.persistence.room.PrimaryKey;
 import android.support.annotation.NonNull;
 
 import com.google.gson.annotations.SerializedName;
-import com.mark.zumo.client.core.dao.StoreDao;
 import com.mark.zumo.client.core.entity.util.EntityHelper;
+
+import static com.mark.zumo.client.core.entity.Store.TABLE;
 
 /**
  * Created by mark on 18. 4. 30.
  */
 
-@Entity(tableName = StoreDao.TABLE_NAME)
+@Entity(tableName = TABLE)
 public class Store {
+    public static final String TABLE = "store";
 
     @PrimaryKey @NonNull @SerializedName(Schema.uuid) @ColumnInfo(name = Schema.uuid)
     public final String uuid;
@@ -44,8 +46,8 @@ public class Store {
     }
 
     private interface Schema {
-        String uuid = "store_uuid";
-        String name = "store_name";
+        String uuid = TABLE + "_uuid";
+        String name = TABLE + "_name";
         String latitude = "latitude";
         String longitude = "longitude";
         String coverImageUrl = "cover_image_url";

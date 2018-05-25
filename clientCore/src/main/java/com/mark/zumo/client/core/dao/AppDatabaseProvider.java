@@ -3,26 +3,19 @@ package com.mark.zumo.client.core.dao;
 import android.arch.persistence.room.Room;
 import android.content.Context;
 
+import com.mark.zumo.client.core.util.context.ContextHolder;
+
 /**
  * Created by mark on 18. 4. 30.
  */
 
-public class AppDatabaseProvider {
+public enum AppDatabaseProvider {
+    INSTANCE;
 
-    private static final Object appDatabaseLock = new Object();
+    public final AppDatabase appDatabase;
 
-    private volatile static AppDatabase appDatabase;
-
-    public static AppDatabase getDatabase(Context context) {
-        if (appDatabase == null) {
-            synchronized (appDatabaseLock) {
-                if (appDatabase == null) {
-                    appDatabase = buildDatabase(context);
-                }
-            }
-        }
-
-        return appDatabase;
+    AppDatabaseProvider() {
+        appDatabase = buildDatabase(ContextHolder.getContext());
     }
 
     private static AppDatabase buildDatabase(Context context) {

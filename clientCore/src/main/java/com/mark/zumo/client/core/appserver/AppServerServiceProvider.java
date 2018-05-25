@@ -40,26 +40,26 @@ public enum AppServerServiceProvider {
     private static final String CONTENT_TYPE = "Content-type";
     private static final String APPLICATION_JSON = "application/json";
 
-    public AppServerService service;
+    public NetworkRepository networkRepository;
 
     AppServerServiceProvider() {
-        service = appServerService();
+        networkRepository = buildNetworkRepository();
         buildDefaultHeader()
                 .flatMap(this::interceptor)
                 .flatMap(this::okHttpClient)
-                .flatMap(this::appServerService)
+                .flatMap(this::buildNetworkRepository)
                 .subscribeOn(Schedulers.newThread())
-                .subscribe(appServerService -> this.service = appServerService
+                .subscribe(networkRepository -> this.networkRepository = networkRepository
                         , throwable -> Log.e(TAG, "AppServerServiceProvider: ", throwable));
     }
 
-    private AppServerService appServerService() {
+    private NetworkRepository buildNetworkRepository() {
         return new Retrofit.Builder()
-                .baseUrl(AppServerService.URL)
+                .baseUrl(NetworkRepository.URL)
                 .addConverterFactory(gsonConverterFactory())
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .build()
-                .create(AppServerService.class);
+                .create(NetworkRepository.class);
     }
 
     public void buildSessionHeader(String uuid) {
@@ -67,20 +67,20 @@ public enum AppServerServiceProvider {
                 .flatMap(bundle -> addGuestUuid(bundle, uuid))
                 .flatMap(this::interceptor)
                 .flatMap(this::okHttpClient)
-                .flatMap(this::appServerService)
+                .flatMap(this::buildNetworkRepository)
                 .subscribeOn(Schedulers.newThread())
-                .subscribe(appServerService -> this.service = appServerService
+                .subscribe(appServerService -> this.networkRepository = appServerService
                         , throwable -> Log.e(TAG, "AppServerServiceProvider: ", throwable));
     }
 
-    private Single<AppServerService> appServerService(final OkHttpClient okHttpClient) {
+    private Single<NetworkRepository> buildNetworkRepository(final OkHttpClient okHttpClient) {
         return Single.fromCallable(() -> new Retrofit.Builder()
-                .baseUrl(AppServerService.URL)
+                .baseUrl(NetworkRepository.URL)
                 .addConverterFactory(gsonConverterFactory())
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .client(okHttpClient)
                 .build()
-                .create(AppServerService.class));
+                .create(NetworkRepository.class));
     }
 
     @NonNull
@@ -125,7 +125,6 @@ public enum AppServerServiceProvider {
                     Request request = builder
                             .method(original.method(), original.body())
                             .build();
-
 
                     return chain.proceed(request);
                 }

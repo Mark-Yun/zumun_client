@@ -3,11 +3,8 @@ package com.mark.zumo.client.core.repository;
 import android.content.Context;
 import android.util.Log;
 
-import com.mark.zumo.client.core.appserver.AppServerService;
 import com.mark.zumo.client.core.appserver.AppServerServiceProvider;
-import com.mark.zumo.client.core.dao.AppDatabase;
-import com.mark.zumo.client.core.dao.AppDatabaseProvider;
-import com.mark.zumo.client.core.entity.user.GuestUser;
+import com.mark.zumo.client.core.appserver.NetworkRepository;
 import com.mark.zumo.client.core.security.SecurePreferences;
 
 import io.reactivex.Maybe;
@@ -23,11 +20,9 @@ public class SessionRepository {
     public static final String TAG = "SessionRepository";
     private volatile static SessionRepository instance;
 
-    private AppDatabase database;
     private SecuredRepository securedRepository;
 
     private SessionRepository(Context context) {
-        database = AppDatabaseProvider.getDatabase(context);
         securedRepository = SecuredRepository.INSTANCE;
     }
 
@@ -40,15 +35,15 @@ public class SessionRepository {
         return instance;
     }
 
-    AppServerService appServerService() {
-        return AppServerServiceProvider.INSTANCE.service;
+    NetworkRepository appServerService() {
+        return AppServerServiceProvider.INSTANCE.networkRepository;
     }
 
     private Single<String> acquireGuestUserUuid() {
         Log.d(TAG, "acquireGuestUserUuid: ");
 
         return Single.zip(securedRepository.securePreferences()
-                , appServerService().createGuestUser().map(GuestUser::getUuid)
+                , appServerService().createGuestUser().map(guestUser -> guestUser.uuid)
                 , this::saveGuestUserUuid);
     }
 

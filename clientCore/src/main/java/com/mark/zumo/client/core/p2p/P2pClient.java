@@ -163,7 +163,7 @@ public class P2pClient {
 
     private Single<String> requestConnection(String endPointId, Packet packet) {
         Log.d(TAG, "requestConnection: " + endPointId);
-        return Single.create(e -> connectionsClient().requestConnection(String.valueOf(guestUser.getUuid()), endPointId,
+        return Single.create(e -> connectionsClient().requestConnection(String.valueOf(guestUser.uuid), endPointId,
                 new ConnectionLifecycleCallback() {
                     @Override
                     public void onConnectionInitiated(@NonNull String endpointId1, @NonNull ConnectionInfo connectionInfo) {

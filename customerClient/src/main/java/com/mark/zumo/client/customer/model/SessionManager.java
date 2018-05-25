@@ -2,8 +2,8 @@ package com.mark.zumo.client.customer.model;
 
 import android.content.Context;
 
-import com.mark.zumo.client.core.appserver.AppServerService;
 import com.mark.zumo.client.core.appserver.AppServerServiceProvider;
+import com.mark.zumo.client.core.appserver.NetworkRepository;
 import com.mark.zumo.client.core.repository.SessionRepository;
 import com.mark.zumo.client.core.repository.UserRepository;
 import com.mark.zumo.client.core.security.EncryptionContract;
@@ -26,7 +26,7 @@ public enum SessionManager {
     private SessionRepository sessionRepository;
     private UserRepository userRepository;
     private SecurePreferences securePreferences;
-    private AppServerService appServerService;
+    private NetworkRepository networkRepository;
     private AppServerServiceProvider appServerServiceProvider;
 
     SessionManager() {

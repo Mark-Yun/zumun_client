@@ -2,11 +2,8 @@ package com.mark.zumo.client.core.repository;
 
 import android.content.Context;
 
-import com.mark.zumo.client.core.appserver.AppServerService;
 import com.mark.zumo.client.core.appserver.AppServerServiceProvider;
-import com.mark.zumo.client.core.dao.AppDatabase;
-import com.mark.zumo.client.core.dao.AppDatabaseProvider;
-import com.mark.zumo.client.core.dao.MenuOrderDao;
+import com.mark.zumo.client.core.appserver.NetworkRepository;
 
 /**
  * Created by mark on 18. 4. 30.
@@ -16,10 +13,8 @@ public class OrderRepository {
 
     private volatile static OrderRepository instance;
 
-    private AppDatabase database;
 
     private OrderRepository(Context context) {
-        database = AppDatabaseProvider.getDatabase(context);
     }
 
     public static OrderRepository from(Context context) {
@@ -31,11 +26,7 @@ public class OrderRepository {
         return instance;
     }
 
-    private MenuOrderDao orderDao() {
-        return database.orderDao();
-    }
-
-    AppServerService appServerService() {
-        return AppServerServiceProvider.INSTANCE.service;
+    NetworkRepository appServerService() {
+        return AppServerServiceProvider.INSTANCE.networkRepository;
     }
 }

@@ -2,6 +2,7 @@ package com.mark.zumo.client.customer.view.menu.detail;
 
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.ViewGroup;
 
 import com.mark.zumo.client.core.entity.MenuOption;
@@ -17,6 +18,7 @@ import java.util.Map;
  */
 public class MenuOptionAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
+    public static final String TAG = "MenuOptionAdapter";
     private Map<String, List<MenuOption>> optionMap;
     private MenuDetailViewModel menuDetailViewModel;
 
@@ -27,6 +29,7 @@ public class MenuOptionAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     void setOptionMap(final Map<String, List<MenuOption>> optionMap) {
         this.optionMap = optionMap;
+        Log.d(TAG, "setOptionMap: " + optionMap.keySet().size());
         notifyDataSetChanged();
     }
 
