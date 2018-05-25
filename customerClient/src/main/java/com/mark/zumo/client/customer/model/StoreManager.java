@@ -9,7 +9,6 @@ import java.util.List;
 
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.schedulers.Schedulers;
 
 /**
  * Created by mark on 18. 4. 30.
@@ -29,8 +28,7 @@ public enum StoreManager {
     public Observable<List<Store>> nearByStore() {
         return locationProvider.currentLocation()
                 .subscribeOn(AndroidSchedulers.mainThread())
-                .flatMap(storeRepository::nearByStore)
-                .subscribeOn(Schedulers.io());
+                .flatMap(storeRepository::nearByStore);
     }
 
     public Observable<List<Store>> latestVisitStore() {

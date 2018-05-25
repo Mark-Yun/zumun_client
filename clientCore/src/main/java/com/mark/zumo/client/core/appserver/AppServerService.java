@@ -1,6 +1,7 @@
 package com.mark.zumo.client.core.appserver;
 
 import com.mark.zumo.client.core.entity.Menu;
+import com.mark.zumo.client.core.entity.MenuOption;
 import com.mark.zumo.client.core.entity.Store;
 import com.mark.zumo.client.core.entity.user.GuestUser;
 
@@ -36,4 +37,7 @@ public interface AppServerService {
 
     @GET("store/get")
     Single<Store> getStore(@Query("store_uuid") String storeUuid);
+
+    @GET("option/get")
+    Single<List<MenuOption>> getMenuOption(@Query("menu_uuid") String uuid);
 }

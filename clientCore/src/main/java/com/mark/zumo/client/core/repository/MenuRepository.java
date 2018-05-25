@@ -5,15 +5,14 @@ import android.util.Log;
 
 import com.mark.zumo.client.core.appserver.AppServerService;
 import com.mark.zumo.client.core.appserver.AppServerServiceProvider;
-import com.mark.zumo.client.core.dao.AppDatabase;
 import com.mark.zumo.client.core.dao.AppDatabaseProvider;
 import com.mark.zumo.client.core.dao.MenuDao;
+import com.mark.zumo.client.core.dao.MenuOptionDao;
 import com.mark.zumo.client.core.entity.Menu;
 import com.mark.zumo.client.core.entity.MenuOption;
 import com.mark.zumo.client.core.entity.Store;
 import com.mark.zumo.client.core.entity.util.EntityComparator;
 import com.mark.zumo.client.core.entity.util.ListComparator;
-import com.mark.zumo.client.core.util.DebugUtil;
 import com.mark.zumo.client.core.util.context.ContextHolder;
 
 import java.util.List;
@@ -30,10 +29,9 @@ public enum MenuRepository {
     INSTANCE;
 
     public static final String TAG = "MenuRepository";
-    private volatile static MenuRepository instance;
 
-    private AppDatabase database;
     private MenuDao menuDao;
+    private MenuOptionDao menuOptionDao;
     private Context context;
     private AppServerService appServerService;
 
@@ -48,7 +46,7 @@ public enum MenuRepository {
             String storeUuid = store.uuid;
             menuDao.findByStoreUuid(storeUuid).subscribe(e::onNext);
             appServerService.getMenuItemList(storeUuid)
-                    .doOnSuccess(menuList -> menuDao.insertAll(menuList.toArray(new Menu[]{})))
+                    .doOnSuccess(menuDao::insertAll)
                     .subscribe(e::onNext,
                             throwable -> Log.e(TAG, "getMenuItemsOfStore: ", throwable));
         }).distinctUntilChanged(new ListComparator<>());
@@ -56,9 +54,11 @@ public enum MenuRepository {
 
     private Observable<List<MenuOption>> getMenuOptionsOfMenu(String menuUuid) {
         return Observable.create((ObservableOnSubscribe<List<MenuOption>>) e -> {
-            //TODO: remove test data
-            e.onNext(DebugUtil.menuOptionList(menuUuid));
-            e.onComplete();
+            menuOptionDao.findByMenuUuid(menuUuid).subscribe(e::onNext);
+            appServerService.getMenuOption(menuUuid)
+                    .doOnSuccess(menuOptionDao::insertAll)
+                    .subscribe(e::onNext,
+                            throwable -> Log.e(TAG, "getMenuOptionsOfMenu: ", throwable));
         }).distinctUntilChanged(new ListComparator<>());
     }
 

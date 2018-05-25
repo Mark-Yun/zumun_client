@@ -31,7 +31,7 @@ public interface MenuDao {
     Maybe<List<Menu>> findByStoreUuid(String storeUuid);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    void insertAll(Menu... menus);
+    void insertAll(List<Menu> menus);
 
     @Update
     void update(Menu user);

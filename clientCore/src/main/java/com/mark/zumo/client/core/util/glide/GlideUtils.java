@@ -1,6 +1,5 @@
 package com.mark.zumo.client.core.util.glide;
 
-import com.bumptech.glide.load.DecodeFormat;
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.bumptech.glide.request.RequestOptions;
 
@@ -13,8 +12,7 @@ public final class GlideUtils {
     }
 
     public static RequestOptions storeImageOptions() {
-        return RequestOptions.circleCropTransform()
-                .format(DecodeFormat.PREFER_ARGB_8888);
+        return RequestOptions.circleCropTransform();
     }
 
     public static DrawableTransitionOptions storeTransitionOptions() {
@@ -26,8 +24,7 @@ public final class GlideUtils {
     }
 
     public static RequestOptions storeCoverImageOptions() {
-        return RequestOptions.centerCropTransform()
-                .format(DecodeFormat.PREFER_ARGB_8888);
+        return RequestOptions.centerCropTransform();
     }
 
     public static RequestOptions menuImageOptions() {

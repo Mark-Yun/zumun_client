@@ -7,6 +7,8 @@ import android.arch.persistence.room.Query;
 
 import com.mark.zumo.client.core.entity.MenuOption;
 
+import java.util.List;
+
 import io.reactivex.Maybe;
 
 /**
@@ -16,9 +18,9 @@ import io.reactivex.Maybe;
 public interface MenuOptionDao {
     String TABLE_NAME = "menu_option";
 
-    @Query("SELECT * FROM " + TABLE_NAME + " WHERE menu_option_uuid LIKE :uuid LIMIT 1")
-    Maybe<MenuOption> findByUuid(String uuid);
+    @Query("SELECT * FROM " + TABLE_NAME + " WHERE menu_option_uuid LIKE :menuUuid LIMIT 1")
+    Maybe<List<MenuOption>> findByMenuUuid(String menuUuid);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    void insertAll(MenuOption... menuOptions);
+    void insertAll(List<MenuOption> menuOptions);
 }

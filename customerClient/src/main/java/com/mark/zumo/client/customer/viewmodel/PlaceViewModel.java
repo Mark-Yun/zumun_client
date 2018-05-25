@@ -31,7 +31,7 @@ public class PlaceViewModel extends AndroidViewModel {
         MutableLiveData<List<Store>> nearByStore = new MutableLiveData<>();
 
         storeManager.nearByStore()
-                .subscribeOn(Schedulers.io())
+                .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(nearByStore::setValue);
 
