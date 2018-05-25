@@ -1,6 +1,7 @@
 package com.mark.zumo.client.core.repository;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.mark.zumo.client.core.appserver.AppServerService;
 import com.mark.zumo.client.core.appserver.AppServerServiceProvider;
@@ -48,7 +49,8 @@ public enum MenuRepository {
             menuDao.findByStoreUuid(storeUuid).subscribe(e::onNext);
             appServerService.getMenuItemList(storeUuid)
                     .doOnSuccess(menuList -> menuDao.insertAll(menuList.toArray(new Menu[]{})))
-                    .subscribe(e::onNext);
+                    .subscribe(e::onNext,
+                            throwable -> Log.e(TAG, "getMenuItemsOfStore: ", throwable));
         }).distinctUntilChanged(new ListComparator<>());
     }
 

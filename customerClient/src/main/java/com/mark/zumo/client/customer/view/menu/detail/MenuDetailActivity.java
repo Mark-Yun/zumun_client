@@ -6,9 +6,10 @@ import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 
 import com.mark.zumo.client.customer.R;
+import com.mark.zumo.client.customer.view.Navigator;
 
 /**
- * Created by mark on 18. 5. 23.
+ * Created by mark on 18. 5. 25.
  */
 public class MenuDetailActivity extends AppCompatActivity {
     public static final String KEY_MENU_UUID = "menu";
@@ -17,9 +18,10 @@ public class MenuDetailActivity extends AppCompatActivity {
     protected void onCreate(@Nullable final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menu_detail);
+        String uuid = getIntent().getStringExtra(KEY_MENU_UUID);
+        inflateViews(uuid);
 
-        String menuUuid = getIntent().getStringExtra(KEY_MENU_UUID);
-        inflateViews(menuUuid);
+        overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
     }
 
     private void inflateViews(String uuid) {
@@ -33,5 +35,23 @@ public class MenuDetailActivity extends AppCompatActivity {
                 .add(R.id.menu_info_fragment, menuInfoFragment)
                 .add(R.id.menu_option_fragment, menuOptionFragment)
                 .commit();
+    }
+
+    @Override
+    public void onAttachedToWindow() {
+        super.onAttachedToWindow();
+        Navigator.setBlurLayoutVisible(true);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        Navigator.setBlurLayoutVisible(false);
+    }
+
+    @Override
+    public void finish() {
+        super.finish();
+        overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
     }
 }

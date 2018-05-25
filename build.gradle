@@ -45,6 +45,7 @@ ext {
     esspressoCore = '3.0.2'
     commonsio = '2.6'
     multidex = '1.0.3'
+    blurkit = '1.0.0'
 }
 
 def applications = [project('customerClient'), project('storeClient'), project('storeServer')]
@@ -79,6 +80,8 @@ configure(applications) {
         testImplementation "junit:junit:$junit"
         androidTestImplementation "com.android.support.test:runner:$runner"
         androidTestImplementation "com.android.support.test.espresso:espresso-core:$esspressoCore"
+
+        implementation "com.wonderkiln:blurkit:$blurkit"
     }
 }
 

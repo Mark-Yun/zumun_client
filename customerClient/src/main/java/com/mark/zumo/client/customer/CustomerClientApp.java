@@ -2,8 +2,8 @@ package com.mark.zumo.client.customer;
 
 import android.app.Application;
 
-import com.mark.zumo.client.core.appserver.AppServerServiceProvider;
 import com.mark.zumo.client.core.util.context.ContextInjector;
+import com.wonderkiln.blurkit.BlurKit;
 
 /**
  * Created by mark on 18. 5. 7.
@@ -20,6 +20,6 @@ public class CustomerClientApp extends Application {
     }
 
     private void initApplication() {
-        AppServerServiceProvider appServerServiceProvider = AppServerServiceProvider.INSTANCE;
+        BlurKit.init(this);
     }
 }

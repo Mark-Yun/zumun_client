@@ -53,3 +53,11 @@
 -keepresourcexmlelements manifest/application/meta-data@name=debug_mode
 -keepresourcexmlelements manifest/application/meta-data@name=spay_debug_api_key
 -keepresourcexmlelements manifest/application/meta-data@name=spay_sdk_api_level
+
+-keep class com.wonderkiln.blurkit.** { *; }
+
+-dontwarn android.support.v8.renderscript.*
+-keepclassmembers class android.support.v8.renderscript.RenderScript {
+  native *** rsn*(...);
+  native *** n*(...);
+}

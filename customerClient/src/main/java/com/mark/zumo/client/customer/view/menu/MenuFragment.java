@@ -83,7 +83,7 @@ public class MenuFragment extends Fragment {
         recyclerView.setNestedScrollingEnabled(false);
 
         // specify an menuAdapter (see also next example)
-        menuAdapter = new MenuAdapter(menuViewModel);
+        menuAdapter = new MenuAdapter(menuViewModel, getFragmentManager());
         recyclerView.setAdapter(menuAdapter);
 
         menuViewModel.getMenuItemList(getActivity()).observe(this, this::onLoadMenuItemList);

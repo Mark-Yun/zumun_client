@@ -1,6 +1,7 @@
 package com.mark.zumo.server.store.model;
 
 import com.mark.zumo.client.core.entity.MenuOrder;
+import com.mark.zumo.client.core.util.DebugUtil;
 
 import io.reactivex.Observable;
 
@@ -15,7 +16,7 @@ public enum MenuOrderManager {
     public Observable<MenuOrder> getMenuOrder() {
         return Observable.create(e -> {
             for (int i = 0; i < 10; i++) {
-                e.onNext(new MenuOrder(i, 0, 0, null, 0, 5500));
+                e.onNext(DebugUtil.menuOrder());
                 Thread.sleep(2000);
             }
         });
