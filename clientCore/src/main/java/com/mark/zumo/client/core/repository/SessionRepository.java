@@ -21,9 +21,11 @@ public class SessionRepository {
     private volatile static SessionRepository instance;
 
     private SecuredRepository securedRepository;
+    private NetworkRepository networkRepository;
 
     private SessionRepository(Context context) {
         securedRepository = SecuredRepository.INSTANCE;
+        networkRepository = AppServerServiceProvider.INSTANCE.networkRepository;
     }
 
     public static SessionRepository from(Context context) {
@@ -35,15 +37,11 @@ public class SessionRepository {
         return instance;
     }
 
-    NetworkRepository appServerService() {
-        return AppServerServiceProvider.INSTANCE.networkRepository;
-    }
-
     private Single<String> acquireGuestUserUuid() {
         Log.d(TAG, "acquireGuestUserUuid: ");
 
         return Single.zip(securedRepository.securePreferences()
-                , appServerService().createGuestUser().map(guestUser -> guestUser.uuid)
+                , networkRepository.createGuestUser().map(guestUser -> guestUser.uuid)
                 , this::saveGuestUserUuid);
     }
 

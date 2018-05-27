@@ -5,4 +5,5 @@
     <string name="place_near_by_header_text">Near by Stores</string>
     <string name="added_to_cart">Added %s into cart.</string>
     <string name="cancel_action">Cancel</string>
+    <string name="menu_option_not_selected">Not Selected</string>
 </resources>

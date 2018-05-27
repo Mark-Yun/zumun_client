@@ -1,4 +1,4 @@
-package com.mark.zumo.client.customer.view.menu.detail;
+package com.mark.zumo.client.customer.view.menu.detail.fragment;
 
 import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
@@ -15,6 +15,7 @@ import com.mark.zumo.client.core.entity.Menu;
 import com.mark.zumo.client.core.util.glide.GlideApp;
 import com.mark.zumo.client.core.util.glide.GlideUtils;
 import com.mark.zumo.client.customer.R;
+import com.mark.zumo.client.customer.view.menu.detail.MenuDetailActivity;
 import com.mark.zumo.client.customer.viewmodel.MenuDetailViewModel;
 
 import butterknife.BindView;

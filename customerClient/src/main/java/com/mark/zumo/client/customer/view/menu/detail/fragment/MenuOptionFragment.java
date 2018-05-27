@@ -1,4 +1,4 @@
-package com.mark.zumo.client.customer.view.menu.detail;
+package com.mark.zumo.client.customer.view.menu.detail.fragment;
 
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.ViewModelProviders;
@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 
 import com.mark.zumo.client.core.entity.MenuOption;
 import com.mark.zumo.client.customer.R;
+import com.mark.zumo.client.customer.view.menu.detail.MenuDetailActivity;
 import com.mark.zumo.client.customer.viewmodel.MenuDetailViewModel;
 
 import java.util.List;
@@ -58,7 +59,7 @@ public class MenuOptionFragment extends Fragment {
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(layoutManager);
 
-        MenuOptionAdapter adapter = new MenuOptionAdapter(menuDetailViewModel);
+        MenuOptionAdapter adapter = new MenuOptionAdapter(this, menuDetailViewModel);
         recyclerView.setAdapter(adapter);
 
         LiveData<Map<String, List<MenuOption>>> menuOptionMap = menuDetailViewModel.getMenuOptionMap(uuid);

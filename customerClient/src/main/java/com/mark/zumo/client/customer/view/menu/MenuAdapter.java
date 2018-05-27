@@ -5,13 +5,13 @@ import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentManager;
+import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.RecyclerView;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.mark.zumo.client.core.entity.Menu;
@@ -108,7 +108,7 @@ class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.ViewHolder> {
     static class ViewHolder extends RecyclerView.ViewHolder {
         @BindView(R.id.name) TextView name;
         @BindView(R.id.price) TextView price;
-        @BindView(R.id.image) ImageView image;
+        @BindView(R.id.image) AppCompatImageView image;
 
         private ViewHolder(final View itemView) {
             super(itemView);

@@ -29,12 +29,14 @@ public class MenuDetailViewModel extends AndroidViewModel {
     private MenuManager menuManager;
     private Map<String, List<MenuOption>> menuOptionMap;
     private Map<String, MenuOption> selectedOptionMap;
+    private Map<String, MutableLiveData<MenuOption>> selectedOptionLiveDataMap;
 
     public MenuDetailViewModel(@NonNull final Application application) {
         super(application);
         menuManager = MenuManager.INSTANCE;
         menuOptionMap = new LinkedHashMap<>();
         selectedOptionMap = new HashMap<>();
+        selectedOptionLiveDataMap = new HashMap<>();
     }
 
     public LiveData<Menu> getMenu(String uuid) {
@@ -65,10 +67,26 @@ public class MenuDetailViewModel extends AndroidViewModel {
     }
 
     public void selectMenuOption(MenuOption menuOption) {
+        Log.d(TAG, "selectMenuOption: " + menuOption);
         selectedOptionMap.put(menuOption.name, menuOption);
+        MutableLiveData<MenuOption> liveData = selectedOptionLiveDataMap.get(menuOption.name);
+        liveData.setValue(menuOption);
     }
 
     public void deselectMenuOption(String key) {
         selectedOptionMap.remove(key);
+        MutableLiveData<MenuOption> liveData = selectedOptionLiveDataMap.get(key);
+        liveData.setValue(null);
+    }
+
+    public LiveData<MenuOption> getSelectedOption(String key) {
+        MutableLiveData<MenuOption> liveData = selectedOptionLiveDataMap.get(key);
+        if (liveData == null) {
+            liveData = new MutableLiveData<>();
+            selectedOptionLiveDataMap.put(key, liveData);
+        }
+
+        liveData.setValue(selectedOptionMap.get(key));
+        return liveData;
     }
 }

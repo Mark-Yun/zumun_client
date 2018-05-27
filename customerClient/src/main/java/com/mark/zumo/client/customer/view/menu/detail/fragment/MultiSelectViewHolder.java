@@ -1,9 +1,8 @@
-package com.mark.zumo.client.customer.view.menu.detail;
+package com.mark.zumo.client.customer.view.menu.detail.fragment;
 
 import android.support.v7.widget.AppCompatTextView;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
-import android.widget.ListView;
 
 import com.mark.zumo.client.customer.R;
 
@@ -15,7 +14,7 @@ import butterknife.ButterKnife;
  */
 class MultiSelectViewHolder extends RecyclerView.ViewHolder {
     @BindView(R.id.name) AppCompatTextView name;
-    @BindView(R.id.value) ListView value;
+    @BindView(R.id.value) AppCompatTextView value;
 
     MultiSelectViewHolder(final View itemView) {
         super(itemView);

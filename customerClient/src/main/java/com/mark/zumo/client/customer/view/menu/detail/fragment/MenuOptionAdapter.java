@@ -1,5 +1,6 @@
-package com.mark.zumo.client.customer.view.menu.detail;
+package com.mark.zumo.client.customer.view.menu.detail.fragment;
 
+import android.arch.lifecycle.LifecycleOwner;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -19,11 +20,16 @@ import java.util.Map;
 public class MenuOptionAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     public static final String TAG = "MenuOptionAdapter";
-    private Map<String, List<MenuOption>> optionMap;
-    private MenuDetailViewModel menuDetailViewModel;
 
-    MenuOptionAdapter(MenuDetailViewModel menuDetailViewModel) {
+    private MenuDetailViewModel menuDetailViewModel;
+    private LifecycleOwner lifecycleOwner;
+
+    private Map<String, List<MenuOption>> optionMap;
+
+    MenuOptionAdapter(LifecycleOwner lifecycleOwner, MenuDetailViewModel menuDetailViewModel) {
         this.menuDetailViewModel = menuDetailViewModel;
+        this.lifecycleOwner = lifecycleOwner;
+
         optionMap = new LinkedHashMap<>();
     }
 
@@ -50,7 +56,7 @@ public class MenuOptionAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
             case ViewHolderUtils.MULTI_SELECT_TYPE:
                 if (holder instanceof MultiSelectViewHolder)
-                    ViewHolderUtils.inject((MultiSelectViewHolder) holder, getKey(position), getMenuOptionList(position), menuDetailViewModel);
+                    ViewHolderUtils.inject((MultiSelectViewHolder) holder, getKey(position), getMenuOptionList(position), menuDetailViewModel, lifecycleOwner);
                 break;
         }
     }

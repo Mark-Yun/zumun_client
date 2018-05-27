@@ -3,26 +3,50 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:isScrollContainer="false">
+    android:background="@drawable/shape_menu_option"
+    android:clickable="true"
+    android:focusable="true"
+    android:isScrollContainer="false"
+    android:padding="13dp">
 
     <android.support.v7.widget.AppCompatTextView
         android:id="@+id/name"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/value"
-        app:layout_constraintHorizontal_weight="7"
+        android:layout_centerInParent="true"
+        android:layout_marginStart="10dp"
+        app:layout_constraintBottom_toBottomOf="@+id/icon"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="@+id/icon" />
 
-    <ListView
+    <android.support.v7.widget.AppCompatTextView
         android:id="@+id/value"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:choiceMode="singleChoice"
+        android:layout_centerInParent="true"
+        android:layout_marginEnd="10dp"
+        app:layout_constraintBottom_toBottomOf="@+id/icon"
+        app:layout_constraintEnd_toStartOf="@+id/divider"
+        app:layout_constraintTop_toTopOf="@+id/icon" />
+
+    <View
+        android:id="@+id/divider"
+        android:layout_width="@dimen/stroke_width"
+        android:layout_height="0dp"
+        android:layout_marginEnd="10dp"
+        android:background="@color/colorText"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/icon"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_weight="1" />
+
+    <android.support.v7.widget.AppCompatImageView
+        android:id="@+id/icon"
+        android:layout_width="@dimen/icon_size_small"
+        android:layout_height="@dimen/icon_size_small"
+        android:layout_marginEnd="10dp"
+        android:src="@drawable/arrow_down"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_weight="4"
-        app:layout_constraintStart_toEndOf="@+id/name"
         app:layout_constraintTop_toTopOf="parent" />
 </android.support.constraint.ConstraintLayout>

@@ -12,6 +12,7 @@ import com.mark.zumo.client.core.entity.MenuOption;
 import com.mark.zumo.client.core.entity.Store;
 import com.mark.zumo.client.core.entity.util.EntityComparator;
 import com.mark.zumo.client.core.entity.util.ListComparator;
+import com.mark.zumo.client.core.util.DebugUtil;
 import com.mark.zumo.client.core.util.context.ContextHolder;
 
 import java.util.List;
@@ -59,14 +60,16 @@ public enum MenuRepository {
     }
 
     private Observable<List<MenuOption>> getMenuOptionsOfMenu(String menuUuid) {
-        Observable<List<MenuOption>> menuOptionListDB = diskRepository.getMenuOptionList(menuUuid).toObservable();
-        Observable<List<MenuOption>> menuOptionListApi = networkRepository.getMenuOptionList(menuUuid)
-                .doOnNext(diskRepository::insertMenuOptionList);
-
-        return Observable.merge(menuOptionListDB, menuOptionListApi)
-                .doOnError(this::onErrorOccurred)
-                .subscribeOn(Schedulers.io())
-                .distinctUntilChanged(new ListComparator<>());
+//        Observable<List<MenuOption>> menuOptionListDB = diskRepository.getMenuOptionList(menuUuid).toObservable();
+//        Observable<List<MenuOption>> menuOptionListApi = networkRepository.getMenuOptionList(menuUuid)
+//                .doOnNext(diskRepository::insertMenuOptionList);
+//
+//        return Observable.merge(menuOptionListDB, menuOptionListApi)
+//                .doOnError(this::onErrorOccurred)
+//                .subscribeOn(Schedulers.io())
+//                .distinctUntilChanged(new ListComparator<>());
+        //TODO: remove test data
+        return Observable.just(DebugUtil.menuOptionList(menuUuid));
     }
 
     private Observable<MenuOption> getMenuOptionFromList(List<MenuOption> menuOptionList) {

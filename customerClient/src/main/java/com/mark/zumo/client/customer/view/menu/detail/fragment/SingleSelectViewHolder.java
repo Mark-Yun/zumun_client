@@ -1,4 +1,4 @@
-package com.mark.zumo.client.customer.view.menu.detail;
+package com.mark.zumo.client.customer.view.menu.detail.fragment;
 
 import android.support.v7.widget.AppCompatCheckedTextView;
 import android.support.v7.widget.AppCompatTextView;

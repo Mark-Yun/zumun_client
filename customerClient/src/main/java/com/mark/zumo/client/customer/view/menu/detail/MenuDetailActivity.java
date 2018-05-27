@@ -7,6 +7,8 @@ import android.support.v7.app.AppCompatActivity;
 
 import com.mark.zumo.client.customer.R;
 import com.mark.zumo.client.customer.view.Navigator;
+import com.mark.zumo.client.customer.view.menu.detail.fragment.MenuInfoFragment;
+import com.mark.zumo.client.customer.view.menu.detail.fragment.MenuOptionFragment;
 
 /**
  * Created by mark on 18. 5. 25.

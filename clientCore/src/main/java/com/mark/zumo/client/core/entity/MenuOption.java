@@ -6,6 +6,7 @@ import android.arch.persistence.room.PrimaryKey;
 import android.support.annotation.NonNull;
 
 import com.google.gson.annotations.SerializedName;
+import com.mark.zumo.client.core.entity.util.EntityHelper;
 
 import java.io.Serializable;
 
@@ -44,5 +45,10 @@ public class MenuOption implements Serializable {
         String name = "option_name";
         String value = "option_value";
         String price = "option_price";
+    }
+
+    @Override
+    public String toString() {
+        return EntityHelper.toString(this, MenuOption.class);
     }
 }
