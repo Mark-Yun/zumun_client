@@ -1,6 +1,6 @@
 package com.mark.zumo.client.customer.view.menu.detail.fragment;
 
-import android.support.v7.widget.AppCompatCheckedTextView;
+import android.support.v7.widget.AppCompatCheckBox;
 import android.support.v7.widget.AppCompatTextView;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -15,8 +15,8 @@ import butterknife.ButterKnife;
  */
 class SingleSelectViewHolder extends RecyclerView.ViewHolder {
     @BindView(R.id.name) AppCompatTextView name;
-    @BindView(R.id.price) AppCompatTextView price;
-    @BindView(R.id.value) AppCompatCheckedTextView value;
+    @BindView(R.id.value) AppCompatTextView value;
+    @BindView(R.id.check_box) AppCompatCheckBox checkBox;
 
     SingleSelectViewHolder(final View itemView) {
         super(itemView);

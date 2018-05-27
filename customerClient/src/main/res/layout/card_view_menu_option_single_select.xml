@@ -2,27 +2,49 @@
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:layout_margin="@dimen/menu_option_margin"
+    android:background="@drawable/shape_menu_option"
+    android:clickable="true"
+    android:focusable="true"
+    android:isScrollContainer="false"
+    android:padding="13dp">
 
     <android.support.v7.widget.AppCompatTextView
         android:id="@+id/name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintStart_toStartOf="parent" />
+        android:layout_centerInParent="true"
+        android:layout_marginStart="10dp"
+        app:layout_constraintBottom_toBottomOf="@+id/check_box"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/check_box" />
 
     <android.support.v7.widget.AppCompatTextView
-        android:id="@+id/price"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="20dp"
-        app:layout_constraintEnd_toStartOf="@+id/value" />
-
-    <android.support.v7.widget.AppCompatCheckedTextView
         android:id="@+id/value"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:checkMark="?android:attr/listChoiceIndicatorMultiple"
-        android:padding="5dp"
-        app:layout_constraintEnd_toEndOf="parent" />
+        android:layout_centerInParent="true"
+        android:layout_marginEnd="10dp"
+        app:layout_constraintBottom_toBottomOf="@+id/check_box"
+        app:layout_constraintEnd_toStartOf="@+id/divider"
+        app:layout_constraintTop_toTopOf="@+id/check_box" />
 
+    <View
+        android:id="@+id/divider"
+        android:layout_width="@dimen/stroke_width"
+        android:layout_height="0dp"
+        android:background="@color/colorText"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/check_box"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_weight="1" />
+
+    <android.support.v7.widget.AppCompatCheckBox
+        android:id="@+id/check_box"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/icon_size_small"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 </android.support.constraint.ConstraintLayout>

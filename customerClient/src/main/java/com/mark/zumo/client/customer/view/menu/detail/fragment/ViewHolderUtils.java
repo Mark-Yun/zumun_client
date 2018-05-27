@@ -53,20 +53,19 @@ final class ViewHolderUtils {
     }
 
     static void inject(SingleSelectViewHolder viewHolder, String key,
-                       List<MenuOption> menuOptionList, MenuDetailViewModel menuDetailViewModel) {
-        MenuOption menuOption = menuOptionList.get(0);
+                       MenuOption menuOption, MenuDetailViewModel menuDetailViewModel,
+                       LifecycleOwner lifecycleOwner) {
         viewHolder.name.setText(key);
-        viewHolder.price.setText(getPriceText(menuOption.price));
-        viewHolder.value.setText(menuOption.value);
         viewHolder.itemView.setOnClickListener(v -> {
-            boolean checked = viewHolder.value.isChecked();
-            viewHolder.value.setChecked(!checked);
+            boolean checked = viewHolder.checkBox.isChecked();
+            viewHolder.checkBox.setChecked(!checked);
             if (checked) {
-                menuDetailViewModel.selectMenuOption(menuOption);
-            } else {
                 menuDetailViewModel.deselectMenuOption(key);
+            } else {
+                menuDetailViewModel.selectMenuOption(menuOption);
             }
         });
+        menuDetailViewModel.getSelectedOption(key).observe(lifecycleOwner, menuOption1 -> viewHolder.checkBox.setChecked(menuOption1 != null));
     }
 
     @NonNull

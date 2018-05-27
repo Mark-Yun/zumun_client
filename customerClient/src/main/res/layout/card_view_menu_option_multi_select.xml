@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:layout_margin="@dimen/menu_option_margin"
     android:background="@drawable/shape_menu_option"
     android:clickable="true"
     android:focusable="true"
@@ -25,6 +26,7 @@
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:layout_marginEnd="10dp"
+        android:textColor="@color/colorAccent"
         app:layout_constraintBottom_toBottomOf="@+id/icon"
         app:layout_constraintEnd_toStartOf="@+id/divider"
         app:layout_constraintTop_toTopOf="@+id/icon" />

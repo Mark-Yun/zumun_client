@@ -51,7 +51,7 @@ public class MenuOptionAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         switch (itemViewType) {
             case ViewHolderUtils.SINGLE_SELECT_TYPE:
                 if (holder instanceof SingleSelectViewHolder)
-                    ViewHolderUtils.inject((SingleSelectViewHolder) holder, getKey(position), getMenuOptionList(position), menuDetailViewModel);
+                    ViewHolderUtils.inject((SingleSelectViewHolder) holder, getKey(position), getMenuOptionList(position).get(0), menuDetailViewModel, lifecycleOwner);
                 break;
 
             case ViewHolderUtils.MULTI_SELECT_TYPE:
