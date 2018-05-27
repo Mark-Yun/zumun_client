@@ -1,5 +1,6 @@
 package com.mark.zumo.client.customer.view.menu;
 
+import android.arch.lifecycle.LifecycleOwner;
 import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
@@ -34,12 +35,15 @@ import butterknife.ButterKnife;
  */
 class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.ViewHolder> {
 
-    private List<Menu> menuList;
+    private LifecycleOwner lifecycleOwner;
     private MenuViewModel menuViewModel;
     private FragmentManager fragmentManager;
 
-    MenuAdapter(MenuViewModel menuViewModel, FragmentManager fragmentManager) {
+    private List<Menu> menuList;
+
+    MenuAdapter(LifecycleOwner lifecycleOwner, MenuViewModel menuViewModel, FragmentManager fragmentManager) {
         menuList = new ArrayList<>();
+        this.lifecycleOwner = lifecycleOwner;
         this.menuViewModel = menuViewModel;
         this.fragmentManager = fragmentManager;
     }
@@ -74,7 +78,11 @@ class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.ViewHolder> {
     }
 
     private void onClickMenu(final View itemView, final Menu menu) {
-        menuViewModel.addMenuToCart(menu);
+        menuViewModel.addMenuToCart(menu)
+                .observe(lifecycleOwner, result -> onAddCartComplete(itemView, menu));
+    }
+
+    private void onAddCartComplete(final View itemView, final Menu menu) {
         String snackBarText = itemView.getContext().getString(R.string.added_to_cart, menu.name);
         Snackbar.make(itemView, snackBarText, Snackbar.LENGTH_LONG)
                 .setAction(R.string.cancel_action, v -> menuViewModel.removeLatestMenuFromCart())
@@ -86,6 +94,7 @@ class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.ViewHolder> {
         Context context = itemView.getContext();
         Intent intent = new Intent(context, MenuDetailActivity.class);
         intent.putExtra(MenuDetailActivity.KEY_MENU_UUID, menu.uuid);
+        intent.putExtra(MenuDetailActivity.KEY_MENU_STORE_UUID, menu.storeUuid);
         context.startActivity(intent);
 
         Navigator.setBlurLayoutVisible(true);

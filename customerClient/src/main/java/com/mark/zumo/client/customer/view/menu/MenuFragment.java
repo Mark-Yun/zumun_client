@@ -55,9 +55,12 @@ public class MenuFragment extends Fragment {
     public void onCreate(@Nullable final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         menuViewModel = ViewModelProviders.of(this).get(MenuViewModel.class);
+
         //TODO: remove test data
-//        storeUuid = getArguments().getString(KEY_STORE_UUID);
-        storeUuid = DebugUtil.TEST_STORE_UUID;
+//        storeUuid = Objects.requireNonNull(getArguments()).getString(KEY_STORE_UUID);
+        if (storeUuid == null) {
+            storeUuid = DebugUtil.TEST_STORE_UUID;
+        }
     }
 
     @Nullable
@@ -83,14 +86,15 @@ public class MenuFragment extends Fragment {
         recyclerView.setNestedScrollingEnabled(false);
 
         // specify an menuAdapter (see also next example)
-        menuAdapter = new MenuAdapter(menuViewModel, getFragmentManager());
+        menuAdapter = new MenuAdapter(this, menuViewModel, getFragmentManager());
         recyclerView.setAdapter(menuAdapter);
 
         menuViewModel.getMenuItemList(getActivity()).observe(this, this::onLoadMenuItemList);
     }
 
     private void inflateCartBadge() {
-        menuViewModel.getCart(DebugUtil.store().uuid).observe(this, this::onLoadCart);
+        menuViewModel.getCart(storeUuid)
+                .observe(this, this::onLoadCart);
     }
 
     private void onLoadMenuItemList(List<Menu> menuList) {
@@ -119,7 +123,6 @@ public class MenuFragment extends Fragment {
         boolean hasMenuInCart = cartCount > 0;
         cartBadgeImage.setVisibility(hasMenuInCart ? View.VISIBLE : View.GONE);
         cartBadgeText.setVisibility(hasMenuInCart ? View.VISIBLE : View.GONE);
-
     }
 
     @OnClick(R.id.store_cart_button)

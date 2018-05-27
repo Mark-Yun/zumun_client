@@ -6,11 +6,19 @@ import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.support.annotation.NonNull;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.mark.zumo.client.core.entity.Menu;
 import com.mark.zumo.client.core.entity.MenuOption;
+import com.mark.zumo.client.core.entity.OrderDetail;
+import com.mark.zumo.client.core.util.context.ContextHolder;
+import com.mark.zumo.client.customer.R;
+import com.mark.zumo.client.customer.model.CartManager;
 import com.mark.zumo.client.customer.model.MenuManager;
+import com.mark.zumo.client.customer.model.entity.CartItem;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -26,7 +34,10 @@ import io.reactivex.schedulers.Schedulers;
 public class MenuDetailViewModel extends AndroidViewModel {
 
     public static final String TAG = "MenuDetailViewModel";
+
     private MenuManager menuManager;
+    private CartManager cartManager;
+
     private Map<String, List<MenuOption>> menuOptionMap;
     private Map<String, MenuOption> selectedOptionMap;
     private Map<String, MutableLiveData<MenuOption>> selectedOptionLiveDataMap;
@@ -34,6 +45,8 @@ public class MenuDetailViewModel extends AndroidViewModel {
     public MenuDetailViewModel(@NonNull final Application application) {
         super(application);
         menuManager = MenuManager.INSTANCE;
+        cartManager = CartManager.INSTANCE;
+
         menuOptionMap = new LinkedHashMap<>();
         selectedOptionMap = new HashMap<>();
         selectedOptionLiveDataMap = new HashMap<>();
@@ -88,5 +101,28 @@ public class MenuDetailViewModel extends AndroidViewModel {
 
         liveData.setValue(selectedOptionMap.get(key));
         return liveData;
+    }
+
+    public void addToCartCurrentItems(String storeUuid) {
+        CartItem cartItem = CartItem.fromOptionMenu(storeUuid, from(selectedOptionMap.values()));
+        cartManager.getCart(storeUuid)
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnNext(cart -> cart.addCartItem(cartItem))
+                .doOnNext(cart -> selectedOptionMap.clear())
+                .doOnNext(cart -> selectedOptionLiveDataMap.clear())
+                .doOnNext(cart -> showAddToCartSucceedToast())
+                .subscribe();
+    }
+
+    private void showAddToCartSucceedToast() {
+        Toast.makeText(ContextHolder.getContext(), R.string.toast_add_to_cart_item_succeed, Toast.LENGTH_SHORT).show();
+    }
+
+    private Collection<OrderDetail> from(Collection<MenuOption> optionSet) {
+        ArrayList<OrderDetail> orderDetailSet = new ArrayList<>();
+        for (MenuOption option : optionSet) {
+            orderDetailSet.add(new OrderDetail(null, option.menuUuid, null, option.uuid));
+        }
+        return orderDetailSet;
     }
 }

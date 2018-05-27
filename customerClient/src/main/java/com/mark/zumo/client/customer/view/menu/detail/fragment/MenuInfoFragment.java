@@ -18,6 +18,8 @@ import com.mark.zumo.client.customer.R;
 import com.mark.zumo.client.customer.view.menu.detail.MenuDetailActivity;
 import com.mark.zumo.client.customer.viewmodel.MenuDetailViewModel;
 
+import java.util.Objects;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -30,13 +32,13 @@ public class MenuInfoFragment extends Fragment {
     @BindView(R.id.name) TextView name;
 
     private MenuDetailViewModel menuDetailViewModel;
-    private String uuid;
+    private String menuUuid;
 
     @Override
     public void onCreate(@Nullable final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         menuDetailViewModel = ViewModelProviders.of(this).get(MenuDetailViewModel.class);
-        uuid = getArguments().getString(MenuDetailActivity.KEY_MENU_UUID);
+        menuUuid = Objects.requireNonNull(getArguments()).getString(MenuDetailActivity.KEY_MENU_UUID);
     }
 
     @Nullable
@@ -49,7 +51,7 @@ public class MenuInfoFragment extends Fragment {
     }
 
     private void inflateMenuInfo() {
-        menuDetailViewModel.getMenu(uuid).observe(this, this::onLoadMenu);
+        menuDetailViewModel.getMenu(menuUuid).observe(this, this::onLoadMenu);
     }
 
     private void onLoadMenu(Menu menu) {

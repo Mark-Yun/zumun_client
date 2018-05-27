@@ -5,7 +5,6 @@ import com.mark.zumo.client.core.entity.OrderDetail;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 
 /**
  * Created by mark on 18. 5. 24.
@@ -13,15 +12,24 @@ import java.util.List;
 public class CartItem {
     public final String menuUuid;
 
-    private List<OrderDetail> orderDetailList;
+    private Collection<OrderDetail> orderDetailList;
 
     private CartItem(final String menuUuid) {
         this.menuUuid = menuUuid;
         orderDetailList = new ArrayList<>();
     }
 
+    private CartItem(final String menuUuid, final Collection<OrderDetail> orderDetailList) {
+        this.menuUuid = menuUuid;
+        this.orderDetailList = orderDetailList;
+    }
+
     public static CartItem fromMenu(Menu menu) {
         return new CartItem(menu.uuid);
+    }
+
+    public static CartItem fromOptionMenu(String menuUuid, Collection<OrderDetail> orderDetailList) {
+        return new CartItem(menuUuid, orderDetailList);
     }
 
     public CartItem add(OrderDetail orderDetail) {

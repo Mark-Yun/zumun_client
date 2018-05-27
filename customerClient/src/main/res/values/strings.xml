@@ -6,4 +6,7 @@
     <string name="added_to_cart">Added %s into cart.</string>
     <string name="cancel_action">Cancel</string>
     <string name="menu_option_not_selected">Not Selected</string>
+    <string name="toast_add_to_cart_item_succeed">Added to cart</string>
+    <string name="button_text_add_to_cart">ADD TO CART</string>
+    <string name="button_text_send_order">SEND ORDER</string>
 </resources>

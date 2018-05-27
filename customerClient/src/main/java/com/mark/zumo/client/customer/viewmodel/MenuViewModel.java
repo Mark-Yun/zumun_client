@@ -34,7 +34,7 @@ public class MenuViewModel extends AndroidViewModel {
     private StoreManager storeManager;
 
     private Map<String, MutableLiveData<Cart>> cartLiveDataMap;
-    private MutableLiveData<Cart> currentCart;
+    private String currentStoreUuid;
 
     public MenuViewModel(@NonNull final Application application) {
         super(application);
@@ -64,33 +64,37 @@ public class MenuViewModel extends AndroidViewModel {
     public LiveData<Cart> getCart(String storeUuid) {
         if (!cartLiveDataMap.containsKey(storeUuid)) {
             MutableLiveData<Cart> cartLiveData = new MutableLiveData<>();
-            Cart cart = cartManager.getCart(storeUuid);
-            cartLiveData.setValue(cart);
             cartLiveDataMap.put(storeUuid, cartLiveData);
         }
 
-        return currentCart = cartLiveDataMap.get(storeUuid);
+        currentStoreUuid = storeUuid;
+        MutableLiveData<Cart> currentCart = cartLiveDataMap.get(currentStoreUuid);
+
+        cartManager.getCart(storeUuid)
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnNext(currentCart::setValue)
+                .subscribe();
+
+        return currentCart;
     }
 
-    public void addMenuToCart(Menu menu) {
-        Cart cart = currentCart.getValue();
-        if (cart == null) return;
-        cart.addCartItem(CartItem.fromMenu(menu));
-        currentCart.setValue(cart);
-    }
+    public LiveData<Boolean> addMenuToCart(Menu menu) {
+        MutableLiveData<Boolean> cartItemLiveData = new MutableLiveData<>();
 
-    public void removeMenuFromCart(int position) {
-        Cart cart = currentCart.getValue();
-        if (cart == null) return;
-        cart.removeCartItem(position);
-        currentCart.setValue(cart);
+        cartManager.getCart(currentStoreUuid)
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnNext(cart -> cart.addCartItem(CartItem.fromMenu(menu)))
+                .doOnNext(cart -> cartItemLiveData.setValue(true))
+                .subscribe();
+
+        return cartItemLiveData;
     }
 
     public void removeLatestMenuFromCart() {
-        Cart cart = currentCart.getValue();
-        if (cart == null) return;
-        cart.removeCartItem(cart.getCartCount() - 1);
-        currentCart.setValue(cart);
+        cartManager.getCart(currentStoreUuid)
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnNext(Cart::removeLatestCartItem)
+                .subscribe();
     }
 
     public LiveData<Store> getStore(String storeUuid) {
