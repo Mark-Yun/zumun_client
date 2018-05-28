@@ -34,8 +34,10 @@ import java.util.Set;
 import java.util.concurrent.Executors;
 
 import io.reactivex.Observable;
+import io.reactivex.ObservableOnSubscribe;
 import io.reactivex.Single;
 import io.reactivex.SingleEmitter;
+import io.reactivex.SingleOnSubscribe;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 
@@ -70,11 +72,11 @@ public class P2pClient {
 
     public Observable<Set<Store>> subscribe() {
         Log.d(TAG, "subscribe: ");
-        return Observable.create(emitter -> {
+        return Observable.create((ObservableOnSubscribe<Set<Store>>) emitter -> {
             storeObservable = new SetObservable<>();
             storeObservable.addObserver((o, arg) -> emitter.onNext(storeObservable.set));
             messageClient().subscribe(messageListener);
-        });
+        }).subscribeOn(Schedulers.io());
     }
 
     @NonNull
@@ -188,10 +190,9 @@ public class P2pClient {
                                 currentEndpointId = endpointId1;
 
                                 Single.just(packet)
-                                        .flatMap(packet -> sendPayload(endpointId1, packet))
-                                        .subscribeOn(Schedulers.from(Executors.newScheduledThreadPool(5)))
                                         .observeOn(AndroidSchedulers.mainThread())
-                                        .subscribe(payload -> e.onSuccess("Send Payload Success" + payload));
+                                        .flatMap(packet -> sendPayload(endpointId1, packet))
+                                        .doOnSuccess(payload -> e.onSuccess("Send Payload Success" + payload)).subscribe();
                                 break;
                             case ConnectionsStatusCodes.STATUS_CONNECTION_REJECTED:
                                 // The connection was rejected by one or both sides.
@@ -223,12 +224,12 @@ public class P2pClient {
     }
 
     private Single<Payload> sendPayload(String endpointId, Packet<MenuOrder> packet) {
-        return Single.create(e -> {
+        return Single.create((SingleOnSubscribe<Payload>) e -> {
             Payload payload = NearbyUtil.payloadFrom(packet);
             connectionsClient().sendPayload(endpointId, payload)
                     .addOnSuccessListener(aVoid -> onSuccessSendPayload(e, endpointId, payload))
                     .addOnFailureListener(Runnable::run, this::onFailureSendPayload);
-        });
+        }).subscribeOn(Schedulers.from(Executors.newScheduledThreadPool(5)));
     }
 
     private void onSuccessSendPayload(SingleEmitter<Payload> emitter, String endpointId, Payload payload) {
@@ -322,7 +323,8 @@ public class P2pClient {
                 .flatMap(this::convertMenuItemFromPayload)
                 .subscribeOn(Schedulers.io())
                 .doOnSuccess(menuItemList -> connectionsClient().disconnectFromEndpoint(currentEndpointId))
-                .doOnSuccess(unUsedResult -> currentEndpointId = null);
+                .doOnSuccess(unUsedResult -> currentEndpointId = null)
+                .subscribeOn(Schedulers.io());
     }
 
     public Single<String> sendOrder(MenuOrder menuOrder, String storeUuid) {
@@ -333,7 +335,8 @@ public class P2pClient {
                 .doOnSuccess(menuItemList -> connectionsClient().disconnectFromEndpoint(currentEndpointId))
                 .doOnSuccess(unUsedResult -> currentEndpointId = null)
                 .map(Payload::getId)
-                .map(String::valueOf);
+                .map(String::valueOf)
+                .subscribeOn(Schedulers.io());
     }
 
     @SuppressWarnings("unused")

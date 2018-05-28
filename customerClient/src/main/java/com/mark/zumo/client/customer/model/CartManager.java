@@ -22,12 +22,13 @@ public enum CartManager {
     }
 
     public Observable<Cart> getCart(final String storeUuid) {
+        if (!storeCartMap.containsKey(storeUuid)) {
+            Cart cart = new Cart();
+            storeCartMap.put(storeUuid, cart);
+        }
+
         return Observable.create((ObservableOnSubscribe<Cart>) e -> {
-            if (!storeCartMap.containsKey(storeUuid)) {
-                Cart cart = new Cart(e);
-                storeCartMap.put(storeUuid, cart);
-            }
-            e.onNext(storeCartMap.get(storeUuid));
+            e.onNext(storeCartMap.get(storeUuid).addEmitter(e));
         }).subscribeOn(Schedulers.computation());
     }
 }

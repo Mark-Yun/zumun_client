@@ -4,6 +4,8 @@ import com.mark.zumo.client.core.entity.MenuOrder;
 import com.mark.zumo.client.core.util.DebugUtil;
 
 import io.reactivex.Observable;
+import io.reactivex.ObservableOnSubscribe;
+import io.reactivex.schedulers.Schedulers;
 
 
 /**
@@ -14,11 +16,11 @@ public enum MenuOrderManager {
     INSTANCE;
 
     public Observable<MenuOrder> getMenuOrder() {
-        return Observable.create(e -> {
+        return Observable.create((ObservableOnSubscribe<MenuOrder>) e -> {
             for (int i = 0; i < 10; i++) {
                 e.onNext(DebugUtil.menuOrder());
                 Thread.sleep(2000);
             }
-        });
+        }).subscribeOn(Schedulers.computation());
     }
 }

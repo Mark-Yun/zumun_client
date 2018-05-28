@@ -9,7 +9,6 @@ import android.support.annotation.NonNull;
 import com.mark.zumo.server.store.model.SessionManager;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.schedulers.Schedulers;
 
 /**
  * Created by mark on 18. 5. 7.
@@ -28,9 +27,9 @@ public class SignUpViewModel extends AndroidViewModel {
         MutableLiveData<Boolean> existSession = new MutableLiveData<>();
 
         sessionManager.isSessionValid()
-                .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(existSession::setValue);
+                .doOnSuccess(existSession::setValue)
+                .subscribe();
 
         return existSession;
     }

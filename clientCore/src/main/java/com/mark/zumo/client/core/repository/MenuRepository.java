@@ -10,15 +10,12 @@ import com.mark.zumo.client.core.dao.DiskRepository;
 import com.mark.zumo.client.core.entity.Menu;
 import com.mark.zumo.client.core.entity.MenuOption;
 import com.mark.zumo.client.core.entity.Store;
-import com.mark.zumo.client.core.entity.util.EntityComparator;
 import com.mark.zumo.client.core.entity.util.ListComparator;
-import com.mark.zumo.client.core.util.DebugUtil;
 import com.mark.zumo.client.core.util.context.ContextHolder;
 
 import java.util.List;
 
 import io.reactivex.Observable;
-import io.reactivex.ObservableOnSubscribe;
 import io.reactivex.observables.GroupedObservable;
 import io.reactivex.schedulers.Schedulers;
 
@@ -55,42 +52,31 @@ public enum MenuRepository {
 
         return Observable.merge(menuListDB, menuListApi)
                 .doOnError(this::onErrorOccurred)
-                .subscribeOn(Schedulers.io())
                 .distinctUntilChanged(new ListComparator<>());
     }
 
     private Observable<List<MenuOption>> getMenuOptionsOfMenu(String menuUuid) {
-//        Observable<List<MenuOption>> menuOptionListDB = diskRepository.getMenuOptionList(menuUuid).toObservable();
-//        Observable<List<MenuOption>> menuOptionListApi = networkRepository.getMenuOptionList(menuUuid)
-//                .doOnNext(diskRepository::insertMenuOptionList);
-//
-//        return Observable.merge(menuOptionListDB, menuOptionListApi)
-//                .doOnError(this::onErrorOccurred)
-//                .subscribeOn(Schedulers.io())
-//                .distinctUntilChanged(new ListComparator<>());
-        //TODO: remove test data
-        return Observable.just(DebugUtil.menuOptionList(menuUuid));
-    }
+        Observable<List<MenuOption>> menuOptionListDB = diskRepository.getMenuOptionList(menuUuid).toObservable();
+        Observable<List<MenuOption>> menuOptionListApi = networkRepository.getMenuOptionList(menuUuid)
+                .doOnNext(diskRepository::insertMenuOptionList);
 
-    private Observable<MenuOption> getMenuOptionFromList(List<MenuOption> menuOptionList) {
-        return Observable.create(e -> {
-            for (int i = 0; i < menuOptionList.size(); i++)
-                e.onNext(menuOptionList.get(i));
-            e.onComplete();
-        });
+        return Observable.merge(menuOptionListDB, menuOptionListApi)
+                .doOnError(this::onErrorOccurred)
+                .subscribeOn(Schedulers.io())
+                .distinctUntilChanged(new ListComparator<>());
     }
 
     public Observable<GroupedObservable<String, MenuOption>> getMenuOptionGroupByMenu(String menuUuid) {
         return getMenuOptionsOfMenu(menuUuid)
-                .flatMap(this::getMenuOptionFromList)
+                .flatMap(Observable::fromIterable)
                 .groupBy(menuOption -> menuOption.name);
     }
 
-    public Observable<Menu> getMenu(final String uuid) {
-        return Observable.create((ObservableOnSubscribe<Menu>) e -> {
-            diskRepository.getMenu(uuid)
-                    .doOnSuccess(e::onNext)
-                    .subscribe();
-        }).distinctUntilChanged(new EntityComparator<>());
+    public Observable<Menu> getMenuFromDisk(final String uuid) {
+        return diskRepository.getMenu(uuid).toObservable();
+    }
+
+    public Observable<MenuOption> getMenuOptionFromDisk(final String menuOptionUuid) {
+        return diskRepository.getMenuOption(menuOptionUuid).toObservable();
     }
 }

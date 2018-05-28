@@ -19,6 +19,14 @@ public final class GlideUtils {
         return DrawableTransitionOptions.withCrossFade();
     }
 
+    public static RequestOptions cartMenuImageOptions() {
+        return RequestOptions.circleCropTransform();
+    }
+
+    public static DrawableTransitionOptions cartMenuTransitionOptions() {
+        return DrawableTransitionOptions.withCrossFade();
+    }
+
     public static DrawableTransitionOptions storeCoverTransitionOptions() {
         return DrawableTransitionOptions.withCrossFade();
     }

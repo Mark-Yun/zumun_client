@@ -12,7 +12,6 @@ import com.mark.zumo.client.customer.model.StoreManager;
 import java.util.List;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.schedulers.Schedulers;
 
 /**
  * Created by mark on 18. 5. 19.
@@ -31,9 +30,9 @@ public class PlaceViewModel extends AndroidViewModel {
         MutableLiveData<List<Store>> nearByStore = new MutableLiveData<>();
 
         storeManager.nearByStore()
-                .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(nearByStore::setValue);
+                .doOnNext(nearByStore::setValue)
+                .subscribe();
 
         return nearByStore;
     }
@@ -42,9 +41,9 @@ public class PlaceViewModel extends AndroidViewModel {
         MutableLiveData<List<Store>> latestVisitStore = new MutableLiveData<>();
 
         storeManager.latestVisitStore()
-                .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(latestVisitStore::setValue);
+                .doOnNext(latestVisitStore::setValue)
+                .subscribe();
 
         return latestVisitStore;
     }

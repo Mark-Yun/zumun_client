@@ -66,6 +66,12 @@ public class StoreRepository {
                 .distinctUntilChanged(new EntityComparator<>());
     }
 
+    public Observable<Store> getStoreFromDisk(String storeUuid) {
+        return diskRepository.getStore(storeUuid).toObservable()
+                .doOnError(this::onErrorOccurred);
+    }
+
+
     private void onErrorOccurred(Throwable throwable) {
         Log.e(TAG, "onErrorOccurred: ", throwable);
     }

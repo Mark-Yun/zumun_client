@@ -78,8 +78,8 @@ class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.ViewHolder> {
     }
 
     private void onClickMenu(final View itemView, final Menu menu) {
-        menuViewModel.addMenuToCart(menu)
-                .observe(lifecycleOwner, result -> onAddCartComplete(itemView, menu));
+        menuViewModel.addMenuToCart(menu);
+        onAddCartComplete(itemView, menu);
     }
 
     private void onAddCartComplete(final View itemView, final Menu menu) {

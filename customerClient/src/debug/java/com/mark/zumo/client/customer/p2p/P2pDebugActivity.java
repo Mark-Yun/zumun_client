@@ -20,7 +20,6 @@ import com.mark.zumo.client.customer.R;
 import java.util.Set;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.schedulers.Schedulers;
 
 /**
  * Created by mark on 18. 5. 2.
@@ -81,9 +80,9 @@ public class P2pDebugActivity extends Activity {
 
     private void sendOrder(View v) {
         p2pClient.sendOrder(testMenuOrder, testStore.uuid)
-                .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(this::updateConsole);
+                .doOnSuccess(this::updateConsole)
+                .subscribe();
         initConsole("Send MenuOrder...");
     }
 
@@ -100,9 +99,10 @@ public class P2pDebugActivity extends Activity {
     private void startSubscribe(View v) {
         p2pClient = new P2pClient(this, currentUser);
         p2pClient.subscribe()
-                .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(stores -> initConsole(getSubscribeConsoleText(stores)));
+                .map(this::getSubscribeConsoleText)
+                .doOnNext(this::initConsole)
+                .subscribe();
         initConsole(currentUser + "\n");
     }
 
@@ -123,7 +123,8 @@ public class P2pDebugActivity extends Activity {
         initConsole("Advertising...");
         p2pServer.findCustomer(testStore)
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(this::updateConsole);
+                .doOnNext(this::updateConsole)
+                .subscribe();
     }
 
     private void stopAdvertising(View view) {
@@ -133,13 +134,13 @@ public class P2pDebugActivity extends Activity {
 
     private void acquireMenuItems(View view) {
         p2pClient.acquireMenuItems()
-                .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(menuItemList -> {
+                .doOnSuccess(menuItemList -> {
                     for (Menu menu : menuItemList) {
                         updateConsole(menu + "\n");
                     }
-                });
+                })
+                .subscribe();
 
         initConsole("Discovering...");
     }

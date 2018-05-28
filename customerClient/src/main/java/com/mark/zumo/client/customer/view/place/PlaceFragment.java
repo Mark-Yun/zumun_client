@@ -49,8 +49,6 @@ public class PlaceFragment extends Fragment {
         // use this setting to improve performance if you know that changes
         // in content do not change the layout size of the RecyclerView
         latestVisitStore.setHasFixedSize(true);
-
-        // use a linear layout manager
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
         latestVisitStore.setLayoutManager(layoutManager);
 

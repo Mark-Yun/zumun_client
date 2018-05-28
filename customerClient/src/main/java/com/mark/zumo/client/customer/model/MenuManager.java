@@ -15,6 +15,7 @@ import java.util.List;
 import io.reactivex.Observable;
 import io.reactivex.Single;
 import io.reactivex.observables.GroupedObservable;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * Created by mark on 18. 4. 30.
@@ -37,11 +38,13 @@ public enum MenuManager {
 //                .flatMap(P2pClient::acquireMenuItems);
 
         return currentStore()
-                .flatMapObservable(menuRepository::getMenuItemsOfStore);
+                .flatMapObservable(menuRepository::getMenuItemsOfStore)
+                .subscribeOn(Schedulers.io());
     }
 
-    public Observable<Menu> getMenu(String uuid) {
-        return menuRepository.getMenu(uuid);
+    public Observable<Menu> getMenuFromDisk(String uuid) {
+        return menuRepository.getMenuFromDisk(uuid)
+                .subscribeOn(Schedulers.io());
     }
 
     private Single<P2pClient> p2pClient(Activity activity, GuestUser guestUser) {
@@ -62,7 +65,13 @@ public enum MenuManager {
         p2pClient = null;
     }
 
-    public Observable<GroupedObservable<String, MenuOption>> getMenuOptions(String menuUuid) {
-        return menuRepository.getMenuOptionGroupByMenu(menuUuid);
+    public Observable<GroupedObservable<String, MenuOption>> getMenuOptionList(String menuUuid) {
+        return menuRepository.getMenuOptionGroupByMenu(menuUuid)
+                .subscribeOn(Schedulers.computation());
+    }
+
+    public Observable<MenuOption> getMenuOptionFromDisk(String menuOptionUuid) {
+        return menuRepository.getMenuOptionFromDisk(menuOptionUuid)
+                .subscribeOn(Schedulers.io());
     }
 }

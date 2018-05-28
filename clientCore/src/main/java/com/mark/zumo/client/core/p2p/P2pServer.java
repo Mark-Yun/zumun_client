@@ -157,7 +157,8 @@ public class P2pServer {
         return Single.fromObservable(MenuRepository.INSTANCE.getMenuItemsOfStore(store))
                 .map(Packet::new)
                 .flatMap(packet -> sendPayload(endPointId, packet))
-                .map(payload -> String.valueOf(payload.getId()));
+                .map(payload -> String.valueOf(payload.getId()))
+                .subscribeOn(Schedulers.io());
     }
 
     private void onSuccessSendPayload(SingleEmitter<Payload> emitter, String endpointId, Payload payload) {

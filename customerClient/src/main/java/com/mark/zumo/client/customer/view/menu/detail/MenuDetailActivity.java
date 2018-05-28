@@ -63,7 +63,7 @@ public class MenuDetailActivity extends AppCompatActivity {
     @OnClick(R.id.add_to_cart_button)
     void onClickAddToCart() {
         MenuDetailViewModel menuDetailViewModel = ViewModelProviders.of(menuOptionFragment).get(MenuDetailViewModel.class);
-        menuDetailViewModel.addToCartCurrentItems(storeUuid);
+        menuDetailViewModel.addToCartCurrentItems(storeUuid, menuUuid);
         finish();
     }
 

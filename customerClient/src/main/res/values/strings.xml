@@ -9,4 +9,6 @@
     <string name="toast_add_to_cart_item_succeed">Added to cart</string>
     <string name="button_text_add_to_cart">ADD TO CART</string>
     <string name="button_text_send_order">SEND ORDER</string>
+    <string name="total_price">Total Price</string>
+    <string name="pat_button_text">PAY FOR IT</string>
 </resources>

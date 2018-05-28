@@ -6,6 +6,7 @@ import android.arch.persistence.room.PrimaryKey;
 import android.support.annotation.NonNull;
 
 import com.google.gson.annotations.SerializedName;
+import com.mark.zumo.client.core.entity.util.EntityHelper;
 
 import java.io.Serializable;
 
@@ -39,5 +40,10 @@ public class OrderDetail implements Serializable {
         String menuUuid = "menu_uuid";
         String menuOptionUuid = "menu_option_uuid";
         String menuOrderUuid = "menu_order_uuid";
+    }
+
+    @Override
+    public String toString() {
+        return EntityHelper.toString(this, OrderDetail.class);
     }
 }

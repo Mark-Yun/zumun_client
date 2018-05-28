@@ -41,6 +41,7 @@ public enum AppLocationProvider {
                 @Override
                 public void onLocationChanged(Location location) {
                     e.onNext(location);
+                    e.onComplete();
                 }
 
                 @Override

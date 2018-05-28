@@ -26,7 +26,6 @@ import java.util.Map;
 
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.schedulers.Schedulers;
 
 /**
  * Created by mark on 18. 5. 24.
@@ -54,10 +53,10 @@ public class MenuDetailViewModel extends AndroidViewModel {
 
     public LiveData<Menu> getMenu(String uuid) {
         MutableLiveData<Menu> liveData = new MutableLiveData<>();
-        menuManager.getMenu(uuid)
-                .subscribeOn(Schedulers.io())
+        menuManager.getMenuFromDisk(uuid)
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(liveData::setValue);
+                .doOnNext(liveData::setValue)
+                .subscribe();
         return liveData;
     }
 
@@ -71,8 +70,9 @@ public class MenuDetailViewModel extends AndroidViewModel {
         menuOptionMap.clear();
         selectedOptionMap.clear();
 
-        menuManager.getMenuOptions(menuUuid)
+        menuManager.getMenuOptionList(menuUuid)
                 .flatMapSingle(Observable::toList)
+                .observeOn(AndroidSchedulers.mainThread())
                 .doOnNext(menuOptions -> Log.d(TAG, "loadMenuOptions: " + menuOptions.size()))
                 .doOnNext(menuOptions -> menuOptionMap.put(menuOptions.get(0).name, menuOptions))
                 .doOnComplete(() -> liveData.postValue(menuOptionMap))
@@ -103,14 +103,15 @@ public class MenuDetailViewModel extends AndroidViewModel {
         return liveData;
     }
 
-    public void addToCartCurrentItems(String storeUuid) {
-        CartItem cartItem = CartItem.fromOptionMenu(storeUuid, from(selectedOptionMap.values()));
+    public void addToCartCurrentItems(String storeUuid, String menuUuid) {
+        CartItem cartItem = CartItem.fromOptionMenu(storeUuid, menuUuid, from(selectedOptionMap.values()));
         cartManager.getCart(storeUuid)
+                .firstElement()
                 .observeOn(AndroidSchedulers.mainThread())
-                .doOnNext(cart -> cart.addCartItem(cartItem))
-                .doOnNext(cart -> selectedOptionMap.clear())
-                .doOnNext(cart -> selectedOptionLiveDataMap.clear())
-                .doOnNext(cart -> showAddToCartSucceedToast())
+                .doOnSuccess(cart -> cart.addCartItem(cartItem))
+                .doOnSuccess(cart -> selectedOptionMap.clear())
+                .doOnSuccess(cart -> selectedOptionLiveDataMap.clear())
+                .doOnSuccess(cart -> showAddToCartSucceedToast())
                 .subscribe();
     }
 

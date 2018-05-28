@@ -15,7 +15,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.schedulers.Schedulers;
 
 /**
  * Created by mark on 18. 5. 16.
@@ -35,9 +34,9 @@ public class OrderViewModel extends AndroidViewModel {
 
     private void bindMenuOrderManager(MutableLiveData<List<MenuOrder>> liveData) {
         menuOrderManager.getMenuOrder()
-                .subscribeOn(Schedulers.computation())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(menuOrder -> onMenuOrderAdded(liveData, menuOrder));
+                .doOnNext(menuOrder -> onMenuOrderAdded(liveData, menuOrder))
+                .subscribe();
     }
 
     private void onMenuOrderAdded(MutableLiveData<List<MenuOrder>> liveData, MenuOrder menuOrder) {
