@@ -48,9 +48,9 @@ public enum AppServerServiceProvider {
                 .flatMap(this::interceptor)
                 .flatMap(this::okHttpClient)
                 .flatMap(this::buildNetworkRepository)
-                .subscribeOn(Schedulers.newThread())
-                .subscribe(networkRepository -> this.networkRepository = networkRepository
-                        , throwable -> Log.e(TAG, "AppServerServiceProvider: ", throwable));
+                .doOnSuccess(networkRepository -> this.networkRepository = networkRepository)
+                .doOnError(throwable -> Log.e(TAG, "AppServerServiceProvider: ", throwable))
+                .subscribe();
     }
 
     private NetworkRepository buildNetworkRepository() {
@@ -68,19 +68,21 @@ public enum AppServerServiceProvider {
                 .flatMap(this::interceptor)
                 .flatMap(this::okHttpClient)
                 .flatMap(this::buildNetworkRepository)
-                .subscribeOn(Schedulers.newThread())
-                .subscribe(appServerService -> this.networkRepository = appServerService
-                        , throwable -> Log.e(TAG, "AppServerServiceProvider: ", throwable));
+                .doOnSuccess(appServerService -> this.networkRepository = appServerService)
+                .doOnError(throwable -> Log.e(TAG, "AppServerServiceProvider: ", throwable))
+                .subscribe();
     }
 
     private Single<NetworkRepository> buildNetworkRepository(final OkHttpClient okHttpClient) {
-        return Single.fromCallable(() -> new Retrofit.Builder()
-                .baseUrl(NetworkRepository.URL)
-                .addConverterFactory(gsonConverterFactory())
-                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-                .client(okHttpClient)
-                .build()
-                .create(NetworkRepository.class));
+        return Single.fromCallable
+                (() -> new Retrofit.Builder()
+                        .baseUrl(NetworkRepository.URL)
+                        .addConverterFactory(gsonConverterFactory())
+                        .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+                        .client(okHttpClient)
+                        .build()
+                        .create(NetworkRepository.class)
+                ).subscribeOn(Schedulers.io());
     }
 
     @NonNull
@@ -96,12 +98,12 @@ public enum AppServerServiceProvider {
     }
 
     private Single<OkHttpClient> okHttpClient(final Interceptor interceptor) {
-        return Single.fromCallable(() ->
-                new OkHttpClient.Builder()
+        return Single.fromCallable
+                (() -> new OkHttpClient.Builder()
                         .cache(cache())
                         .addInterceptor(interceptor)
                         .build()
-        );
+                ).subscribeOn(Schedulers.io());
     }
 
     @NonNull
@@ -111,24 +113,28 @@ public enum AppServerServiceProvider {
     }
 
     private Single<Interceptor> interceptor(@NonNull Bundle bundle) {
-        return Single.fromCallable(() ->
-                chain -> {
-                    Request original = chain.request();
-                    Request.Builder builder = original.newBuilder();
+        return Single.fromCallable(() -> getInterceptor(bundle))
+                .subscribeOn(Schedulers.io());
+    }
 
-                    for (String key : bundle.keySet()) {
-                        String value = bundle.getString(key);
-                        builder.header(key, value);
-                    }
-                    builder.header(CONTENT_TYPE, APPLICATION_JSON);
+    @NonNull
+    private Interceptor getInterceptor(final @NonNull Bundle bundle) {
+        return chain -> {
+            Request original = chain.request();
+            Request.Builder builder = original.newBuilder();
 
-                    Request request = builder
-                            .method(original.method(), original.body())
-                            .build();
+            for (String key : bundle.keySet()) {
+                String value = bundle.getString(key);
+                builder.header(key, value);
+            }
+            builder.header(CONTENT_TYPE, APPLICATION_JSON);
 
-                    return chain.proceed(request);
-                }
-        );
+            Request request = builder
+                    .method(original.method(), original.body())
+                    .build();
+
+            return chain.proceed(request);
+        };
     }
 
     private Single<Bundle> buildDefaultHeader() {
@@ -139,7 +145,7 @@ public enum AppServerServiceProvider {
             bundle.putString(KEY_MODEL, Build.MODEL);
             bundle.putString(KEY_MANUFACTURER, getAppVersion());
             return bundle;
-        });
+        }).subscribeOn(Schedulers.io());
     }
 
     private String getAppVersion() {
@@ -155,9 +161,10 @@ public enum AppServerServiceProvider {
     }
 
     private Single<Bundle> addGuestUuid(Bundle bundle, String uuid) {
-        return Single.fromCallable(() -> {
-            bundle.putString(SessionRepository.KEY_GUEST_USER_UUID, uuid);
-            return bundle;
-        });
+        return Single.fromCallable
+                (() -> {
+                    bundle.putString(SessionRepository.KEY_GUEST_USER_UUID, uuid);
+                    return bundle;
+                }).subscribeOn(Schedulers.io());
     }
 }
