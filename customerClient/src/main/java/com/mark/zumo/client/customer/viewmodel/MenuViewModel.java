@@ -19,6 +19,8 @@ import com.mark.zumo.client.customer.model.entity.CartItem;
 import java.util.List;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.disposables.Disposable;
 
 /**
  * Created by mark on 18. 5. 10.
@@ -30,29 +32,37 @@ public class MenuViewModel extends AndroidViewModel {
     private CartManager cartManager;
     private StoreManager storeManager;
 
+    private CompositeDisposable disposables;
+
     private String currentStoreUuid;
 
     public MenuViewModel(@NonNull final Application application) {
         super(application);
+
         menuManager = MenuManager.INSTANCE;
         userManager = UserManager.INSTANCE;
         cartManager = CartManager.INSTANCE;
         storeManager = StoreManager.INSTANCE;
+
+        disposables = new CompositeDisposable();
     }
 
     public LiveData<List<Menu>> getMenuItemList(Activity activity) {
         MutableLiveData<List<Menu>> listMutableLiveData = new MutableLiveData<>();
-        userManager.getCurrentUser()
+        Disposable subscribe = userManager.getCurrentUser()
                 .flatMap(customerUser -> menuManager.acquireMenuItem(activity, customerUser))
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnNext(listMutableLiveData::setValue)
                 .subscribe();
+
+        disposables.add(subscribe);
 
         return listMutableLiveData;
     }
 
     @Override
     protected void onCleared() {
+        disposables.clear();
         menuManager.clearClient();
     }
 
@@ -60,35 +70,45 @@ public class MenuViewModel extends AndroidViewModel {
         currentStoreUuid = storeUuid;
 
         MutableLiveData<Cart> cartLiveData = new MutableLiveData<>();
-        cartManager.getCart(storeUuid)
+
+        Disposable subscribe = cartManager.getCart(storeUuid)
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnNext(cartLiveData::setValue)
                 .subscribe();
+
+        disposables.add(subscribe);
 
         return cartLiveData;
     }
 
     public void addMenuToCart(Menu menu) {
-        cartManager.getCart(currentStoreUuid)
+        Disposable subscribe = cartManager.getCart(currentStoreUuid)
                 .firstElement()
                 .doOnSuccess(cart -> cart.addCartItem(CartItem.fromMenu(menu)))
                 .subscribe();
+
+        disposables.add(subscribe);
     }
 
     public void removeLatestMenuFromCart() {
-        cartManager.getCart(currentStoreUuid)
+        Disposable subscribe = cartManager.getCart(currentStoreUuid)
                 .firstElement()
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSuccess(Cart::removeLatestCartItem)
                 .subscribe();
+
+        disposables.add(subscribe);
     }
 
     public LiveData<Store> getStore(String storeUuid) {
         MutableLiveData<Store> storeLiveData = new MutableLiveData<>();
-        storeManager.getStore(storeUuid)
+
+        Disposable subscribe = storeManager.getStore(storeUuid)
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnNext(storeLiveData::setValue)
                 .subscribe();
+
+        disposables.add(subscribe);
 
         return storeLiveData;
     }

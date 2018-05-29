@@ -12,6 +12,8 @@ import com.mark.zumo.client.customer.model.StoreManager;
 import java.util.List;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.disposables.Disposable;
 
 /**
  * Created by mark on 18. 5. 19.
@@ -20,19 +22,24 @@ public class PlaceViewModel extends AndroidViewModel {
 
     private StoreManager storeManager;
 
+    private CompositeDisposable disposables;
+
     public PlaceViewModel(@NonNull final Application application) {
         super(application);
 
         storeManager = StoreManager.INSTANCE;
+        disposables = new CompositeDisposable();
     }
 
     public LiveData<List<Store>> nearByStore() {
         MutableLiveData<List<Store>> nearByStore = new MutableLiveData<>();
 
-        storeManager.nearByStore()
+        Disposable subscribe = storeManager.nearByStore()
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnNext(nearByStore::setValue)
                 .subscribe();
+
+        disposables.add(subscribe);
 
         return nearByStore;
     }
@@ -40,11 +47,18 @@ public class PlaceViewModel extends AndroidViewModel {
     public LiveData<List<Store>> latestVisitStore() {
         MutableLiveData<List<Store>> latestVisitStore = new MutableLiveData<>();
 
-        storeManager.latestVisitStore()
+        Disposable subscribe = storeManager.latestVisitStore()
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnNext(latestVisitStore::setValue)
                 .subscribe();
 
+        disposables.add(subscribe);
+
         return latestVisitStore;
+    }
+
+    @Override
+    protected void onCleared() {
+        disposables.clear();
     }
 }

@@ -26,6 +26,8 @@ import java.util.Map;
 
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.disposables.Disposable;
 
 /**
  * Created by mark on 18. 5. 24.
@@ -41,6 +43,7 @@ public class MenuDetailViewModel extends AndroidViewModel {
     private Map<String, MenuOption> selectedOptionMap;
     private Map<String, MutableLiveData<MenuOption>> selectedOptionLiveDataMap;
 
+    private CompositeDisposable disposables;
     public MenuDetailViewModel(@NonNull final Application application) {
         super(application);
         menuManager = MenuManager.INSTANCE;
@@ -49,14 +52,17 @@ public class MenuDetailViewModel extends AndroidViewModel {
         menuOptionMap = new LinkedHashMap<>();
         selectedOptionMap = new HashMap<>();
         selectedOptionLiveDataMap = new HashMap<>();
+
+        disposables = new CompositeDisposable();
     }
 
     public LiveData<Menu> getMenu(String uuid) {
         MutableLiveData<Menu> liveData = new MutableLiveData<>();
-        menuManager.getMenuFromDisk(uuid)
+        Disposable subscribe = menuManager.getMenuFromDisk(uuid)
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnNext(liveData::setValue)
                 .subscribe();
+        disposables.add(subscribe);
         return liveData;
     }
 
@@ -70,13 +76,15 @@ public class MenuDetailViewModel extends AndroidViewModel {
         menuOptionMap.clear();
         selectedOptionMap.clear();
 
-        menuManager.getMenuOptionList(menuUuid)
+        Disposable subscribe = menuManager.getMenuOptionList(menuUuid)
                 .flatMapSingle(Observable::toList)
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnNext(menuOptions -> Log.d(TAG, "loadMenuOptions: " + menuOptions.size()))
                 .doOnNext(menuOptions -> menuOptionMap.put(menuOptions.get(0).name, menuOptions))
                 .doOnComplete(() -> liveData.postValue(menuOptionMap))
                 .subscribe();
+
+        disposables.add(subscribe);
     }
 
     public void selectMenuOption(MenuOption menuOption) {
@@ -105,7 +113,7 @@ public class MenuDetailViewModel extends AndroidViewModel {
 
     public void addToCartCurrentItems(String storeUuid, String menuUuid) {
         CartItem cartItem = CartItem.fromOptionMenu(storeUuid, menuUuid, from(selectedOptionMap.values()));
-        cartManager.getCart(storeUuid)
+        Disposable subscribe = cartManager.getCart(storeUuid)
                 .firstElement()
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSuccess(cart -> cart.addCartItem(cartItem))
@@ -113,6 +121,8 @@ public class MenuDetailViewModel extends AndroidViewModel {
                 .doOnSuccess(cart -> selectedOptionLiveDataMap.clear())
                 .doOnSuccess(cart -> showAddToCartSucceedToast())
                 .subscribe();
+
+        disposables.add(subscribe);
     }
 
     private void showAddToCartSucceedToast() {
@@ -125,5 +135,10 @@ public class MenuDetailViewModel extends AndroidViewModel {
             orderDetailSet.add(new OrderDetail(null, option.menuUuid, null, option.uuid));
         }
         return orderDetailSet;
+    }
+
+    @Override
+    protected void onCleared() {
+        disposables.clear();
     }
 }
