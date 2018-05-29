@@ -26,7 +26,7 @@ import butterknife.ButterKnife;
 /**
  * Created by mark on 18. 5. 28.
  */
-public class CartMenuAdapter extends RecyclerView.Adapter<CartMenuAdapter.CartMenuViewHolder> {
+public class CartMenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private CartViewModel cartViewModel;
     private LifecycleOwner lifecycleOwner;
@@ -47,14 +47,32 @@ public class CartMenuAdapter extends RecyclerView.Adapter<CartMenuAdapter.CartMe
 
     @NonNull
     @Override
-    public CartMenuAdapter.CartMenuViewHolder onCreateViewHolder(@NonNull final ViewGroup parent, final int viewType) {
+    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull final ViewGroup parent, final int viewType) {
         LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
-        View view = layoutInflater.inflate(R.layout.card_view_cart_item, parent, false);
-        return new CartMenuViewHolder(view);
+        if (viewType == 0) {
+            View view = layoutInflater.inflate(R.layout.card_view_cart_menu_header, parent, false);
+            return new CartMenuHeaderViewHolder(view);
+        } else {
+            View view = layoutInflater.inflate(R.layout.card_view_cart_item, parent, false);
+            return new CartMenuViewHolder(view);
+        }
     }
 
     @Override
-    public void onBindViewHolder(@NonNull final CartMenuAdapter.CartMenuViewHolder holder, final int position) {
+    public void onBindViewHolder(@NonNull final RecyclerView.ViewHolder holder, final int position) {
+        if (holder instanceof CartMenuViewHolder) {
+            inflateMenuViewHolder((CartMenuViewHolder) holder, position);
+        } else if (holder instanceof CartMenuHeaderViewHolder) {
+            inflateHeaderViewHolder((CartMenuHeaderViewHolder) holder);
+        }
+    }
+
+    private void inflateHeaderViewHolder(final @NonNull CartMenuHeaderViewHolder holder) {
+        String text = holder.itemView.getContext().getString(R.string.cart_title_text, cartItemList.size());
+        holder.title.setText(text);
+    }
+
+    private void inflateMenuViewHolder(final @NonNull CartMenuViewHolder holder, final int position) {
         CartItem cartItem = cartItemList.get(position);
 
         cartViewModel.getMenu(cartItem.menuUuid).observe(lifecycleOwner, menu -> {
@@ -84,6 +102,11 @@ public class CartMenuAdapter extends RecyclerView.Adapter<CartMenuAdapter.CartMe
     }
 
     @Override
+    public int getItemViewType(int position) {
+        return position;
+    }
+
+    @Override
     public int getItemCount() {
         return cartItemList.size();
     }
@@ -98,6 +121,16 @@ public class CartMenuAdapter extends RecyclerView.Adapter<CartMenuAdapter.CartMe
         @BindView(R.id.menu_amount_value) AppCompatTextView amount;
 
         CartMenuViewHolder(final View itemView) {
+            super(itemView);
+            ButterKnife.bind(this, itemView);
+        }
+    }
+
+    class CartMenuHeaderViewHolder extends RecyclerView.ViewHolder {
+
+        @BindView(R.id.title) AppCompatTextView title;
+
+        CartMenuHeaderViewHolder(final View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
         }

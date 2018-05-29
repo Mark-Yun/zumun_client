@@ -13,4 +13,5 @@
     <string name="pat_button_text">PAY FOR IT</string>
     <string name="personal_option_button_text">PERSONAL OPTION</string>
     <string name="amount_description">Amount</string>
+    <string name="cart_title_text">Cart(%1$d)</string>
 </resources>
