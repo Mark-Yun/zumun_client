@@ -44,6 +44,9 @@ public class MenuDetailViewModel extends AndroidViewModel {
     private Map<String, MutableLiveData<MenuOption>> selectedOptionLiveDataMap;
 
     private CompositeDisposable disposables;
+
+    private int amount;
+
     public MenuDetailViewModel(@NonNull final Application application) {
         super(application);
         menuManager = MenuManager.INSTANCE;
@@ -58,11 +61,14 @@ public class MenuDetailViewModel extends AndroidViewModel {
 
     public LiveData<Menu> getMenu(String uuid) {
         MutableLiveData<Menu> liveData = new MutableLiveData<>();
+
         Disposable subscribe = menuManager.getMenuFromDisk(uuid)
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnNext(liveData::setValue)
                 .subscribe();
+
         disposables.add(subscribe);
+
         return liveData;
     }
 
@@ -85,6 +91,18 @@ public class MenuDetailViewModel extends AndroidViewModel {
                 .subscribe();
 
         disposables.add(subscribe);
+    }
+
+    public String getMenuAmount() {
+        return String.valueOf(amount = 1);
+    }
+
+    public String increaseAmount() {
+        return String.valueOf(++amount);
+    }
+
+    public String decreaseAmount() {
+        return String.valueOf(amount > 1 ? --amount : amount);
     }
 
     public void selectMenuOption(MenuOption menuOption) {
@@ -112,7 +130,7 @@ public class MenuDetailViewModel extends AndroidViewModel {
     }
 
     public void addToCartCurrentItems(String storeUuid, String menuUuid) {
-        CartItem cartItem = CartItem.fromOptionMenu(storeUuid, menuUuid, from(selectedOptionMap.values()));
+        CartItem cartItem = CartItem.fromOptionMenu(storeUuid, menuUuid, from(selectedOptionMap.values()), amount);
         Disposable subscribe = cartManager.getCart(storeUuid)
                 .firstElement()
                 .observeOn(AndroidSchedulers.mainThread())

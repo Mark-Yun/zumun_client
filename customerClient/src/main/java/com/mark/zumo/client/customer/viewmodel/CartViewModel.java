@@ -137,6 +137,7 @@ public class CartViewModel extends AndroidViewModel {
                                 getOptionListPrice(cartItem1),
                                 getMenuPrice(cartItem1)
                         ).reduce((integer, integer2) -> integer + integer2)
+                                .map(integer -> integer * cartItem.getAmount())
                 );
     }
 
@@ -162,13 +163,19 @@ public class CartViewModel extends AndroidViewModel {
 
         Disposable subscribe = cartManager.getCart(storeUuid)
                 .doOnNext(cart ->
-                        Observable.fromIterable(cart.getCartItemList())
-                                .flatMapMaybe(this::getCartItemPrice)
-                                .reduce((integer, integer2) -> integer + integer2)
-                                .map(NumberFormat.getCurrencyInstance()::format)
-                                .observeOn(AndroidSchedulers.mainThread())
-                                .doOnSuccess(liveData::setValue)
-                                .subscribe()
+                        {
+                            if (cart.getCartItemList().isEmpty()) {
+                                liveData.postValue(NumberFormat.getCurrencyInstance().format(0));
+                            } else {
+                                Observable.fromIterable(cart.getCartItemList())
+                                        .flatMapMaybe(this::getCartItemPrice)
+                                        .reduce((integer, integer2) -> integer + integer2)
+                                        .map(NumberFormat.getCurrencyInstance()::format)
+                                        .observeOn(AndroidSchedulers.mainThread())
+                                        .doOnSuccess(liveData::setValue)
+                                        .subscribe();
+                            }
+                        }
                 ).subscribe();
 
         disposables.add(subscribe);

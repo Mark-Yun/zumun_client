@@ -68,14 +68,16 @@ public class CartMenuAdapter extends RecyclerView.Adapter<CartMenuAdapter.CartMe
 
             cartViewModel.getCartItemPriceLiveData(cartItem.storeUuid, position).observe(lifecycleOwner, holder.menuPrice::setText);
 
-            holder.cartOptionRecyclerView.setHasFixedSize(true);
             RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(holder.itemView.getContext());
             holder.cartOptionRecyclerView.setLayoutManager(layoutManager);
+            holder.cartOptionRecyclerView.setHasFixedSize(true);
 
             CartOptionAdapter cartOptionAdapter = new CartOptionAdapter(cartViewModel, lifecycleOwner);
             holder.cartOptionRecyclerView.setAdapter(cartOptionAdapter);
 
             cartOptionAdapter.setOrderDetailList(new ArrayList<>(cartItem.getOrderDetailList()));
+
+            holder.amount.setText(String.valueOf(cartItem.getAmount()));
         });
 
         holder.removeButton.setOnClickListener(v -> cartViewModel.removeCartItem(position));
@@ -93,6 +95,7 @@ public class CartMenuAdapter extends RecyclerView.Adapter<CartMenuAdapter.CartMe
         @BindView(R.id.remove_button) AppCompatImageButton removeButton;
         @BindView(R.id.menu_price) AppCompatTextView menuPrice;
         @BindView(R.id.cart_option_recycler_view) RecyclerView cartOptionRecyclerView;
+        @BindView(R.id.menu_amount_value) AppCompatTextView amount;
 
         CartMenuViewHolder(final View itemView) {
             super(itemView);

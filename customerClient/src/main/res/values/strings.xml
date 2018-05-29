@@ -11,4 +11,6 @@
     <string name="button_text_send_order">SEND ORDER</string>
     <string name="total_price">Total Price</string>
     <string name="pat_button_text">PAY FOR IT</string>
+    <string name="personal_option_button_text">PERSONAL OPTION</string>
+    <string name="amount_description">Amount</string>
 </resources>

@@ -14,4 +14,27 @@
         <item name="android:windowIsTranslucent">true</item>
         <item name="android:windowAnimationStyle">@android:style/Animation</item>
     </style>
+
+    <style name="MenuOptionSelector">
+        <item name="android:layout_margin">@dimen/menu_option_margin</item>
+        <item name="android:background">@drawable/shape_menu_option</item>
+        <item name="android:clickable">true</item>
+        <item name="android:focusable">true</item>
+        <item name="android:isScrollContainer">false</item>
+        <item name="android:padding">13dp</item>
+    </style>
+
+    <style name="CartMenuOptionNameText">
+        <item name="android:padding">2dp</item>
+        <item name="android:textColor">@color/colorTextDark</item>
+        <item name="android:textSize">13sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="CartMenuOptionValueText">
+        <item name="android:padding">2dp</item>
+        <item name="android:textColor">@color/colorSecondaryText</item>
+        <item name="android:textSize">13sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
 </resources>

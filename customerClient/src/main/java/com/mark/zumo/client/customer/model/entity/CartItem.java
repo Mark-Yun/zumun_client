@@ -14,26 +14,41 @@ public class CartItem {
     public final String storeUuid;
     public final String menuUuid;
 
+    private int amount;
+
     private Collection<OrderDetail> orderDetailList;
 
-    private CartItem(final String storeUuid, final String menuUuid) {
-        this.menuUuid = menuUuid;
-        this.storeUuid = storeUuid;
-        orderDetailList = new ArrayList<>();
-    }
-
-    private CartItem(final String storeUuid, final String menuUuid, final Collection<OrderDetail> orderDetailList) {
+    private CartItem(final String storeUuid, final String menuUuid,
+                     final Collection<OrderDetail> orderDetailList, final int amount) {
         this.menuUuid = menuUuid;
         this.storeUuid = storeUuid;
         this.orderDetailList = orderDetailList;
+        this.amount = amount;
+    }
+
+    private CartItem(final String storeUuid, final String menuUuid, final int amount) {
+        this(storeUuid, menuUuid, new ArrayList<>(), amount);
     }
 
     public static CartItem fromMenu(Menu menu) {
-        return new CartItem(menu.storeUuid, menu.uuid);
+        return new CartItem(menu.storeUuid, menu.uuid, 1);
     }
 
-    public static CartItem fromOptionMenu(String storeUuid, final String menuUuid, Collection<OrderDetail> orderDetailList) {
-        return new CartItem(storeUuid, menuUuid, orderDetailList);
+    public static CartItem fromOptionMenu(String storeUuid, final String menuUuid,
+                                          Collection<OrderDetail> orderDetailList, final int amount) {
+        return new CartItem(storeUuid, menuUuid, orderDetailList, amount);
+    }
+
+    public static CartItem empty() {
+        return new CartItem(null, null, 0);
+    }
+
+    public int getAmount() {
+        return amount;
+    }
+
+    public void setAmount(int amount) {
+        this.amount = amount;
     }
 
     public CartItem add(OrderDetail orderDetail) {

@@ -51,6 +51,23 @@
         app:layout_constraintTop_toBottomOf="@+id/menu_name" />
 
     <android.support.v7.widget.AppCompatTextView
+        android:id="@+id/menu_amount_name"
+        style="@style/CartMenuOptionNameText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/amount_description"
+        app:layout_constraintStart_toStartOf="@+id/cart_option_recycler_view"
+        app:layout_constraintTop_toBottomOf="@+id/cart_option_recycler_view" />
+
+    <android.support.v7.widget.AppCompatTextView
+        android:id="@+id/menu_amount_value"
+        style="@style/CartMenuOptionValueText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toEndOf="@+id/menu_amount_name"
+        app:layout_constraintTop_toBottomOf="@+id/cart_option_recycler_view" />
+
+    <android.support.v7.widget.AppCompatTextView
         android:id="@+id/menu_price"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

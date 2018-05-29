@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
+import android.widget.Toast;
 
 import com.mark.zumo.client.customer.R;
 import com.mark.zumo.client.customer.view.Navigator;
@@ -69,6 +70,7 @@ public class MenuDetailActivity extends AppCompatActivity {
 
     @OnClick(R.id.send_order_button)
     void onClickSendOrder() {
+        Toast.makeText(this, "IMPL ME", Toast.LENGTH_SHORT).show();
         finish();
     }
 }
