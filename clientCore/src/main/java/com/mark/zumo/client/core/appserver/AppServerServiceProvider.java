@@ -33,33 +33,12 @@ public enum AppServerServiceProvider {
     INSTANCE;
 
     private static final String TAG = "AppServerServiceProvider";
-    private static final String KEY_ANDROID_SDK = "android_sdk";
-    private static final String KEY_MODEL = "model";
-    private static final String KEY_MANUFACTURER = "manufacturer";
-    private static final int MAX_CACHE_SIZE = 20 * 1024 * 1024;
-    private static final String CONTENT_TYPE = "Content-type";
-    private static final String APPLICATION_JSON = "application/json";
 
+    private static final int MAX_CACHE_SIZE = 20 * 1024 * 1024;
     public NetworkRepository networkRepository;
 
     AppServerServiceProvider() {
-        networkRepository = buildNetworkRepository();
-        buildDefaultHeader()
-                .flatMap(this::interceptor)
-                .flatMap(this::okHttpClient)
-                .flatMap(this::buildNetworkRepository)
-                .doOnSuccess(networkRepository -> this.networkRepository = networkRepository)
-                .doOnError(throwable -> Log.e(TAG, "AppServerServiceProvider: ", throwable))
-                .subscribe();
-    }
-
-    private NetworkRepository buildNetworkRepository() {
-        return new Retrofit.Builder()
-                .baseUrl(NetworkRepository.URL)
-                .addConverterFactory(gsonConverterFactory())
-                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-                .build()
-                .create(NetworkRepository.class);
+        buildSessionHeader("");
     }
 
     public void buildSessionHeader(String uuid) {
@@ -68,7 +47,7 @@ public enum AppServerServiceProvider {
                 .flatMap(this::interceptor)
                 .flatMap(this::okHttpClient)
                 .flatMap(this::buildNetworkRepository)
-                .doOnSuccess(appServerService -> this.networkRepository = appServerService)
+                .doOnSuccess(this::setNetworkRepository)
                 .doOnError(throwable -> Log.e(TAG, "AppServerServiceProvider: ", throwable))
                 .subscribe();
     }
@@ -83,6 +62,10 @@ public enum AppServerServiceProvider {
                         .build()
                         .create(NetworkRepository.class)
                 ).subscribeOn(Schedulers.io());
+    }
+
+    private void setNetworkRepository(final NetworkRepository networkRepository) {
+        this.networkRepository = networkRepository;
     }
 
     @NonNull
@@ -125,9 +108,11 @@ public enum AppServerServiceProvider {
 
             for (String key : bundle.keySet()) {
                 String value = bundle.getString(key);
+                if (value == null) continue;
+
                 builder.header(key, value);
             }
-            builder.header(CONTENT_TYPE, APPLICATION_JSON);
+            builder.header(ContentType.KEY, ContentType.VALUE);
 
             Request request = builder
                     .method(original.method(), original.body())
@@ -141,9 +126,9 @@ public enum AppServerServiceProvider {
         //TODO: Impl
         return Single.fromCallable(() -> {
             Bundle bundle = new Bundle();
-            bundle.putString(KEY_ANDROID_SDK, String.valueOf(Build.VERSION.SDK_INT));
-            bundle.putString(KEY_MODEL, Build.MODEL);
-            bundle.putString(KEY_MANUFACTURER, getAppVersion());
+            bundle.putString(AndroidSdk.KEY, String.valueOf(Build.VERSION.SDK_INT));
+            bundle.putString(Model.KEY, Build.MODEL);
+            bundle.putString(Manufacturer.KEY, getAppVersion());
             return bundle;
         }).subscribeOn(Schedulers.io());
     }
@@ -163,8 +148,27 @@ public enum AppServerServiceProvider {
     private Single<Bundle> addGuestUuid(Bundle bundle, String uuid) {
         return Single.fromCallable
                 (() -> {
-                    bundle.putString(SessionRepository.KEY_GUEST_USER_UUID, uuid);
+                    if (!uuid.isEmpty()) {
+                        bundle.putString(SessionRepository.KEY_GUEST_USER_UUID, uuid);
+                    }
                     return bundle;
                 }).subscribeOn(Schedulers.io());
+    }
+
+    private interface ContentType {
+        String KEY = "Content-type";
+        String VALUE = "application/json";
+    }
+
+    private interface AndroidSdk {
+        String KEY = "android_sdk";
+    }
+
+    private interface Model {
+        String KEY = "model";
+    }
+
+    private interface Manufacturer {
+        String KEY = "manufacturer";
     }
 }
