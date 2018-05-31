@@ -4,8 +4,6 @@ import com.mark.zumo.client.core.security.EncryptionContract;
 import com.mark.zumo.client.core.security.SecurePreferences;
 import com.mark.zumo.client.core.util.context.ContextHolder;
 
-import io.reactivex.Single;
-
 /**
  * Created by mark on 18. 5. 21.
  */
@@ -15,11 +13,7 @@ public enum SecuredRepository {
     private final Object securePrefLock = new Object();
     private SecurePreferences securePreferences;
 
-    public Single<SecurePreferences> securePreferences() {
-        return Single.fromCallable(this::getSecurePreferences);
-    }
-
-    private SecurePreferences getSecurePreferences() {
+    public SecurePreferences securePreferences() {
         if (securePreferences == null) {
             synchronized (securePrefLock) {
                 if (securePreferences == null) {

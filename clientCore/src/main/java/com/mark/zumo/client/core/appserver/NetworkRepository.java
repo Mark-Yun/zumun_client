@@ -2,9 +2,12 @@ package com.mark.zumo.client.core.appserver;
 
 import com.mark.zumo.client.core.entity.Menu;
 import com.mark.zumo.client.core.entity.MenuOption;
+import com.mark.zumo.client.core.entity.MenuOrder;
+import com.mark.zumo.client.core.entity.OrderDetail;
 import com.mark.zumo.client.core.entity.Store;
 import com.mark.zumo.client.core.entity.user.GuestUser;
 
+import java.util.Collection;
 import java.util.List;
 
 import io.reactivex.Observable;
@@ -19,10 +22,11 @@ import retrofit2.http.Query;
  */
 
 public interface NetworkRepository {
+
     String URL = "https://faca5l5t89.execute-api.ap-northeast-2.amazonaws.com/zumo_api/";
 
     @GET("users/guest/create")
-    Single<GuestUser> createGuestUser();
+    Observable<GuestUser> createGuestUser();
 
     @POST("users/guest/delete")
     Single<Void> deleteGuestUser(@Query("menu_uuid") String uuid);
@@ -41,4 +45,7 @@ public interface NetworkRepository {
 
     @GET("option/get")
     Observable<List<MenuOption>> getMenuOptionList(@Query("menu_uuid") String uuid);
+
+    @POST("order/create")
+    Observable<MenuOrder> createOrder(@Body Collection<OrderDetail> orderDetailCollection);
 }

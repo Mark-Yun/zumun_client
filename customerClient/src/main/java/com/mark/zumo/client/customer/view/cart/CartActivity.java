@@ -10,6 +10,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.widget.Toast;
 
+import com.mark.zumo.client.core.entity.MenuOrder;
 import com.mark.zumo.client.core.entity.Store;
 import com.mark.zumo.client.core.util.glide.GlideApp;
 import com.mark.zumo.client.core.util.glide.GlideUtils;
@@ -48,11 +49,6 @@ public class CartActivity extends AppCompatActivity {
         inflateView(storeUuid);
     }
 
-    @OnClick(R.id.pay_button)
-    void onClickPayButton() {
-        Toast.makeText(this, "onClickPayButton", Toast.LENGTH_SHORT).show();
-    }
-
     private void inflateView(String storeUuid) {
         cartViewModel.getStore(storeUuid).observe(this, this::onLoadStore);
 
@@ -63,7 +59,7 @@ public class CartActivity extends AppCompatActivity {
         CartMenuAdapter cartMenuAdapter = new CartMenuAdapter(cartViewModel, this);
         cartItemRecyclerView.setAdapter(cartMenuAdapter);
 
-        cartViewModel.getCartItemList(storeUuid).observe(this, cartMenuAdapter::setCartItemList);
+        cartViewModel.getCartItemList(storeUuid).observe(this, cartMenuAdapter::setOrderDetailList);
         cartViewModel.getTotalPrice(storeUuid).observe(this, totalPrice::setText);
     }
 
@@ -75,5 +71,14 @@ public class CartActivity extends AppCompatActivity {
                 .transition(GlideUtils.storeCoverTransitionOptions())
                 .apply(GlideUtils.storeCoverImageOptions())
                 .into(storeImage);
+    }
+
+    @OnClick(R.id.place_order)
+    void onClickPlaceOrder() {
+        cartViewModel.placeOrder(storeUuid).observe(this, this::onSuccessCreateOrder);
+    }
+
+    private void onSuccessCreateOrder(MenuOrder menuOrder) {
+        Toast.makeText(this, menuOrder.toString(), Toast.LENGTH_SHORT).show();
     }
 }

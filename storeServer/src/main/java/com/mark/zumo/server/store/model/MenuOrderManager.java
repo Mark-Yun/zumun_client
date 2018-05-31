@@ -15,6 +15,9 @@ import io.reactivex.schedulers.Schedulers;
 public enum MenuOrderManager {
     INSTANCE;
 
+    MenuOrderManager() {
+    }
+
     public Observable<MenuOrder> getMenuOrder() {
         return Observable.create((ObservableOnSubscribe<MenuOrder>) e -> {
             for (int i = 0; i < 10; i++) {

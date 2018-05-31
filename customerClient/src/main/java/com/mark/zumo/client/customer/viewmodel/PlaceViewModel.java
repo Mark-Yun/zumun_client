@@ -13,7 +13,6 @@ import java.util.List;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
-import io.reactivex.disposables.Disposable;
 
 /**
  * Created by mark on 18. 5. 19.
@@ -34,12 +33,11 @@ public class PlaceViewModel extends AndroidViewModel {
     public LiveData<List<Store>> nearByStore() {
         MutableLiveData<List<Store>> nearByStore = new MutableLiveData<>();
 
-        Disposable subscribe = storeManager.nearByStore()
+        storeManager.nearByStore()
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnNext(nearByStore::setValue)
+                .doOnSubscribe(disposables::add)
                 .subscribe();
-
-        disposables.add(subscribe);
 
         return nearByStore;
     }
@@ -47,12 +45,11 @@ public class PlaceViewModel extends AndroidViewModel {
     public LiveData<List<Store>> latestVisitStore() {
         MutableLiveData<List<Store>> latestVisitStore = new MutableLiveData<>();
 
-        Disposable subscribe = storeManager.latestVisitStore()
+        storeManager.latestVisitStore()
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnNext(latestVisitStore::setValue)
+                .doOnSubscribe(disposables::add)
                 .subscribe();
-
-        disposables.add(subscribe);
 
         return latestVisitStore;
     }

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Vibrator;
 import android.util.Log;
 
+import com.mark.zumo.client.core.entity.OrderDetail;
 import com.mark.zumo.client.core.util.context.ContextHolder;
 
 import java.util.ArrayList;
@@ -18,17 +19,18 @@ import io.reactivex.ObservableEmitter;
 public class Cart {
 
     public static final String TAG = "Cart";
-    private List<CartItem> cartItemList;
+
+    private List<OrderDetail> orderDetailList;
     private Collection<ObservableEmitter<Cart>> emitterCollection;
 
     public Cart() {
-        cartItemList = new ArrayList<>();
+        orderDetailList = new ArrayList<>();
         emitterCollection = new ArrayList<>();
     }
 
-    public void addCartItem(CartItem cartItem) {
-        Log.d(TAG, "addCartItem: " + cartItem);
-        cartItemList.add(cartItem);
+    public void addCartItem(OrderDetail orderDetail) {
+        Log.d(TAG, "addCartItem: " + orderDetail);
+        orderDetailList.add(orderDetail);
         notifyOnNext();
         vibrationFeedback();
     }
@@ -46,32 +48,32 @@ public class Cart {
         }
     }
 
-    public CartItem getCartItem(int position) {
-        return cartItemList.get(position);
+    public OrderDetail getOrderList(int position) {
+        return orderDetailList.get(position);
     }
 
-    public List<CartItem> getCartItemList() {
-        return cartItemList;
+    public List<OrderDetail> getOrderDetailList() {
+        return orderDetailList;
     }
 
     public void clear() {
-        cartItemList.clear();
+        orderDetailList.clear();
     }
 
     public void removeCartItem(int position) {
         Log.d(TAG, "removeCartItem: " + position);
-        cartItemList.remove(position);
+        orderDetailList.remove(position);
         notifyOnNext();
         vibrationFeedback();
     }
 
     public void removeLatestCartItem() {
-        removeCartItem(cartItemList.size() - 1);
+        removeCartItem(orderDetailList.size() - 1);
         notifyOnNext();
     }
 
     public int getItemCount() {
-        return cartItemList.size();
+        return orderDetailList.size();
     }
 
     private void vibrationFeedback() {

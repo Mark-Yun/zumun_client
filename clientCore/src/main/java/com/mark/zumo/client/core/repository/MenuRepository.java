@@ -35,7 +35,7 @@ public enum MenuRepository {
     MenuRepository() {
         context = ContextHolder.getContext();
 
-        diskRepository = AppDatabaseProvider.INSTANCE.appDatabase.diskRepository();
+        diskRepository = AppDatabaseProvider.INSTANCE.diskRepository;
         networkRepository = AppServerServiceProvider.INSTANCE.networkRepository;
     }
 

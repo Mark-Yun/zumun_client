@@ -8,7 +8,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.mark.zumo.client.core.entity.OrderDetail;
 import com.mark.zumo.client.customer.R;
 import com.mark.zumo.client.customer.viewmodel.CartViewModel;
 
@@ -26,17 +25,17 @@ public class CartOptionAdapter extends RecyclerView.Adapter<CartOptionAdapter.Op
     private CartViewModel cartViewModel;
     private LifecycleOwner lifecycleOwner;
 
-    private List<OrderDetail> orderDetailList;
+    private List<String> menuOptionList;
 
     CartOptionAdapter(final CartViewModel cartViewModel, final LifecycleOwner lifecycleOwner) {
         this.cartViewModel = cartViewModel;
         this.lifecycleOwner = lifecycleOwner;
 
-        orderDetailList = new ArrayList<>();
+        menuOptionList = new ArrayList<>();
     }
 
-    void setOrderDetailList(final List<OrderDetail> orderDetailList) {
-        this.orderDetailList = orderDetailList;
+    void setMenuOptionList(final List<String> menuOptionList) {
+        this.menuOptionList = menuOptionList;
         notifyDataSetChanged();
     }
 
@@ -50,8 +49,9 @@ public class CartOptionAdapter extends RecyclerView.Adapter<CartOptionAdapter.Op
 
     @Override
     public void onBindViewHolder(@NonNull final OptionViewHolder holder, final int position) {
-        OrderDetail orderDetail = orderDetailList.get(position);
-        cartViewModel.getMenuOption(orderDetail.menuOptionUuid).observe(lifecycleOwner, menuOption -> {
+        String menuOptionUuid = menuOptionList.get(position);
+
+        cartViewModel.getMenuOption(menuOptionUuid).observe(lifecycleOwner, menuOption -> {
             holder.name.setText(menuOption.name);
             holder.value.setText(menuOption.value);
         });
@@ -59,7 +59,7 @@ public class CartOptionAdapter extends RecyclerView.Adapter<CartOptionAdapter.Op
 
     @Override
     public int getItemCount() {
-        return orderDetailList.size();
+        return menuOptionList.size();
     }
 
     class OptionViewHolder extends RecyclerView.ViewHolder {

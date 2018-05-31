@@ -31,4 +31,13 @@ public enum CartManager {
             e.onNext(storeCartMap.get(storeUuid).addEmitter(e));
         }).subscribeOn(Schedulers.computation());
     }
+
+    public void clearCart(final String storeUuid) {
+        Cart cart = storeCartMap.get(storeUuid);
+        if (cart == null) {
+            return;
+        }
+
+        cart.clear();
+    }
 }

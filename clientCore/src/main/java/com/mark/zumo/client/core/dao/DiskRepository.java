@@ -77,4 +77,8 @@ public interface DiskRepository {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insert(Menu menu);
+
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    void insert(MenuOrder menuOrder);
 }

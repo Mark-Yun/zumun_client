@@ -1,71 +1,32 @@
 package com.mark.zumo.client.core.repository;
 
-import android.content.Context;
 import android.util.Log;
 
-import com.mark.zumo.client.core.appserver.AppServerServiceProvider;
-import com.mark.zumo.client.core.appserver.NetworkRepository;
+import com.mark.zumo.client.core.entity.user.GuestUser;
 import com.mark.zumo.client.core.security.SecurePreferences;
-
-import io.reactivex.Maybe;
-import io.reactivex.Single;
 
 /**
  * Created by mark on 18. 4. 30.
  */
 
-public class SessionRepository {
+public enum SessionRepository {
+    INSTANCE;
 
     public static final String KEY_GUEST_USER_UUID = "guest_user_uuid";
     public static final String TAG = "SessionRepository";
-    private volatile static SessionRepository instance;
 
-    private SecuredRepository securedRepository;
-    private NetworkRepository networkRepository;
+    private SecurePreferences securePreferences;
 
-    private SessionRepository(Context context) {
-        securedRepository = SecuredRepository.INSTANCE;
-        networkRepository = AppServerServiceProvider.INSTANCE.networkRepository;
+    SessionRepository() {
+        securePreferences = SecuredRepository.INSTANCE.securePreferences();
     }
 
-    public static SessionRepository from(Context context) {
-        if (instance == null) {
-            synchronized (SessionRepository.class) {
-                if (instance == null) instance = new SessionRepository(context);
-            }
-        }
-        return instance;
+    public void saveGuestUser(final GuestUser guestUser) {
+        securePreferences.put(SessionRepository.KEY_GUEST_USER_UUID, guestUser.uuid);
+        Log.d(TAG, "saveGuestUser: menu_uuid-" + guestUser.uuid);
     }
 
-    private Single<String> acquireGuestUserUuid() {
-        Log.d(TAG, "acquireGuestUserUuid: ");
-
-        return Single.zip(securedRepository.securePreferences()
-                , networkRepository.createGuestUser().map(guestUser -> guestUser.uuid)
-                , this::saveGuestUserUuid);
-    }
-
-    private String saveGuestUserUuid(final SecurePreferences securePreferences, final String uuid) {
-        Log.d(TAG, "saveGuestUserUuid: menu_uuid-" + uuid);
-        securePreferences.put(SessionRepository.KEY_GUEST_USER_UUID, uuid);
-        return uuid;
-    }
-
-    public Single<String> getSessionId() {
-        return securedRepository.securePreferences()
-                .flatMapMaybe(this::getGuestUserUuid)
-                .doOnComplete(this::acquireGuestUserUuid)
-                .toSingle();
-    }
-
-    private Maybe<String> getGuestUserUuid(final SecurePreferences securePreferences) {
-        return Maybe.create(e -> {
-            String guestUserUuid = securePreferences.getString(SessionRepository.KEY_GUEST_USER_UUID);
-            if (guestUserUuid == null || guestUserUuid.isEmpty()) {
-                e.onComplete();
-            } else {
-                e.onSuccess(guestUserUuid);
-            }
-        });
+    public String getGuestUserUuid() {
+        return securePreferences.getString(SessionRepository.KEY_GUEST_USER_UUID);
     }
 }

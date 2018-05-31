@@ -11,10 +11,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.mark.zumo.client.core.entity.OrderDetail;
 import com.mark.zumo.client.core.util.glide.GlideApp;
 import com.mark.zumo.client.core.util.glide.GlideUtils;
 import com.mark.zumo.client.customer.R;
-import com.mark.zumo.client.customer.model.entity.CartItem;
 import com.mark.zumo.client.customer.viewmodel.CartViewModel;
 
 import java.util.ArrayList;
@@ -31,17 +31,17 @@ public class CartMenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     private CartViewModel cartViewModel;
     private LifecycleOwner lifecycleOwner;
 
-    private List<CartItem> cartItemList;
+    private List<OrderDetail> orderDetailList;
 
     CartMenuAdapter(final CartViewModel cartViewModel, final LifecycleOwner lifecycleOwner) {
         this.cartViewModel = cartViewModel;
         this.lifecycleOwner = lifecycleOwner;
 
-        cartItemList = new ArrayList<>();
+        orderDetailList = new ArrayList<>();
     }
 
-    void setCartItemList(final List<CartItem> cartItemList) {
-        this.cartItemList = cartItemList;
+    void setOrderDetailList(final List<OrderDetail> orderDetailList) {
+        this.orderDetailList = orderDetailList;
         notifyDataSetChanged();
     }
 
@@ -68,14 +68,14 @@ public class CartMenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     }
 
     private void inflateHeaderViewHolder(final @NonNull CartMenuHeaderViewHolder holder) {
-        String text = holder.itemView.getContext().getString(R.string.cart_title_text, cartItemList.size());
+        String text = holder.itemView.getContext().getString(R.string.cart_title_text, orderDetailList.size());
         holder.title.setText(text);
     }
 
     private void inflateMenuViewHolder(final @NonNull CartMenuViewHolder holder, final int position) {
-        CartItem cartItem = cartItemList.get(position);
+        OrderDetail orderDetail = orderDetailList.get(position);
 
-        cartViewModel.getMenu(cartItem.menuUuid).observe(lifecycleOwner, menu -> {
+        cartViewModel.getMenu(orderDetail.menuUuid).observe(lifecycleOwner, menu -> {
             holder.menuName.setText(menu.name);
 
             GlideApp.with(holder.itemView.getContext())
@@ -84,7 +84,7 @@ public class CartMenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                     .transition(GlideUtils.cartMenuTransitionOptions())
                     .into(holder.menuImage);
 
-            cartViewModel.getCartItemPriceLiveData(cartItem.storeUuid, position).observe(lifecycleOwner, holder.menuPrice::setText);
+            cartViewModel.getCartItemPriceLiveData(orderDetail.storeUuid, position).observe(lifecycleOwner, holder.menuPrice::setText);
 
             RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(holder.itemView.getContext());
             holder.cartOptionRecyclerView.setLayoutManager(layoutManager);
@@ -93,9 +93,9 @@ public class CartMenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             CartOptionAdapter cartOptionAdapter = new CartOptionAdapter(cartViewModel, lifecycleOwner);
             holder.cartOptionRecyclerView.setAdapter(cartOptionAdapter);
 
-            cartOptionAdapter.setOrderDetailList(new ArrayList<>(cartItem.getOrderDetailList()));
+            cartOptionAdapter.setMenuOptionList(orderDetail.menuOptionUuidList);
 
-            holder.amount.setText(String.valueOf(cartItem.getAmount()));
+            holder.amount.setText(String.valueOf(orderDetail.amount));
         });
 
         holder.removeButton.setOnClickListener(v -> cartViewModel.removeCartItem(position));
@@ -108,7 +108,7 @@ public class CartMenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
     @Override
     public int getItemCount() {
-        return cartItemList.size() + 1;
+        return orderDetailList.size() + 1;
     }
 
     class CartMenuViewHolder extends RecyclerView.ViewHolder {

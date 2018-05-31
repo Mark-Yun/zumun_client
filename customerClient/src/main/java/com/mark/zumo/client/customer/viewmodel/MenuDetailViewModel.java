@@ -10,15 +10,15 @@ import android.widget.Toast;
 
 import com.mark.zumo.client.core.entity.Menu;
 import com.mark.zumo.client.core.entity.MenuOption;
+import com.mark.zumo.client.core.entity.MenuOrder;
 import com.mark.zumo.client.core.entity.OrderDetail;
 import com.mark.zumo.client.core.util.context.ContextHolder;
 import com.mark.zumo.client.customer.R;
 import com.mark.zumo.client.customer.model.CartManager;
 import com.mark.zumo.client.customer.model.MenuManager;
-import com.mark.zumo.client.customer.model.entity.CartItem;
+import com.mark.zumo.client.customer.model.OrderManager;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -27,7 +27,6 @@ import java.util.Map;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
-import io.reactivex.disposables.Disposable;
 
 /**
  * Created by mark on 18. 5. 24.
@@ -38,6 +37,7 @@ public class MenuDetailViewModel extends AndroidViewModel {
 
     private MenuManager menuManager;
     private CartManager cartManager;
+    private OrderManager orderManager;
 
     private Map<String, List<MenuOption>> menuOptionMap;
     private Map<String, MenuOption> selectedOptionMap;
@@ -51,6 +51,7 @@ public class MenuDetailViewModel extends AndroidViewModel {
         super(application);
         menuManager = MenuManager.INSTANCE;
         cartManager = CartManager.INSTANCE;
+        orderManager = OrderManager.INSTANCE;
 
         menuOptionMap = new LinkedHashMap<>();
         selectedOptionMap = new HashMap<>();
@@ -62,12 +63,11 @@ public class MenuDetailViewModel extends AndroidViewModel {
     public LiveData<Menu> getMenu(String uuid) {
         MutableLiveData<Menu> liveData = new MutableLiveData<>();
 
-        Disposable subscribe = menuManager.getMenuFromDisk(uuid)
+        menuManager.getMenuFromDisk(uuid)
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnNext(liveData::setValue)
-                .subscribe();
-
-        disposables.add(subscribe);
+                .doOnSubscribe(disposables::add)
+                .subscribe();        
 
         return liveData;
     }
@@ -82,15 +82,14 @@ public class MenuDetailViewModel extends AndroidViewModel {
         menuOptionMap.clear();
         selectedOptionMap.clear();
 
-        Disposable subscribe = menuManager.getMenuOptionList(menuUuid)
+        menuManager.getMenuOptionList(menuUuid)
                 .flatMapSingle(Observable::toList)
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnNext(menuOptions -> Log.d(TAG, "loadMenuOptions: " + menuOptions.size()))
                 .doOnNext(menuOptions -> menuOptionMap.put(menuOptions.get(0).name, menuOptions))
                 .doOnComplete(() -> liveData.postValue(menuOptionMap))
-                .subscribe();
-
-        disposables.add(subscribe);
+                .doOnSubscribe(disposables::add)
+                .subscribe();        
     }
 
     public String getMenuAmount() {
@@ -130,29 +129,48 @@ public class MenuDetailViewModel extends AndroidViewModel {
     }
 
     public void addToCartCurrentItems(String storeUuid, String menuUuid) {
-        CartItem cartItem = CartItem.fromOptionMenu(storeUuid, menuUuid, from(selectedOptionMap.values()), amount);
-        Disposable subscribe = cartManager.getCart(storeUuid)
+        ArrayList<String> menuOptionUuidList = new ArrayList<>();
+
+        for (MenuOption menuOption : selectedOptionMap.values()) {
+            menuOptionUuidList.add(menuOption.uuid);
+        }
+
+        OrderDetail orderDetail = new OrderDetail("", storeUuid, menuUuid, "", menuOptionUuidList, amount);
+        cartManager.getCart(storeUuid)
                 .firstElement()
                 .observeOn(AndroidSchedulers.mainThread())
-                .doOnSuccess(cart -> cart.addCartItem(cartItem))
+                .doOnSuccess(cart -> cart.addCartItem(orderDetail))
                 .doOnSuccess(cart -> selectedOptionMap.clear())
                 .doOnSuccess(cart -> selectedOptionLiveDataMap.clear())
                 .doOnSuccess(cart -> showAddToCartSucceedToast())
+                .doOnSubscribe(disposables::add)
+                .subscribe();
+    }
+
+    public LiveData<MenuOrder> placeOrder(String storeUuid, String menuUuid) {
+        MutableLiveData<MenuOrder> liveData = new MutableLiveData<>();
+        ArrayList<String> menuOptionUuidList = new ArrayList<>();
+
+        for (MenuOption menuOption : selectedOptionMap.values()) {
+            menuOptionUuidList.add(menuOption.uuid);
+        }
+
+        OrderDetail orderDetail = new OrderDetail("", storeUuid, menuUuid, "", menuOptionUuidList, amount);
+        orderManager.createMenuOrder(orderDetail)
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnNext(unused -> selectedOptionMap.clear())
+                .doOnNext(unused -> selectedOptionLiveDataMap.clear())
+                .doOnNext(menuOrder -> Log.d(TAG, "placeOrder: success-" + menuOrder))
+                .doOnNext(liveData::setValue)
+                .doOnError(throwable -> Log.e(TAG, "placeOrder: ", throwable))
+                .doOnSubscribe(disposables::add)
                 .subscribe();
 
-        disposables.add(subscribe);
+        return liveData;
     }
 
     private void showAddToCartSucceedToast() {
         Toast.makeText(ContextHolder.getContext(), R.string.toast_add_to_cart_item_succeed, Toast.LENGTH_SHORT).show();
-    }
-
-    private Collection<OrderDetail> from(Collection<MenuOption> optionSet) {
-        ArrayList<OrderDetail> orderDetailSet = new ArrayList<>();
-        for (MenuOption option : optionSet) {
-            orderDetailSet.add(new OrderDetail(null, option.menuUuid, null, option.uuid));
-        }
-        return orderDetailSet;
     }
 
     @Override

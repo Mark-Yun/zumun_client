@@ -31,7 +31,7 @@ public class StoreRepository {
 
     private StoreRepository(Context context) {
         networkRepository = AppServerServiceProvider.INSTANCE.networkRepository;
-        diskRepository = AppDatabaseProvider.INSTANCE.appDatabase.diskRepository();
+        diskRepository = AppDatabaseProvider.INSTANCE.diskRepository;
     }
 
     public static StoreRepository from(Context context) {

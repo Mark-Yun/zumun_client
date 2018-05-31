@@ -12,10 +12,10 @@ import com.mark.zumo.client.core.util.context.ContextHolder;
 public enum AppDatabaseProvider {
     INSTANCE;
 
-    public final AppDatabase appDatabase;
+    public final DiskRepository diskRepository;
 
     AppDatabaseProvider() {
-        appDatabase = buildDatabase(ContextHolder.getContext());
+        diskRepository = buildDatabase(ContextHolder.getContext()).diskRepository();
     }
 
     private static AppDatabase buildDatabase(Context context) {

@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "acb37ea463e4a465c022a729fca0c574",
+    "identityHash": "75b9850fe1ce14c2ba4264c7a69dfc2d",
     "entities": [
       {
         "tableName": "menu",
@@ -158,13 +158,19 @@
       },
       {
         "tableName": "order_detail",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`order_detail_uuid` TEXT NOT NULL, `menu_uuid` TEXT, `menu_order_uuid` TEXT, `menu_option_uuid` TEXT, PRIMARY KEY(`order_detail_uuid`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`order_detail_uuid` TEXT NOT NULL, `store_uuid` TEXT, `menu_uuid` TEXT, `menu_order_uuid` TEXT, `menu_option_uuid_list` TEXT, `menu_quantity` INTEGER NOT NULL, PRIMARY KEY(`order_detail_uuid`))",
         "fields": [
           {
             "fieldPath": "uuid",
             "columnName": "order_detail_uuid",
             "affinity": "TEXT",
             "notNull": true
+          },
+          {
+            "fieldPath": "storeUuid",
+            "columnName": "store_uuid",
+            "affinity": "TEXT",
+            "notNull": false
           },
           {
             "fieldPath": "menuUuid",
@@ -179,10 +185,16 @@
             "notNull": false
           },
           {
-            "fieldPath": "menuOptionUuid",
-            "columnName": "menu_option_uuid",
+            "fieldPath": "menuOptionUuidList",
+            "columnName": "menu_option_uuid_list",
             "affinity": "TEXT",
             "notNull": false
+          },
+          {
+            "fieldPath": "amount",
+            "columnName": "menu_quantity",
+            "affinity": "INTEGER",
+            "notNull": true
           }
         ],
         "primaryKey": {
@@ -241,7 +253,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"acb37ea463e4a465c022a729fca0c574\")"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"75b9850fe1ce14c2ba4264c7a69dfc2d\")"
     ]
   }
 }

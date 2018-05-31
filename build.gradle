@@ -46,6 +46,7 @@ ext {
     commonsio = '2.6'
     multidex = '1.0.3'
     blurkit = '1.0.0'
+    logging_interceptor = '3.4.1'
 }
 
 def applications = [project('customerClient'), project('storeClient'), project('storeServer')]
@@ -109,6 +110,7 @@ configure(libraries) {
         implementation "com.squareup.retrofit2:retrofit:$retrofit"
         implementation "com.squareup.retrofit2:converter-gson:$retrofit"
         implementation "com.squareup.retrofit2:adapter-rxjava2:$retrofit"
+        implementation "com.squareup.okhttp3:logging-interceptor:$logging_interceptor"
 
         implementation "io.reactivex.rxjava2:rxandroid:$rxAndroid"
         implementation "io.reactivex.rxjava2:rxjava:$rxJava"

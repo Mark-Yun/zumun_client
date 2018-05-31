@@ -7,6 +7,7 @@ import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
 
+import com.mark.zumo.client.core.entity.MenuOrder;
 import com.mark.zumo.client.customer.R;
 import com.mark.zumo.client.customer.view.Navigator;
 import com.mark.zumo.client.customer.view.menu.detail.fragment.MenuInfoFragment;
@@ -68,9 +69,14 @@ public class MenuDetailActivity extends AppCompatActivity {
         finish();
     }
 
-    @OnClick(R.id.send_order_button)
+    @OnClick(R.id.place_order)
     void onClickSendOrder() {
-        Toast.makeText(this, "IMPL ME", Toast.LENGTH_SHORT).show();
+        MenuDetailViewModel menuDetailViewModel = ViewModelProviders.of(menuOptionFragment).get(MenuDetailViewModel.class);
+        menuDetailViewModel.placeOrder(storeUuid, menuUuid).observe(this, this::onSuccessCreateOrder);
+    }
+
+    private void onSuccessCreateOrder(MenuOrder menuOrder) {
+        Toast.makeText(this, "SUCCESS -" + menuOrder, Toast.LENGTH_SHORT).show();
         finish();
     }
 }

@@ -1,6 +1,7 @@
 package com.mark.zumo.client.customer.model;
 
 import android.content.Context;
+import android.text.TextUtils;
 
 import com.mark.zumo.client.core.appserver.AppServerServiceProvider;
 import com.mark.zumo.client.core.appserver.NetworkRepository;
@@ -12,6 +13,7 @@ import com.mark.zumo.client.core.security.SecurePreferences;
 import com.mark.zumo.client.core.util.context.ContextHolder;
 
 import io.reactivex.Single;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * Created by mark on 18. 4. 30.
@@ -32,15 +34,27 @@ public enum SessionManager {
     SessionManager() {
         Context context = ContextHolder.getContext();
 
-        sessionRepository = SessionRepository.from(context);
+        sessionRepository = SessionRepository.INSTANCE;
         userRepository = UserRepository.from(context);
         appServerServiceProvider = AppServerServiceProvider.INSTANCE;
+        networkRepository = appServerServiceProvider.networkRepository;
 
         buildSessionHeader();
     }
 
     private void buildSessionHeader() {
-        sessionRepository.getSessionId().doOnSuccess(appServerServiceProvider::buildSessionHeader);
+        String guestUserUuid = sessionRepository.getGuestUserUuid();
+        if (TextUtils.isEmpty(guestUserUuid)) {
+            networkRepository.createGuestUser()
+                    .subscribeOn(Schedulers.io())
+                    .doOnNext(appServerServiceProvider::buildSessionHeader)
+                    .doOnNext(sessionRepository::saveGuestUser)
+                    .subscribe();
+
+            return;
+        }
+
+        appServerServiceProvider.buildSessionHeader(guestUserUuid);
     }
 
     public void saveToCache(String email, String password, byte[] key) throws Exception {

@@ -48,12 +48,12 @@
         android:padding="15dp"
         android:text="@string/button_text_add_to_cart"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/send_order_button"
+        app:layout_constraintEnd_toStartOf="@+id/place_order"
         app:layout_constraintHorizontal_chainStyle="packed"
         app:layout_constraintStart_toStartOf="parent" />
 
     <android.support.v7.widget.AppCompatButton
-        android:id="@+id/send_order_button"
+        android:id="@+id/place_order"
         style="?android:attr/borderlessButtonStyle"
         android:layout_width="0dp"
         android:layout_height="wrap_content"

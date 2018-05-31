@@ -9,6 +9,8 @@ import com.google.gson.annotations.SerializedName;
 import com.mark.zumo.client.core.entity.util.EntityHelper;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 import static com.mark.zumo.client.core.entity.OrderDetail.TABLE;
 
@@ -21,29 +23,41 @@ public class OrderDetail implements Serializable {
 
     @PrimaryKey @NonNull @SerializedName(Schema.uuid) @ColumnInfo(name = Schema.uuid)
     public final String uuid;
+    @SerializedName(Schema.storeUuid) @ColumnInfo(name = Schema.storeUuid)
+    public final String storeUuid;
     @SerializedName(Schema.menuUuid) @ColumnInfo(name = Schema.menuUuid)
     public final String menuUuid;
     @SerializedName(Schema.menuOrderUuid) @ColumnInfo(name = Schema.menuOrderUuid)
     public final String menuOrderUuid;
-    @SerializedName(Schema.menuOptionUuid) @ColumnInfo(name = Schema.menuOptionUuid)
-    public final String menuOptionUuid;
+    @SerializedName(Schema.menuOptionUuidList) @ColumnInfo(name = Schema.menuOptionUuidList)
+    public final List<String> menuOptionUuidList;
+    @SerializedName(Schema.amount) @ColumnInfo(name = Schema.amount)
+    public final int amount;
 
-    public OrderDetail(@NonNull final String uuid, final String menuUuid, final String menuOrderUuid, final String menuOptionUuid) {
+    public OrderDetail(@NonNull final String uuid, final String storeUuid, final String menuUuid, final String menuOrderUuid, final List<String> menuOptionUuidList, final int amount) {
         this.uuid = uuid;
+        this.storeUuid = storeUuid;
         this.menuUuid = menuUuid;
         this.menuOrderUuid = menuOrderUuid;
-        this.menuOptionUuid = menuOptionUuid;
+        this.menuOptionUuidList = menuOptionUuidList;
+        this.amount = amount;
     }
 
-    private interface Schema {
-        String uuid = "order_detail_uuid";
-        String menuUuid = "menu_uuid";
-        String menuOptionUuid = "menu_option_uuid";
-        String menuOrderUuid = "menu_order_uuid";
+    public static OrderDetail fromMenu(Menu menu) {
+        return new OrderDetail("", menu.storeUuid, menu.uuid, "", new ArrayList<>(), 1);
     }
 
     @Override
     public String toString() {
         return EntityHelper.toString(this, OrderDetail.class);
+    }
+
+    private interface Schema {
+        String uuid = "order_detail_uuid";
+        String menuUuid = "menu_uuid";
+        String menuOptionUuidList = "menu_option_uuid_list";
+        String menuOrderUuid = "menu_order_uuid";
+        String storeUuid = "store_uuid";
+        String amount = "menu_quantity";
     }
 }
