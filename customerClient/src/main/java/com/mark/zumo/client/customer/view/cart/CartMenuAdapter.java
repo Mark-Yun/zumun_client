@@ -61,7 +61,7 @@ public class CartMenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     @Override
     public void onBindViewHolder(@NonNull final RecyclerView.ViewHolder holder, final int position) {
         if (holder instanceof CartMenuViewHolder) {
-            inflateMenuViewHolder((CartMenuViewHolder) holder, position);
+            inflateMenuViewHolder((CartMenuViewHolder) holder, position - 1);
         } else if (holder instanceof CartMenuHeaderViewHolder) {
             inflateHeaderViewHolder((CartMenuHeaderViewHolder) holder);
         }
@@ -108,7 +108,7 @@ public class CartMenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
     @Override
     public int getItemCount() {
-        return cartItemList.size();
+        return cartItemList.size() + 1;
     }
 
     class CartMenuViewHolder extends RecyclerView.ViewHolder {
