@@ -1,7 +1,5 @@
 package com.mark.zumo.client.core.repository;
 
-import android.content.Context;
-
 import com.mark.zumo.client.core.appserver.AppServerServiceProvider;
 import com.mark.zumo.client.core.appserver.NetworkRepository;
 
@@ -9,21 +7,10 @@ import com.mark.zumo.client.core.appserver.NetworkRepository;
  * Created by mark on 18. 4. 30.
  */
 
-public class OrderRepository {
+public enum OrderRepository {
+    INSTANCE;
 
-    private volatile static OrderRepository instance;
-
-
-    private OrderRepository(Context context) {
-    }
-
-    public static OrderRepository from(Context context) {
-        if (instance == null) {
-            synchronized (OrderRepository.class) {
-                if (instance == null) instance = new OrderRepository(context);
-            }
-        }
-        return instance;
+    OrderRepository() {
     }
 
     NetworkRepository appServerService() {

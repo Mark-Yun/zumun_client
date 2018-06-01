@@ -1,6 +1,6 @@
 <resources>
-    <string name="app_name">Customer Client</string>
     <string name="kakao_api_key">265e130b23d5b75316022561ec01ea5e</string>
+    <string name="app_name">Customer Client</string>
     <string name="place_latest_visit_store_header_text">Latest Visit Stores</string>
     <string name="place_near_by_header_text">Near by Stores</string>
     <string name="added_to_cart">Added %s into cart.</string>
@@ -13,4 +13,7 @@
     <string name="personal_option_button_text">PERSONAL OPTION</string>
     <string name="amount_description">Amount</string>
     <string name="cart_title_text">Cart(%1$d)</string>
+    <string name="tab_title_current_store">Current Store</string>
+    <string name="tab_title_places">Places</string>
+    <string name="tab_title_orders">Orders</string>
 </resources>

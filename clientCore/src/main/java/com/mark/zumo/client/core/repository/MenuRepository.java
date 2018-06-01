@@ -1,6 +1,5 @@
 package com.mark.zumo.client.core.repository;
 
-import android.content.Context;
 import android.util.Log;
 
 import com.mark.zumo.client.core.appserver.AppServerServiceProvider;
@@ -11,7 +10,6 @@ import com.mark.zumo.client.core.entity.Menu;
 import com.mark.zumo.client.core.entity.MenuOption;
 import com.mark.zumo.client.core.entity.Store;
 import com.mark.zumo.client.core.entity.util.ListComparator;
-import com.mark.zumo.client.core.util.context.ContextHolder;
 
 import java.util.List;
 
@@ -24,17 +22,15 @@ import io.reactivex.schedulers.Schedulers;
  */
 
 public enum MenuRepository {
+
     INSTANCE;
 
     public static final String TAG = "MenuRepository";
 
     private DiskRepository diskRepository;
-    private Context context;
     private NetworkRepository networkRepository;
 
     MenuRepository() {
-        context = ContextHolder.getContext();
-
         diskRepository = AppDatabaseProvider.INSTANCE.diskRepository;
         networkRepository = AppServerServiceProvider.INSTANCE.networkRepository;
     }

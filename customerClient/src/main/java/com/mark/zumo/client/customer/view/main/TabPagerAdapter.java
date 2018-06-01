@@ -7,6 +7,7 @@ import android.util.SparseArray;
 
 import com.mark.zumo.client.core.util.context.ContextHolder;
 import com.mark.zumo.client.customer.view.menu.MenuFragment;
+import com.mark.zumo.client.customer.view.order.OrderFragment;
 import com.mark.zumo.client.customer.view.place.PlaceFragment;
 
 /**
@@ -16,7 +17,8 @@ public class TabPagerAdapter extends FragmentStatePagerAdapter {
 
     private static final String[] FRAGMENTS_NAME = {
             MenuFragment.class.getName(),
-            PlaceFragment.class.getName()
+            PlaceFragment.class.getName(),
+            OrderFragment.class.getName()
     };
 
     private SparseArray<Fragment> fragmentList = new SparseArray<>();

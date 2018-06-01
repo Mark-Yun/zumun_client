@@ -1,6 +1,5 @@
 package com.mark.zumo.client.core.repository;
 
-import android.content.Context;
 import android.location.Location;
 import android.util.Log;
 
@@ -21,26 +20,17 @@ import io.reactivex.schedulers.Schedulers;
  * Created by mark on 18. 4. 30.
  */
 
-public class StoreRepository {
+public enum StoreRepository {
+    INSTANCE;
 
     public static final String TAG = "StoreRepository";
-    private volatile static StoreRepository instance;
 
     private NetworkRepository networkRepository;
     private DiskRepository diskRepository;
 
-    private StoreRepository(Context context) {
+    StoreRepository() {
         networkRepository = AppServerServiceProvider.INSTANCE.networkRepository;
         diskRepository = AppDatabaseProvider.INSTANCE.diskRepository;
-    }
-
-    public static StoreRepository from(Context context) {
-        if (instance == null) {
-            synchronized (StoreRepository.class) {
-                if (instance == null) instance = new StoreRepository(context);
-            }
-        }
-        return instance;
     }
 
     public Observable<List<Store>> nearByStore(Location location) {

@@ -5,7 +5,6 @@ import android.util.Log;
 import com.mark.zumo.client.core.entity.Store;
 import com.mark.zumo.client.core.provider.AppLocationProvider;
 import com.mark.zumo.client.core.repository.StoreRepository;
-import com.mark.zumo.client.core.util.context.ContextHolder;
 
 import java.util.List;
 
@@ -25,7 +24,7 @@ public enum StoreManager {
     private AppLocationProvider locationProvider;
 
     StoreManager() {
-        storeRepository = StoreRepository.from(ContextHolder.getContext());
+        storeRepository = StoreRepository.INSTANCE;
         locationProvider = AppLocationProvider.INSTANCE;
     }
 

@@ -9,8 +9,6 @@ import android.support.annotation.NonNull;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.mark.zumo.client.core.entity.user.GuestUser;
-import com.mark.zumo.client.core.repository.SessionRepository;
 import com.mark.zumo.client.core.util.context.ContextHolder;
 
 import java.io.File;
@@ -118,20 +116,10 @@ public enum AppServerServiceProvider {
         }
     }
 
-    private static Bundle addGuestUuid(Bundle bundle, String uuid) {
-        if (!uuid.isEmpty()) {
-            bundle.putString(SessionRepository.KEY_GUEST_USER_UUID, uuid);
-        }
-        return bundle;
-    }
-
-    public NetworkRepository buildSessionHeader(GuestUser guestUser) {
-        return buildSessionHeader(guestUser.uuid);
-    }
-
-    public NetworkRepository buildSessionHeader(final String guestUserUuid) {
-        Bundle bundle = addGuestUuid(buildDefaultHeader(), guestUserUuid);
-        return networkRepository = buildNetworkRepository(bundle);
+    public NetworkRepository buildSessionHeader(final Bundle bundle) {
+        Bundle mergedBundle = buildDefaultHeader();
+        mergedBundle.putAll(bundle);
+        return networkRepository = buildNetworkRepository(mergedBundle);
     }
 
     private NetworkRepository buildDefaultService() {
