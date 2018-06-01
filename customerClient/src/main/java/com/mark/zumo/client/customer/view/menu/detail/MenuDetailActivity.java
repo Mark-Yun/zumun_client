@@ -61,6 +61,12 @@ public class MenuDetailActivity extends AppCompatActivity {
     }
 
     @Override
+    public void onAttachedToWindow() {
+        super.onAttachedToWindow();
+        Navigator.setBlurLayoutVisible(true);
+    }
+
+    @Override
     public void finish() {
         super.finish();
         Navigator.setBlurLayoutVisible(false);

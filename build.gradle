@@ -53,6 +53,7 @@ ext {
     multidex = '1.0.3'
     blurkit = '1.0.0'
     logging_interceptor = '3.4.1'
+    rebound = '0.3.8'
 }
 
 def applications = [project('customerClient'), project('storeClient'), project('storeServer')]
@@ -90,6 +91,8 @@ configure(applications) {
         androidTestImplementation "com.android.support.test.espresso:espresso-core:$esspressoCore"
 
         implementation "com.wonderkiln:blurkit:$blurkit"
+
+        implementation "com.facebook.rebound:rebound:$rebound"
     }
 }
 

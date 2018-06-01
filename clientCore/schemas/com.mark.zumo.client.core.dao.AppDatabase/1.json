@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "75b9850fe1ce14c2ba4264c7a69dfc2d",
+    "identityHash": "8051342317bfb66695a6c5f6b7b8392e",
     "entities": [
       {
         "tableName": "menu",
@@ -249,11 +249,38 @@
         },
         "indices": [],
         "foreignKeys": []
+      },
+      {
+        "tableName": "visit_store",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`store_uuid` TEXT NOT NULL, `visit_date` TEXT NOT NULL, PRIMARY KEY(`store_uuid`, `visit_date`))",
+        "fields": [
+          {
+            "fieldPath": "storeUuid",
+            "columnName": "store_uuid",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "visitDate",
+            "columnName": "visit_date",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "store_uuid",
+            "visit_date"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [],
+        "foreignKeys": []
       }
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"75b9850fe1ce14c2ba4264c7a69dfc2d\")"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"8051342317bfb66695a6c5f6b7b8392e\")"
     ]
   }
 }

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (c) 2018. Mark Soft - All Rights Reserved
+  ~ Unauthorized copying of this file, via any medium is strictly prohibited
+  ~ Proprietary and confidential
+  -->
+
+<set xmlns:android="http://schemas.android.com/apk/res/android"
+    android:interpolator="@android:interpolator/accelerate_cubic"
+    android:shareInterpolator="true">
+    <translate
+        android:duration="@android:integer/config_mediumAnimTime"
+        android:fromXDelta="0"
+        android:toXDelta="50%p" />
+    <alpha
+        android:duration="@android:integer/config_mediumAnimTime"
+        android:fromAlpha="1.0"
+        android:toAlpha="0.0" />
+</set>

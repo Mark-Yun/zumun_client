@@ -25,8 +25,8 @@ import com.mark.zumo.client.core.entity.Menu;
 import com.mark.zumo.client.core.util.glide.GlideApp;
 import com.mark.zumo.client.core.util.glide.GlideUtils;
 import com.mark.zumo.client.customer.R;
-import com.mark.zumo.client.customer.view.Navigator;
 import com.mark.zumo.client.customer.view.menu.detail.MenuDetailActivity;
+import com.mark.zumo.client.customer.view.rebound.Rebound;
 import com.mark.zumo.client.customer.viewmodel.MenuViewModel;
 
 import java.text.NumberFormat;
@@ -79,8 +79,7 @@ class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.ViewHolder> {
 
         viewHolder.itemView.setOnClickListener(v -> onClickMenu(v, menu));
         viewHolder.itemView.setOnLongClickListener(v -> onLongClickMenu(v, menu));
-//        GestureDetector gestureDetector = new GestureDetector(viewHolder.itemView.getContext(), new GestureListener(() -> onLongClickMenu(viewHolder.itemView, menu)));
-//        viewHolder.itemView.setOnTouchListener((v, event) -> gestureDetector.onTouchEvent(event));
+        viewHolder.itemView.setOnTouchListener(Rebound.INSTANCE.onTouchListener(lifecycleOwner));
     }
 
     private void onClickMenu(final View itemView, final Menu menu) {
@@ -102,8 +101,6 @@ class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.ViewHolder> {
         intent.putExtra(MenuDetailActivity.KEY_MENU_UUID, menu.uuid);
         intent.putExtra(MenuDetailActivity.KEY_MENU_STORE_UUID, menu.storeUuid);
         context.startActivity(intent);
-
-        Navigator.setBlurLayoutVisible(true);
         return true;
     }
 

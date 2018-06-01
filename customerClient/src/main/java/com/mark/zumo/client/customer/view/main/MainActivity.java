@@ -9,10 +9,10 @@ package com.mark.zumo.client.customer.view.main;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.transition.AutoTransition;
 import android.view.Window;
+import android.widget.Toast;
 
 import com.mark.zumo.client.core.app.BaseActivity;
 import com.mark.zumo.client.customer.R;
@@ -77,7 +77,7 @@ public class MainActivity extends BaseActivity {
             long currentTime = Calendar.getInstance().getTimeInMillis();
             if (currentTime - backKeyPressedTimeMills > TimeUnit.SECONDS.toMillis(2)) {
                 backKeyPressedTimeMills = currentTime;
-                Snackbar.make(getWindow().getDecorView().getRootView(), R.string.press_again_to_exit, Snackbar.LENGTH_SHORT)
+                Toast.makeText(this, R.string.press_again_to_exit, Toast.LENGTH_SHORT)
                         .show();
                 return;
             }

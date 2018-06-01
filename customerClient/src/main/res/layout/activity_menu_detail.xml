@@ -82,4 +82,5 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_chainStyle="packed"
         app:layout_constraintStart_toEndOf="@+id/add_to_cart_button" />
+
 </android.support.constraint.ConstraintLayout>
