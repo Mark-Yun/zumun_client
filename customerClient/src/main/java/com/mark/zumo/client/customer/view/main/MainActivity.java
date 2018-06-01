@@ -9,6 +9,7 @@ package com.mark.zumo.client.customer.view.main;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.transition.AutoTransition;
 import android.view.Window;
@@ -17,6 +18,9 @@ import com.mark.zumo.client.core.app.BaseActivity;
 import com.mark.zumo.client.customer.R;
 import com.mark.zumo.client.customer.view.Navigator;
 import com.wonderkiln.blurkit.BlurLayout;
+
+import java.util.Calendar;
+import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -28,6 +32,8 @@ import butterknife.ButterKnife;
 public class MainActivity extends BaseActivity {
 
     @BindView(R.id.blur_filter) BlurLayout blurFilter;
+
+    private long backKeyPressedTimeMills;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -63,5 +69,19 @@ public class MainActivity extends BaseActivity {
     protected void onDestroy() {
         super.onDestroy();
         Navigator.setBlurFilter(null);
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (getSupportFragmentManager().getBackStackEntryCount() == 0) {
+            long currentTime = Calendar.getInstance().getTimeInMillis();
+            if (currentTime - backKeyPressedTimeMills > TimeUnit.SECONDS.toMillis(2)) {
+                backKeyPressedTimeMills = currentTime;
+                Snackbar.make(getWindow().getDecorView().getRootView(), R.string.press_again_to_exit, Snackbar.LENGTH_SHORT)
+                        .show();
+                return;
+            }
+        }
+        super.onBackPressed();
     }
 }
