@@ -84,6 +84,11 @@ public class CartActivity extends AppCompatActivity {
         cartViewModel.placeOrder(storeUuid).observe(this, this::onSuccessCreateOrder);
     }
 
+    @OnClick(R.id.back_button)
+    void onClickBackButton() {
+        finish();
+    }
+
     private void onSuccessCreateOrder(MenuOrder menuOrder) {
         Toast.makeText(this, menuOrder.toString(), Toast.LENGTH_SHORT).show();
     }

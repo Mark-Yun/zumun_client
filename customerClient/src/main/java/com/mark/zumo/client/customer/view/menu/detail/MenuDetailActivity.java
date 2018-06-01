@@ -84,4 +84,9 @@ public class MenuDetailActivity extends AppCompatActivity {
         Toast.makeText(this, "SUCCESS -" + menuOrder, Toast.LENGTH_SHORT).show();
         finish();
     }
+
+    @OnClick(R.id.back_button)
+    void onClickBackButton() {
+        finish();
+    }
 }
