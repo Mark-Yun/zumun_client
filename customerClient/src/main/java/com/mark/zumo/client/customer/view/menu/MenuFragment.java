@@ -6,6 +6,8 @@
 
 package com.mark.zumo.client.customer.view.menu;
 
+import android.arch.lifecycle.LiveData;
+import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.os.Bundle;
@@ -19,6 +21,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.mark.zumo.client.core.entity.Menu;
 import com.mark.zumo.client.core.entity.Store;
@@ -133,8 +136,24 @@ public class MenuFragment extends Fragment {
 
     @OnClick(R.id.store_cart_button)
     void onClickCartButton() {
-        Intent intent = new Intent(getContext(), CartActivity.class);
-        intent.putExtra(CartActivity.KEY_STORE_UUID, storeUuid);
-        startActivity(intent);
+        LiveData<Cart> cartLiveData = menuViewModel.getCart(storeUuid);
+
+        Observer<Cart> observer = new Observer<Cart>() {
+            @Override
+            public void onChanged(@Nullable final Cart cart) {
+
+                if (cart == null || cart.getItemCount() == 0) {
+                    Toast.makeText(getActivity(), R.string.theres_no_item_in_cart, Toast.LENGTH_SHORT).show();
+                } else {
+                    Intent intent = new Intent(getContext(), CartActivity.class);
+                    intent.putExtra(CartActivity.KEY_STORE_UUID, storeUuid);
+                    startActivity(intent);
+                }
+
+                cartLiveData.removeObserver(this);
+            }
+        };
+        cartLiveData.observe(this, observer);
+
     }
 }

@@ -59,7 +59,6 @@
             android:id="@+id/store_cart_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="30dp"
             android:background="@color/colorAccent"
             android:src="@drawable/order"
             android:layout_margin="30dp"
@@ -73,7 +72,7 @@
             android:layout_height="wrap_content"
             android:visibility="gone"
             android:background="@drawable/badge_background"
-            android:elevation="11dp"
+            android:elevation="12dp"
             app:layout_constraintEnd_toEndOf="@+id/store_cart_button"
             app:layout_constraintTop_toTopOf="@+id/store_cart_button" />
 
@@ -81,7 +80,7 @@
             android:id="@+id/store_cart_badge_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:elevation="11dp"
+            android:elevation="12dp"
             android:textColor="@color/colorText"
             android:textSize="15dp"
             android:textStyle="bold"
