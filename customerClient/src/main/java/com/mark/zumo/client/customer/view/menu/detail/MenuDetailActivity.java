@@ -34,7 +34,6 @@ public class MenuDetailActivity extends AppCompatActivity {
     private String menuUuid;
     private String storeUuid;
 
-    private Fragment menuOptionFragment;
     @Override
     protected void onCreate(@Nullable final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,7 +52,7 @@ public class MenuDetailActivity extends AppCompatActivity {
         bundle.putString(KEY_MENU_UUID, uuid);
 
         Fragment menuInfoFragment = Fragment.instantiate(this, MenuInfoFragment.class.getName(), bundle);
-        menuOptionFragment = Fragment.instantiate(this, MenuOptionFragment.class.getName(), bundle);
+        Fragment menuOptionFragment = Fragment.instantiate(this, MenuOptionFragment.class.getName(), bundle);
 
         getSupportFragmentManager().beginTransaction()
                 .add(R.id.menu_info_fragment, menuInfoFragment)
@@ -70,14 +69,14 @@ public class MenuDetailActivity extends AppCompatActivity {
 
     @OnClick(R.id.add_to_cart_button)
     void onClickAddToCart() {
-        MenuDetailViewModel menuDetailViewModel = ViewModelProviders.of(menuOptionFragment).get(MenuDetailViewModel.class);
+        MenuDetailViewModel menuDetailViewModel = ViewModelProviders.of(this).get(MenuDetailViewModel.class);
         menuDetailViewModel.addToCartCurrentItems(storeUuid, menuUuid);
         finish();
     }
 
     @OnClick(R.id.place_order)
     void onClickSendOrder() {
-        MenuDetailViewModel menuDetailViewModel = ViewModelProviders.of(menuOptionFragment).get(MenuDetailViewModel.class);
+        MenuDetailViewModel menuDetailViewModel = ViewModelProviders.of(this).get(MenuDetailViewModel.class);
         menuDetailViewModel.placeOrder(storeUuid, menuUuid).observe(this, this::onSuccessCreateOrder);
     }
 

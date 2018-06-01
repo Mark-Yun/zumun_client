@@ -66,8 +66,9 @@ public class MenuFragment extends Fragment {
         menuViewModel = ViewModelProviders.of(this).get(MenuViewModel.class);
 
         //TODO: remove test data
-//        storeUuid = Objects.requireNonNull(getArguments()).getString(KEY_STORE_UUID);
-        if (storeUuid == null) {
+        if (getArguments() != null) {
+            storeUuid = getArguments().getString(KEY_STORE_UUID);
+        } else {
             storeUuid = DebugUtil.TEST_STORE_UUID;
         }
     }

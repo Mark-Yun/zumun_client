@@ -7,6 +7,7 @@
 package com.mark.zumo.client.customer.view.place.adapter;
 
 import android.support.annotation.NonNull;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.ViewGroup;
 
@@ -21,9 +22,11 @@ import java.util.List;
  */
 public class NearbyStoreAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
+    private FragmentManager fragmentManager;
     private List<Store> storeList;
 
-    public NearbyStoreAdapter() {
+    public NearbyStoreAdapter(FragmentManager fragmentManager) {
+        this.fragmentManager = fragmentManager;
         storeList = new ArrayList<>();
     }
 
@@ -48,7 +51,7 @@ public class NearbyStoreAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         } else if (holder instanceof StoreViewHolder) {
             StoreViewHolder storeViewHolder = (StoreViewHolder) holder;
             Store store = storeList.get(position - 1);
-            ViewHolderUtils.inject(storeViewHolder, store);
+            ViewHolderUtils.inject(fragmentManager, storeViewHolder, store);
         }
     }
 

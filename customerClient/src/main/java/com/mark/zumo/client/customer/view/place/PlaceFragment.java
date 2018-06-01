@@ -58,7 +58,7 @@ public class PlaceFragment extends Fragment {
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
         latestVisitStore.setLayoutManager(layoutManager);
 
-        LatestVisitStoreAdapter adapter = new LatestVisitStoreAdapter();
+        LatestVisitStoreAdapter adapter = new LatestVisitStoreAdapter(getFragmentManager());
         latestVisitStore.setAdapter(adapter);
 
         placeViewModel.latestVisitStore().observe(this, adapter::setStoreList);
@@ -73,7 +73,7 @@ public class PlaceFragment extends Fragment {
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
         nearByStore.setLayoutManager(layoutManager);
 
-        NearbyStoreAdapter adapter = new NearbyStoreAdapter();
+        NearbyStoreAdapter adapter = new NearbyStoreAdapter(getFragmentManager());
         nearByStore.setAdapter(adapter);
 
         placeViewModel.nearByStore().observe(this, adapter::setStoreList);

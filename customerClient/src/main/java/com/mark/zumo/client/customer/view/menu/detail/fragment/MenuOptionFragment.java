@@ -42,15 +42,15 @@ public class MenuOptionFragment extends Fragment {
     @BindView(R.id.personal_option) ConstraintLayout personalOption;
     @BindView(R.id.amount) AppCompatTextView amount;
 
-    private String uuid;
+    private String menuUuid;
     private MenuDetailViewModel menuDetailViewModel;
 
     @Override
     public void onCreate(@Nullable final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        menuDetailViewModel = ViewModelProviders.of(this).get(MenuDetailViewModel.class);
-        uuid = getArguments().getString(MenuDetailActivity.KEY_MENU_UUID);
+        menuDetailViewModel = ViewModelProviders.of(getActivity()).get(MenuDetailViewModel.class);
+        menuUuid = getArguments().getString(MenuDetailActivity.KEY_MENU_UUID);
     }
 
     @Nullable
@@ -71,7 +71,7 @@ public class MenuOptionFragment extends Fragment {
         MenuOptionAdapter adapter = new MenuOptionAdapter(this, menuDetailViewModel);
         recyclerView.setAdapter(adapter);
 
-        LiveData<Map<String, List<MenuOption>>> menuOptionMap = menuDetailViewModel.getMenuOptionMap(uuid);
+        LiveData<Map<String, List<MenuOption>>> menuOptionMap = menuDetailViewModel.getMenuOptionMap(menuUuid);
         menuOptionMap.observe(this, adapter::setOptionMap);
     }
 
