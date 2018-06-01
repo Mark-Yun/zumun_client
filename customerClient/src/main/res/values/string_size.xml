@@ -1,4 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2018. Mark Soft - All Rights Reserved
+  ~ Unauthorized copying of this file, via any medium is strictly prohibited
+  ~ Proprietary and confidential
+  -->
+
 <resources>
     <dimen name="menu_detail_menu_name_size">22sp</dimen>
     <dimen name="selected_menu_option_size">18dp</dimen>

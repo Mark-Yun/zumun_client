@@ -1,3 +1,9 @@
+<!--
+  ~ Copyright (c) 2018. Mark Soft - All Rights Reserved
+  ~ Unauthorized copying of this file, via any medium is strictly prohibited
+  ~ Proprietary and confidential
+  -->
+
 <resources>
     <string name="app_name">store_client</string>
     <string name="kakao_api_key">3f4c28bae03ae812b880c5012ccc943d</string>
