@@ -83,7 +83,7 @@ final class ViewHolderUtils {
                             R.anim.slide_out_right,
                             R.anim.slide_in_left,
                             R.anim.slide_out_right)
-                    .add(R.id.place_main_fragment, menuFragment)
+                    .replace(R.id.place_main_fragment, menuFragment)
                     .addToBackStack(store.uuid)
                     .commit();
         });
