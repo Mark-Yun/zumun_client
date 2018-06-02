@@ -36,7 +36,12 @@ public class Cart {
 
     public void addCartItem(OrderDetail orderDetail) {
         Log.d(TAG, "addCartItem: " + orderDetail);
-        orderDetailList.add(orderDetail);
+        int index = hasSameMenu(orderDetail);
+        if (index < 0) {
+            orderDetailList.add(orderDetail);
+        } else {
+            mergeOrderDetail(index, orderDetail);
+        }
         notifyOnNext();
         vibrationFeedback();
     }
@@ -85,5 +90,32 @@ public class Cart {
     private void vibrationFeedback() {
         Vibrator vibrator = (Vibrator) ContextHolder.getContext().getSystemService(Context.VIBRATOR_SERVICE);
         vibrator.vibrate(100);
+    }
+
+    private int hasSameMenu(OrderDetail orderDetail) {
+        for (int i = 0; i < orderDetailList.size(); i++) {
+            boolean hasSameMenu = orderDetailList.get(i).isSameMenu(orderDetail);
+            if (hasSameMenu) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    private void mergeOrderDetail(int index, OrderDetail orderDetail2) {
+        if (index < 0) return;
+
+        OrderDetail orderDetail = orderDetailList.remove(index);
+
+        orderDetailList.add(index,
+                new OrderDetail(
+                        null,
+                        orderDetail.storeUuid,
+                        orderDetail.menuUuid,
+                        null,
+                        orderDetail.menuOptionUuidList,
+                        orderDetail.amount + orderDetail2.amount
+                )
+        );
     }
 }

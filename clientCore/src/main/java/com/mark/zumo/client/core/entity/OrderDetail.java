@@ -66,4 +66,10 @@ public class OrderDetail implements Serializable {
         String storeUuid = "store_uuid";
         String amount = "menu_quantity";
     }
+
+    public boolean isSameMenu(@NonNull OrderDetail orderDetail) {
+        return this.storeUuid.equals(orderDetail.storeUuid) &&
+                this.menuUuid.equals(orderDetail.menuUuid) &&
+                this.menuOptionUuidList.equals(orderDetail.menuOptionUuidList);
+    }
 }
