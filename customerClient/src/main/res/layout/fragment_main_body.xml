@@ -16,6 +16,7 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/tab_height"
         android:background="@color/colorPrimary"
+        style="@style/AppTheme.NoActionBar.TabStyle"
         android:elevation="1dp"
         app:layout_constraintBottom_toTopOf="@+id/view_pager"
         app:layout_constraintTop_toTopOf="parent"

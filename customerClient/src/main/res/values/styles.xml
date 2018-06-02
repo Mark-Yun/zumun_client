@@ -34,11 +34,12 @@
         <item name="android:textColor">@color/colorText</item>
     </style>
 
-    <style name="AppTheme.NoActionBar.ActionButtonStyle" parent="Widget.AppCompat.Light.ActionButton">
+    <style name="AppTheme.NoActionBar.ActionButtonStyle" parent="Widget.Design.FloatingActionButton">
         <item name="background">@color/colorAccent</item>
+        <item name="android:backgroundTint" tools:targetApi="lollipop">@color/colorAccent</item>
     </style>
 
-    <style name="AppTheme.NoActionBar.TabStyle">
+    <style name="AppTheme.NoActionBar.TabStyle" parent="Widget.Design.TabLayout">
         <item name="tabIndicatorColor">@color/colorAccent</item>
         <item name="tabSelectedTextColor">@color/colorTextDark</item>
         <item name="tabTextColor">@color/colorSecondaryText</item>

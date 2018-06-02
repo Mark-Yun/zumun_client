@@ -60,7 +60,7 @@
             android:id="@+id/store_cart_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@color/colorAccent"
+            style="@style/AppTheme.NoActionBar.ActionButtonStyle"
             android:src="@drawable/order"
             android:layout_margin="30dp"
             app:layout_constraintBottom_toBottomOf="@+id/store_cover_image"
