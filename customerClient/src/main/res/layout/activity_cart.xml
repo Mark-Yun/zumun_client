@@ -93,7 +93,7 @@
 
     <android.support.v7.widget.AppCompatButton
         android:id="@+id/place_order"
-        style="@style/Widget.AppCompat.Button.Borderless"
+        style="?android:attr/borderlessButtonStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/colorAccent"

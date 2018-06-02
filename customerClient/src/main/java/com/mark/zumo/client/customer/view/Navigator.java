@@ -13,19 +13,27 @@ import android.view.animation.AnimationUtils;
 import com.mark.zumo.client.core.util.context.ContextHolder;
 import com.wonderkiln.blurkit.BlurLayout;
 
+import java.util.ArrayList;
+import java.util.List;
+
 
 /**
  * Created by mark on 18. 5. 25.
  */
 public final class Navigator {
 
-    private static BlurLayout blurLayout;
+    private static List<BlurLayout> blurLayoutStack = new ArrayList<>();
 
-    public static void setBlurFilter(final BlurLayout blurLayout) {
-        Navigator.blurLayout = blurLayout;
+    public static void addBlurFilter(final BlurLayout blurLayout) {
+        blurLayoutStack.add(blurLayout);
+    }
+
+    public static void removeBlurFilter(final BlurLayout blurLayout) {
+        blurLayoutStack.remove(blurLayout);
     }
 
     public static void setBlurLayoutVisible(boolean visible) {
+        final BlurLayout blurLayout = getTopBlurLayout();
         if (blurLayout == null) return;
         if ((blurLayout.getVisibility() == View.VISIBLE) == visible) return;
 
@@ -50,5 +58,9 @@ public final class Navigator {
         });
         blurLayout.startAnimation(animationFade);
         blurLayout.setVisibility(visible ? View.VISIBLE : View.GONE);
+    }
+
+    private static BlurLayout getTopBlurLayout() {
+        return blurLayoutStack.get(blurLayoutStack.size() - 1);
     }
 }

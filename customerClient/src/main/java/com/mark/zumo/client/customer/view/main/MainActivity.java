@@ -47,7 +47,7 @@ public class MainActivity extends BaseActivity {
         ButterKnife.bind(this);
         inflateMenuFragment();
 
-        Navigator.setBlurFilter(blurFilter);
+        Navigator.addBlurFilter(blurFilter);
     }
 
     private void inflateMenuFragment() {
@@ -68,7 +68,7 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        Navigator.setBlurFilter(null);
+        Navigator.removeBlurFilter(blurFilter);
     }
 
     @Override

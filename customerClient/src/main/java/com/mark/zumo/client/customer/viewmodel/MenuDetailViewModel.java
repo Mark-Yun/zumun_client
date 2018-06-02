@@ -91,7 +91,6 @@ public class MenuDetailViewModel extends AndroidViewModel {
         menuManager.getMenuOptionList(menuUuid)
                 .flatMapSingle(Observable::toList)
                 .observeOn(AndroidSchedulers.mainThread())
-                .doOnNext(menuOptions -> Log.d(TAG, "loadMenuOptions: " + menuOptions.size()))
                 .doOnNext(menuOptions -> menuOptionMap.put(menuOptions.get(0).name, menuOptions))
                 .doOnComplete(() -> liveData.postValue(menuOptionMap))
                 .doOnSubscribe(disposables::add)

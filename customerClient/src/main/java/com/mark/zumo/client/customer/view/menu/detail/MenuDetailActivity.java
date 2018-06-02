@@ -30,26 +30,31 @@ public class MenuDetailActivity extends AppCompatActivity {
 
     public static final String KEY_MENU_UUID = "menu_uuid";
     public static final String KEY_MENU_STORE_UUID = "store_uuid";
+    public static final String KEY_CART_INDEX = "cart_index";
 
     private String menuUuid;
     private String storeUuid;
+    private String cartIndex;
 
     @Override
     protected void onCreate(@Nullable final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menu_detail);
         ButterKnife.bind(this);
+
         menuUuid = getIntent().getStringExtra(KEY_MENU_UUID);
         storeUuid = getIntent().getStringExtra(KEY_MENU_STORE_UUID);
+        cartIndex = getIntent().getStringExtra(KEY_CART_INDEX);
 
         inflateViews(menuUuid);
 
         overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
     }
 
-    private void inflateViews(String uuid) {
+    private void inflateViews(String menuUuid) {
         Bundle bundle = new Bundle();
-        bundle.putString(KEY_MENU_UUID, uuid);
+        bundle.putString(KEY_MENU_UUID, menuUuid);
+        bundle.putString(KEY_CART_INDEX, cartIndex);
 
         Fragment menuInfoFragment = Fragment.instantiate(this, MenuInfoFragment.class.getName(), bundle);
         Fragment menuOptionFragment = Fragment.instantiate(this, MenuOptionFragment.class.getName(), bundle);

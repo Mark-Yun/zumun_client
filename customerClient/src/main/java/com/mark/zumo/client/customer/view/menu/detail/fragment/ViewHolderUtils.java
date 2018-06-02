@@ -86,10 +86,14 @@ final class ViewHolderUtils {
 
         List<String> menuStringList = new ArrayList<>();
         for (MenuOption option : menuOptionList) {
-            menuStringList.add(option.value);
+            String text = option.value;
+            if (option.price > 0) {
+                text += "     " + getPriceText(option.price);
+            }
+            menuStringList.add(text);
         }
         Context context = viewHolder.itemView.getContext();
-        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(context, android.R.layout.select_dialog_singlechoice, menuStringList);
+        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(context, android.R.layout.select_dialog_item, menuStringList);
         AlertDialog.Builder builder = new AlertDialog.Builder(context)
                 .setTitle(key)
                 .setAdapter(arrayAdapter, (dialog, which) -> menuDetailViewModel.selectMenuOption(menuOptionList.get(which)))

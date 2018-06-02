@@ -19,9 +19,6 @@
         android:elevation="1dp"
         app:layout_constraintBottom_toTopOf="@+id/view_pager"
         app:layout_constraintTop_toTopOf="parent"
-        app:tabIndicatorColor="@color/colorAccent"
-        app:tabSelectedTextColor="@color/colorTextDark"
-        app:tabTextColor="@color/colorSecondaryText"
         design:tabMode="fixed">
 
         <android.support.design.widget.TabItem
