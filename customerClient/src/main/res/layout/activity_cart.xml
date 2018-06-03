@@ -36,7 +36,7 @@
             android:layout_marginStart="@dimen/icon_size_small"
             android:background="@null"
             android:scaleType="fitXY"
-            android:src="@drawable/arrow_right"
+            android:src="@drawable/arrow_back"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />

@@ -18,7 +18,6 @@
         </item>
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="android:colorPrimaryDark" tools:targetApi="m">@color/colorPrimaryDark</item>
-        <item name="android:windowLightStatusBar" tools:targetApi="m">true</item>
         <item name="android:windowBackground">@color/colorPrimary</item>
         <item name="android:textColorHighlight">@color/colorAccent</item>
         <item name="android:colorAccent" tools:targetApi="lollipop">@color/colorAccent</item>
