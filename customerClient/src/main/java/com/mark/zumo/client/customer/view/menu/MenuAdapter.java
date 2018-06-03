@@ -14,9 +14,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.RecyclerView;
-import android.view.GestureDetector;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -25,6 +23,7 @@ import com.mark.zumo.client.core.entity.Menu;
 import com.mark.zumo.client.core.util.glide.GlideApp;
 import com.mark.zumo.client.core.util.glide.GlideUtils;
 import com.mark.zumo.client.customer.R;
+import com.mark.zumo.client.customer.view.TouchResponse;
 import com.mark.zumo.client.customer.view.menu.detail.MenuDetailActivity;
 import com.mark.zumo.client.customer.view.rebound.Rebound;
 import com.mark.zumo.client.customer.viewmodel.MenuViewModel;
@@ -83,6 +82,7 @@ class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.ViewHolder> {
     }
 
     private void onClickMenu(final View itemView, final Menu menu) {
+        TouchResponse.big();
         menuViewModel.addMenuToCart(menu);
         onAddCartComplete(itemView, menu);
     }
@@ -109,11 +109,6 @@ class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.ViewHolder> {
         return menuList.size();
     }
 
-    @FunctionalInterface
-    private interface OnDoubleTap {
-        void onDoubleTab();
-    }
-
     // Provide a reference to the views for each data item
     // Complex data items may need more than one view per item, and
     // you provide access to all the views for a data item in a view holder
@@ -125,20 +120,6 @@ class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.ViewHolder> {
         private ViewHolder(final View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
-        }
-    }
-
-    private class GestureListener extends GestureDetector.SimpleOnGestureListener {
-        private OnDoubleTap onDoubleTap;
-
-        private GestureListener(final OnDoubleTap onDoubleTap) {
-            this.onDoubleTap = onDoubleTap;
-        }
-
-        @Override
-        public boolean onDoubleTap(final MotionEvent e) {
-            this.onDoubleTap.onDoubleTab();
-            return true;
         }
     }
 }

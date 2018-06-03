@@ -21,6 +21,7 @@ import com.mark.zumo.client.core.entity.Store;
 import com.mark.zumo.client.core.util.glide.GlideApp;
 import com.mark.zumo.client.core.util.glide.GlideUtils;
 import com.mark.zumo.client.customer.R;
+import com.mark.zumo.client.customer.view.TouchResponse;
 import com.mark.zumo.client.customer.viewmodel.CartViewModel;
 
 import butterknife.BindView;
@@ -81,11 +82,13 @@ public class CartActivity extends AppCompatActivity {
 
     @OnClick(R.id.place_order)
     void onClickPlaceOrder() {
+        TouchResponse.medium();
         cartViewModel.placeOrder(storeUuid).observe(this, this::onSuccessCreateOrder);
     }
 
     @OnClick(R.id.back_button)
     void onClickBackButton() {
+        TouchResponse.small();
         finish();
     }
 

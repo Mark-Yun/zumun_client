@@ -18,6 +18,7 @@ import android.widget.ArrayAdapter;
 
 import com.mark.zumo.client.core.entity.MenuOption;
 import com.mark.zumo.client.customer.R;
+import com.mark.zumo.client.customer.view.TouchResponse;
 import com.mark.zumo.client.customer.viewmodel.MenuDetailViewModel;
 
 import java.util.ArrayList;
@@ -96,16 +97,21 @@ final class ViewHolderUtils {
         ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(context, android.R.layout.select_dialog_item, menuStringList);
         AlertDialog.Builder builder = new AlertDialog.Builder(context)
                 .setTitle(key)
-                .setAdapter(arrayAdapter, (dialog, which) -> menuDetailViewModel.selectMenuOption(menuOptionList.get(which)))
+                .setAdapter(arrayAdapter, (dialog, which) -> {
+                    menuDetailViewModel.selectMenuOption(menuOptionList.get(which));
+                    TouchResponse.medium();
+                })
                 .setCancelable(true)
                 .setOnCancelListener(dialog -> menuDetailViewModel.deselectMenuOption(key));
 
-        viewHolder.itemView.setOnClickListener(v -> builder.create().show());
+        viewHolder.itemView.setOnClickListener(v -> {
+            TouchResponse.small();
+            builder.create().show();
+        });
 
         menuDetailViewModel.getSelectedOption(key).observe(lifecycleOwner, menuOption -> {
             String value = menuOption == null ? "" : menuOption.value;
             viewHolder.value.setText(value);
         });
     }
-
 }

@@ -30,6 +30,7 @@ import com.mark.zumo.client.core.util.glide.GlideApp;
 import com.mark.zumo.client.core.util.glide.GlideUtils;
 import com.mark.zumo.client.customer.R;
 import com.mark.zumo.client.customer.model.entity.Cart;
+import com.mark.zumo.client.customer.view.TouchResponse;
 import com.mark.zumo.client.customer.view.cart.CartActivity;
 import com.mark.zumo.client.customer.viewmodel.MenuViewModel;
 
@@ -137,6 +138,7 @@ public class MenuFragment extends Fragment {
 
     @OnClick(R.id.store_cart_button)
     void onClickCartButton() {
+        TouchResponse.small();
         LiveData<Cart> cartLiveData = menuViewModel.getCart(storeUuid);
 
         Observer<Cart> observer = new Observer<Cart>() {

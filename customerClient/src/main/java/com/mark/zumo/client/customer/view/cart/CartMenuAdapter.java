@@ -21,6 +21,7 @@ import com.mark.zumo.client.core.entity.OrderDetail;
 import com.mark.zumo.client.core.util.glide.GlideApp;
 import com.mark.zumo.client.core.util.glide.GlideUtils;
 import com.mark.zumo.client.customer.R;
+import com.mark.zumo.client.customer.view.TouchResponse;
 import com.mark.zumo.client.customer.viewmodel.CartViewModel;
 
 import java.util.ArrayList;
@@ -104,7 +105,10 @@ public class CartMenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             holder.amount.setText(String.valueOf(orderDetail.amount));
         });
 
-        holder.removeButton.setOnClickListener(v -> cartViewModel.removeCartItem(position));
+        holder.removeButton.setOnClickListener(v -> {
+            TouchResponse.big();
+            cartViewModel.removeCartItem(position);
+        });
     }
 
     @Override

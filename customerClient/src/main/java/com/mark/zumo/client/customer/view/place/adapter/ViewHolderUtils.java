@@ -18,6 +18,7 @@ import com.mark.zumo.client.core.entity.Store;
 import com.mark.zumo.client.core.util.glide.GlideApp;
 import com.mark.zumo.client.core.util.glide.GlideUtils;
 import com.mark.zumo.client.customer.R;
+import com.mark.zumo.client.customer.view.TouchResponse;
 import com.mark.zumo.client.customer.view.menu.MenuFragment;
 
 import io.reactivex.exceptions.OnErrorNotImplementedException;
@@ -73,6 +74,8 @@ final class ViewHolderUtils {
                 .into(storeViewHolder.image);
 
         storeViewHolder.itemView.setOnClickListener(v -> {
+            TouchResponse.small();
+
             Bundle bundle = new Bundle();
             bundle.putString(MenuFragment.KEY_STORE_UUID, store.uuid);
             Fragment menuFragment = Fragment.instantiate(storeViewHolder.itemView.getContext(), MenuFragment.class.getName(), bundle);

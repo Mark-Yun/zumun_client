@@ -23,6 +23,7 @@ import android.widget.Toast;
 
 import com.mark.zumo.client.core.entity.MenuOption;
 import com.mark.zumo.client.customer.R;
+import com.mark.zumo.client.customer.view.TouchResponse;
 import com.mark.zumo.client.customer.view.menu.detail.MenuDetailActivity;
 import com.mark.zumo.client.customer.viewmodel.MenuDetailViewModel;
 
@@ -82,18 +83,21 @@ public class MenuOptionFragment extends Fragment {
 
     @OnClick(R.id.amount_plus_button)
     void onClickAmountPlus() {
+        TouchResponse.medium();
         String increaseAmount = menuDetailViewModel.increaseAmount();
         amount.setText(increaseAmount);
     }
 
     @OnClick(R.id.amount_minus_button)
     void onClickAmountMinus() {
+        TouchResponse.medium();
         String decreaseAmount = menuDetailViewModel.decreaseAmount();
         amount.setText(decreaseAmount);
     }
 
     @OnClick(R.id.personal_option)
     void onClickPersonalOption() {
+        TouchResponse.small();
         Toast.makeText(getActivity(), "IMPL ME", Toast.LENGTH_SHORT).show();
     }
 }

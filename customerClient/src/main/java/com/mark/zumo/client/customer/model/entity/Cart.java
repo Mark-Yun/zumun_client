@@ -6,12 +6,9 @@
 
 package com.mark.zumo.client.customer.model.entity;
 
-import android.content.Context;
-import android.os.Vibrator;
 import android.util.Log;
 
 import com.mark.zumo.client.core.entity.OrderDetail;
-import com.mark.zumo.client.core.util.context.ContextHolder;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -44,7 +41,6 @@ public class Cart {
             mergeOrderDetail(index, orderDetail);
         }
         notifyOnNext();
-        vibrationFeedback();
     }
 
     public Cart addEmitter(ObservableEmitter<Cart> emitter) {
@@ -76,7 +72,6 @@ public class Cart {
         Log.d(TAG, "removeCartItem: " + position);
         orderDetailList.remove(position);
         notifyOnNext();
-        vibrationFeedback();
     }
 
     public void removeLatestCartItem() {
@@ -93,11 +88,6 @@ public class Cart {
                 .map(orderDetail -> orderDetail.amount)
                 .reduce((integer, integer2) -> integer + integer2)
                 .blockingGet(0);
-    }
-
-    private void vibrationFeedback() {
-        Vibrator vibrator = (Vibrator) ContextHolder.getContext().getSystemService(Context.VIBRATOR_SERVICE);
-        vibrator.vibrate(100);
     }
 
     private int hasSameMenu(OrderDetail orderDetail) {

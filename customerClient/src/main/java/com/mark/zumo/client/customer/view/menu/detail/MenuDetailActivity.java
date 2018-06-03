@@ -16,6 +16,7 @@ import android.widget.Toast;
 import com.mark.zumo.client.core.entity.MenuOrder;
 import com.mark.zumo.client.customer.R;
 import com.mark.zumo.client.customer.view.Navigator;
+import com.mark.zumo.client.customer.view.TouchResponse;
 import com.mark.zumo.client.customer.view.menu.detail.fragment.MenuInfoFragment;
 import com.mark.zumo.client.customer.view.menu.detail.fragment.MenuOptionFragment;
 import com.mark.zumo.client.customer.viewmodel.MenuDetailViewModel;
@@ -80,6 +81,7 @@ public class MenuDetailActivity extends AppCompatActivity {
 
     @OnClick(R.id.add_to_cart_button)
     void onClickAddToCart() {
+        TouchResponse.big();
         MenuDetailViewModel menuDetailViewModel = ViewModelProviders.of(this).get(MenuDetailViewModel.class);
         menuDetailViewModel.addToCartCurrentItems(storeUuid, menuUuid);
         finish();
@@ -87,6 +89,7 @@ public class MenuDetailActivity extends AppCompatActivity {
 
     @OnClick(R.id.place_order)
     void onClickSendOrder() {
+        TouchResponse.big();
         MenuDetailViewModel menuDetailViewModel = ViewModelProviders.of(this).get(MenuDetailViewModel.class);
         menuDetailViewModel.placeOrder(storeUuid, menuUuid).observe(this, this::onSuccessCreateOrder);
     }
@@ -98,6 +101,7 @@ public class MenuDetailActivity extends AppCompatActivity {
 
     @OnClick(R.id.back_button)
     void onClickBackButton() {
+        TouchResponse.small();
         finish();
     }
 }
