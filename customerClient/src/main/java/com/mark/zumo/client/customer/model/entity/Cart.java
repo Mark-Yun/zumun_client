@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
 
 /**
@@ -85,6 +86,13 @@ public class Cart {
 
     public int getItemCount() {
         return orderDetailList.size();
+    }
+
+    public int getTotalAmount() {
+        return Observable.fromIterable(orderDetailList)
+                .map(orderDetail -> orderDetail.amount)
+                .reduce((integer, integer2) -> integer + integer2)
+                .blockingGet(0);
     }
 
     private void vibrationFeedback() {

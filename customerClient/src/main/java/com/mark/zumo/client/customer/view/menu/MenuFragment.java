@@ -127,7 +127,7 @@ public class MenuFragment extends Fragment {
     }
 
     private void onLoadCart(Cart cart) {
-        int cartCount = cart.getItemCount();
+        int cartCount = cart.getTotalAmount();
         cartBadgeText.setText(String.valueOf(cartCount));
 
         boolean hasMenuInCart = cartCount > 0;

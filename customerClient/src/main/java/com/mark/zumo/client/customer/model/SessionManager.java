@@ -13,6 +13,9 @@ import com.mark.zumo.client.core.appserver.AppServerServiceProvider;
 import com.mark.zumo.client.core.appserver.NetworkRepository;
 import com.mark.zumo.client.core.repository.SessionRepository;
 
+import java.util.concurrent.TimeUnit;
+
+import io.reactivex.Observable;
 import io.reactivex.schedulers.Schedulers;
 
 /**
@@ -44,6 +47,8 @@ public enum SessionManager {
                     .subscribeOn(Schedulers.io())
                     .doOnNext(guestUser -> buildSessionHeader(guestUser.uuid))
                     .doOnNext(sessionRepository::saveGuestUser)
+                    .retryWhen(observable ->
+                            observable.flatMap(throwable -> Observable.timer(3, TimeUnit.SECONDS)))
                     .subscribe();
 
             return;
