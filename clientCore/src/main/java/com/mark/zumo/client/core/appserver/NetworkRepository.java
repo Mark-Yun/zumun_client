@@ -16,6 +16,7 @@ import com.mark.zumo.client.core.entity.user.GuestUser;
 import java.util.Collection;
 import java.util.List;
 
+import io.reactivex.Maybe;
 import io.reactivex.Observable;
 import io.reactivex.Single;
 import retrofit2.http.Body;
@@ -32,7 +33,7 @@ public interface NetworkRepository {
     String URL = "https://faca5l5t89.execute-api.ap-northeast-2.amazonaws.com/zumo_api/";
 
     @GET("users/guest/create")
-    Observable<GuestUser> createGuestUser();
+    Maybe<GuestUser> createGuestUser();
 
     @POST("users/guest/delete")
     Single<Void> deleteGuestUser(@Query("menu_uuid") String uuid);

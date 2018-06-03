@@ -7,7 +7,6 @@
 package com.mark.zumo.client.customer.model;
 
 import android.os.Bundle;
-import android.text.TextUtils;
 
 import com.mark.zumo.client.core.appserver.AppServerServiceProvider;
 import com.mark.zumo.client.core.appserver.NetworkRepository;
@@ -15,7 +14,8 @@ import com.mark.zumo.client.core.repository.SessionRepository;
 
 import java.util.concurrent.TimeUnit;
 
-import io.reactivex.Observable;
+import io.reactivex.Flowable;
+import io.reactivex.Maybe;
 import io.reactivex.schedulers.Schedulers;
 
 /**
@@ -37,27 +37,22 @@ public enum SessionManager {
         appServerServiceProvider = AppServerServiceProvider.INSTANCE;
         networkRepository = appServerServiceProvider.networkRepository;
 
-        buildSessionHeader();
+        getSessionId().subscribe();
     }
 
-    private void buildSessionHeader() {
-        String guestUserUuid = sessionRepository.getGuestUserUuid();
-        if (TextUtils.isEmpty(guestUserUuid)) {
-            networkRepository.createGuestUser()
-                    .subscribeOn(Schedulers.io())
-                    .doOnNext(guestUser -> buildSessionHeader(guestUser.uuid))
-                    .doOnNext(sessionRepository::saveGuestUser)
-                    .retryWhen(observable ->
-                            observable.flatMap(throwable -> Observable.timer(3, TimeUnit.SECONDS)))
-                    .subscribe();
-
-            return;
-        }
-
-        buildSessionHeader(guestUserUuid);
+    public Maybe<String> getSessionId() {
+        return Maybe.fromCallable(() -> sessionRepository.getGuestUserUuid())
+                .switchIfEmpty(
+                        networkRepository.createGuestUser()
+                                .retryWhen(errors -> errors.flatMap(error -> Flowable.timer(3, TimeUnit.SECONDS)))
+                                .retry(2)
+                                .map(guestUser -> guestUser.uuid)
+                                .doOnSuccess(this::getSessionId)
+                                .doOnSuccess(sessionRepository::saveGuestUserUuid)
+                ).subscribeOn(Schedulers.io());
     }
 
-    private NetworkRepository buildSessionHeader(final String guestUserUuid) {
+    private NetworkRepository getSessionId(final String guestUserUuid) {
         Bundle bundle = new Bundle();
         if (!guestUserUuid.isEmpty()) {
             bundle.putString(SessionRepository.KEY_GUEST_USER_UUID, guestUserUuid);

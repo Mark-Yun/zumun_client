@@ -6,11 +6,13 @@
 
 package com.mark.zumo.client.customer.view.main;
 
+import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.util.SparseArray;
 
+import com.mark.zumo.client.core.entity.Store;
 import com.mark.zumo.client.core.util.context.ContextHolder;
 import com.mark.zumo.client.customer.view.menu.MenuFragment;
 import com.mark.zumo.client.customer.view.order.OrderFragment;
@@ -22,15 +24,16 @@ import com.mark.zumo.client.customer.view.place.PlaceFragment;
 public class TabPagerAdapter extends FragmentStatePagerAdapter {
 
     private static final String[] FRAGMENTS_NAME = {
-            MenuFragment.class.getName(),
+            FindingStoreFragment.class.getName(),
             PlaceFragment.class.getName(),
             OrderFragment.class.getName()
     };
 
-    private SparseArray<Fragment> fragmentList = new SparseArray<>();
+    private SparseArray<Fragment> fragmentList;
 
     TabPagerAdapter(final FragmentManager fragmentManager) {
         super(fragmentManager);
+        fragmentList = new SparseArray<>();
     }
 
     @Override
@@ -41,6 +44,26 @@ public class TabPagerAdapter extends FragmentStatePagerAdapter {
         }
 
         return fragmentList.get(position);
+    }
+
+    @Override
+    public int getItemPosition(Object object) {
+        if (fragmentList.indexOfValue((Fragment) object) < 1) {
+            return POSITION_NONE;
+        } else {
+            return super.getItemPosition(object);
+        }
+    }
+
+    public void onD2dLoadStore(Store store) {
+        Bundle bundle = new Bundle();
+        bundle.putString(MenuFragment.KEY_STORE_UUID, store.uuid);
+        bundle.putBoolean(MenuFragment.KEY_IS_D2D, true);
+        Fragment fragment = Fragment.instantiate(ContextHolder.getContext(), MenuFragment.class.getName(), bundle);
+        fragmentList.remove(0);
+        fragmentList.put(0, fragment);
+
+        notifyDataSetChanged();
     }
 
     @Override

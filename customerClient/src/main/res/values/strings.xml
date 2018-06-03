@@ -20,7 +20,7 @@
     <string name="amount_description">Amount</string>
     <string name="cart_title_text">Cart(%1$d)</string>
 
-    <string name="tab_title_current_store">Current Store</string>
+    <string name="tab_title_is_finding_store">Is Finding…</string>
     <string name="tab_title_places">Places</string>
     <string name="tab_title_orders">Orders</string>
 

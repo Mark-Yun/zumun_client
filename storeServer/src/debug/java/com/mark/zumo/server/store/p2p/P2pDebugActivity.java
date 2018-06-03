@@ -52,7 +52,7 @@ public class P2pDebugActivity extends Activity {
         testStore = DebugUtil.store();
         testMenuOrder = DebugUtil.menuOrder();
 
-        p2pClient = new P2pClient(this, currentUser);
+        p2pClient = P2pClient.INSTANCE;
         p2pServer = new P2pServer(this, testStore);
         inflateView();
     }
@@ -103,8 +103,7 @@ public class P2pDebugActivity extends Activity {
     }
 
     private void startSubscribe(View v) {
-        p2pClient = new P2pClient(this, currentUser);
-        p2pClient.subscribe()
+        p2pClient.subscribe(this)
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnNext(stores -> initConsole(getSubscribeConsoleText(stores)))
                 .subscribe();
@@ -138,7 +137,7 @@ public class P2pDebugActivity extends Activity {
     }
 
     private void acquireMenuItems(View view) {
-        p2pClient.acquireMenuItems()
+        p2pClient.acquireMenuItems(this, DebugUtil.guestUser().uuid)
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSuccess(menuItemList -> {
                     for (Menu menu : menuItemList) {

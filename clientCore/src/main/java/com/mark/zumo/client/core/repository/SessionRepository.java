@@ -6,9 +6,6 @@
 
 package com.mark.zumo.client.core.repository;
 
-import android.util.Log;
-
-import com.mark.zumo.client.core.entity.user.GuestUser;
 import com.mark.zumo.client.core.security.SecurePreferences;
 
 /**
@@ -27,9 +24,8 @@ public enum SessionRepository {
         securePreferences = SecuredRepository.INSTANCE.securePreferences();
     }
 
-    public void saveGuestUser(final GuestUser guestUser) {
-        securePreferences.put(SessionRepository.KEY_GUEST_USER_UUID, guestUser.uuid);
-        Log.d(TAG, "saveGuestUser: menu_uuid-" + guestUser.uuid);
+    public void saveGuestUserUuid(final String guestUserUuid) {
+        securePreferences.put(SessionRepository.KEY_GUEST_USER_UUID, guestUserUuid);
     }
 
     public String getGuestUserUuid() {

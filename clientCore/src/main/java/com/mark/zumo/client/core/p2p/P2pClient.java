@@ -30,7 +30,6 @@ import com.google.android.gms.nearby.messages.MessagesClient;
 import com.mark.zumo.client.core.entity.Menu;
 import com.mark.zumo.client.core.entity.MenuOrder;
 import com.mark.zumo.client.core.entity.Store;
-import com.mark.zumo.client.core.entity.user.GuestUser;
 import com.mark.zumo.client.core.p2p.observable.SetObservable;
 import com.mark.zumo.client.core.p2p.packet.Packet;
 import com.mark.zumo.client.core.p2p.packet.Request;
@@ -39,6 +38,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.concurrent.Executors;
 
+import io.reactivex.Maybe;
 import io.reactivex.Observable;
 import io.reactivex.ObservableOnSubscribe;
 import io.reactivex.Single;
@@ -51,37 +51,39 @@ import io.reactivex.schedulers.Schedulers;
  * Created by mark on 18. 4. 30.
  */
 
-public class P2pClient {
+public enum P2pClient {
+    INSTANCE;
 
     private static final String TAG = "P2pClient";
-
-    private Activity activity;
-    private GuestUser guestUser;
 
     private SetObservable<Store> storeObservable;
     private MessageListener messageListener;
 
     private String currentEndpointId;
 
-    private SimpleArrayMap<String, String> endPointMap = new SimpleArrayMap<>();
-    private SimpleArrayMap<String, Payload> incomingPayloads = new SimpleArrayMap<>();
+    private SimpleArrayMap<String, String> endPointMap;
+    private SimpleArrayMap<String, Payload> incomingPayloads;
 
-    public P2pClient(Activity activity, GuestUser currentUser) {
-        this.activity = activity;
-        this.guestUser = currentUser;
-        messageListener = messageListener();
+    private MessagesClient messagesClient;
+    private ConnectionsClient connectionsClient;
+    private String sessionId;
+
+    P2pClient() {
+        endPointMap = new SimpleArrayMap<>();
+        incomingPayloads = new SimpleArrayMap<>();
     }
 
-    private MessagesClient messageClient() {
+    private MessagesClient messageClient(Activity activity) {
         return Nearby.getMessagesClient(activity);
     }
 
-    public Observable<Set<Store>> subscribe() {
+    public Observable<Set<Store>> subscribe(Activity activity) {
         Log.d(TAG, "subscribe: ");
         return Observable.create((ObservableOnSubscribe<Set<Store>>) emitter -> {
             storeObservable = new SetObservable<>();
             storeObservable.addObserver((o, arg) -> emitter.onNext(storeObservable.set));
-            messageClient().subscribe(messageListener);
+            messagesClient = messageClient(activity);
+            messagesClient.subscribe(messageListener);
         }).subscribeOn(Schedulers.io());
     }
 
@@ -120,58 +122,77 @@ public class P2pClient {
 
     public void unsubscribe() {
         Log.d(TAG, "unsubscribe: ");
-        messageClient().unsubscribe(messageListener);
+        messagesClient.unsubscribe(messageListener);
         clearOnUnsubscribe();
     }
-
-//    public Observable<List<Menu>> loadMenuItemList(Store store) {
-//        return Observable.create(e -> {
-//
-//        });
-//    }
 
     private void clearOnUnsubscribe() {
         storeObservable.set.clear();
         storeObservable.deleteObservers();
     }
 
-    private ConnectionsClient connectionsClient() {
+    private ConnectionsClient connectionsClient(Activity activity) {
         return Nearby.getConnectionsClient(activity);
     }
 
-    private Single<String> startDiscovery() {
+    private void saveEndpointInfo(String endpointId, DiscoveredEndpointInfo endpointInfo) {
+        endPointMap.put(endpointInfo.getEndpointName(), endpointId);
+        endPointMap.put(endpointId, endpointInfo.getEndpointName());
+    }
+
+    private Maybe<String> startDiscovery(Activity activity, String sessionId) {
         Log.d(TAG, "startDiscovery: ");
-        return Single.create(e ->
-                connectionsClient().startDiscovery(Options.SERVICE_ID, new EndpointDiscoveryCallback() {
-                    @Override
-                    public void onEndpointFound(@NonNull String endpointId, @NonNull DiscoveredEndpointInfo endpointInfo) {
-                        Log.d(TAG, "onEndpointFound: endpointId=" + endpointId
-                                + " DiscoveredEndpointInfo["
-                                + "endpointName=" + endpointInfo.getEndpointName()
-                                + " serviceId=" + endpointInfo.getServiceId()
-                                + "]");
+        return Maybe.create(e -> {
+            this.sessionId = sessionId;
+            connectionsClient = connectionsClient(activity);
+            connectionsClient.startDiscovery(Options.SERVICE_ID, new EndpointDiscoveryCallback() {
+                @Override
+                public void onEndpointFound(@NonNull String endpointId, @NonNull DiscoveredEndpointInfo endpointInfo) {
+                    Log.d(TAG, "onEndpointFound: endpointId=" + endpointId
+                            + " DiscoveredEndpointInfo["
+                            + "endpointName=" + endpointInfo.getEndpointName()
+                            + " serviceId=" + endpointInfo.getServiceId()
+                            + "]");
 
-                        //TODO Auth Store by endpointInfo
-                        e.onSuccess(endpointId);
-                    }
+                    saveEndpointInfo(endpointId, endpointInfo);
+                    e.onSuccess(endpointId);
+                }
 
-                    @Override
-                    public void onEndpointLost(@NonNull String endpointId) {
-                        Log.d(TAG, "onEndpointLost: endpointId=" + endpointId);
-                    }
-                }, Options.DISCOVERY)
-                        .addOnSuccessListener(this::onDiscoverySuccess)
-                        .addOnFailureListener(this::onDiscoveryFailure));
+                @Override
+                public void onEndpointLost(@NonNull String endpointId) {
+                    Log.d(TAG, "onEndpointLost: endpointId=" + endpointId);
+                }
+            }, Options.DISCOVERY)
+                    .addOnSuccessListener(this::onDiscoverySuccess)
+                    .addOnFailureListener(this::onDiscoveryFailure);
+        });
     }
 
     public void stopDiscovery() {
         Log.d(TAG, "stopDiscovery: ");
-        connectionsClient().stopDiscovery();
+        connectionsClient.stopDiscovery();
     }
 
-    private Single<String> requestConnection(String endPointId, Packet packet) {
+    public void clear() {
+        endPointMap.clear();
+        incomingPayloads.clear();
+
+        if (messagesClient != null) {
+            messagesClient.unsubscribe(messageListener);
+            messagesClient = null;
+        }
+        if (connectionsClient != null) {
+            connectionsClient.stopDiscovery();
+            connectionsClient.stopAllEndpoints();
+            connectionsClient = null;
+        }
+
+        sessionId = "";
+    }
+
+    private Maybe<String> requestConnection(String endPointId, Packet packet) {
         Log.d(TAG, "requestConnection: " + endPointId);
-        return Single.create(e -> connectionsClient().requestConnection(String.valueOf(guestUser.uuid), endPointId,
+        return Maybe.create(e -> connectionsClient.requestConnection(sessionId, endPointId,
                 new ConnectionLifecycleCallback() {
                     @Override
                     public void onConnectionInitiated(@NonNull String endpointId1, @NonNull ConnectionInfo connectionInfo) {
@@ -182,7 +203,7 @@ public class P2pClient {
                                 + " endpointName=" + connectionInfo.getEndpointName()
                                 + "]");
                         //TODO: Auth
-                        saveConnectionInfo(endpointId1, connectionInfo);
+//                        saveConnectionInfo(endpointId1, connectionInfo);
                         e.onSuccess(endpointId1);
                     }
 
@@ -232,7 +253,7 @@ public class P2pClient {
     private Single<Payload> sendPayload(String endpointId, Packet<MenuOrder> packet) {
         return Single.create((SingleOnSubscribe<Payload>) e -> {
             Payload payload = NearbyUtil.payloadFrom(packet);
-            connectionsClient().sendPayload(endpointId, payload)
+            connectionsClient.sendPayload(endpointId, payload)
                     .addOnSuccessListener(aVoid -> onSuccessSendPayload(e, endpointId, payload))
                     .addOnFailureListener(Runnable::run, this::onFailureSendPayload);
         }).subscribeOn(Schedulers.from(Executors.newScheduledThreadPool(5)));
@@ -252,10 +273,10 @@ public class P2pClient {
         endPointMap.put(storeId, endpointId1);
     }
 
-    private Single<Payload> acceptConnection(String endpointId) {
+    private Maybe<Payload> acceptConnection(String endpointId) {
         Log.d(TAG, "acceptConnection: endpointId=" + endpointId);
-        return Single.create(e ->
-                connectionsClient().acceptConnection(endpointId, new PayloadCallback() {
+        return Maybe.create(e ->
+                connectionsClient.acceptConnection(endpointId, new PayloadCallback() {
                     @Override
                     public void onPayloadReceived(@NonNull String endpointId1, @NonNull Payload payload) {
                         Log.d(TAG, "onPayloadReceived: endpointId=" + endpointId1
@@ -311,34 +332,53 @@ public class P2pClient {
         Log.e(TAG, "onFailureAcceptConnection: ", e);
     }
 
-    private Single<List<Menu>> convertMenuItemFromPayload(final Payload payload) {
-        return Single.create(e -> {
+    private Maybe<List<Menu>> convertMenuItemFromPayload(final Payload payload) {
+        return Maybe.create(e -> {
             byte[] bytes = NearbyUtil.bytesFrom(payload);
             Packet<List<Menu>> menuItemsPacket = new Packet<>(bytes);
             e.onSuccess(menuItemsPacket.get());
         });
     }
 
-    public Single<List<Menu>> acquireMenuItems() {
+    public Maybe<List<Menu>> acquireMenuItems(Activity activity, String sessionId) {
         Log.d(TAG, "acquireMenuItems:");
-        Packet<Request> packet = new Packet<>(Request.REQ_MENU_ITEM_LIST);
 
-        return startDiscovery()
-                .flatMap(endpointId -> requestConnection(endpointId, packet))
+        return startDiscovery(activity, sessionId)
+                .flatMap(endpointId -> requestConnection(endpointId, new Packet<>(Request.REQ_MENU_ITEM_LIST)))
                 .flatMap(this::acceptConnection)
                 .flatMap(this::convertMenuItemFromPayload)
                 .subscribeOn(Schedulers.io())
-                .doOnSuccess(menuItemList -> connectionsClient().disconnectFromEndpoint(currentEndpointId))
+                .doOnSuccess(menuItemList -> connectionsClient.disconnectFromEndpoint(currentEndpointId))
                 .doOnSuccess(unUsedResult -> currentEndpointId = null)
                 .subscribeOn(Schedulers.io());
     }
 
-    public Single<String> sendOrder(MenuOrder menuOrder, String storeUuid) {
+    public Maybe<List<Menu>> requestMenuItems(String storeId) {
+        return Maybe.just(storeId)
+                .map(endPointMap::get)
+                .doOnError(throwable -> Log.e(TAG, "requestMenuItems: ", throwable))
+                .flatMap(endpointId -> requestConnection(endpointId, new Packet<>(Request.REQ_MENU_ITEM_LIST)))
+                .flatMap(this::acceptConnection)
+                .flatMap(this::convertMenuItemFromPayload)
+                .subscribeOn(Schedulers.io())
+                .doOnSuccess(menuItemList -> connectionsClient.disconnectFromEndpoint(currentEndpointId))
+                .doOnSuccess(unUsedResult -> currentEndpointId = null)
+                .subscribeOn(Schedulers.io());
+    }
+
+    public Maybe<String> findStore(Activity activity, String sessionId) {
+        return startDiscovery(activity, sessionId)
+                .map(endPointMap::get)
+                .doOnError(throwable -> Log.e(TAG, "findStore: ", throwable))
+                .subscribeOn(Schedulers.newThread());
+    }
+
+    public Maybe<String> sendOrder(MenuOrder menuOrder, String storeUuid) {
         String endpointId = endPointMap.get(storeUuid);
         Packet<MenuOrder> packet = new Packet<>(menuOrder);
         return requestConnection(endpointId, packet)
                 .flatMap(this::acceptConnection)
-                .doOnSuccess(menuItemList -> connectionsClient().disconnectFromEndpoint(currentEndpointId))
+                .doOnSuccess(menuItemList -> connectionsClient.disconnectFromEndpoint(currentEndpointId))
                 .doOnSuccess(unUsedResult -> currentEndpointId = null)
                 .map(Payload::getId)
                 .map(String::valueOf)

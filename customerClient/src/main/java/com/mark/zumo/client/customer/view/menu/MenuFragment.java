@@ -25,13 +25,13 @@ import android.widget.Toast;
 
 import com.mark.zumo.client.core.entity.Menu;
 import com.mark.zumo.client.core.entity.Store;
-import com.mark.zumo.client.core.util.DebugUtil;
 import com.mark.zumo.client.core.util.glide.GlideApp;
 import com.mark.zumo.client.core.util.glide.GlideUtils;
 import com.mark.zumo.client.customer.R;
 import com.mark.zumo.client.customer.model.entity.Cart;
 import com.mark.zumo.client.customer.view.TouchResponse;
 import com.mark.zumo.client.customer.view.cart.CartActivity;
+import com.mark.zumo.client.customer.viewmodel.MainViewModel;
 import com.mark.zumo.client.customer.viewmodel.MenuViewModel;
 
 import java.util.List;
@@ -46,7 +46,9 @@ import butterknife.OnClick;
 public class MenuFragment extends Fragment {
 
     public static final String TAG = "MenuFragment";
+
     public static final String KEY_STORE_UUID = "store_uuid";
+    public static final String KEY_IS_D2D = "is_d2d";
 
     @BindView(R.id.store_cover_image) ImageView storeCoverImage;
     @BindView(R.id.store_cover_title) TextView storeCoverTitle;
@@ -58,20 +60,19 @@ public class MenuFragment extends Fragment {
 
     private MenuAdapter menuAdapter;
     private MenuViewModel menuViewModel;
+    private MainViewModel mainViewModel;
 
     private String storeUuid;
+    private boolean isD2D;
 
     @Override
     public void onCreate(@Nullable final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         menuViewModel = ViewModelProviders.of(this).get(MenuViewModel.class);
+        mainViewModel = ViewModelProviders.of(getActivity()).get(MainViewModel.class);
 
-        //TODO: remove test data
-        if (getArguments() != null) {
-            storeUuid = getArguments().getString(KEY_STORE_UUID);
-        } else {
-            storeUuid = DebugUtil.TEST_STORE_UUID;
-        }
+        storeUuid = getArguments().getString(KEY_STORE_UUID);
+        isD2D = getArguments().getBoolean(KEY_IS_D2D);
     }
 
     @Nullable
@@ -100,7 +101,13 @@ public class MenuFragment extends Fragment {
         menuAdapter = new MenuAdapter(this, menuViewModel, getFragmentManager());
         recyclerView.setAdapter(menuAdapter);
 
-        menuViewModel.getMenuItemList(getActivity()).observe(this, this::onLoadMenuItemList);
+        //TODO: remove test code
+        isD2D = false;
+        if (isD2D) {
+            mainViewModel.requestMenuItemList(storeUuid).observe(getActivity(), this::onLoadMenuItemList);
+        } else {
+            menuViewModel.getMenuItemList(getActivity()).observe(this, this::onLoadMenuItemList);
+        }
     }
 
     private void inflateCartBadge() {
@@ -114,7 +121,7 @@ public class MenuFragment extends Fragment {
     }
 
     private void inflateStoreCover() {
-        menuViewModel.getStore(DebugUtil.TEST_STORE_UUID).observe(this, this::onLoadStore);
+        menuViewModel.getStore(storeUuid).observe(this, this::onLoadStore);
     }
 
     private void onLoadStore(Store store) {

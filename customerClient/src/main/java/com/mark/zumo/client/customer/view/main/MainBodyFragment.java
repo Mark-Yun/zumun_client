@@ -6,17 +6,21 @@
 
 package com.mark.zumo.client.customer.view.main;
 
+import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.mark.zumo.client.core.entity.Store;
 import com.mark.zumo.client.customer.R;
+import com.mark.zumo.client.customer.viewmodel.MainViewModel;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -26,12 +30,18 @@ import butterknife.ButterKnife;
  */
 public class MainBodyFragment extends Fragment {
 
+    public static final String TAG = "MainBodyFragment";
     @BindView(R.id.tab_layout) TabLayout tabLayout;
     @BindView(R.id.view_pager) ViewPager viewPager;
+
+    private MainViewModel mainViewModel;
+    private TabPagerAdapter tabPagerAdapter;
 
     @Override
     public void onCreate(@Nullable final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        mainViewModel = ViewModelProviders.of(this).get(MainViewModel.class);
     }
 
     @Nullable
@@ -44,7 +54,7 @@ public class MainBodyFragment extends Fragment {
     }
 
     private void inflateTabLayout() {
-        TabPagerAdapter tabPagerAdapter = new TabPagerAdapter(getFragmentManager());
+        tabPagerAdapter = new TabPagerAdapter(getFragmentManager());
         viewPager.setAdapter(tabPagerAdapter);
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
 
@@ -64,5 +74,14 @@ public class MainBodyFragment extends Fragment {
 
             }
         });
+
+        mainViewModel.findStore(getActivity())
+                .observe(this, this::onD2dLoadStore);
+    }
+
+    private void onD2dLoadStore(Store store) {
+        Log.d(TAG, "onD2dLoadStore: " + store);
+        tabLayout.getTabAt(0).setText(store.name);
+        tabPagerAdapter.onD2dLoadStore(store);
     }
 }

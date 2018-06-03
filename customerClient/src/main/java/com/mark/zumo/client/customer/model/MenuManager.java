@@ -53,10 +53,6 @@ public enum MenuManager {
                 .subscribeOn(Schedulers.io());
     }
 
-    private Single<P2pClient> p2pClient(Activity activity, GuestUser guestUser) {
-        return Single.fromCallable(() -> new P2pClient(activity, guestUser));
-    }
-
     private Single<Store> currentStore() {
         //TODO: impl
         return Single.fromCallable(DebugUtil::store);
