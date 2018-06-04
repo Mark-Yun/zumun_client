@@ -56,7 +56,7 @@ ext {
     rebound = '0.3.8'
 }
 
-def applications = [project('customerClient'), project('storeClient'), project('storeServer')]
+def applications = [project('customerClient'), project('storeServer')]
 configure(applications) {
     apply plugin: 'com.android.application'
 
