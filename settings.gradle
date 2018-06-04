@@ -4,4 +4,4 @@
  * Proprietary and confidential
  */
 
-include ':customerClient', ':storeServer', ':clientCore'
+include ':customerClient', ':storeClient', ':clientCore'
