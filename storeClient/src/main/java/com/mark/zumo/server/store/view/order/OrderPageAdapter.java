@@ -6,16 +6,19 @@
 
 package com.mark.zumo.server.store.view.order;
 
+import android.arch.lifecycle.LifecycleOwner;
 import android.support.annotation.NonNull;
+import android.support.v7.widget.AppCompatButton;
+import android.support.v7.widget.AppCompatTextView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import com.mark.zumo.client.core.entity.MenuOrder;
 import com.mark.zumo.server.store.R;
 import com.mark.zumo.server.store.view.order.widget.TabLayoutSupport;
+import com.mark.zumo.server.store.viewmodel.OrderViewModel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,9 +30,21 @@ import butterknife.ButterKnife;
  * Created by mark on 18. 5. 16.
  */
 public class OrderPageAdapter extends RecyclerView.Adapter<OrderPageAdapter.ViewHolder>
-        implements TabLayoutSupport.ViewPagerTabLayoutAdapter {
+        implements TabLayoutSupport.ViewPagerTabLayoutAdapter<OrderPageAdapter.TabViewHolder> {
 
-    private List<MenuOrder> menuOrderList = new ArrayList<>();
+    private OrderViewModel orderViewModel;
+    private LifecycleOwner lifecycleOwner;
+
+    private List<MenuOrder> menuOrderList;
+    private List<TabViewHolder> tabViewHolderList;
+
+    OrderPageAdapter(final OrderViewModel orderViewModel, final LifecycleOwner lifecycleOwner) {
+        this.orderViewModel = orderViewModel;
+        this.lifecycleOwner = lifecycleOwner;
+
+        menuOrderList = new ArrayList<>();
+        tabViewHolderList = new ArrayList<>();
+    }
 
     void setMenuOrderList(final List<MenuOrder> menuOrderList) {
         this.menuOrderList = menuOrderList;
@@ -39,14 +54,18 @@ public class OrderPageAdapter extends RecyclerView.Adapter<OrderPageAdapter.View
     @Override
     public ViewHolder onCreateViewHolder(@NonNull final ViewGroup parent, final int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_view_menu_order, parent, false);
+        tabViewHolderList.add(createTabView(parent));
         return new ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull final ViewHolder holder, final int position) {
         MenuOrder menuOrder = getMenuOrder(position);
-        holder.idTextView.setText("menu_uuid : " + menuOrder.uuid);
-        holder.priceTextView.setText("menu_price : " + menuOrder.storeUuid);
+        holder.number.setText(menuOrder.orderNumber);
+        holder.date.setText(menuOrder.createdDate.split(" ")[0]);
+        holder.time.setText(menuOrder.createdDate.split(" ")[1]);
+        holder.totalQuantity.setText(String.valueOf(menuOrder.totalQuantity));
+        holder.complete.setOnClickListener(v -> orderViewModel.completeOrder(menuOrder));
     }
 
     private MenuOrder getMenuOrder(final int position) {
@@ -64,15 +83,41 @@ public class OrderPageAdapter extends RecyclerView.Adapter<OrderPageAdapter.View
         return "Order Number-" + menuOrder.uuid;
     }
 
-    static class ViewHolder extends RecyclerView.ViewHolder {
-        View rootView;
+    @Override
+    public TabViewHolder createTabView(@NonNull final ViewGroup parent) {
+        View tabView = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_view_order_tab, parent, false);
+        return new TabViewHolder(tabView);
+    }
 
-        @BindView(R.id.order_id) TextView idTextView;
-        @BindView(R.id.order_price) TextView priceTextView;
+    @Override
+    public void bindTabView(@NonNull final TabViewHolder holder, final int position) {
+        MenuOrder menuOrder = getMenuOrder(position);
+        holder.number.setText(menuOrder.orderNumber);
+        holder.time.setText(menuOrder.createdDate.split(" ")[1]);
+        holder.quantity.setText(String.valueOf(menuOrder.totalQuantity));
+    }
+
+    static class ViewHolder extends RecyclerView.ViewHolder {
+        @BindView(R.id.number) AppCompatTextView number;
+        @BindView(R.id.date) AppCompatTextView date;
+        @BindView(R.id.time) AppCompatTextView time;
+        @BindView(R.id.total_quantity) AppCompatTextView totalQuantity;
+        @BindView(R.id.total_price) AppCompatTextView totalPrice;
+        @BindView(R.id.complete_button) AppCompatButton complete;
 
         private ViewHolder(final View itemView) {
             super(itemView);
-            rootView = itemView;
+            ButterKnife.bind(this, itemView);
+        }
+    }
+
+    static class TabViewHolder extends RecyclerView.ViewHolder {
+        @BindView(R.id.number) AppCompatTextView number;
+        @BindView(R.id.time) AppCompatTextView time;
+        @BindView(R.id.quantity) AppCompatTextView quantity;
+
+        private TabViewHolder(final View itemView) {
+            super(itemView);
             ButterKnife.bind(this, itemView);
         }
     }

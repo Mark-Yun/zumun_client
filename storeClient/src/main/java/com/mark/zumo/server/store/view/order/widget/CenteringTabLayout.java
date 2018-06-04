@@ -7,6 +7,7 @@
 package com.mark.zumo.server.store.view.order.widget;
 
 import android.content.Context;
+import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewCompat;
 import android.util.AttributeSet;
@@ -39,5 +40,12 @@ public class CenteringTabLayout extends TabLayout {
             return;
         }
         ViewCompat.setPaddingRelative(getChildAt(0), (getWidth() / 4) - (firstTab.getWidth() / 2), 0, (getWidth() * 3 / 4) - (lastTab.getWidth() / 2), 0);
+    }
+
+    @Nullable
+    @Override
+    public Tab getTabAt(final int index) {
+        Tab tabAt = super.getTabAt(index);
+        return tabAt;
     }
 }

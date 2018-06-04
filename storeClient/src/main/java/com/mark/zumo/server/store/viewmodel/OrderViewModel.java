@@ -73,7 +73,7 @@ public class OrderViewModel extends AndroidViewModel {
     }
 
     public void completeOrder(MenuOrder menuOrder) {
-        Toast.makeText(ContextHolder.getContext(), "completeOrder", Toast.LENGTH_SHORT).show();
+        Toast.makeText(ContextHolder.getContext(), "completeOrder" + menuOrder.uuid, Toast.LENGTH_SHORT).show();
         nextOrder();
     }
 

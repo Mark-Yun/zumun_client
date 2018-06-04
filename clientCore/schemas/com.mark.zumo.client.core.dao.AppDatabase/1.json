@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "8051342317bfb66695a6c5f6b7b8392e",
+    "identityHash": "3131ffc6e4fc4d8c5850b99c6dbae6ba",
     "entities": [
       {
         "tableName": "menu",
@@ -56,7 +56,7 @@
       },
       {
         "tableName": "menu_order",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`menu_order_uuid` TEXT NOT NULL, `customer_uuid` TEXT, `store_uuid` TEXT, PRIMARY KEY(`menu_order_uuid`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`menu_order_uuid` TEXT NOT NULL, `customer_uuid` TEXT, `store_uuid` TEXT, `order_number` TEXT, `create_date` TEXT, `total_quantity` INTEGER NOT NULL, PRIMARY KEY(`menu_order_uuid`))",
         "fields": [
           {
             "fieldPath": "uuid",
@@ -75,6 +75,24 @@
             "columnName": "store_uuid",
             "affinity": "TEXT",
             "notNull": false
+          },
+          {
+            "fieldPath": "orderNumber",
+            "columnName": "order_number",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "createdDate",
+            "columnName": "create_date",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "totalQuantity",
+            "columnName": "total_quantity",
+            "affinity": "INTEGER",
+            "notNull": true
           }
         ],
         "primaryKey": {
@@ -280,7 +298,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"8051342317bfb66695a6c5f6b7b8392e\")"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"3131ffc6e4fc4d8c5850b99c6dbae6ba\")"
     ]
   }
 }

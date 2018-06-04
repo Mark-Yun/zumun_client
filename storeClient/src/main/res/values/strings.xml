@@ -13,4 +13,15 @@
     <string name="button_sign_up">SIGN UP</string>
     <string name="text_view_go_to_sign_up">Go To Sign Up >></string>
     <string name="text_view_back_to_sign_in">&lt;&lt;Back To Sign In</string>
+
+    <string name="order_title_description">Order number</string>
+    <string name="order_date_description">Date:&#160;</string>
+    <string name="order_time_description">Time:&#160;</string>
+    <string name="order_item_name_description">ITEM NAME</string>
+    <string name="order_quantity_description">QTY</string>
+    <string name="order_price_description">PRICE</string>
+    <string name="order_total_price_description">TOTAL</string>
+    <string name="order_complete_button_text">COMPLETE</string>
+
+    <string name="order_tab_quantity_description">QTY:&#160;</string>
 </resources>

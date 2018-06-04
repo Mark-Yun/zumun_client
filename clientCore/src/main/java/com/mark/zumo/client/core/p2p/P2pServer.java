@@ -32,9 +32,9 @@ import com.mark.zumo.client.core.repository.MenuRepository;
 
 import java.util.concurrent.Executors;
 
+import io.reactivex.Maybe;
+import io.reactivex.MaybeEmitter;
 import io.reactivex.Observable;
-import io.reactivex.Single;
-import io.reactivex.SingleEmitter;
 import io.reactivex.schedulers.Schedulers;
 
 /**
@@ -148,9 +148,9 @@ public class P2pServer {
         connectionsClient().disconnectFromEndpoint(endpointId);
     }
 
-    private Single<Payload> sendPayload(String endpointId, Packet packet) {
+    private Maybe<Payload> sendPayload(String endpointId, Packet packet) {
         Log.d(TAG, "sendPayload: endpointId=" + endpointId + " " + packet);
-        return Single.create(e -> {
+        return Maybe.create(e -> {
             Payload payload = NearbyUtil.payloadFrom(packet);
             connectionsClient().sendPayload(endpointId, payload)
                     .addOnSuccessListener(aVoid -> onSuccessSendPayload(e, endpointId, payload))
@@ -158,16 +158,17 @@ public class P2pServer {
         });
     }
 
-    private Single<String> sendMenuItems(String endPointId) {
+    private Maybe<String> sendMenuItems(String endPointId) {
         Log.d(TAG, "sendMenuItems: endPointId=" + endPointId);
-        return Single.fromObservable(MenuRepository.INSTANCE.getMenuItemsOfStore(store))
+        return MenuRepository.INSTANCE.getMenuItemsOfStore(store)
+                .firstElement()
                 .map(Packet::new)
                 .flatMap(packet -> sendPayload(endPointId, packet))
                 .map(payload -> String.valueOf(payload.getId()))
                 .subscribeOn(Schedulers.io());
     }
 
-    private void onSuccessSendPayload(SingleEmitter<Payload> emitter, String endpointId, Payload payload) {
+    private void onSuccessSendPayload(MaybeEmitter<Payload> emitter, String endpointId, Payload payload) {
         Log.d(TAG, "onSuccessSendPayload: endpointId=" + endpointId);
         emitter.onSuccess(payload);
     }
@@ -222,7 +223,7 @@ public class P2pServer {
             case MENU_ORDER:
                 Packet<MenuOrder> menuOrderPacket = (Packet<MenuOrder>) packet;
                 Packet<Response> responsePacket = new Packet<>(Response.SUCCESS);
-                return Single.just(menuOrderPacket)
+                return Maybe.just(menuOrderPacket)
                         .doOnSuccess(unUsed ->
                                 sendPayload(endPointId, responsePacket)
                                         .subscribe()
@@ -245,7 +246,7 @@ public class P2pServer {
         Log.d(TAG, "processOnRequest: " + result);
         Request request = result.r.get();
         String endPointId = result.t;
-        Single<String> task;
+        Maybe<String> task;
         switch (request) {
             case REQ_MENU_ITEM_LIST:
                 task = sendMenuItems(endPointId);

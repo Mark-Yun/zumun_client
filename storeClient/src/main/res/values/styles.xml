@@ -4,13 +4,39 @@
   ~ Proprietary and confidential
   -->
 
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
-        <!-- Customize your theme here. -->
+    <style name="AppTheme.NoActionBar" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:windowActivityTransitions" tools:targetApi="lollipop">true</item>
+        <item name="android:colorControlHighlight" tools:targetApi="lollipop">@color/colorDivider
+        </item>
         <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:colorPrimaryDark" tools:targetApi="m">@color/colorPrimaryDark</item>
+        <item name="android:windowBackground">@color/colorPrimary</item>
+        <item name="android:textColorHighlight">@color/colorAccent</item>
+        <item name="android:colorAccent" tools:targetApi="lollipop">@color/colorAccent</item>
+        <item name="android:textColor">@color/colorText</item>
+        <item name="android:textColorPrimary">@color/colorTextDark</item>
+        <item name="android:textColorPrimaryInverse">@color/colorText</item>
+        <item name="android:borderlessButtonStyle">@style/AppTheme.NoActionBar.ButtonStyle</item>
+        <item name="android:tabWidgetStyle">@style/AppTheme.NoActionBar.TabStyle</item>
+        <item name="android:actionButtonStyle">@style/AppTheme.NoActionBar.ActionButtonStyle</item>
     </style>
+
+    <style name="AppTheme.NoActionBar.ButtonStyle" parent="Widget.AppCompat.Button.Borderless">
+        <item name="android:textColor">@color/colorText</item>
+    </style>
+
+    <style name="AppTheme.NoActionBar.ActionButtonStyle" parent="Widget.Design.FloatingActionButton">
+        <item name="background">@color/colorAccent</item>
+        <item name="android:backgroundTint" tools:targetApi="lollipop">@color/colorAccent</item>
+    </style>
+
+    <style name="AppTheme.NoActionBar.TabStyle" parent="Widget.Design.TabLayout">
+        <item name="tabIndicatorColor">@color/colorAccent</item>
+        <item name="tabSelectedTextColor">@color/colorTextDark</item>
+        <item name="tabTextColor">@color/colorSecondaryText</item>
+    </style>
+
 </resources>

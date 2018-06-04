@@ -17,6 +17,7 @@ import android.support.design.widget.TabLayout.Tab;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.OnScrollListener;
 import android.view.View;
+import android.view.ViewGroup;
 
 import com.lsjwzh.widget.recyclerviewpager.LoopRecyclerViewPager;
 import com.lsjwzh.widget.recyclerviewpager.RecyclerViewPager;
@@ -27,23 +28,31 @@ import java.lang.ref.WeakReference;
 
 public class TabLayoutSupport {
 
-    public static void setupWithViewPager(@NonNull TabLayout tabLayout, @NonNull RecyclerViewPager viewPager, @NonNull TabLayoutSupport.ViewPagerTabLayoutAdapter viewPagerTabLayoutAdapter) {
+    public static void setupWithViewPager(@NonNull TabLayout tabLayout,
+                                          @NonNull RecyclerViewPager viewPager,
+                                          @NonNull TabLayoutSupport.ViewPagerTabLayoutAdapter viewPagerTabLayoutAdapter) {
         tabLayout.removeAllTabs();
         int i = 0;
 
         for (int count = viewPagerTabLayoutAdapter.getItemCount(); i < count; ++i) {
-            tabLayout.addTab(tabLayout.newTab().setText(viewPagerTabLayoutAdapter.getPageTitle(i)));
+            ViewGroup rootView = (ViewGroup) tabLayout.getRootView();
+            RecyclerView.ViewHolder viewHolder = viewPagerTabLayoutAdapter.createTabView(rootView);
+            viewPagerTabLayoutAdapter.bindTabView(viewHolder, i);
+            tabLayout.addTab(tabLayout.newTab().setCustomView(viewHolder.itemView));
         }
 
         TabLayoutSupport.TabLayoutOnPageChangeListener listener = new TabLayoutSupport.TabLayoutOnPageChangeListener(tabLayout, viewPager);
         viewPager.addOnScrollListener(listener);
         viewPager.addOnPageChangedListener(listener);
+        viewPager.setClipToPadding(false);
+        viewPager.setPadding(160, 0, 160, 0);
         tabLayout.addOnTabSelectedListener(new TabLayoutSupport.ViewPagerOnTabSelectedListener(viewPager));
     }
 
-    public interface ViewPagerTabLayoutAdapter {
-        String getPageTitle(int var1);
-
+    public interface ViewPagerTabLayoutAdapter<T extends RecyclerView.ViewHolder> {
+        String getPageTitle(int position);
+        T createTabView(@NonNull final ViewGroup parent);
+        void bindTabView(@NonNull final T holder, final int position);
         int getItemCount();
     }
 

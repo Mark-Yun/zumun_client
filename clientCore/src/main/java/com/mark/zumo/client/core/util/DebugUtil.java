@@ -37,7 +37,10 @@ public class DebugUtil {
     }
 
     public static MenuOrder menuOrder() {
-        return new MenuOrder(UUID.randomUUID().toString(), UUID.randomUUID().toString(), UUID.randomUUID().toString());
+        return new MenuOrder(UUID.randomUUID().toString(),
+                UUID.randomUUID().toString(),
+                UUID.randomUUID().toString(),
+                "24", "3/6/2018 15:33", 5);
     }
 
     public static List<Store> storeList() {
