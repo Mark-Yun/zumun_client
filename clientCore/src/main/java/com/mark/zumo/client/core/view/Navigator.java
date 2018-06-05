@@ -4,7 +4,13 @@
  * Proprietary and confidential
  */
 
-package com.mark.zumo.client.customer.view;
+/*
+ * Copyright (c) 2018. Mark Soft - All Rights Reserved
+ * Unauthorized copying of this file, via any medium is strictly prohibited
+ * Proprietary and confidential
+ */
+
+package com.mark.zumo.client.core.view;
 
 import android.view.View;
 import android.view.animation.Animation;

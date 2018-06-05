@@ -4,7 +4,7 @@
  * Proprietary and confidential
  */
 
-package com.mark.zumo.server.store.view.order;
+package com.mark.zumo.server.store.view.acceptedorder;
 
 import android.arch.lifecycle.LifecycleOwner;
 import android.support.annotation.NonNull;
@@ -17,9 +17,10 @@ import android.view.ViewGroup;
 
 import com.mark.zumo.client.core.entity.MenuOrder;
 import com.mark.zumo.server.store.R;
-import com.mark.zumo.server.store.view.order.widget.TabLayoutSupport;
+import com.mark.zumo.server.store.view.acceptedorder.widget.TabLayoutSupport;
 import com.mark.zumo.server.store.viewmodel.OrderViewModel;
 
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -48,12 +49,13 @@ public class OrderPageAdapter extends RecyclerView.Adapter<OrderPageAdapter.View
 
     void setMenuOrderList(final List<MenuOrder> menuOrderList) {
         this.menuOrderList = menuOrderList;
+        notifyDataSetChanged();
     }
 
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull final ViewGroup parent, final int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_view_menu_order, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_view_accepted_order, parent, false);
         tabViewHolderList.add(createTabView(parent));
         return new ViewHolder(view);
     }
@@ -65,6 +67,7 @@ public class OrderPageAdapter extends RecyclerView.Adapter<OrderPageAdapter.View
         holder.date.setText(menuOrder.createdDate.split(" ")[0]);
         holder.time.setText(menuOrder.createdDate.split(" ")[1]);
         holder.totalQuantity.setText(String.valueOf(menuOrder.totalQuantity));
+        holder.totalPrice.setText(NumberFormat.getCurrencyInstance().format(menuOrder.totalPrice));
         holder.complete.setOnClickListener(v -> orderViewModel.completeOrder(menuOrder));
     }
 

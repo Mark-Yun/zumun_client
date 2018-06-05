@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (c) 2018. Mark Soft - All Rights Reserved
+  ~ Unauthorized copying of this file, via any medium is strictly prohibited
+  ~ Proprietary and confidential
+  -->
+
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:isScrollContainer="true">
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/requested_order_recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:isScrollContainer="true"
+        android:scrollIndicators="top|start"
+        android:scrollbars="horizontal" />
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/back_fab"
+        android:layout_width="@dimen/order_control_button_height"
+        android:layout_height="@dimen/order_control_button_height"
+        android:layout_marginBottom="@dimen/order_controller_button_bottom_margin"
+        android:layout_marginStart="@dimen/order_card_view_big_margin"
+        android:background="@android:color/holo_red_dark"
+        android:backgroundTint="@android:color/holo_red_dark"
+        android:elevation="5dp"
+        android:scaleType="fitXY"
+        android:src="@drawable/arrow_back"
+        app:borderWidth="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <android.support.v7.widget.AppCompatButton
+        android:id="@+id/accept_all"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/order_control_button_height"
+        android:layout_marginEnd="@dimen/order_card_view_big_margin"
+        android:background="@color/colorAccent"
+        android:elevation="5dp"
+        android:paddingEnd="@dimen/order_control_button_height"
+        android:paddingStart="@dimen/order_control_button_height"
+        android:text="@string/accept_all_button_text"
+        android:textSize="@dimen/order_number_description_text_size"
+        app:layout_constraintBottom_toBottomOf="@+id/back_fab"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/back_fab" />
+</android.support.constraint.ConstraintLayout>

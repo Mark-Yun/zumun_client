@@ -27,7 +27,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
  */
 public class OrderViewModel extends AndroidViewModel {
 
-    private List<MenuOrder> menuOrderList = new ArrayList<>();
+    private List<MenuOrder> requestedMenuOrderList;
     private int currentOrderIndex;
     private MenuOrderManager menuOrderManager;
     private MutableLiveData<Integer> currentPositionLiveData = new MutableLiveData<>();
@@ -36,18 +36,13 @@ public class OrderViewModel extends AndroidViewModel {
         super(application);
 
         menuOrderManager = MenuOrderManager.INSTANCE;
+
+        requestedMenuOrderList = new ArrayList<>();
     }
 
-    private void bindMenuOrderManager(MutableLiveData<List<MenuOrder>> liveData) {
-        menuOrderManager.getMenuOrder()
-                .observeOn(AndroidSchedulers.mainThread())
-                .doOnNext(menuOrder -> onMenuOrderAdded(liveData, menuOrder))
-                .subscribe();
-    }
-
-    private void onMenuOrderAdded(MutableLiveData<List<MenuOrder>> liveData, MenuOrder menuOrder) {
-        menuOrderList.add(menuOrder);
-        liveData.setValue(menuOrderList);
+    private void onMenuOrderRequested(MutableLiveData<List<MenuOrder>> liveData, MenuOrder menuOrder) {
+        requestedMenuOrderList.add(menuOrder);
+        liveData.setValue(requestedMenuOrderList);
     }
 
     public LiveData<Integer> currentOrderPosition() {
@@ -58,10 +53,22 @@ public class OrderViewModel extends AndroidViewModel {
         currentPositionLiveData.setValue(currentOrderIndex);
     }
 
-    public LiveData<List<MenuOrder>> menuOrderList() {
-        MutableLiveData<List<MenuOrder>> menuOrderListLiveData = new MutableLiveData<>();
-        bindMenuOrderManager(menuOrderListLiveData);
-        return menuOrderListLiveData;
+    public LiveData<List<MenuOrder>> acceptedMenuOrderList() {
+        MutableLiveData<List<MenuOrder>> liveData = new MutableLiveData<>();
+        menuOrderManager.getAcceptedMenuOrder()
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnSuccess(liveData::setValue)
+                .subscribe();
+        return liveData;
+    }
+
+    public LiveData<List<MenuOrder>> requestedMenuOrderList() {
+        MutableLiveData<List<MenuOrder>> liveData = new MutableLiveData<>();
+        menuOrderManager.getRequestedMenuOrder()
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnNext(menuOrder -> onMenuOrderRequested(liveData, menuOrder))
+                .subscribe();
+        return liveData;
     }
 
     public void acceptOrder(MenuOrder menuOrder) {
@@ -82,7 +89,7 @@ public class OrderViewModel extends AndroidViewModel {
     }
 
     private boolean nextOrder() {
-        if (menuOrderList.size() <= currentOrderIndex + 1) {
+        if (requestedMenuOrderList.size() <= currentOrderIndex + 1) {
             return false;
         }
 

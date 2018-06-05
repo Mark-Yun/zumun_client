@@ -20,6 +20,7 @@ import android.view.Window;
 
 import com.mark.zumo.client.core.app.BaseActivity;
 import com.mark.zumo.server.store.R;
+import com.mark.zumo.server.store.view.acceptedorder.AcceptedOrderActivity;
 import com.mark.zumo.server.store.view.signup.SignUpActivity;
 import com.mark.zumo.server.store.viewmodel.SignUpViewModel;
 
@@ -92,7 +93,7 @@ public class SplashActivity extends BaseActivity {
         Class<? extends AppCompatActivity> ret;
 
         if (isSessionValid) {
-            ret = MainActivity.class;
+            ret = AcceptedOrderActivity.class;
         } else {
             ret = SignUpActivity.class;
         }

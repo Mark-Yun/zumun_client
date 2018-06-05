@@ -14,8 +14,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
 
 import com.mark.zumo.client.core.entity.MenuOrder;
+import com.mark.zumo.client.core.view.Navigator;
 import com.mark.zumo.client.customer.R;
-import com.mark.zumo.client.customer.view.Navigator;
 import com.mark.zumo.client.customer.view.TouchResponse;
 import com.mark.zumo.client.customer.view.menu.detail.fragment.MenuInfoFragment;
 import com.mark.zumo.client.customer.view.menu.detail.fragment.MenuOptionFragment;

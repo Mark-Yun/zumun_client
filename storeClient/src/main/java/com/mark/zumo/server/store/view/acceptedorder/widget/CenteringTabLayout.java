@@ -4,7 +4,7 @@
  * Proprietary and confidential
  */
 
-package com.mark.zumo.server.store.view.order.widget;
+package com.mark.zumo.server.store.view.acceptedorder.widget;
 
 import android.content.Context;
 import android.support.annotation.Nullable;

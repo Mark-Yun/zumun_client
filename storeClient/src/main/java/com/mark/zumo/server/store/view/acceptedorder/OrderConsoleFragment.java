@@ -4,9 +4,10 @@
  * Proprietary and confidential
  */
 
-package com.mark.zumo.server.store.view.order;
+package com.mark.zumo.server.store.view.acceptedorder;
 
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -21,8 +22,9 @@ import android.view.ViewGroup;
 import com.lsjwzh.widget.recyclerviewpager.RecyclerViewPager;
 import com.mark.zumo.client.core.entity.MenuOrder;
 import com.mark.zumo.server.store.R;
-import com.mark.zumo.server.store.view.order.widget.CenteringTabLayout;
-import com.mark.zumo.server.store.view.order.widget.TabLayoutSupport;
+import com.mark.zumo.server.store.view.acceptedorder.widget.CenteringTabLayout;
+import com.mark.zumo.server.store.view.acceptedorder.widget.TabLayoutSupport;
+import com.mark.zumo.server.store.view.requestedorder.RequestedOrderActivity;
 import com.mark.zumo.server.store.viewmodel.OrderViewModel;
 
 import java.util.List;
@@ -68,17 +70,16 @@ public class OrderConsoleFragment extends Fragment {
         orderPageAdapter = new OrderPageAdapter(orderViewModel, this);
         orderPage.setAdapter(orderPageAdapter);
 
-        TabLayoutSupport.setupWithViewPager(orderTabLayout, orderPage, orderPageAdapter);
     }
 
     private void bindLiveData() {
-        orderViewModel.menuOrderList().observe(this, this::onLoadMenuOrderList);
+        orderViewModel.acceptedMenuOrderList().observe(this, this::onLoadMenuOrderList);
     }
 
     private void onLoadMenuOrderList(List<MenuOrder> menuOrderList) {
         orderPageAdapter.setMenuOrderList(menuOrderList);
-        orderPageAdapter.notifyItemInserted(menuOrderList.size() - 1);
-        notifyTabLayoutItemInserted(orderTabLayout, orderPageAdapter);
+        TabLayoutSupport.setupWithViewPager(orderTabLayout, orderPage, orderPageAdapter);
+//        notifyTabLayoutItemInserted(orderTabLayout, orderPageAdapter);
     }
 
     private void notifyTabLayoutItemInserted(@NonNull TabLayout tabLayout,
@@ -105,5 +106,11 @@ public class OrderConsoleFragment extends Fragment {
         TabLayout.Tab tab = orderTabLayout.getTabAt(selectedTabPosition + 1);
         if (tab == null) return;
         tab.select();
+    }
+
+    @OnClick(R.id.requested_order_fab)
+    void onClickRequestedOrder() {
+        Intent intent = new Intent(getActivity(), RequestedOrderActivity.class);
+        startActivity(intent);
     }
 }

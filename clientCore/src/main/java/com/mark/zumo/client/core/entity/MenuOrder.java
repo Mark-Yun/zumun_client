@@ -38,14 +38,17 @@ public class MenuOrder implements Serializable {
     public final String createdDate;
     @ColumnInfo(name = Schema.totalQuantity) @SerializedName(Schema.totalQuantity)
     public final int totalQuantity;
+    @ColumnInfo(name = Schema.totalPrice) @SerializedName(Schema.totalPrice)
+    public final int totalPrice;
 
-    public MenuOrder(@NonNull final String uuid, final String customerUuid, final String storeUuid, final String orderNumber, final String createdDate, final int totalQuantity) {
+    public MenuOrder(@NonNull final String uuid, final String customerUuid, final String storeUuid, final String orderNumber, final String createdDate, final int totalQuantity, final int totalPrice) {
         this.uuid = uuid;
         this.customerUuid = customerUuid;
         this.storeUuid = storeUuid;
         this.orderNumber = orderNumber;
         this.createdDate = createdDate;
         this.totalQuantity = totalQuantity;
+        this.totalPrice = totalPrice;
     }
 
     @Override
@@ -60,5 +63,6 @@ public class MenuOrder implements Serializable {
         String orderNumber = "order_number";
         String createdDate = "create_date";
         String totalQuantity = "total_quantity";
+        String totalPrice = "total_price";
     }
 }

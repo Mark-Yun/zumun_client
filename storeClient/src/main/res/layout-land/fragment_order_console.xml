@@ -4,18 +4,12 @@
   ~ Proprietary and confidential
   -->
 
-<!--
-  ~ Copyright (c) 2018. Mark Soft - All Rights Reserved
-  ~ Unauthorized copying of this file, via any medium is strictly prohibited
-  ~ Proprietary and confidential
-  -->
-
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.mark.zumo.server.store.view.order.widget.CenteringTabLayout
+    <com.mark.zumo.server.store.view.acceptedorder.widget.CenteringTabLayout
         android:id="@+id/order_tab"
         android:layout_width="match_parent"
         android:layout_height="@dimen/tab_order_height"
@@ -34,8 +28,8 @@
         android:layout_height="0dp"
         android:background="@color/colorTextDisable"
         android:clipToPadding="false"
-        android:paddingLeft="15dp"
-        android:paddingRight="15dp"
+        android:paddingEnd="@dimen/order_recycler_view_padding"
+        android:paddingStart="@dimen/order_recycler_view_padding"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/order_controller"
         app:layout_constraintHorizontal_weight="2"
@@ -61,7 +55,7 @@
             android:id="@+id/prev_order"
             android:layout_width="0dp"
             android:layout_height="@dimen/order_control_button_height"
-            android:layout_marginBottom="10dp"
+            android:layout_marginBottom="@dimen/order_controller_button_bottom_margin"
             android:layout_marginStart="10dp"
             android:background="@drawable/order_controller_prev_order_button_background"
             android:elevation="5dp"
@@ -77,7 +71,7 @@
             android:id="@+id/next_order"
             android:layout_width="0dp"
             android:layout_height="@dimen/order_control_button_height"
-            android:layout_marginBottom="10dp"
+            android:layout_marginBottom="@dimen/order_controller_button_bottom_margin"
             android:layout_marginEnd="10dp"
             android:background="@drawable/order_controller_next_order_button_background"
             android:elevation="5dp"
@@ -89,4 +83,17 @@
             app:layout_constraintHorizontal_weight="1"
             app:layout_constraintStart_toEndOf="@+id/prev_order" />
     </android.support.constraint.ConstraintLayout>
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/requested_order_fab"
+        android:layout_width="@dimen/order_control_button_height"
+        android:layout_height="@dimen/order_control_button_height"
+        android:layout_marginBottom="@dimen/order_controller_button_bottom_margin"
+        android:layout_marginStart="@dimen/order_card_view_big_margin"
+        android:background="@android:color/holo_red_dark"
+        android:backgroundTint="@android:color/holo_red_dark"
+        android:elevation="5dp"
+        app:borderWidth="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 </android.support.constraint.ConstraintLayout>

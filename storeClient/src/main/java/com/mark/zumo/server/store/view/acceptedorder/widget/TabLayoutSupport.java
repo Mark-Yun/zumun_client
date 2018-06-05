@@ -4,7 +4,7 @@
  * Proprietary and confidential
  */
 
-package com.mark.zumo.server.store.view.order.widget;
+package com.mark.zumo.server.store.view.acceptedorder.widget;
 
 /**
  * Created by mark on 18. 5. 16.

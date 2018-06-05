@@ -40,7 +40,7 @@ public class DebugUtil {
         return new MenuOrder(UUID.randomUUID().toString(),
                 UUID.randomUUID().toString(),
                 UUID.randomUUID().toString(),
-                "24", "3/6/2018 15:33", 5);
+                "24", "3/6/2018 15:33", 5, 25500);
     }
 
     public static List<Store> storeList() {

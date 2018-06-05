@@ -24,4 +24,7 @@
     <string name="order_complete_button_text">COMPLETE</string>
 
     <string name="order_tab_quantity_description">QTY:&#160;</string>
+    <string name="accept_all_button_text">ACCEPT ALL</string>
+    <string name="requested_order_accept_button_text">ACCEPT</string>
+    <string name="requested_order_reject_button_text">REJECT</string>
 </resources>

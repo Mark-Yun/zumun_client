@@ -5,6 +5,8 @@
   -->
 
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:blurkit="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -12,4 +14,14 @@
         android:id="@+id/console_fragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
+
+    <com.wonderkiln.blurkit.BlurLayout
+        android:id="@+id/blur_filter"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:clickable="false"
+        android:focusable="false"
+        android:visibility="gone"
+        app:blurRadius="10"
+        blurkit:blk_fps="0" />
 </android.support.constraint.ConstraintLayout>

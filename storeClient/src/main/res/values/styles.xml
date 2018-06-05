@@ -19,14 +19,18 @@
         <item name="android:textColor">@color/colorText</item>
         <item name="android:textColorPrimary">@color/colorTextDark</item>
         <item name="android:textColorPrimaryInverse">@color/colorText</item>
-        <item name="android:borderlessButtonStyle">@style/AppTheme.NoActionBar.ButtonStyle</item>
+        <item name="android:borderlessButtonStyle">
+            @style/AppTheme.NoActionBar.ButtonStyle.Borderless
+        </item>
         <item name="android:tabWidgetStyle">@style/AppTheme.NoActionBar.TabStyle</item>
         <item name="android:actionButtonStyle">@style/AppTheme.NoActionBar.ActionButtonStyle</item>
     </style>
 
-    <style name="AppTheme.NoActionBar.ButtonStyle" parent="Widget.AppCompat.Button.Borderless">
+    <style name="AppTheme.NoActionBar.ButtonStyle.Borderless" parent="Widget.AppCompat.Button.Borderless.Colored">
         <item name="android:textColor">@color/colorText</item>
     </style>
+
+    <style name="AppTheme.NoActionBar.ButtonStyle" parent="Widget.AppCompat.Button.Colored"></style>
 
     <style name="AppTheme.NoActionBar.ActionButtonStyle" parent="Widget.Design.FloatingActionButton">
         <item name="background">@color/colorAccent</item>
@@ -39,4 +43,11 @@
         <item name="tabTextColor">@color/colorSecondaryText</item>
     </style>
 
+    <style name="AppTheme.NoActionBar.Translucent" parent="AppTheme.NoActionBar">
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:colorBackgroundCacheHint">@null</item>
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowAnimationStyle">@android:style/Animation</item>
+    </style>
 </resources>

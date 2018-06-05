@@ -15,8 +15,8 @@ import android.view.Window;
 import android.widget.Toast;
 
 import com.mark.zumo.client.core.app.BaseActivity;
+import com.mark.zumo.client.core.view.Navigator;
 import com.mark.zumo.client.customer.R;
-import com.mark.zumo.client.customer.view.Navigator;
 import com.wonderkiln.blurkit.BlurLayout;
 
 import java.util.Calendar;

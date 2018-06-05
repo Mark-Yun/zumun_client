@@ -21,7 +21,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.mark.zumo.server.store.view.order.widget.CenteringTabLayout
+    <com.mark.zumo.server.store.view.acceptedorder.widget.CenteringTabLayout
         android:id="@+id/order_tab"
         android:layout_width="match_parent"
         android:layout_height="@dimen/tab_order_height"

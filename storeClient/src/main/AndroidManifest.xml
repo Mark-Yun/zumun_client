@@ -29,7 +29,10 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".view.MainActivity" />
+        <activity android:name=".view.acceptedorder.AcceptedOrderActivity" />
+        <activity
+            android:name=".view.requestedorder.RequestedOrderActivity"
+            android:theme="@style/AppTheme.NoActionBar.Translucent" />
     </application>
 
 </manifest>

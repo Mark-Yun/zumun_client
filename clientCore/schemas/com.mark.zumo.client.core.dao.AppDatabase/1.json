@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "3131ffc6e4fc4d8c5850b99c6dbae6ba",
+    "identityHash": "1b71c658071921bb73d6776f40947434",
     "entities": [
       {
         "tableName": "menu",
@@ -56,7 +56,7 @@
       },
       {
         "tableName": "menu_order",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`menu_order_uuid` TEXT NOT NULL, `customer_uuid` TEXT, `store_uuid` TEXT, `order_number` TEXT, `create_date` TEXT, `total_quantity` INTEGER NOT NULL, PRIMARY KEY(`menu_order_uuid`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`menu_order_uuid` TEXT NOT NULL, `customer_uuid` TEXT, `store_uuid` TEXT, `order_number` TEXT, `create_date` TEXT, `total_quantity` INTEGER NOT NULL, `total_price` INTEGER NOT NULL, PRIMARY KEY(`menu_order_uuid`))",
         "fields": [
           {
             "fieldPath": "uuid",
@@ -91,6 +91,12 @@
           {
             "fieldPath": "totalQuantity",
             "columnName": "total_quantity",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "totalPrice",
+            "columnName": "total_price",
             "affinity": "INTEGER",
             "notNull": true
           }
@@ -298,7 +304,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"3131ffc6e4fc4d8c5850b99c6dbae6ba\")"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"1b71c658071921bb73d6776f40947434\")"
     ]
   }
 }
