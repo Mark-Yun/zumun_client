@@ -9,10 +9,10 @@
     xmlns:card_view="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="match_parent"
-    android:layout_margin="20dp"
+    android:layout_margin="@dimen/order_card_view_margin"
     android:background="@color/colorPrimary"
     android:elevation="10dp"
-    android:padding="10dp"
+    android:padding="@dimen/order_card_view_padding"
     app:layout_constraintBottom_toBottomOf="parent"
     app:layout_constraintTop_toTopOf="parent"
     app:layout_constraintVertical_weight="1"
@@ -24,7 +24,7 @@
         android:layout_height="wrap_content"
         android:text="@string/order_title_description"
         android:textColor="@color/colorTextDark"
-        android:textSize="25dp"
+        android:textSize="@dimen/order_number_description_text_size"
         app:layout_constraintBottom_toBottomOf="@+id/number"
         app:layout_constraintEnd_toStartOf="@+id/number"
         app:layout_constraintHorizontal_chainStyle="packed"
@@ -35,7 +35,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="@color/colorTextDark"
-        android:textSize="33dp"
+        android:textSize="@dimen/order_number_text_size"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_chainStyle="packed"
@@ -45,7 +45,8 @@
     <View
         android:id="@+id/divider"
         android:layout_width="match_parent"
-        android:layout_height="1dp"
+        android:layout_height="@dimen/divider_height"
+        android:layout_marginTop="@dimen/order_card_view_medium_margin"
         android:background="@color/colorDivider"
         app:layout_constraintTop_toBottomOf="@+id/number_description" />
 
@@ -53,8 +54,10 @@
         android:id="@+id/date_description"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/order_card_view_medium_margin"
         android:text="@string/order_date_description"
         android:textColor="@color/colorTextDark"
+        android:textSize="@dimen/order_card_view_date_text_size"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/divider" />
 
@@ -62,7 +65,9 @@
         android:id="@+id/date"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/order_card_view_medium_margin"
         android:textColor="@color/colorTextDark"
+        android:textSize="@dimen/order_card_view_date_text_size"
         app:layout_constraintStart_toEndOf="@+id/date_description"
         app:layout_constraintTop_toBottomOf="@+id/divider" />
 
@@ -70,25 +75,32 @@
         android:id="@+id/time_description"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/order_card_view_big_margin"
+        android:layout_marginTop="@dimen/order_card_view_medium_margin"
         android:text="@string/order_time_description"
         android:textColor="@color/colorTextDark"
-        app:layout_constraintEnd_toStartOf="@+id/time"
+        android:textSize="@dimen/order_card_view_date_text_size"
+        app:layout_constraintStart_toEndOf="@+id/date"
         app:layout_constraintTop_toBottomOf="@+id/divider" />
 
     <TextView
         android:id="@+id/time"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/order_card_view_medium_margin"
         android:textColor="@color/colorTextDark"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:textSize="@dimen/order_card_view_date_text_size"
+        app:layout_constraintStart_toEndOf="@+id/time_description"
         app:layout_constraintTop_toBottomOf="@+id/divider" />
 
     <TextView
         android:id="@+id/item_name_description"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/order_card_view_big_margin"
         android:text="@string/order_item_name_description"
         android:textColor="@color/colorTextDark"
+        android:textSize="@dimen/order_card_view_item_name_description_text_size"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/date_description" />
 
@@ -104,8 +116,10 @@
         android:id="@+id/item_quantity_description"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/order_card_view_big_margin"
         android:text="@string/order_quantity_description"
         android:textColor="@color/colorTextDark"
+        android:textSize="@dimen/order_card_view_item_name_description_text_size"
         app:layout_constraintEnd_toStartOf="@+id/item_price_guide_line"
         app:layout_constraintStart_toEndOf="@+id/item_quantity_guide_line"
         app:layout_constraintTop_toBottomOf="@+id/date_description" />
@@ -114,6 +128,7 @@
         android:id="@+id/item_price_guide_line"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/order_card_view_big_margin"
         android:orientation="vertical"
         app:layout_constraintGuide_percent="0.8" />
 
@@ -121,8 +136,10 @@
         android:id="@+id/item_price_description"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/order_card_view_big_margin"
         android:text="@string/order_price_description"
         android:textColor="@color/colorTextDark"
+        android:textSize="@dimen/order_card_view_item_name_description_text_size"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/item_price_guide_line"
         app:layout_constraintTop_toBottomOf="@+id/date_description" />
@@ -131,6 +148,7 @@
         android:id="@+id/menu_option_divider"
         android:layout_width="match_parent"
         android:layout_height="1dp"
+        android:layout_marginTop="@dimen/order_card_view_small_margin"
         android:background="@color/colorTextDark"
         app:layout_constraintTop_toBottomOf="@+id/item_name_description" />
 
@@ -138,6 +156,7 @@
         android:id="@+id/option_recycler_view"
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:layout_marginTop="@dimen/order_card_view_small_margin"
         app:layout_constraintTop_toBottomOf="@+id/menu_option_divider"
         app:layout_constraintVertical_weight="1" />
 
@@ -145,6 +164,7 @@
         android:id="@+id/total_divider"
         android:layout_width="match_parent"
         android:layout_height="1dp"
+        android:layout_marginTop="@dimen/order_card_view_small_margin"
         android:background="@color/colorTextDark"
         app:layout_constraintTop_toBottomOf="@+id/option_recycler_view" />
 
@@ -155,6 +175,7 @@
         android:layout_marginBottom="10dp"
         android:text="@string/order_total_price_description"
         android:textColor="@color/colorTextDark"
+        android:textSize="@dimen/order_number_description_text_size"
         app:layout_constraintBottom_toTopOf="@+id/complete_button"
         app:layout_constraintStart_toStartOf="parent" />
 
@@ -164,6 +185,7 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="10dp"
         android:textColor="@color/colorTextDark"
+        android:textSize="@dimen/order_number_description_text_size"
         app:layout_constraintBottom_toTopOf="@+id/complete_button"
         app:layout_constraintEnd_toStartOf="@+id/item_price_guide_line"
         app:layout_constraintStart_toEndOf="@+id/item_quantity_guide_line" />
@@ -174,6 +196,7 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="10dp"
         android:textColor="@color/colorTextDark"
+        android:textSize="@dimen/order_number_description_text_size"
         app:layout_constraintBottom_toTopOf="@+id/complete_button"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/item_price_guide_line" />
@@ -184,6 +207,7 @@
         android:layout_height="50dp"
         android:background="@color/colorAccent"
         android:text="@string/order_complete_button_text"
+        android:textSize="@dimen/order_number_description_text_size"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_weight="1"

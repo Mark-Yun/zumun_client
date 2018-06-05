@@ -20,7 +20,7 @@
     <string name="order_item_name_description">ITEM NAME</string>
     <string name="order_quantity_description">QTY</string>
     <string name="order_price_description">PRICE</string>
-    <string name="order_total_price_description">TOTAL</string>
+    <string name="order_total_price_description">Total</string>
     <string name="order_complete_button_text">COMPLETE</string>
 
     <string name="order_tab_quantity_description">QTY:&#160;</string>
