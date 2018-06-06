@@ -31,8 +31,8 @@ import butterknife.ButterKnife;
 /**
  * Created by mark on 18. 5. 16.
  */
-public class OrderPageAdapter extends RecyclerView.Adapter<OrderPageAdapter.ViewHolder>
-        implements TabLayoutSupport.ViewPagerTabLayoutAdapter<OrderPageAdapter.TabViewHolder> {
+public class AcceptedOrderPageAdapter extends RecyclerView.Adapter<AcceptedOrderPageAdapter.ViewHolder>
+        implements TabLayoutSupport.ViewPagerTabLayoutAdapter<AcceptedOrderPageAdapter.TabViewHolder> {
 
     private OrderViewModel orderViewModel;
     private LifecycleOwner lifecycleOwner;
@@ -40,7 +40,7 @@ public class OrderPageAdapter extends RecyclerView.Adapter<OrderPageAdapter.View
     private List<MenuOrder> menuOrderList;
     private List<TabViewHolder> tabViewHolderList;
 
-    OrderPageAdapter(final OrderViewModel orderViewModel, final LifecycleOwner lifecycleOwner) {
+    AcceptedOrderPageAdapter(final OrderViewModel orderViewModel, final LifecycleOwner lifecycleOwner) {
         this.orderViewModel = orderViewModel;
         this.lifecycleOwner = lifecycleOwner;
 
@@ -71,7 +71,7 @@ public class OrderPageAdapter extends RecyclerView.Adapter<OrderPageAdapter.View
         holder.totalPrice.setText(NumberFormat.getCurrencyInstance().format(menuOrder.totalPrice));
         holder.complete.setOnClickListener(v -> orderViewModel.completeOrder(menuOrder));
 
-        OrderDetailAdapter adapter = new OrderDetailAdapter(orderViewModel, lifecycleOwner);
+        AcceptedOrderDetailAdapter adapter = new AcceptedOrderDetailAdapter(orderViewModel, lifecycleOwner);
         holder.recyclerView.setAdapter(adapter);
 
         LinearLayoutManager layout = new LinearLayoutManager(holder.itemView.getContext(), LinearLayoutManager.VERTICAL, false);

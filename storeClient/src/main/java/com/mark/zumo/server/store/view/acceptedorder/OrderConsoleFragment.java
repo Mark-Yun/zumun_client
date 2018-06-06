@@ -42,7 +42,7 @@ public class OrderConsoleFragment extends Fragment {
     @BindView(R.id.order_tab) CenteringTabLayout orderTabLayout;
 
     private OrderViewModel orderViewModel;
-    private OrderPageAdapter orderPageAdapter;
+    private AcceptedOrderPageAdapter acceptedOrderPageAdapter;
 
     @Override
     public void onCreate(@Nullable final Bundle savedInstanceState) {
@@ -67,8 +67,8 @@ public class OrderConsoleFragment extends Fragment {
         LinearLayoutManager layout = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
         orderPage.setLayoutManager(layout);
 
-        orderPageAdapter = new OrderPageAdapter(orderViewModel, this);
-        orderPage.setAdapter(orderPageAdapter);
+        acceptedOrderPageAdapter = new AcceptedOrderPageAdapter(orderViewModel, this);
+        orderPage.setAdapter(acceptedOrderPageAdapter);
 
     }
 
@@ -77,9 +77,9 @@ public class OrderConsoleFragment extends Fragment {
     }
 
     private void onLoadMenuOrderList(List<MenuOrder> menuOrderList) {
-        orderPageAdapter.setMenuOrderList(menuOrderList);
-        TabLayoutSupport.setupWithViewPager(orderTabLayout, orderPage, orderPageAdapter);
-//        notifyTabLayoutItemInserted(orderTabLayout, orderPageAdapter);
+        acceptedOrderPageAdapter.setMenuOrderList(menuOrderList);
+        TabLayoutSupport.setupWithViewPager(orderTabLayout, orderPage, acceptedOrderPageAdapter);
+//        notifyTabLayoutItemInserted(orderTabLayout, acceptedOrderPageAdapter);
     }
 
     private void notifyTabLayoutItemInserted(@NonNull TabLayout tabLayout,

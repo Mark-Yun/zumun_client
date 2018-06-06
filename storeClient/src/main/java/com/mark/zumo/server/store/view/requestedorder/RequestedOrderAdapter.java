@@ -16,6 +16,7 @@ import android.arch.lifecycle.LifecycleOwner;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.AppCompatTextView;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -68,6 +69,15 @@ class RequestedOrderAdapter extends RecyclerView.Adapter<RequestedOrderAdapter.V
         holder.time.setText(menuOrder.createdDate.split(" ")[1]);
         holder.totalQuantity.setText(String.valueOf(menuOrder.totalQuantity));
         holder.totalPrice.setText(NumberFormat.getCurrencyInstance().format(menuOrder.totalPrice));
+
+        RequestedOrderDetailAdapter adapter = new RequestedOrderDetailAdapter(orderViewModel, lifecycleOwner);
+        holder.recyclerView.setAdapter(adapter);
+
+        LinearLayoutManager layout = new LinearLayoutManager(holder.itemView.getContext(), LinearLayoutManager.VERTICAL, false);
+        holder.recyclerView.setLayoutManager(layout);
+
+        orderViewModel.orderDetailList(menuOrder.uuid).observe(lifecycleOwner, adapter::setOrderDetailList);
+
     }
 
     @Override
@@ -83,6 +93,7 @@ class RequestedOrderAdapter extends RecyclerView.Adapter<RequestedOrderAdapter.V
         @BindView(R.id.total_price) AppCompatTextView totalPrice;
         @BindView(R.id.accept) AppCompatButton accept;
         @BindView(R.id.reject) AppCompatButton reject;
+        @BindView(R.id.order_detail_recycler_view) RecyclerView recyclerView;
 
         ViewHolder(final View itemView) {
             super(itemView);

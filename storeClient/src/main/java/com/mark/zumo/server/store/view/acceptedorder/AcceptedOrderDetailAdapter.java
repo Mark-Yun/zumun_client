@@ -28,14 +28,14 @@ import butterknife.ButterKnife;
 /**
  * Created by mark on 18. 6. 6.
  */
-class OrderDetailAdapter extends RecyclerView.Adapter<OrderDetailAdapter.ViewHolder> {
+class AcceptedOrderDetailAdapter extends RecyclerView.Adapter<AcceptedOrderDetailAdapter.ViewHolder> {
 
     private OrderViewModel orderViewModel;
     private LifecycleOwner lifecycleOwner;
 
     private List<OrderDetail> orderDetailList;
 
-    OrderDetailAdapter(final OrderViewModel orderViewModel, final LifecycleOwner lifecycleOwner) {
+    AcceptedOrderDetailAdapter(final OrderViewModel orderViewModel, final LifecycleOwner lifecycleOwner) {
         this.orderViewModel = orderViewModel;
         this.lifecycleOwner = lifecycleOwner;
 
@@ -71,7 +71,6 @@ class OrderDetailAdapter extends RecyclerView.Adapter<OrderDetailAdapter.ViewHol
         @BindView(R.id.name) AppCompatTextView name;
         @BindView(R.id.quantity) AppCompatTextView quantity;
         @BindView(R.id.price) AppCompatTextView price;
-        @BindView(R.id.accepted_order_card_view_menu_option_recycler_view) RecyclerView recyclerView;
 
         private ViewHolder(final View itemView) {
             super(itemView);
