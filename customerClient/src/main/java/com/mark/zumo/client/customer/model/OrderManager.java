@@ -12,10 +12,9 @@ import com.mark.zumo.client.core.dao.AppDatabaseProvider;
 import com.mark.zumo.client.core.dao.DiskRepository;
 import com.mark.zumo.client.core.entity.MenuOrder;
 import com.mark.zumo.client.core.entity.OrderDetail;
+import com.mark.zumo.client.core.util.DebugUtil;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.concurrent.Callable;
 
 import io.reactivex.Observable;
 import io.reactivex.schedulers.Schedulers;
@@ -36,15 +35,22 @@ public enum OrderManager {
     }
 
     public Observable<MenuOrder> createMenuOrder(Collection<OrderDetail> orderDetailCollection) {
-        return networkRepository.createOrder(orderDetailCollection)
+        //TODO: remove Test Code
+        return Observable.fromCallable(() -> DebugUtil.menuOrder())
                 .subscribeOn(Schedulers.io());
+//        return networkRepository.createOrder(orderDetailCollection)
+//                .doOnNext(diskRepository::insert)
+//                .subscribeOn(Schedulers.io());
     }
 
     public Observable<MenuOrder> createMenuOrder(OrderDetail orderDetail) {
-        return Observable.fromCallable((Callable<ArrayList<OrderDetail>>) ArrayList::new)
-                .doOnEach(notification -> notification.getValue().add(orderDetail))
-                .flatMap(networkRepository::createOrder)
-                .doOnNext(diskRepository::insert)
+        //TODO: remove Test Code
+        return Observable.fromCallable(() -> DebugUtil.menuOrder())
                 .subscribeOn(Schedulers.io());
+//        return Observable.fromCallable((Callable<ArrayList<OrderDetail>>) ArrayList::new)
+//                .doOnEach(notification -> notification.getValue().add(orderDetail))
+//                .flatMap(networkRepository::createOrder)
+//                .doOnNext(diskRepository::insert)
+//                .subscribeOn(Schedulers.io());
     }
 }

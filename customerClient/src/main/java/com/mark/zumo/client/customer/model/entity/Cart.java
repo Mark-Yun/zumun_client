@@ -113,8 +113,8 @@ public class Cart {
                         orderDetail.menuName,
                         null,
                         orderDetail.menuOptionUuidList,
-                        orderDetail.price + orderDetail2.price,
-                        orderDetail.quantity + orderDetail2.quantity
+                        orderDetail.quantity + orderDetail2.quantity,
+                        orderDetail.price + orderDetail2.price
                 )
         );
     }

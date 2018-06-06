@@ -7,11 +7,11 @@
 package com.mark.zumo.client.customer.view.menu.detail;
 
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
-import android.widget.Toast;
 
 import com.mark.zumo.client.core.entity.Menu;
 import com.mark.zumo.client.core.entity.MenuOrder;
@@ -20,6 +20,7 @@ import com.mark.zumo.client.customer.R;
 import com.mark.zumo.client.customer.view.TouchResponse;
 import com.mark.zumo.client.customer.view.menu.detail.fragment.MenuInfoFragment;
 import com.mark.zumo.client.customer.view.menu.detail.fragment.MenuOptionFragment;
+import com.mark.zumo.client.customer.view.payment.PaymentActivity;
 import com.mark.zumo.client.customer.viewmodel.MenuDetailViewModel;
 
 import butterknife.ButterKnife;
@@ -96,19 +97,31 @@ public class MenuDetailActivity extends AppCompatActivity {
     }
 
     @OnClick(R.id.place_order)
-    void onClickSendOrder() {
-        TouchResponse.big();
+    void onClickPlaceOrder() {
+        TouchResponse.medium();
         menuDetailViewModel.placeOrder(storeUuid, menu).observe(this, this::onSuccessCreateOrder);
-    }
-
-    private void onSuccessCreateOrder(MenuOrder menuOrder) {
-        Toast.makeText(this, "SUCCESS -" + menuOrder, Toast.LENGTH_SHORT).show();
-        finish();
     }
 
     @OnClick(R.id.back_button)
     void onClickBackButton() {
         TouchResponse.small();
         finish();
+    }
+
+    private void onSuccessCreateOrder(MenuOrder menuOrder) {
+        Intent intent = new Intent(this, PaymentActivity.class);
+        intent.putExtra(PaymentActivity.KEY_ORDER_UUID, menuOrder.uuid);
+        startActivityForResult(intent, PaymentActivity.REQ_CODE_PAYMENT);
+    }
+
+    @Override
+    protected void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        switch (requestCode) {
+            case PaymentActivity.REQ_CODE_PAYMENT:
+
+                break;
+        }
     }
 }

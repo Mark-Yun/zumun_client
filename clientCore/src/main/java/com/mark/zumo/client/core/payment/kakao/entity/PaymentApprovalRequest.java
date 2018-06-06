@@ -26,7 +26,7 @@ public class PaymentApprovalRequest {
     @SerializedName("payload") public final String payload;//해당 Request와 매핑해서 저장하고 싶은 값. 최대 200자	X
     @SerializedName("total_amount") public final int totalAmount;//상품총액. 결제준비 API에서 요청한 total_amount 값과 일치해야 함	X
 
-    private PaymentApprovalRequest(Builder builder) {
+    public PaymentApprovalRequest(Builder builder) {
         this.cId = builder.cId;
         this.tId = builder.tId;
         this.partnerOrderId = builder.partnerOrderId;
@@ -52,10 +52,10 @@ public class PaymentApprovalRequest {
         private int totalAmount;//상품총액. 결제준비 API에서 요청한 total_amount 값과 일치해야 함	X
 
         public PaymentApprovalRequest build() {
-            Assert.assertTrue(TextUtils.isEmpty(cId));
-            Assert.assertTrue(TextUtils.isEmpty(partnerOrderId));
-            Assert.assertTrue(TextUtils.isEmpty(partnerUserId));
-            Assert.assertTrue(TextUtils.isEmpty(pgToken));
+            Assert.assertFalse(TextUtils.isEmpty(cId));
+            Assert.assertFalse(TextUtils.isEmpty(partnerOrderId));
+            Assert.assertFalse(TextUtils.isEmpty(partnerUserId));
+            Assert.assertFalse(TextUtils.isEmpty(pgToken));
 
             return new PaymentApprovalRequest(this);
         }

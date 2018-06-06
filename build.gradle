@@ -118,9 +118,10 @@ configure(libraries) {
         api "com.android.support:appcompat-v7:$support"
 
         implementation "com.squareup.retrofit2:retrofit:$retrofit"
-        implementation "com.squareup.retrofit2:converter-gson:$retrofit"
         implementation "com.squareup.retrofit2:adapter-rxjava2:$retrofit"
         implementation "com.squareup.okhttp3:logging-interceptor:$logging_interceptor"
+        implementation "com.squareup.retrofit2:converter-gson:$retrofit"
+        implementation "com.squareup.retrofit2:converter-scalars:$retrofit"
 
         implementation "io.reactivex.rxjava2:rxandroid:$rxAndroid"
         implementation "io.reactivex.rxjava2:rxjava:$rxJava"

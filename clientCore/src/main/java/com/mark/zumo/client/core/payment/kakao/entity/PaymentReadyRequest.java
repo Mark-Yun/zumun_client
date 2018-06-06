@@ -61,7 +61,7 @@ public class PaymentReadyRequest {
         return EntityHelper.toString(this, PaymentReadyRequest.class);
     }
 
-    public class Builder {
+    public static class Builder {
 
         private String cId;//가맹점 코드. 10자. O
         private String partnerOrderId;//가맹점 주문번호. 최대 100자	O
@@ -81,26 +81,19 @@ public class PaymentReadyRequest {
         private String customJson;//결제화면에 보여주고 싶은 custom message. 사전협의가 필요한 값 X
 
         public PaymentReadyRequest build() {
-            Assert.assertTrue(TextUtils.isEmpty(cId));
-            Assert.assertTrue(TextUtils.isEmpty(partnerOrderId));
-            Assert.assertTrue(TextUtils.isEmpty(partnerUserId));
-            Assert.assertTrue(TextUtils.isEmpty(itemName));
-            Assert.assertTrue(quantity == 0);
-            Assert.assertTrue(totalAmount == 0);
-            Assert.assertTrue(taxFreeAmount == 0);
-            Assert.assertTrue(vatAmount == 0);
-            Assert.assertTrue(TextUtils.isEmpty(approvalUrl));
-            Assert.assertTrue(TextUtils.isEmpty(cancelUrl));
-            Assert.assertTrue(TextUtils.isEmpty(failUrl));
-            Assert.assertTrue(TextUtils.isEmpty(cId));
-            Assert.assertTrue(TextUtils.isEmpty(cId));
-            Assert.assertTrue(TextUtils.isEmpty(cId));
-            Assert.assertTrue(TextUtils.isEmpty(cId));
-            Assert.assertTrue(TextUtils.isEmpty(cId));
+            Assert.assertFalse(TextUtils.isEmpty(cId));
+            Assert.assertFalse(TextUtils.isEmpty(partnerOrderId));
+            Assert.assertFalse(TextUtils.isEmpty(partnerUserId));
+            Assert.assertFalse(TextUtils.isEmpty(itemName));
+            Assert.assertFalse(quantity == 0);
+            Assert.assertFalse(totalAmount == 0);
+            Assert.assertFalse(TextUtils.isEmpty(approvalUrl));
+            Assert.assertFalse(TextUtils.isEmpty(cancelUrl));
+            Assert.assertFalse(TextUtils.isEmpty(failUrl));
             return new PaymentReadyRequest(this);
         }
 
-        public Builder setcId(final String cId) {
+        public Builder setCId(final String cId) {
             this.cId = cId;
             return this;
         }

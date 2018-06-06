@@ -11,7 +11,6 @@ import android.arch.lifecycle.AndroidViewModel;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.support.annotation.NonNull;
-import android.util.Log;
 
 import com.mark.zumo.client.core.entity.Menu;
 import com.mark.zumo.client.core.entity.MenuOption;
@@ -23,6 +22,7 @@ import com.mark.zumo.client.customer.model.MenuManager;
 import com.mark.zumo.client.customer.model.OrderManager;
 import com.mark.zumo.client.customer.model.StoreManager;
 import com.mark.zumo.client.customer.model.entity.Cart;
+import com.mark.zumo.client.customer.model.payment.PaymentManager;
 
 import java.text.NumberFormat;
 import java.util.List;
@@ -44,6 +44,7 @@ public class CartViewModel extends AndroidViewModel {
     private StoreManager storeManager;
     private MenuManager menuManager;
     private OrderManager orderManager;
+    private PaymentManager paymentManager;
 
     private String currentStoreUuid;
 
@@ -56,6 +57,7 @@ public class CartViewModel extends AndroidViewModel {
         storeManager = StoreManager.INSTANCE;
         menuManager = MenuManager.INSTANCE;
         orderManager = OrderManager.INSTANCE;
+        paymentManager = PaymentManager.INSTANCE;
 
         disposables = new CompositeDisposable();
     }
@@ -200,8 +202,6 @@ public class CartViewModel extends AndroidViewModel {
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnNext(unused -> cartManager.clearCart(storeUuid))
                 .doOnNext(liveData::setValue)
-                .doOnNext(menuOrder -> Log.d(TAG, "placeOrder: SUCCESS-" + menuOrder))
-                .doOnError(throwable -> Log.e(TAG, "placeOrder: ", throwable))
                 .doOnSubscribe(disposables::add)
                 .subscribe();
 

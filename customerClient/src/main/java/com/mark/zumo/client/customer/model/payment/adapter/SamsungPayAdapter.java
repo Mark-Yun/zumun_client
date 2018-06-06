@@ -4,30 +4,45 @@
  * Proprietary and confidential
  */
 
-package com.mark.zumo.client.customer.model.payment;
+/*
+ * Copyright (c) 2018. Mark Soft - All Rights Reserved
+ * Unauthorized copying of this file, via any medium is strictly prohibited
+ * Proprietary and confidential
+ */
+
+package com.mark.zumo.client.customer.model.payment.adapter;
 
 import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 
+import com.mark.zumo.client.core.entity.MenuOrder;
+import com.mark.zumo.client.core.payment.kakao.entity.PaymentReadyResponse;
+import com.mark.zumo.client.customer.model.payment.PaymentContract;
 import com.samsung.android.sdk.samsungpay.v2.PartnerInfo;
 import com.samsung.android.sdk.samsungpay.v2.SamsungPay;
 import com.samsung.android.sdk.samsungpay.v2.StatusListener;
 import com.samsung.android.sdk.samsungpay.v2.card.CardManager;
 import com.samsung.android.sdk.samsungpay.v2.payment.PaymentManager;
 
+import io.reactivex.Maybe;
 import io.reactivex.Single;
 
 /**
  * Created by mark on 18. 5. 21.
  */
-public class SamsungPayAdapter implements PaymentAdapter {
+class SamsungPayAdapter implements PaymentAdapter {
 
     public static final String TAG = "SamsungPayAdapter";
 
     private static final String SERVICE_ID = "SAMPLE_PRD_SERVICE_ID";
 
     private Context context;
+
+    @Override
+    public Maybe<PaymentReadyResponse> preparePayment(final MenuOrder menuOrder) {
+        return null;
+    }
 
     private Single<PartnerInfo> partnerInfo(SamsungPay.ServiceType serviceType, String serviceId) {
         return Single.create(e -> {

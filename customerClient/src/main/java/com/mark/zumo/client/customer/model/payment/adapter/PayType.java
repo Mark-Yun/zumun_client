@@ -4,10 +4,11 @@
  * Proprietary and confidential
  */
 
-package com.mark.zumo.client.customer.model.payment;
+package com.mark.zumo.client.customer.model.payment.adapter;
 
 /**
- * Created by mark on 18. 5. 21.
+ * Created by mark on 18. 6. 6.
  */
-public interface PaymentAdapter {
+public enum PayType {
+    KAKAO
 }

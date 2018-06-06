@@ -7,6 +7,7 @@
 package com.mark.zumo.client.customer.view.cart;
 
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -14,7 +15,6 @@ import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.AppCompatTextView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.widget.Toast;
 
 import com.mark.zumo.client.core.entity.MenuOrder;
 import com.mark.zumo.client.core.entity.Store;
@@ -22,6 +22,7 @@ import com.mark.zumo.client.core.util.glide.GlideApp;
 import com.mark.zumo.client.core.util.glide.GlideUtils;
 import com.mark.zumo.client.customer.R;
 import com.mark.zumo.client.customer.view.TouchResponse;
+import com.mark.zumo.client.customer.view.payment.PaymentActivity;
 import com.mark.zumo.client.customer.viewmodel.CartViewModel;
 
 import butterknife.BindView;
@@ -80,19 +81,32 @@ public class CartActivity extends AppCompatActivity {
                 .into(storeImage);
     }
 
-    @OnClick(R.id.place_order)
-    void onClickPlaceOrder() {
-        TouchResponse.medium();
-        cartViewModel.placeOrder(storeUuid).observe(this, this::onSuccessCreateOrder);
-    }
-
     @OnClick(R.id.back_button)
     void onClickBackButton() {
         TouchResponse.small();
         finish();
     }
 
-    private void onSuccessCreateOrder(MenuOrder menuOrder) {
-        Toast.makeText(this, menuOrder.toString(), Toast.LENGTH_SHORT).show();
+    @OnClick(R.id.place_order)
+    void onClickPlaceOrder() {
+        TouchResponse.medium();
+        cartViewModel.placeOrder(storeUuid).observe(this, this::onSuccessCreateOrder);
+    }
+
+    private void onSuccessCreateOrder(MenuOrder response) {
+        Intent intent = new Intent(this, PaymentActivity.class);
+        intent.putExtra(PaymentActivity.KEY_ORDER_UUID, response.uuid);
+        startActivityForResult(intent, PaymentActivity.REQ_CODE_PAYMENT);
+    }
+
+    @Override
+    protected void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        switch (requestCode) {
+            case PaymentActivity.REQ_CODE_PAYMENT:
+
+                break;
+        }
     }
 }

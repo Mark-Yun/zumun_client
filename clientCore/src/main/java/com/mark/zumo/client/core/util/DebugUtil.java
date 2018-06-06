@@ -39,6 +39,7 @@ public class DebugUtil {
 
     public static MenuOrder menuOrder() {
         return new MenuOrder(UUID.randomUUID().toString(),
+                "TESTNAME",
                 UUID.randomUUID().toString(),
                 UUID.randomUUID().toString(),
                 "24", "3/6/2018 15:33", 5, 25500);
