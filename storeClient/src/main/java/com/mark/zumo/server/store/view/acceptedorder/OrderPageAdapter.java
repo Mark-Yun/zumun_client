@@ -10,6 +10,7 @@ import android.arch.lifecycle.LifecycleOwner;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.AppCompatTextView;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -69,6 +70,14 @@ public class OrderPageAdapter extends RecyclerView.Adapter<OrderPageAdapter.View
         holder.totalQuantity.setText(String.valueOf(menuOrder.totalQuantity));
         holder.totalPrice.setText(NumberFormat.getCurrencyInstance().format(menuOrder.totalPrice));
         holder.complete.setOnClickListener(v -> orderViewModel.completeOrder(menuOrder));
+
+        OrderDetailAdapter adapter = new OrderDetailAdapter(orderViewModel, lifecycleOwner);
+        holder.recyclerView.setAdapter(adapter);
+
+        LinearLayoutManager layout = new LinearLayoutManager(holder.itemView.getContext(), LinearLayoutManager.VERTICAL, false);
+        holder.recyclerView.setLayoutManager(layout);
+
+        orderViewModel.orderDetailList(menuOrder.uuid).observe(lifecycleOwner, adapter::setOrderDetailList);
     }
 
     private MenuOrder getMenuOrder(final int position) {
@@ -78,12 +87,6 @@ public class OrderPageAdapter extends RecyclerView.Adapter<OrderPageAdapter.View
     @Override
     public int getItemCount() {
         return menuOrderList.size();
-    }
-
-    @Override
-    public String getPageTitle(final int i) {
-        MenuOrder menuOrder = getMenuOrder(i);
-        return "Order Number-" + menuOrder.uuid;
     }
 
     @Override
@@ -107,6 +110,7 @@ public class OrderPageAdapter extends RecyclerView.Adapter<OrderPageAdapter.View
         @BindView(R.id.total_quantity) AppCompatTextView totalQuantity;
         @BindView(R.id.total_price) AppCompatTextView totalPrice;
         @BindView(R.id.complete_button) AppCompatButton complete;
+        @BindView(R.id.order_detail_recycler_view) RecyclerView recyclerView;
 
         private ViewHolder(final View itemView) {
             super(itemView);

@@ -12,6 +12,7 @@ import com.mark.zumo.client.core.R;
 import com.mark.zumo.client.core.entity.Menu;
 import com.mark.zumo.client.core.entity.MenuOption;
 import com.mark.zumo.client.core.entity.MenuOrder;
+import com.mark.zumo.client.core.entity.OrderDetail;
 import com.mark.zumo.client.core.entity.Store;
 import com.mark.zumo.client.core.entity.user.GuestUser;
 
@@ -43,6 +44,68 @@ public class DebugUtil {
                 "24", "3/6/2018 15:33", 5, 25500);
     }
 
+    public static List<OrderDetail> orderDetailList(String orderUuid) {
+        OrderDetail[] orderDetails = {
+                new OrderDetail(UUID.randomUUID().toString(),
+                        TEST_STORE_UUID,
+                        "AE62797461FA4F2292AF11F48D2F5C30",
+                        "Iced Americano",
+                        orderUuid,
+                        Arrays.asList("5007D8547CAC47D38C41C4F419986D49", "A530720210564C93A2CDE072B640D31F"),
+                        1,
+                        100000
+                ),
+                new OrderDetail(UUID.randomUUID().toString(),
+                        TEST_STORE_UUID,
+                        "AE62797461FA4F2292AF11F48D2F5C30",
+                        "Iced Americano",
+                        orderUuid,
+                        Arrays.asList("5007D8547CAC47D38C41C4F419986D49", "A530720210564C93A2CDE072B640D31F"),
+                        2,
+                        100000
+                ),
+                new OrderDetail(UUID.randomUUID().toString(),
+                        TEST_STORE_UUID,
+                        "AE62797461FA4F2292AF11F48D2F5C30",
+                        "Iced Americano",
+                        orderUuid,
+                        Arrays.asList("5007D8547CAC47D38C41C4F419986D49"),
+                        3,
+                        100000
+                ),
+                new OrderDetail(UUID.randomUUID().toString(),
+                        TEST_STORE_UUID,
+                        "AE62797461FA4F2292AF11F48D2F5C30",
+                        "Iced Americano",
+                        orderUuid,
+                        Arrays.asList("5007D8547CAC47D38C41C4F419986D49"),
+                        5,
+                        100000
+                ),
+                new OrderDetail(UUID.randomUUID().toString(),
+                        TEST_STORE_UUID,
+                        "AE62797461FA4F2292AF11F48D2F5C30",
+                        "Iced Americano",
+                        orderUuid,
+                        null,
+                        11,
+                        100000
+                ),
+                new OrderDetail(UUID.randomUUID().toString(),
+                        TEST_STORE_UUID,
+                        "AE62797461FA4F2292AF11F48D2F5C30",
+                        "Iced Americano",
+                        orderUuid,
+                        Arrays.asList("5007D8547CAC47D38C41C4F419986D49", "A530720210564C93A2CDE072B640D31F"),
+                        51,
+                        100000
+                )
+
+        };
+
+        return Arrays.asList(orderDetails);
+    }
+
     public static List<Store> storeList() {
         Store[] stores = {
                 new Store(TEST_STORE_UUID, "test1", 15, 15, null, null),
@@ -61,7 +124,7 @@ public class DebugUtil {
                 new Store(TEST_STORE_UUID, "COCOCOCOCOCOCO_@#!@$*I@", 15, 15, null, null),
                 new Store(TEST_STORE_UUID, "LAIIEJ!F#IFJASDJFP(!O@$I!P(", 15, 15, null, null)
         };
-        return new ArrayList<>(Arrays.asList(stores));
+        return Arrays.asList(stores);
     }
 
     public static List<Menu> menuItemList() {
@@ -99,19 +162,6 @@ public class DebugUtil {
         return resultList;
     }
 
-    private static class FakeData {
-        public int drawableId;
-        public String name;
-        public int price;
-
-        public FakeData(int drawableId, String name, int price) {
-            //TODO: remove test data
-            this.drawableId = drawableId;
-            this.name = name;
-            this.price = price;
-        }
-    }
-
     public static List<MenuOption> menuOptionList(String menuUuid) {
         List<MenuOption> result = new ArrayList<>();
         result.add(new MenuOption("TEST", menuUuid, "size", "small", -200));
@@ -133,5 +183,18 @@ public class DebugUtil {
         result.add(new MenuOption("TEST", menuUuid, "6", "tall", 0));
         result.add(new MenuOption("TEST", menuUuid, "7", "tall", 0));
         return result;
+    }
+
+    private static class FakeData {
+        public int drawableId;
+        public String name;
+        public int price;
+
+        public FakeData(int drawableId, String name, int price) {
+            //TODO: remove test data
+            this.drawableId = drawableId;
+            this.name = name;
+            this.price = price;
+        }
     }
 }

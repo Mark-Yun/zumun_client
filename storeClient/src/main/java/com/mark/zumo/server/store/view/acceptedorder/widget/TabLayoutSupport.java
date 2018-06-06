@@ -50,7 +50,6 @@ public class TabLayoutSupport {
     }
 
     public interface ViewPagerTabLayoutAdapter<T extends RecyclerView.ViewHolder> {
-        String getPageTitle(int position);
         T createTabView(@NonNull final ViewGroup parent);
         void bindTabView(@NonNull final T holder, final int position);
         int getItemCount();

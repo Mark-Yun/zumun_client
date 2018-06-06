@@ -145,7 +145,7 @@
         app:layout_constraintTop_toBottomOf="@+id/item_name_description" />
 
     <android.support.v7.widget.RecyclerView
-        android:id="@+id/option_recycler_view"
+        android:id="@+id/order_detail_recycler_view"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/order_card_view_small_margin"
@@ -164,7 +164,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_weight="1"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/option_recycler_view" />
+        app:layout_constraintTop_toBottomOf="@+id/order_detail_recycler_view" />
 
     <android.support.v7.widget.AppCompatTextView
         android:id="@+id/total_description"

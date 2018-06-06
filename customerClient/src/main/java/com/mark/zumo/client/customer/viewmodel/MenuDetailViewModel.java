@@ -133,14 +133,15 @@ public class MenuDetailViewModel extends AndroidViewModel {
         return liveData;
     }
 
-    public void addToCartCurrentItems(String storeUuid, String menuUuid) {
+    public void addToCartCurrentItems(String storeUuid, Menu menu) {
+        int price = menu.price;
         ArrayList<String> menuOptionUuidList = new ArrayList<>();
-
         for (MenuOption menuOption : selectedOptionMap.values()) {
             menuOptionUuidList.add(menuOption.uuid);
+            price += menuOption.price;
         }
 
-        OrderDetail orderDetail = new OrderDetail("", storeUuid, menuUuid, "", menuOptionUuidList, amount);
+        OrderDetail orderDetail = new OrderDetail("", storeUuid, menu.uuid, menu.name, "", menuOptionUuidList, amount, price);
         cartManager.getCart(storeUuid)
                 .firstElement()
                 .observeOn(AndroidSchedulers.mainThread())
@@ -152,15 +153,17 @@ public class MenuDetailViewModel extends AndroidViewModel {
                 .subscribe();
     }
 
-    public LiveData<MenuOrder> placeOrder(String storeUuid, String menuUuid) {
+    public LiveData<MenuOrder> placeOrder(String storeUuid, Menu menu) {
         MutableLiveData<MenuOrder> liveData = new MutableLiveData<>();
-        ArrayList<String> menuOptionUuidList = new ArrayList<>();
 
+        ArrayList<String> menuOptionUuidList = new ArrayList<>();
+        int price = menu.price;
         for (MenuOption menuOption : selectedOptionMap.values()) {
             menuOptionUuidList.add(menuOption.uuid);
+            price += menuOption.price;
         }
 
-        OrderDetail orderDetail = new OrderDetail("", storeUuid, menuUuid, "", menuOptionUuidList, amount);
+        OrderDetail orderDetail = new OrderDetail("", storeUuid, menu.uuid, menu.name, "", menuOptionUuidList, amount, price);
         orderManager.createMenuOrder(orderDetail)
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnNext(unused -> selectedOptionMap.clear())

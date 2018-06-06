@@ -13,6 +13,7 @@ import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
 
+import com.mark.zumo.client.core.entity.Menu;
 import com.mark.zumo.client.core.entity.MenuOrder;
 import com.mark.zumo.client.core.view.Navigator;
 import com.mark.zumo.client.customer.R;
@@ -33,7 +34,10 @@ public class MenuDetailActivity extends AppCompatActivity {
     public static final String KEY_MENU_STORE_UUID = "store_uuid";
     public static final String KEY_CART_INDEX = "cart_index";
 
-    private String menuUuid;
+    private MenuDetailViewModel menuDetailViewModel;
+
+    private Menu menu;
+
     private String storeUuid;
     private String cartIndex;
 
@@ -43,7 +47,11 @@ public class MenuDetailActivity extends AppCompatActivity {
         setContentView(R.layout.activity_menu_detail);
         ButterKnife.bind(this);
 
-        menuUuid = getIntent().getStringExtra(KEY_MENU_UUID);
+        menuDetailViewModel = ViewModelProviders.of(this).get(MenuDetailViewModel.class);
+
+        String menuUuid = getIntent().getStringExtra(KEY_MENU_UUID);
+        menuDetailViewModel.getMenu(menuUuid).observe(this, menu -> this.menu = menu);
+
         storeUuid = getIntent().getStringExtra(KEY_MENU_STORE_UUID);
         cartIndex = getIntent().getStringExtra(KEY_CART_INDEX);
 
@@ -82,16 +90,15 @@ public class MenuDetailActivity extends AppCompatActivity {
     @OnClick(R.id.add_to_cart_button)
     void onClickAddToCart() {
         TouchResponse.big();
-        MenuDetailViewModel menuDetailViewModel = ViewModelProviders.of(this).get(MenuDetailViewModel.class);
-        menuDetailViewModel.addToCartCurrentItems(storeUuid, menuUuid);
+        menuDetailViewModel = ViewModelProviders.of(this).get(MenuDetailViewModel.class);
+        menuDetailViewModel.addToCartCurrentItems(storeUuid, menu);
         finish();
     }
 
     @OnClick(R.id.place_order)
     void onClickSendOrder() {
         TouchResponse.big();
-        MenuDetailViewModel menuDetailViewModel = ViewModelProviders.of(this).get(MenuDetailViewModel.class);
-        menuDetailViewModel.placeOrder(storeUuid, menuUuid).observe(this, this::onSuccessCreateOrder);
+        menuDetailViewModel.placeOrder(storeUuid, menu).observe(this, this::onSuccessCreateOrder);
     }
 
     private void onSuccessCreateOrder(MenuOrder menuOrder) {

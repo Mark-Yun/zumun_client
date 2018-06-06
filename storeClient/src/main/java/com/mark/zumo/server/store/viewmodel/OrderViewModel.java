@@ -11,9 +11,11 @@ import android.arch.lifecycle.AndroidViewModel;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.support.annotation.NonNull;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.mark.zumo.client.core.entity.MenuOrder;
+import com.mark.zumo.client.core.entity.OrderDetail;
 import com.mark.zumo.client.core.util.context.ContextHolder;
 import com.mark.zumo.server.store.model.MenuOrderManager;
 
@@ -21,16 +23,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
 
 /**
  * Created by mark on 18. 5. 16.
  */
 public class OrderViewModel extends AndroidViewModel {
 
-    private List<MenuOrder> requestedMenuOrderList;
-    private int currentOrderIndex;
+    public static final String TAG = "OrderViewModel";
     private MenuOrderManager menuOrderManager;
-    private MutableLiveData<Integer> currentPositionLiveData = new MutableLiveData<>();
+
+    private List<MenuOrder> requestedMenuOrderList;
+    private CompositeDisposable compositeDisposable;
 
     public OrderViewModel(@NonNull final Application application) {
         super(application);
@@ -38,6 +42,7 @@ public class OrderViewModel extends AndroidViewModel {
         menuOrderManager = MenuOrderManager.INSTANCE;
 
         requestedMenuOrderList = new ArrayList<>();
+        compositeDisposable = new CompositeDisposable();
     }
 
     private void onMenuOrderRequested(MutableLiveData<List<MenuOrder>> liveData, MenuOrder menuOrder) {
@@ -45,28 +50,33 @@ public class OrderViewModel extends AndroidViewModel {
         liveData.setValue(requestedMenuOrderList);
     }
 
-    public LiveData<Integer> currentOrderPosition() {
-        return currentPositionLiveData;
-    }
-
-    private void updateCurrentOrder() {
-        currentPositionLiveData.setValue(currentOrderIndex);
-    }
-
     public LiveData<List<MenuOrder>> acceptedMenuOrderList() {
         MutableLiveData<List<MenuOrder>> liveData = new MutableLiveData<>();
-        menuOrderManager.getAcceptedMenuOrder()
+        menuOrderManager.getAcceptedMenuOrderList()
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSuccess(liveData::setValue)
+                .doOnSubscribe(compositeDisposable::add)
                 .subscribe();
         return liveData;
     }
 
     public LiveData<List<MenuOrder>> requestedMenuOrderList() {
         MutableLiveData<List<MenuOrder>> liveData = new MutableLiveData<>();
-        menuOrderManager.getRequestedMenuOrder()
+        menuOrderManager.getRequestedMenuOrderList()
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnNext(menuOrder -> onMenuOrderRequested(liveData, menuOrder))
+                .doOnError(throwable -> Log.e(TAG, "requestedMenuOrderList: ", throwable))
+                .doOnSubscribe(compositeDisposable::add)
+                .subscribe();
+        return liveData;
+    }
+
+    public LiveData<List<OrderDetail>> orderDetailList(String orderUuid) {
+        MutableLiveData<List<OrderDetail>> liveData = new MutableLiveData<>();
+        menuOrderManager.getOrderDetailList(orderUuid)
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnNext(liveData::setValue)
+                .doOnSubscribe(compositeDisposable::add)
                 .subscribe();
         return liveData;
     }
@@ -81,30 +91,10 @@ public class OrderViewModel extends AndroidViewModel {
 
     public void completeOrder(MenuOrder menuOrder) {
         Toast.makeText(ContextHolder.getContext(), "completeOrder" + menuOrder.uuid, Toast.LENGTH_SHORT).show();
-        nextOrder();
     }
 
-    private void setCurrentOrder(int position) {
-
-    }
-
-    private boolean nextOrder() {
-        if (requestedMenuOrderList.size() <= currentOrderIndex + 1) {
-            return false;
-        }
-
-        currentOrderIndex += 1;
-        updateCurrentOrder();
-        return true;
-    }
-
-    private boolean prevOrder() {
-        if (0 <= currentOrderIndex - 1) {
-            return false;
-        }
-
-        currentOrderIndex -= 1;
-        updateCurrentOrder();
-        return true;
+    @Override
+    protected void onCleared() {
+        compositeDisposable.clear();
     }
 }

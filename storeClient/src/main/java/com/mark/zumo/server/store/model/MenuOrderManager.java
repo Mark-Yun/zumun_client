@@ -7,6 +7,7 @@
 package com.mark.zumo.server.store.model;
 
 import com.mark.zumo.client.core.entity.MenuOrder;
+import com.mark.zumo.client.core.entity.OrderDetail;
 import com.mark.zumo.client.core.util.DebugUtil;
 
 import java.util.List;
@@ -27,7 +28,7 @@ public enum MenuOrderManager {
     MenuOrderManager() {
     }
 
-    public Single<List<MenuOrder>> getAcceptedMenuOrder() {
+    public Single<List<MenuOrder>> getAcceptedMenuOrderList() {
         return Observable.create((ObservableOnSubscribe<MenuOrder>) e -> {
             for (int i = 0; i < 10; i++) {
                 e.onNext(DebugUtil.menuOrder());
@@ -36,12 +37,19 @@ public enum MenuOrderManager {
         }).toList().subscribeOn(Schedulers.computation());
     }
 
-    public Observable<MenuOrder> getRequestedMenuOrder() {
+    public Observable<MenuOrder> getRequestedMenuOrderList() {
         return Observable.create((ObservableOnSubscribe<MenuOrder>) e -> {
             for (int i = 0; i < 10; i++) {
                 e.onNext(DebugUtil.menuOrder());
                 Thread.sleep(2000);
             }
         }).subscribeOn(Schedulers.computation());
+    }
+
+    public Observable<List<OrderDetail>> getOrderDetailList(String orderUuid) {
+        return Observable.create((ObservableOnSubscribe<List<OrderDetail>>) e -> {
+            e.onNext(DebugUtil.orderDetailList(orderUuid));
+            e.onComplete();
+        }).subscribeOn(Schedulers.io());
     }
 }

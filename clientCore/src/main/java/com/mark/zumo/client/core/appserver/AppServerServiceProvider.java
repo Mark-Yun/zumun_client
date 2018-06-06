@@ -66,7 +66,7 @@ public enum AppServerServiceProvider {
 
     @NonNull
     private static HttpLoggingInterceptor logger() {
-        return new HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BASIC);
+        return new HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY);
     }
 
     @NonNull
