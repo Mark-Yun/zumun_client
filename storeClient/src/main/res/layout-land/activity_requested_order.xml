@@ -13,25 +13,29 @@
     <android.support.v7.widget.RecyclerView
         android:id="@+id/requested_order_recycler_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="0dp"
         android:isScrollContainer="true"
-        android:scrollIndicators="top|start"
-        android:scrollbars="horizontal" />
+        android:layout_marginTop="50dp"
+        android:scrollbars="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/accept_all"
+        app:layout_constraintTop_toTopOf="@+id/accept_all"
+        app:layout_constraintVertical_weight="1" />
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/back_fab"
         android:layout_width="@dimen/order_control_button_height"
         android:layout_height="@dimen/order_control_button_height"
-        android:layout_marginBottom="@dimen/order_controller_button_bottom_margin"
         android:layout_marginStart="@dimen/order_card_view_big_margin"
+        android:layout_marginTop="@dimen/order_controller_button_bottom_margin"
         android:background="@android:color/holo_red_dark"
         android:backgroundTint="@android:color/holo_red_dark"
         android:elevation="5dp"
         android:scaleType="fitXY"
         android:src="@drawable/arrow_back"
         app:borderWidth="0dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <android.support.v7.widget.AppCompatButton
         android:id="@+id/accept_all"

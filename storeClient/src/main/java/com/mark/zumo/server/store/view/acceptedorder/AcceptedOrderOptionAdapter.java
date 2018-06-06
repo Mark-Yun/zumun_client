@@ -9,13 +9,12 @@ package com.mark.zumo.server.store.view.acceptedorder;
 import android.arch.lifecycle.LifecycleOwner;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.AppCompatTextView;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.mark.zumo.client.core.entity.OrderDetail;
+import com.mark.zumo.client.core.entity.MenuOption;
 import com.mark.zumo.server.store.R;
 import com.mark.zumo.server.store.viewmodel.OrderViewModel;
 
@@ -29,58 +28,53 @@ import butterknife.ButterKnife;
 /**
  * Created by mark on 18. 6. 6.
  */
-class AcceptedOrderDetailAdapter extends RecyclerView.Adapter<AcceptedOrderDetailAdapter.ViewHolder> {
-
+class AcceptedOrderOptionAdapter extends RecyclerView.Adapter<AcceptedOrderOptionAdapter.ViewHolder> {
     private OrderViewModel orderViewModel;
     private LifecycleOwner lifecycleOwner;
 
-    private List<OrderDetail> orderDetailList;
+    private List<MenuOption> menuOptionList;
 
-    AcceptedOrderDetailAdapter(final OrderViewModel orderViewModel, final LifecycleOwner lifecycleOwner) {
+    AcceptedOrderOptionAdapter(final OrderViewModel orderViewModel, final LifecycleOwner lifecycleOwner) {
         this.orderViewModel = orderViewModel;
         this.lifecycleOwner = lifecycleOwner;
 
-        orderDetailList = new ArrayList<>();
+        menuOptionList = new ArrayList<>();
     }
 
-    void setOrderDetailList(final List<OrderDetail> orderDetailList) {
-        this.orderDetailList = orderDetailList;
+    void setMenuOptionList(final List<MenuOption> menuOptionList) {
+        this.menuOptionList = menuOptionList;
         notifyDataSetChanged();
     }
 
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull final ViewGroup parent, final int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_view_accepted_order_detail, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_view_accepted_order_option, parent, false);
         return new ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull final ViewHolder holder, final int position) {
-        OrderDetail orderDetail = orderDetailList.get(position);
-        holder.name.setText(orderDetail.menuName);
-        holder.quantity.setText(String.valueOf(orderDetail.quantity));
-        holder.price.setText(NumberFormat.getCurrencyInstance().format(orderDetail.price));
+        MenuOption menuOption = menuOptionList.get(position);
 
-        AcceptedOrderOptionAdapter adapter = new AcceptedOrderOptionAdapter(orderViewModel, lifecycleOwner);
-        holder.recyclerView.setAdapter(adapter);
-
-        LinearLayoutManager layout = new LinearLayoutManager(holder.itemView.getContext(), LinearLayoutManager.VERTICAL, false);
-        holder.recyclerView.setLayoutManager(layout);
-
-        orderViewModel.menuOptionList(orderDetail.menuOptionUuidList).observe(lifecycleOwner, adapter::setMenuOptionList);
+        String nameText = "- " + menuOption.name;
+        holder.name.setText(nameText);
+        holder.value.setText(menuOption.value);
+        if (menuOption.price > 0) {
+            String priceText = "+ " + NumberFormat.getCurrencyInstance().format(menuOption.price);
+            holder.price.setText(priceText);
+        }
     }
 
     @Override
     public int getItemCount() {
-        return orderDetailList.size();
+        return menuOptionList.size();
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {
         @BindView(R.id.name) AppCompatTextView name;
-        @BindView(R.id.quantity) AppCompatTextView quantity;
+        @BindView(R.id.value) AppCompatTextView value;
         @BindView(R.id.price) AppCompatTextView price;
-        @BindView(R.id.accepted_order_card_view_menu_option_recycler_view) RecyclerView recyclerView;
 
         private ViewHolder(final View itemView) {
             super(itemView);

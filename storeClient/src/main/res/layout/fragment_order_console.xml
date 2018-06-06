@@ -21,19 +21,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.mark.zumo.server.store.view.acceptedorder.widget.CenteringTabLayout
-        android:id="@+id/order_tab"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/tab_order_height"
-        app:layout_constraintBottom_toTopOf="@+id/order_page"
-        app:layout_constraintTop_toTopOf="parent"
-        app:tabGravity="fill"
-        app:tabIndicatorColor="@color/colorAccent"
-        app:tabMode="scrollable"
-        app:tabSelectedTextColor="@color/tabSelectedTextColor"
-        android:background="@color/colorDivider"
-        app:tabTextColor="@color/colorDivider" />
-
     <com.lsjwzh.widget.recyclerviewpager.RecyclerViewPager
         android:id="@+id/order_page"
         android:layout_width="match_parent"
@@ -88,4 +75,17 @@
             app:layout_constraintHorizontal_weight="1"
             app:layout_constraintStart_toEndOf="@+id/prev_order" />
     </android.support.constraint.ConstraintLayout>
+
+    <com.mark.zumo.server.store.view.acceptedorder.widget.CenteringTabLayout
+        android:id="@+id/order_tab"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/tab_order_height"
+        android:background="@color/colorDivider"
+        app:layout_constraintBottom_toTopOf="@+id/order_page"
+        app:layout_constraintTop_toTopOf="parent"
+        app:tabGravity="fill"
+        app:tabIndicatorColor="@color/colorAccent"
+        app:tabMode="scrollable"
+        app:tabSelectedTextColor="@color/tabSelectedTextColor"
+        app:tabTextColor="@color/colorDivider" />
 </android.support.constraint.ConstraintLayout>

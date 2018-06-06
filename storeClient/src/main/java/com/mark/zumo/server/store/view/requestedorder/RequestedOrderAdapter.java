@@ -75,6 +75,9 @@ class RequestedOrderAdapter extends RecyclerView.Adapter<RequestedOrderAdapter.V
 
         LinearLayoutManager layout = new LinearLayoutManager(holder.itemView.getContext(), LinearLayoutManager.VERTICAL, false);
         holder.recyclerView.setLayoutManager(layout);
+        holder.recyclerView.setItemViewCacheSize(20);
+        holder.recyclerView.setDrawingCacheEnabled(true);
+        holder.recyclerView.setHasFixedSize(true);
 
         orderViewModel.orderDetailList(menuOrder.uuid).observe(lifecycleOwner, adapter::setOrderDetailList);
 
@@ -91,8 +94,8 @@ class RequestedOrderAdapter extends RecyclerView.Adapter<RequestedOrderAdapter.V
         @BindView(R.id.time) AppCompatTextView time;
         @BindView(R.id.total_quantity) AppCompatTextView totalQuantity;
         @BindView(R.id.total_price) AppCompatTextView totalPrice;
-        @BindView(R.id.accept) AppCompatButton accept;
-        @BindView(R.id.reject) AppCompatButton reject;
+        @BindView(R.id.reject) AppCompatButton accept;
+        @BindView(R.id.accept) AppCompatButton reject;
         @BindView(R.id.order_detail_recycler_view) RecyclerView recyclerView;
 
         ViewHolder(final View itemView) {

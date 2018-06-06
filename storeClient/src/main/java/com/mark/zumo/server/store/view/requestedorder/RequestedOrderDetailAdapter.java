@@ -8,6 +8,7 @@ package com.mark.zumo.server.store.view.requestedorder;
 import android.arch.lifecycle.LifecycleOwner;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.AppCompatTextView;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -57,6 +58,17 @@ class RequestedOrderDetailAdapter extends RecyclerView.Adapter<RequestedOrderDet
         OrderDetail orderDetail = orderDetailList.get(position);
         holder.name.setText(orderDetail.menuName);
         holder.quantity.setText(String.valueOf(orderDetail.quantity));
+
+        RequestedOrderOptionAdapter adapter = new RequestedOrderOptionAdapter(orderViewModel, lifecycleOwner);
+        holder.recyclerView.setAdapter(adapter);
+
+        LinearLayoutManager layout = new LinearLayoutManager(holder.itemView.getContext(), LinearLayoutManager.VERTICAL, false);
+        holder.recyclerView.setLayoutManager(layout);
+
+        holder.recyclerView.setItemViewCacheSize(20);
+        holder.recyclerView.setDrawingCacheEnabled(true);
+        holder.recyclerView.setHasFixedSize(true);
+        orderViewModel.menuOptionList(orderDetail.menuOptionUuidList).observe(lifecycleOwner, adapter::setMenuOptionList);
     }
 
     @Override

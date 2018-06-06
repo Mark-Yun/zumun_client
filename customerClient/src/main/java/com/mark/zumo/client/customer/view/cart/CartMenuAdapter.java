@@ -102,7 +102,7 @@ public class CartMenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
             cartOptionAdapter.setMenuOptionList(orderDetail.menuOptionUuidList);
 
-            holder.amount.setText(String.valueOf(orderDetail.amount));
+            holder.amount.setText(String.valueOf(orderDetail.quantity));
         });
 
         holder.removeButton.setOnClickListener(v -> {

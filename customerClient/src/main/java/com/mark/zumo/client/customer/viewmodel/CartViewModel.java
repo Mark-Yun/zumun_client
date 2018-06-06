@@ -142,7 +142,7 @@ public class CartViewModel extends AndroidViewModel {
                                 getOptionListPrice(cartItem1),
                                 getMenuPrice(cartItem1)
                         ).reduce((integer, integer2) -> integer + integer2)
-                                .map(integer -> integer * orderDetail.amount)
+                                .map(integer -> integer * orderDetail.quantity)
                 );
     }
 

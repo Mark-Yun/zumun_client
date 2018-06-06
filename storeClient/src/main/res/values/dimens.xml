@@ -19,6 +19,6 @@
     <dimen name="order_control_button_height">80dp</dimen>
     <dimen name="order_number_description_text_size">25dp</dimen>
     <dimen name="order_recycler_view_padding">55dp</dimen>
-    <dimen name="order_controller_button_bottom_margin">60dp</dimen>
+    <dimen name="order_controller_button_bottom_margin">20dp</dimen>
     <dimen name="requested_order_card_view_reject_button_text_size">18dp</dimen>
 </resources>

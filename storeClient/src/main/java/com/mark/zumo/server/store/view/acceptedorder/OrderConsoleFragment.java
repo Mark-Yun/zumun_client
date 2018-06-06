@@ -70,6 +70,8 @@ public class OrderConsoleFragment extends Fragment {
         acceptedOrderPageAdapter = new AcceptedOrderPageAdapter(orderViewModel, this);
         orderPage.setAdapter(acceptedOrderPageAdapter);
 
+        orderPage.setItemViewCacheSize(20);
+        orderPage.setDrawingCacheEnabled(true);
     }
 
     private void bindLiveData() {
@@ -79,7 +81,6 @@ public class OrderConsoleFragment extends Fragment {
     private void onLoadMenuOrderList(List<MenuOrder> menuOrderList) {
         acceptedOrderPageAdapter.setMenuOrderList(menuOrderList);
         TabLayoutSupport.setupWithViewPager(orderTabLayout, orderPage, acceptedOrderPageAdapter);
-//        notifyTabLayoutItemInserted(orderTabLayout, acceptedOrderPageAdapter);
     }
 
     private void notifyTabLayoutItemInserted(@NonNull TabLayout tabLayout,

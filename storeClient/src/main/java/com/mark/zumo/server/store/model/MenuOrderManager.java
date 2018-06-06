@@ -6,6 +6,7 @@
 
 package com.mark.zumo.server.store.model;
 
+import com.mark.zumo.client.core.entity.MenuOption;
 import com.mark.zumo.client.core.entity.MenuOrder;
 import com.mark.zumo.client.core.entity.OrderDetail;
 import com.mark.zumo.client.core.util.DebugUtil;
@@ -41,7 +42,6 @@ public enum MenuOrderManager {
         return Observable.create((ObservableOnSubscribe<MenuOrder>) e -> {
             for (int i = 0; i < 10; i++) {
                 e.onNext(DebugUtil.menuOrder());
-                Thread.sleep(2000);
             }
         }).subscribeOn(Schedulers.computation());
     }
@@ -50,6 +50,12 @@ public enum MenuOrderManager {
         return Observable.create((ObservableOnSubscribe<List<OrderDetail>>) e -> {
             e.onNext(DebugUtil.orderDetailList(orderUuid));
             e.onComplete();
+        }).subscribeOn(Schedulers.io());
+    }
+
+    public Observable<List<MenuOption>> getMenuOptionList(List<String> menuOptionUuidList) {
+        return Observable.create((ObservableOnSubscribe<List<MenuOption>>) e -> {
+            e.onNext(DebugUtil.menuOptionListFromOrder());
         }).subscribeOn(Schedulers.io());
     }
 }

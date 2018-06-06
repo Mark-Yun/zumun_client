@@ -49,7 +49,7 @@ public class DebugUtil {
                 new OrderDetail(UUID.randomUUID().toString(),
                         TEST_STORE_UUID,
                         "AE62797461FA4F2292AF11F48D2F5C30",
-                        "Iced Americano",
+                        "Iced Americano TTTTTTTTTTTTTTTTTTTTT",
                         orderUuid,
                         Arrays.asList("5007D8547CAC47D38C41C4F419986D49", "A530720210564C93A2CDE072B640D31F"),
                         1,
@@ -162,7 +162,7 @@ public class DebugUtil {
         return resultList;
     }
 
-    public static List<MenuOption> menuOptionList(String menuUuid) {
+    public static List<MenuOption> menuOptionListFromServer(String menuUuid) {
         List<MenuOption> result = new ArrayList<>();
         result.add(new MenuOption("TEST", menuUuid, "size", "small", -200));
         result.add(new MenuOption("TEST", menuUuid, "size", "tall", 0));
@@ -182,6 +182,16 @@ public class DebugUtil {
         result.add(new MenuOption("TEST", menuUuid, "5", "tall", 0));
         result.add(new MenuOption("TEST", menuUuid, "6", "tall", 0));
         result.add(new MenuOption("TEST", menuUuid, "7", "tall", 0));
+        return result;
+    }
+
+    public static List<MenuOption> menuOptionListFromOrder() {
+        List<MenuOption> result = new ArrayList<>();
+        result.add(new MenuOption("TEST", UUID.randomUUID().toString(), "size", "grande", 500));
+        result.add(new MenuOption("TEST", UUID.randomUUID().toString(), "시럽", "없음", 0));
+        result.add(new MenuOption("TEST", UUID.randomUUID().toString(), "test", "1", 1));
+        result.add(new MenuOption("TEST", UUID.randomUUID().toString(), "1", "tall", 0));
+        result.add(new MenuOption("TEST", UUID.randomUUID().toString(), "2", "tall", 0));
         return result;
     }
 

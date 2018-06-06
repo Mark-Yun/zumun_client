@@ -85,7 +85,7 @@ public class Cart {
 
     public int getTotalAmount() {
         return Observable.fromIterable(orderDetailList)
-                .map(orderDetail -> orderDetail.amount)
+                .map(orderDetail -> orderDetail.quantity)
                 .reduce((integer, integer2) -> integer + integer2)
                 .blockingGet(0);
     }
@@ -110,9 +110,11 @@ public class Cart {
                         null,
                         orderDetail.storeUuid,
                         orderDetail.menuUuid,
+                        orderDetail.menuName,
                         null,
                         orderDetail.menuOptionUuidList,
-                        orderDetail.amount + orderDetail2.amount
+                        orderDetail.price + orderDetail2.price,
+                        orderDetail.quantity + orderDetail2.quantity
                 )
         );
     }

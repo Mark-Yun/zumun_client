@@ -49,7 +49,9 @@ public class RequestedOrderActivity extends AppCompatActivity {
 
         adapter = new RequestedOrderAdapter(orderViewModel, this);
         recyclerView.setAdapter(adapter);
-
+        recyclerView.setItemViewCacheSize(20);
+        recyclerView.setDrawingCacheEnabled(true);
+        recyclerView.setHasFixedSize(true);
         orderViewModel.requestedMenuOrderList().observe(this, this::onLoadRequestedMenuOrderList);
     }
 
