@@ -36,7 +36,7 @@ public enum OrderManager {
 
     public Observable<MenuOrder> createMenuOrder(Collection<OrderDetail> orderDetailCollection) {
         //TODO: remove Test Code
-        return Observable.fromCallable(() -> DebugUtil.menuOrder())
+        return Observable.fromCallable(DebugUtil::menuOrder)
                 .subscribeOn(Schedulers.io());
 //        return networkRepository.createOrder(orderDetailCollection)
 //                .doOnNext(diskRepository::insert)
@@ -45,12 +45,21 @@ public enum OrderManager {
 
     public Observable<MenuOrder> createMenuOrder(OrderDetail orderDetail) {
         //TODO: remove Test Code
-        return Observable.fromCallable(() -> DebugUtil.menuOrder())
+        return Observable.fromCallable(DebugUtil::menuOrder)
                 .subscribeOn(Schedulers.io());
 //        return Observable.fromCallable((Callable<ArrayList<OrderDetail>>) ArrayList::new)
 //                .doOnEach(notification -> notification.getValue().add(orderDetail))
 //                .flatMap(networkRepository::createOrder)
 //                .doOnNext(diskRepository::insert)
+//                .subscribeOn(Schedulers.io());
+    }
+
+    public Observable<MenuOrder> getMenuOrderFromDisk(String orderUuid) {
+        return Observable.fromCallable(() -> DebugUtil.menuOrder())
+                .subscribeOn(Schedulers.io());
+
+//        return diskRepository.getMenuOrder(orderUuid)
+//                .toObservable()
 //                .subscribeOn(Schedulers.io());
     }
 }

@@ -38,10 +38,6 @@ public enum KakaoPayServiceProvider {
     public KakaoPayService service;
 
     KakaoPayServiceProvider() {
-        Bundle bundle = buildDefaultHeader();
-        Interceptor interceptor = interceptor(bundle);
-        OkHttpClient okHttpClient = okHttpClient(interceptor);
-        service = buildKakaoPayService(okHttpClient);
     }
 
     @NonNull
@@ -49,10 +45,17 @@ public enum KakaoPayServiceProvider {
         return new HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY);
     }
 
-    private Bundle buildDefaultHeader() {
+    public KakaoPayService buildService(String token) {
+        Bundle bundle = buildDefaultHeader(token);
+        Interceptor interceptor = interceptor(bundle);
+        OkHttpClient okHttpClient = okHttpClient(interceptor);
+        return service = buildKakaoPayService(okHttpClient);
+    }
+
+    private Bundle buildDefaultHeader(String token) {
         Bundle bundle = new Bundle();
         bundle.putString(ContentType.KEY, ContentType.VALUE);
-        bundle.putString(Authorization.KEY, Authorization.VALUE);
+        bundle.putString(Authorization.KEY, Authorization.TOKEN_VALUE + token);
         return bundle;
     }
 
@@ -129,7 +132,8 @@ public enum KakaoPayServiceProvider {
     private interface Authorization {
         //TODO: replace to token
         String KEY = "Authorization";
-        String VALUE = "KakaoAK d17ffca1e2c89e95fcb9de08a41eee12";
+        String AK_VALUE = "KakaoAK d17ffca1e2c89e95fcb9de08a41eee12";
+        String TOKEN_VALUE = "Bearer ";
     }
 
 }

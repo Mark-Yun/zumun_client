@@ -23,7 +23,6 @@ import com.mark.zumo.client.customer.R;
 import com.mark.zumo.client.customer.model.CartManager;
 import com.mark.zumo.client.customer.model.MenuManager;
 import com.mark.zumo.client.customer.model.OrderManager;
-import com.mark.zumo.client.customer.model.payment.PaymentManager;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -45,7 +44,6 @@ public class MenuDetailViewModel extends AndroidViewModel {
     private MenuManager menuManager;
     private CartManager cartManager;
     private OrderManager orderManager;
-    private PaymentManager paymentManager;
 
     private Map<String, List<MenuOption>> menuOptionMap;
     private Map<String, MenuOption> selectedOptionMap;
@@ -60,7 +58,6 @@ public class MenuDetailViewModel extends AndroidViewModel {
         menuManager = MenuManager.INSTANCE;
         cartManager = CartManager.INSTANCE;
         orderManager = OrderManager.INSTANCE;
-        paymentManager = PaymentManager.INSTANCE;
 
         menuOptionMap = new LinkedHashMap<>();
         selectedOptionMap = new HashMap<>();

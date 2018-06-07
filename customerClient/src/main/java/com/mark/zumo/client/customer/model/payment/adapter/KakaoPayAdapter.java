@@ -9,6 +9,7 @@ package com.mark.zumo.client.customer.model.payment.adapter;
 import com.mark.zumo.client.core.entity.MenuOrder;
 import com.mark.zumo.client.core.payment.kakao.KakaoPayService;
 import com.mark.zumo.client.core.payment.kakao.KakaoPayServiceProvider;
+import com.mark.zumo.client.core.payment.kakao.entity.PaidDetailResponse;
 import com.mark.zumo.client.core.payment.kakao.entity.PaymentReadyRequest;
 import com.mark.zumo.client.core.payment.kakao.entity.PaymentReadyResponse;
 
@@ -18,14 +19,15 @@ import io.reactivex.schedulers.Schedulers;
 /**
  * Created by mark on 18. 6. 6.
  */
-class KakaoPayAdapter implements PaymentAdapter {
+public enum KakaoPayAdapter implements PaymentAdapter {
 
-    private static final String TEST_CID = "TC0ONETIME";
+    INSTANCE;
+
+    private static final String CID = "TC0ONETIME";
 
     private KakaoPayService payService;
 
-    public KakaoPayAdapter() {
-        payService = KakaoPayServiceProvider.INSTANCE.service;
+    KakaoPayAdapter() {
     }
 
     private static String approvalUrl(MenuOrder menuOrder) {
@@ -40,10 +42,19 @@ class KakaoPayAdapter implements PaymentAdapter {
         return "https://developers.kakao.com/cancel";
     }
 
+    public void setAccessToken(String accessToken) {
+        payService = KakaoPayServiceProvider.INSTANCE.buildService(accessToken);
+    }
+
+    public Maybe<PaidDetailResponse> paidDetail(String tId) {
+        return payService.paiedDetail(CID, tId)
+                .subscribeOn(Schedulers.io());
+    }
+
     @Override
     public Maybe<PaymentReadyResponse> preparePayment(final MenuOrder menuOrder) {
         PaymentReadyRequest paymentReadyRequest = new PaymentReadyRequest.Builder()
-                .setCId(TEST_CID)
+                .setCId(CID)
                 .setPartnerOrderId(menuOrder.uuid)
                 .setPartnerUserId(menuOrder.customerUuid)
                 .setItemName(menuOrder.name)

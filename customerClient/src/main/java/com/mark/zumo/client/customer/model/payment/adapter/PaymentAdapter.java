@@ -13,7 +13,6 @@
 package com.mark.zumo.client.customer.model.payment.adapter;
 
 import com.mark.zumo.client.core.entity.MenuOrder;
-import com.mark.zumo.client.core.payment.kakao.entity.PaymentReadyResponse;
 
 import io.reactivex.Maybe;
 
@@ -22,5 +21,5 @@ import io.reactivex.Maybe;
  */
 public interface PaymentAdapter {
 
-    Maybe<PaymentReadyResponse> preparePayment(MenuOrder menuOrder);
+    Maybe<?> preparePayment(MenuOrder menuOrder);
 }

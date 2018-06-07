@@ -7,7 +7,7 @@
 package com.mark.zumo.client.core.payment.kakao;
 
 import com.mark.zumo.client.core.payment.kakao.entity.CancelResponse;
-import com.mark.zumo.client.core.payment.kakao.entity.PaiedDetailResponse;
+import com.mark.zumo.client.core.payment.kakao.entity.PaidDetailResponse;
 import com.mark.zumo.client.core.payment.kakao.entity.PaymentApprovalResponse;
 import com.mark.zumo.client.core.payment.kakao.entity.PaymentReadyResponse;
 
@@ -55,8 +55,8 @@ public interface KakaoPayService {
 
     @FormUrlEncoded
     @POST("/v1/payment/order")
-    Maybe<PaiedDetailResponse> paiedDetail(@Field("cid") String cId,
-                                           @Field("tid") String tId);
+    Maybe<PaidDetailResponse> paiedDetail(@Field("cid") String cId,
+                                          @Field("tid") String tId);
 
     @FormUrlEncoded
     @POST("/v1/payment/cancel")

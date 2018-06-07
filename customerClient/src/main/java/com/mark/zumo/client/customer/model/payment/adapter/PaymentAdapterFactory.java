@@ -11,10 +11,6 @@ package com.mark.zumo.client.customer.model.payment.adapter;
  */
 public final class PaymentAdapterFactory {
     public static PaymentAdapter create(PayType payType) {
-        switch (payType) {
-            case KAKAO:
-                return new KakaoPayAdapter();
-        }
         return null;
     }
 }

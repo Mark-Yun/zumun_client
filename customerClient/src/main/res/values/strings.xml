@@ -5,7 +5,7 @@
   -->
 
 <resources>
-    <string name="kakao_api_key">265e130b23d5b75316022561ec01ea5e</string>
+    <string name="kakao_app_key">265e130b23d5b75316022561ec01ea5e</string>
     <string name="app_name">Zumun</string>
     <string name="place_latest_visit_store_header_text">Latest Visit Stores</string>
     <string name="place_near_by_header_text">Near by Stores</string>

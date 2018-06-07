@@ -93,9 +93,9 @@ public class CartActivity extends AppCompatActivity {
         cartViewModel.placeOrder(storeUuid).observe(this, this::onSuccessCreateOrder);
     }
 
-    private void onSuccessCreateOrder(MenuOrder response) {
+    private void onSuccessCreateOrder(MenuOrder menuOrder) {
         Intent intent = new Intent(this, PaymentActivity.class);
-        intent.putExtra(PaymentActivity.KEY_ORDER_UUID, response.uuid);
+        intent.putExtra(PaymentActivity.KEY_ORDER_UUID, menuOrder.uuid);
         startActivityForResult(intent, PaymentActivity.REQ_CODE_PAYMENT);
     }
 

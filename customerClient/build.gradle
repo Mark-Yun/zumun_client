@@ -42,4 +42,5 @@ android {
 
 dependencies {
     implementation files('libs/samsungpay_2.3.00.jar')
+    implementation "com.kakao.sdk:usermgmt:1.7.1"
 }

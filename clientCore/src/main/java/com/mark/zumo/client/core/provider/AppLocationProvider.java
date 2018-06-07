@@ -53,6 +53,7 @@ public enum AppLocationProvider {
                 public void onLocationChanged(Location location) {
                     e.onNext(location);
                     e.onComplete();
+                    locationManager.removeUpdates(this);
                 }
 
                 @Override
