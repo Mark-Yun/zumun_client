@@ -76,7 +76,7 @@
             app:layout_constraintStart_toEndOf="@+id/prev_order" />
     </android.support.constraint.ConstraintLayout>
 
-    <com.mark.zumo.server.store.view.acceptedorder.widget.CenteringTabLayout
+    <com.mark.zumo.client.store.view.acceptedorder.widget.CenteringTabLayout
         android:id="@+id/order_tab"
         android:layout_width="match_parent"
         android:layout_height="@dimen/tab_order_height"

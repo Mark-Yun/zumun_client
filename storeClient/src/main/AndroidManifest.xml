@@ -5,10 +5,10 @@
   -->
 
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.mark.zumo.server.store">
+    package="com.mark.zumo.client.store">
 
     <application
-        android:name=".app.StoreServerApp"
+        android:name="com.mark.zumo.client.store.app.StoreServerApp"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -16,22 +16,22 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme.NoActionBar">
 
-        <service android:name=".app.fcm.StoreFcmService">
+        <service android:name="com.mark.zumo.client.store.app.fcm.StoreFcmService">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
 
-        <service android:name=".app.fcm.StoreFcmIdService">
+        <service android:name="com.mark.zumo.client.store.app.fcm.StoreFcmIdService">
             <intent-filter>
                 <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
             </intent-filter>
         </service>
 
-        <activity android:name=".view.signup.SignUpActivity" />
+        <activity android:name="com.mark.zumo.client.store.view.signup.SignUpActivity" />
 
         <activity
-            android:name=".view.SplashActivity"
+            android:name="com.mark.zumo.client.store.view.SplashActivity"
             android:label="@string/app_name"
             android:launchMode="singleTop"
             android:theme="@style/AppTheme.NoActionBar">
@@ -41,13 +41,13 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".view.acceptedorder.AcceptedOrderActivity">
+        <activity android:name="com.mark.zumo.client.store.view.acceptedorder.AcceptedOrderActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
             </intent-filter>
         </activity>
         <activity
-            android:name=".view.requestedorder.RequestedOrderActivity"
+            android:name="com.mark.zumo.client.store.view.requestedorder.RequestedOrderActivity"
             android:theme="@style/AppTheme.NoActionBar.Translucent" />
     </application>
 

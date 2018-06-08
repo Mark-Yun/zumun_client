@@ -10,7 +10,7 @@
     <application>
 
         <activity
-            android:name="com.mark.zumo.server.store.DebugMainActivity"
+            android:name="com.mark.zumo.client.store.DebugMainActivity"
             android:label="@string/app_name">
             <intent-filter>
                 <category android:name="android.intent.category.LAUNCHER" />
