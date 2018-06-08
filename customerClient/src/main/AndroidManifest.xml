@@ -12,7 +12,7 @@
     <uses-permission android:name="android.permission.VIBRATE" />
 
     <application
-        android:name=".CustomerClientApp"
+        android:name=".app.CustomerClientApp"
         android:allowBackup="true"
         android:icon="@mipmap/ic_customer_round"
         android:label="@string/app_name"
@@ -23,6 +23,18 @@
         <meta-data
             android:name="com.kakao.sdk.AppKey"
             android:value="@string/kakao_app_key" />
+
+        <service android:name=".app.fcm.CustomerFcmService">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
+
+        <service android:name=".app.fcm.CustomerFcmIdService">
+            <intent-filter>
+                <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
+            </intent-filter>
+        </service>
 
         <activity
             android:name=".view.SplashActivity"

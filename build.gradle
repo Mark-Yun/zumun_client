@@ -95,6 +95,7 @@ configure(applications) {
         androidTestImplementation "com.android.support.test.espresso:espresso-core:$esspressoCore"
 
         implementation "com.facebook.rebound:rebound:$rebound"
+        implementation "com.google.firebase:firebase-messaging:$playService"
     }
 }
 
