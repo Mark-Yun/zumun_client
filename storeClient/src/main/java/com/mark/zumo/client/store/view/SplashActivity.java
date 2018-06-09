@@ -48,11 +48,7 @@ public class SplashActivity extends BaseActivity {
 
         signUpViewModel = ViewModelProviders.of(this).get(SignUpViewModel.class);
 
-        setupSessionObserver();
-    }
-
-    private void setupSessionObserver() {
-        signUpViewModel.isSessionValid().observe(this, this::onUpdateSessionAcquired);
+        onUpdateSessionAcquired(signUpViewModel.isSessionValid());
     }
 
     @Override
@@ -67,7 +63,7 @@ public class SplashActivity extends BaseActivity {
     }
 
     private void onUpdateSessionAcquired(boolean isSessionValid) {
-        Log.d(TAG, "onUpdateSessionAcquired: isSessionValid=" + isSessionValid);
+        Log.d(TAG, "onUpdateSessionAcquired: isSessionAvailable=" + isSessionValid);
         Class<? extends AppCompatActivity> targetActivity = getTargetActivity(isSessionValid);
         startTargetActivity(targetActivity);
     }

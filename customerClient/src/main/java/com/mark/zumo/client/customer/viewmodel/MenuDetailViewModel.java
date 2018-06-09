@@ -164,13 +164,12 @@ public class MenuDetailViewModel extends AndroidViewModel {
         }
 
         OrderDetail orderDetail = new OrderDetail("", storeUuid, menu.uuid, menu.name, "", menuOptionUuidList, amount, price);
+        orderDetail.menuOrderName = menu.name;
         orderManager.createMenuOrder(orderDetail)
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnNext(unused -> selectedOptionMap.clear())
                 .doOnNext(unused -> selectedOptionLiveDataMap.clear())
-                .doOnNext(menuOrder -> Log.d(TAG, "placeOrder: success-" + menuOrder))
                 .doOnNext(liveData::setValue)
-                .doOnError(throwable -> Log.e(TAG, "placeOrder: ", throwable))
                 .doOnSubscribe(disposables::add)
                 .subscribe();
 

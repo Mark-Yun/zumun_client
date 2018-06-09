@@ -34,7 +34,7 @@ public class DebugUtil {
     }
 
     public static Store store() {
-        return new Store(TEST_STORE_UUID, Build.MODEL, 0, 0, null, null);
+        return new Store(TEST_STORE_UUID, Build.MODEL, 0, 0, "TEST", "TEST", null);
     }
 
     public static MenuOrder menuOrder() {
@@ -109,21 +109,21 @@ public class DebugUtil {
 
     public static List<Store> storeList() {
         Store[] stores = {
-                new Store(TEST_STORE_UUID, "test1", 15, 15, null, null),
-                new Store(TEST_STORE_UUID, "testStore2", 15, 15, null, null),
-                new Store(TEST_STORE_UUID, "testTestStore3", 15, 15, null, null),
-                new Store(TEST_STORE_UUID, "COCOCOCOCOCOCO_@#!@$*I@", 15, 15, null, null),
-                new Store(TEST_STORE_UUID, "LAIIEJ!F#IFJASDJFP(!O@$I!P(", 15, 15, null, null),
-                new Store(TEST_STORE_UUID, "test1", 15, 15, null, null),
-                new Store(TEST_STORE_UUID, "testStore2", 15, 15, null, null),
-                new Store(TEST_STORE_UUID, "testTestStore3", 15, 15, null, null),
-                new Store(TEST_STORE_UUID, "COCOCOCOCOCOCO_@#!@$*I@", 15, 15, null, null),
-                new Store(TEST_STORE_UUID, "LAIIEJ!F#IFJASDJFP(!O@$I!P(", 15, 15, null, null),
-                new Store(TEST_STORE_UUID, "test1", 15, 15, null, null),
-                new Store(TEST_STORE_UUID, "testStore2", 15, 15, null, null),
-                new Store(TEST_STORE_UUID, "testTestStore3", 15, 15, null, null),
-                new Store(TEST_STORE_UUID, "COCOCOCOCOCOCO_@#!@$*I@", 15, 15, null, null),
-                new Store(TEST_STORE_UUID, "LAIIEJ!F#IFJASDJFP(!O@$I!P(", 15, 15, null, null)
+                new Store(TEST_STORE_UUID, "test1", 15, 15, null, null, null),
+                new Store(TEST_STORE_UUID, "testStore2", 15, 15, null, null, null),
+                new Store(TEST_STORE_UUID, "testTestStore3", 15, 15, null, null, null),
+                new Store(TEST_STORE_UUID, "COCOCOCOCOCOCO_@#!@$*I@", 15, 15, null, null, null),
+                new Store(TEST_STORE_UUID, "LAIIEJ!F#IFJASDJFP(!O@$I!P(", 15, 15, null, null, null),
+                new Store(TEST_STORE_UUID, "test1", 15, 15, null, null, null),
+                new Store(TEST_STORE_UUID, "testStore2", 15, 15, null, null, null),
+                new Store(TEST_STORE_UUID, "testTestStore3", 15, 15, null, null, null),
+                new Store(TEST_STORE_UUID, "COCOCOCOCOCOCO_@#!@$*I@", 15, 15, null, null, null),
+                new Store(TEST_STORE_UUID, "LAIIEJ!F#IFJASDJFP(!O@$I!P(", 15, 15, null, null, null),
+                new Store(TEST_STORE_UUID, "test1", 15, 15, null, null, null),
+                new Store(TEST_STORE_UUID, "testStore2", 15, 15, null, null, null),
+                new Store(TEST_STORE_UUID, "testTestStore3", 15, 15, null, null, null),
+                new Store(TEST_STORE_UUID, "COCOCOCOCOCOCO_@#!@$*I@", 15, 15, null, null, null),
+                new Store(TEST_STORE_UUID, "LAIIEJ!F#IFJASDJFP(!O@$I!P(", 15, 15, null, null, null)
         };
         return Arrays.asList(stores);
     }

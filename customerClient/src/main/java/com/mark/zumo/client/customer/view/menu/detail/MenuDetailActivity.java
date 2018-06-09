@@ -35,6 +35,11 @@ public class MenuDetailActivity extends AppCompatActivity {
     public static final String KEY_MENU_STORE_UUID = "store_uuid";
     public static final String KEY_CART_INDEX = "cart_index";
 
+    public static final int REQUEST_CODE = 1;
+
+    public static final int RESULT_CODE_PAYMENT_SUCCESS = PaymentActivity.RESULT_CODE_PAYMENT_SUCCESS;
+    public static final int RESULT_CODE_PAYMENT_FAILED = PaymentActivity.RESULT_CODE_PAYMENT_FAILED;
+
     private MenuDetailViewModel menuDetailViewModel;
 
     private Menu menu;
@@ -120,7 +125,15 @@ public class MenuDetailActivity extends AppCompatActivity {
 
         switch (requestCode) {
             case PaymentActivity.REQ_CODE_PAYMENT:
+                switch (resultCode) {
+                    case PaymentActivity.RESULT_CODE_PAYMENT_SUCCESS:
+                        setResult(RESULT_CODE_PAYMENT_SUCCESS, data);
+                        break;
 
+                    case PaymentActivity.RESULT_CODE_PAYMENT_FAILED:
+                        setResult(RESULT_CODE_PAYMENT_FAILED);
+                        break;
+                }
                 break;
         }
     }

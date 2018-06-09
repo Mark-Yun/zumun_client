@@ -14,14 +14,13 @@ android {
     }
 
     defaultConfig {
-        applicationId "com.mark.zumo.server.store"
+        applicationId "com.mark.zumo.client.store"
         minSdkVersion rootProject.ext.minSdk
         targetSdkVersion rootProject.ext.targetSdk
         versionCode 1
         versionName "1.0"
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-
     }
 
     compileOptions {
@@ -37,7 +36,7 @@ android {
         }
 
         debug {
-
+            versionNameSuffix 'd'
         }
     }
 

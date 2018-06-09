@@ -6,15 +6,13 @@
 
 package com.mark.zumo.client.customer.model;
 
-import com.mark.zumo.client.core.appserver.AppServerServiceProvider;
-import com.mark.zumo.client.core.appserver.NetworkRepository;
-import com.mark.zumo.client.core.dao.AppDatabaseProvider;
-import com.mark.zumo.client.core.dao.DiskRepository;
 import com.mark.zumo.client.core.entity.MenuOrder;
 import com.mark.zumo.client.core.entity.OrderDetail;
-import com.mark.zumo.client.core.util.DebugUtil;
+import com.mark.zumo.client.core.repository.OrderRepository;
+import com.mark.zumo.client.core.util.context.ContextHolder;
+import com.mark.zumo.client.customer.R;
 
-import java.util.Collection;
+import java.util.List;
 
 import io.reactivex.Observable;
 import io.reactivex.schedulers.Schedulers;
@@ -26,40 +24,36 @@ import io.reactivex.schedulers.Schedulers;
 public enum OrderManager {
     INSTANCE;
 
-    private NetworkRepository networkRepository;
-    private DiskRepository diskRepository;
+    private OrderRepository orderRepository;
 
     OrderManager() {
-        networkRepository = AppServerServiceProvider.INSTANCE.networkRepository;
-        diskRepository = AppDatabaseProvider.INSTANCE.diskRepository;
+        orderRepository = OrderRepository.INSTANCE;
     }
 
-    public Observable<MenuOrder> createMenuOrder(Collection<OrderDetail> orderDetailCollection) {
-        //TODO: remove Test Code
-        return Observable.fromCallable(DebugUtil::menuOrder)
+    public Observable<MenuOrder> createMenuOrder(List<OrderDetail> orderDetailList) {
+        String generatedOrderName = orderDetailList.get(0).menuName;
+        if (orderDetailList.size() > 1) {
+            String amount = String.valueOf(orderDetailList.size() - 1);
+            String etcText = ContextHolder.getContext().getString(R.string.menu_order_name_and, amount);
+            generatedOrderName += " " + etcText;
+        }
+        final String orderName = generatedOrderName;
+        return Observable.fromIterable(orderDetailList)
+                .map(orderDetail -> {
+                    orderDetail.menuOrderName = orderName;
+                    return orderDetail;
+                }).toList().flatMapObservable(orderRepository::createMenuOrder)
                 .subscribeOn(Schedulers.io());
-//        return networkRepository.createOrder(orderDetailCollection)
-//                .doOnNext(diskRepository::insert)
-//                .subscribeOn(Schedulers.io());
     }
 
     public Observable<MenuOrder> createMenuOrder(OrderDetail orderDetail) {
-        //TODO: remove Test Code
-        return Observable.fromCallable(DebugUtil::menuOrder)
+        return orderRepository.createMenuOrder(orderDetail)
                 .subscribeOn(Schedulers.io());
-//        return Observable.fromCallable((Callable<ArrayList<OrderDetail>>) ArrayList::new)
-//                .doOnEach(notification -> notification.getValue().add(orderDetail))
-//                .flatMap(networkRepository::createOrder)
-//                .doOnNext(diskRepository::insert)
-//                .subscribeOn(Schedulers.io());
     }
 
     public Observable<MenuOrder> getMenuOrderFromDisk(String orderUuid) {
-        return Observable.fromCallable(() -> DebugUtil.menuOrder())
-                .subscribeOn(Schedulers.io());
 
-//        return diskRepository.getMenuOrder(orderUuid)
-//                .toObservable()
-//                .subscribeOn(Schedulers.io());
+        return orderRepository.getMenuOrderFromDisk(orderUuid)
+                .subscribeOn(Schedulers.io());
     }
 }

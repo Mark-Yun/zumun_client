@@ -19,6 +19,7 @@ import com.mark.zumo.client.core.util.DebugUtil;
 
 import java.util.List;
 
+import io.reactivex.Maybe;
 import io.reactivex.Observable;
 import io.reactivex.schedulers.Schedulers;
 
@@ -49,6 +50,11 @@ public enum StoreRepository {
         return Observable.create(e -> {
             e.onNext(DebugUtil.storeList());
         });
+    }
+
+    public Maybe<Store> updateStore(Store store) {
+        return networkRepository.updateStore(store.uuid, store)
+                .doOnSuccess(updatedStore -> diskRepository.insert(updatedStore));
     }
 
     public Observable<Store> getStore(String storeUuid) {

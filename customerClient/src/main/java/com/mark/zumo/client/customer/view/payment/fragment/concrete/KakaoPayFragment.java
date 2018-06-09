@@ -15,6 +15,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,7 +28,7 @@ import android.webkit.WebViewClient;
 import com.kakao.auth.ISessionCallback;
 import com.kakao.auth.Session;
 import com.kakao.util.exception.KakaoException;
-import com.mark.zumo.client.core.payment.kakao.entity.PaidDetailResponse;
+import com.mark.zumo.client.core.entity.MenuOrder;
 import com.mark.zumo.client.core.payment.kakao.entity.PaymentReadyResponse;
 import com.mark.zumo.client.customer.R;
 import com.mark.zumo.client.customer.view.payment.PaymentActivity;
@@ -46,9 +47,6 @@ public class KakaoPayFragment extends Fragment {
 
     private static final int REQ_CODE_KAKAO_PAY = 10;
     private static final int REQ_CODE_KAKAO_SIGN = 11;
-
-    private static final String KAKAO_SCHEME = "kakaotalk://kakaopay/pg";
-    private static final String KEY_ORDER_UUID = "order_uuid";
 
     @BindView(R.id.web_view) WebView webView;
 
@@ -97,7 +95,7 @@ public class KakaoPayFragment extends Fragment {
     }
 
     private void inflateView(String accessToken) {
-        String orderUuid = getArguments().getString(KEY_ORDER_UUID);
+        String orderUuid = getArguments().getString(PaymentActivity.KEY_ORDER_UUID);
         kakaoPayViewModel.preparePayment(orderUuid, accessToken).observe(this, this::onLoadPaymentReadyResponse);
         webView.setVisibility(View.VISIBLE);
     }
@@ -145,19 +143,18 @@ public class KakaoPayFragment extends Fragment {
         super.onActivityResult(requestCode, resultCode, data);
     }
 
-    private void onLoadPaidDetail(PaidDetailResponse response) {
-        switch (response.status) {
-            case SUCCESS_PAYMENT:
-                getActivity().setResult(PaymentActivity.RESEULT_CODE_PAYMENT_SUCCESS);
-                break;
-        }
-
-        getActivity().finish();
+    private void onSuccessCreatePaymentToken(MenuOrder menuOrder) {
+        FragmentActivity activity = getActivity();
+        Intent intent = new Intent();
+        intent.putExtra(PaymentActivity.KEY_ORDER_UUID, menuOrder.uuid);
+        activity.setResult(PaymentActivity.RESULT_CODE_PAYMENT_SUCCESS, intent);
+        activity.finish();
     }
 
     private class KakaoWebViewClient extends WebViewClient {
 
-        public static final String KEY_PG_TOKEN = "pg_token";
+        private static final String INTENT_KAKAO_PAY = "intent://kakaopay/pg";
+        private static final String KEY_PG_TOKEN = "pg_token";
 
         @TargetApi(Build.VERSION_CODES.LOLLIPOP)
         @Override
@@ -165,7 +162,7 @@ public class KakaoPayFragment extends Fragment {
             Log.d(TAG, "shouldOverrideUrlLoading: " + request.getUrl());
             Uri url = request.getUrl();
 
-            if (url.toString().startsWith("intent://kakaopay/pg")) {
+            if (url.toString().startsWith(INTENT_KAKAO_PAY)) {
                 startKakaoPayApp(Uri.parse(paymentReadyResponse.androidAppScheme));
                 return true;
             }
@@ -175,8 +172,9 @@ public class KakaoPayFragment extends Fragment {
         @Override
         public boolean shouldOverrideUrlLoading(final WebView view, final String url) {
             Log.d(TAG, "shouldOverrideUrlLoading: " + url);
-            if (url.startsWith(KAKAO_SCHEME)) {
-                startKakaoPayApp(Uri.parse(url));
+
+            if (url.startsWith(INTENT_KAKAO_PAY)) {
+                startKakaoPayApp(Uri.parse(paymentReadyResponse.androidAppScheme));
                 return true;
             }
             return super.shouldOverrideUrlLoading(view, url);
@@ -191,8 +189,9 @@ public class KakaoPayFragment extends Fragment {
 
             if (url.toString().contains(KEY_PG_TOKEN)) {
                 String pgToken = url.getQueryParameter(KEY_PG_TOKEN);
-                //TODO: transfer pgToken
-                getActivity().finish();
+                String orderUuid = getArguments().getString(PaymentActivity.KEY_ORDER_UUID);
+                kakaoPayViewModel.postTokenInfo(orderUuid, pgToken)
+                        .observe(KakaoPayFragment.this, KakaoPayFragment.this::onSuccessCreatePaymentToken);
             }
 
             return super.shouldInterceptRequest(view, request);

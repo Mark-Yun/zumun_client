@@ -39,6 +39,9 @@ public enum AppServerServiceProvider {
 
     private static final int MAX_CACHE_SIZE = 20 * 1024 * 1024;
     public NetworkRepository networkRepository;
+    public PaymentService paymentService;
+
+    private Bundle headerBundle;
 
     AppServerServiceProvider() {
         networkRepository = buildDefaultService();
@@ -106,7 +109,8 @@ public enum AppServerServiceProvider {
         Bundle bundle = new Bundle();
         bundle.putString(AndroidSdk.KEY, String.valueOf(Build.VERSION.SDK_INT));
         bundle.putString(Model.KEY, Build.MODEL);
-        bundle.putString(Manufacturer.KEY, getAppVersion());
+        bundle.putString(Manufacturer.KEY, Build.MANUFACTURER);
+        bundle.putString(AppVersion.KEY, getAppVersion());
         return bundle;
     }
 
@@ -122,17 +126,18 @@ public enum AppServerServiceProvider {
         }
     }
 
-    public NetworkRepository buildSessionHeader(final Bundle bundle) {
+    public NetworkRepository buildNetworkRepository(final Bundle bundle) {
         Bundle mergedBundle = buildDefaultHeader();
         mergedBundle.putAll(bundle);
-        return networkRepository = buildNetworkRepository(mergedBundle);
+        headerBundle = mergedBundle;
+        return networkRepository = buildNetworkRepositoryInternal(mergedBundle);
     }
 
     private NetworkRepository buildDefaultService() {
-        return buildNetworkRepository(buildDefaultHeader());
+        return buildNetworkRepositoryInternal(buildDefaultHeader());
     }
 
-    private NetworkRepository buildNetworkRepository(final Bundle bundle) {
+    private NetworkRepository buildNetworkRepositoryInternal(final Bundle bundle) {
         Interceptor interceptor = interceptor(bundle);
         OkHttpClient okHttpClient = okHttpClient(interceptor);
 
@@ -143,6 +148,19 @@ public enum AppServerServiceProvider {
                 .client(okHttpClient)
                 .build()
                 .create(NetworkRepository.class);
+    }
+
+    public PaymentService buildPaymentService() {
+        Interceptor interceptor = interceptor(headerBundle);
+        OkHttpClient okHttpClient = okHttpClient(interceptor);
+
+        return paymentService = new Retrofit.Builder()
+                .baseUrl(PaymentService.URL)
+                .addConverterFactory(gsonConverterFactory())
+                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+                .client(okHttpClient)
+                .build()
+                .create(PaymentService.class);
     }
 
     private interface ContentType {
@@ -160,5 +178,9 @@ public enum AppServerServiceProvider {
 
     private interface Manufacturer {
         String KEY = "manufacturer";
+    }
+
+    private interface AppVersion {
+        String KEY = "app_version";
     }
 }

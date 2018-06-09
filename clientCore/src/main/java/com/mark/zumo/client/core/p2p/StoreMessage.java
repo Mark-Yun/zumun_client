@@ -31,8 +31,11 @@ class StoreMessage {
         String name = splitContent[1];
         long latitude = Long.parseLong(splitContent[2]);
         long longitude = Long.parseLong(splitContent[3]);
+        String coverImageUrl = splitContent[4];
+        String thumbnailImageUrl = splitContent[5];
+        String fcmToken = splitContent[6];
 
-        Store store = new Store(id, name, latitude, longitude, null, null);
+        Store store = new Store(id, name, latitude, longitude, coverImageUrl, thumbnailImageUrl, fcmToken);
         return new StoreMessage(store);
     }
 

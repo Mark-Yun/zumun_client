@@ -36,8 +36,8 @@ public class PaymentActivity extends AppCompatActivity {
     public static final String KEY_ORDER_UUID = "order_uuid";
 
     public static final int REQ_CODE_PAYMENT = 0;
-    public static final int RESEULT_CODE_PAYMENT_SUCCESS = 1;
-    public static final int RESEULT_CODE_PAYMENT_FAILED = 2;
+    public static final int RESULT_CODE_PAYMENT_SUCCESS = 1;
+    public static final int RESULT_CODE_PAYMENT_FAILED = 2;
 
     private static final String TAG = "PaymentActivity";
 
@@ -47,7 +47,7 @@ public class PaymentActivity extends AppCompatActivity {
         setContentView(R.layout.activity_payment);
         ButterKnife.bind(this);
 
-        setResult(RESEULT_CODE_PAYMENT_FAILED);
+        setResult(RESULT_CODE_PAYMENT_FAILED);
 
         inflateKakaoPay();
     }

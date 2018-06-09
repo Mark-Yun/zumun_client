@@ -10,6 +10,7 @@ import android.arch.lifecycle.LifecycleOwner;
 import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.RecyclerView;
@@ -25,6 +26,7 @@ import com.mark.zumo.client.core.util.glide.GlideUtils;
 import com.mark.zumo.client.customer.R;
 import com.mark.zumo.client.customer.view.TouchResponse;
 import com.mark.zumo.client.customer.view.menu.detail.MenuDetailActivity;
+import com.mark.zumo.client.customer.view.payment.PaymentActivity;
 import com.mark.zumo.client.customer.view.rebound.Rebound;
 import com.mark.zumo.client.customer.viewmodel.MenuViewModel;
 
@@ -98,7 +100,7 @@ class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.ViewHolder> {
         Intent intent = new Intent(context, MenuDetailActivity.class);
         intent.putExtra(MenuDetailActivity.KEY_MENU_UUID, menu.uuid);
         intent.putExtra(MenuDetailActivity.KEY_MENU_STORE_UUID, menu.storeUuid);
-        context.startActivity(intent);
+        ((FragmentActivity) context).startActivityForResult(intent, PaymentActivity.REQ_CODE_PAYMENT);
         return true;
     }
 

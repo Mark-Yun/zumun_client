@@ -13,15 +13,15 @@ import com.mark.zumo.client.core.entity.OrderDetail;
 import com.mark.zumo.client.core.entity.Store;
 import com.mark.zumo.client.core.entity.user.GuestUser;
 
-import java.util.Collection;
 import java.util.List;
 
 import io.reactivex.Maybe;
 import io.reactivex.Observable;
-import io.reactivex.Single;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
+import retrofit2.http.PUT;
+import retrofit2.http.Path;
 import retrofit2.http.Query;
 
 /**
@@ -30,29 +30,27 @@ import retrofit2.http.Query;
 
 public interface NetworkRepository {
 
-    String URL = "https://faca5l5t89.execute-api.ap-northeast-2.amazonaws.com/zumo_api/";
+    String URL = "https://akxjj18zh8.execute-api.ap-northeast-2.amazonaws.com/api/";
 
-    @GET("users/guest/create")
+    @POST("users/guest")
     Maybe<GuestUser> createGuestUser();
 
-    @POST("users/guest/delete")
-    Single<Void> deleteGuestUser(@Query("menu_uuid") String uuid);
-
-    @GET("menu/get")
+    @GET("menu")
     Observable<List<Menu>> getMenuList(@Query("store_uuid") String storeUuid);
 
-    @POST("menu/create")
-    Single<Menu> createMenuItem(@Body Menu menu);
+    @GET("store/{store_uuid}")
+    Observable<Store> getStore(@Path("store_uuid") String storeUuid);
 
-    @POST("store/create")
-    Single<Store> createStore(@Body Store store);
-
-    @GET("store/get")
-    Observable<Store> getStore(@Query("store_uuid") String storeUuid);
-
-    @GET("option/get")
+    @GET("option")
     Observable<List<MenuOption>> getMenuOptionList(@Query("menu_uuid") String uuid);
 
-    @POST("order/create")
-    Observable<MenuOrder> createOrder(@Body Collection<OrderDetail> orderDetailCollection);
+    @POST("order")
+    Observable<MenuOrder> createOrder(@Body List<OrderDetail> orderDetailCollection);
+
+    @POST("order/{menu_order_uuid}")
+    Maybe<MenuOrder> getMenuOrder(@Path("menu_order_uuid") String uuid);
+
+    @PUT("store/{store_uuid}")
+    Maybe<Store> updateStore(@Path("store_uuid") String storeUuid,
+                             @Body Store store);
 }

@@ -26,4 +26,6 @@
 
     <string name="theres_no_item_in_cart">Nothing in Cart</string>
     <string name="press_again_to_exit">Press again to exit</string>
+
+    <string name="menu_order_name_and">And, %s etc.</string>
 </resources>

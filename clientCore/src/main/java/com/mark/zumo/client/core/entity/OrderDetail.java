@@ -37,6 +37,8 @@ public class OrderDetail implements Serializable {
     public final String menuName;
     @SerializedName(Schema.menuOrderUuid) @ColumnInfo(name = Schema.menuOrderUuid)
     public final String menuOrderUuid;
+    @SerializedName(Schema.menuOrderName) @ColumnInfo(name = Schema.menuOrderName)
+    public String menuOrderName;
     @SerializedName(Schema.menuOptionUuidList) @ColumnInfo(name = Schema.menuOptionUuidList)
     public final List<String> menuOptionUuidList;
     @SerializedName(Schema.quantity) @ColumnInfo(name = Schema.quantity)
@@ -84,6 +86,7 @@ public class OrderDetail implements Serializable {
         String menuName = "menu_name";
         String menuOptionUuidList = "menu_option_uuid_list";
         String menuOrderUuid = "menu_order_uuid";
+        String menuOrderName = "menu_order_name";
         String storeUuid = "store_uuid";
         String quantity = "menu_quantity";
         String price = "price";

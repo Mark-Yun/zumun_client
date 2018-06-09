@@ -74,13 +74,13 @@ public class Cart {
         notifyOnNext();
     }
 
+    public int getItemCount() {
+        return orderDetailList.size();
+    }
+
     public void removeLatestCartItem() {
         removeCartItem(orderDetailList.size() - 1);
         notifyOnNext();
-    }
-
-    public int getItemCount() {
-        return orderDetailList.size();
     }
 
     public int getTotalAmount() {

@@ -1,0 +1,59 @@
+{
+  "project_info": {
+    "project_number": "929411035844",
+    "firebase_url": "https://emerald-agility-202708.firebaseio.com",
+    "project_id": "emerald-agility-202708",
+    "storage_bucket": "emerald-agility-202708.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:929411035844:android:b0018148f0c640a4",
+        "android_client_info": {
+          "package_name": "com.mark.zumo.client.customer"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "929411035844-qom5n44cvda88303jsr7od4sgmoujv68.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.mark.zumo.client.customer",
+            "certificate_hash": "148e8b8bc0af18d431760b7fc3b48b38b3c30ecb"
+          }
+        },
+        {
+          "client_id": "929411035844-gchjanfjrq93vpnf875aet438j0hrhq8.apps.googleusercontent.com",
+          "client_type": 3
+        },
+        {
+          "client_id": "929411035844-gchjanfjrq93vpnf875aet438j0hrhq8.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyApwDnG-wSi0JAbcI_Fxp5s92Xx_sZ-FA4"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "929411035844-gchjanfjrq93vpnf875aet438j0hrhq8.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

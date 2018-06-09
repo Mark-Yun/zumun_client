@@ -64,7 +64,7 @@ public class MenuOrder implements Serializable {
         String name = "menu_order_name";
         String customerUuid = "customer_uuid";
         String storeUuid = "store_uuid";
-        String orderNumber = "order_number";
+        String orderNumber = "menu_order_num";
         String createdDate = "create_date";
         String totalQuantity = "total_quantity";
         String totalPrice = "total_price";

@@ -18,6 +18,7 @@ import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.support.annotation.NonNull;
 
+import com.mark.zumo.client.core.entity.MenuOrder;
 import com.mark.zumo.client.core.payment.kakao.entity.PaidDetailResponse;
 import com.mark.zumo.client.core.payment.kakao.entity.PaymentReadyResponse;
 import com.mark.zumo.client.customer.model.OrderManager;
@@ -70,5 +71,24 @@ public class KakaoPayViewModel extends AndroidViewModel {
                 .subscribe();
 
         return liveData;
+    }
+
+    public LiveData<MenuOrder> postTokenInfo(String menuOrderUuid, String pgToken) {
+
+        MutableLiveData<MenuOrder> liveData = new MutableLiveData<>();
+
+        kakaoPayAdapter.createPaymentToken(menuOrderUuid, pgToken)
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnSuccess(liveData::setValue)
+                .doOnSubscribe(compositeDisposable::add)
+                .subscribe();
+
+        return liveData;
+    }
+
+    @Override
+    protected void onCleared() {
+        super.onCleared();
+        compositeDisposable.clear();
     }
 }

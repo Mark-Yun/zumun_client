@@ -7,6 +7,7 @@
 package com.mark.zumo.client.customer.view.main;
 
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -20,6 +21,9 @@ import android.view.ViewGroup;
 
 import com.mark.zumo.client.core.entity.Store;
 import com.mark.zumo.client.customer.R;
+import com.mark.zumo.client.customer.view.cart.CartActivity;
+import com.mark.zumo.client.customer.view.menu.detail.MenuDetailActivity;
+import com.mark.zumo.client.customer.view.order.OrderFragment;
 import com.mark.zumo.client.customer.viewmodel.MainViewModel;
 
 import butterknife.BindView;
@@ -40,7 +44,6 @@ public class MainBodyFragment extends Fragment {
     @Override
     public void onCreate(@Nullable final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         mainViewModel = ViewModelProviders.of(this).get(MainViewModel.class);
     }
 
@@ -83,5 +86,39 @@ public class MainBodyFragment extends Fragment {
         Log.d(TAG, "onD2dLoadStore: " + store);
         tabLayout.getTabAt(0).setText(store.name);
         tabPagerAdapter.onD2dLoadStore(store);
+    }
+
+    private void selectTabFragment(String className) {
+        int itemPosition = tabPagerAdapter.getItemPosition(className);
+        tabLayout.getTabAt(itemPosition).select();
+    }
+
+    @Override
+    public void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
+        switch (requestCode) {
+            case CartActivity.REQUEST_CODE:
+                switch (resultCode) {
+                    case CartActivity.RESULT_CODE_PAYMENT_SUCCESS:
+                        selectTabFragment(OrderFragment.class.getName());
+                        break;
+
+                    case CartActivity.RESULT_CODE_PAYMENT_FAILED:
+                        break;
+                }
+                break;
+
+            case MenuDetailActivity.REQUEST_CODE:
+                switch (resultCode) {
+                    case MenuDetailActivity.RESULT_CODE_PAYMENT_SUCCESS:
+                        selectTabFragment(OrderFragment.class.getName());
+                        break;
+
+                    case MenuDetailActivity.RESULT_CODE_PAYMENT_FAILED:
+                        break;
+                }
+                break;
+        }
+
+        super.onActivityResult(requestCode, resultCode, data);
     }
 }

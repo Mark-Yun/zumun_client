@@ -6,8 +6,12 @@
 
 package com.mark.zumo.client.store.model;
 
-import io.reactivex.Single;
-import io.reactivex.SingleOnSubscribe;
+import android.util.Log;
+
+import com.mark.zumo.client.core.entity.Store;
+import com.mark.zumo.client.core.repository.SessionRepository;
+
+import io.reactivex.Maybe;
 import io.reactivex.schedulers.Schedulers;
 
 /**
@@ -17,10 +21,37 @@ import io.reactivex.schedulers.Schedulers;
 public enum SessionManager {
     INSTANCE;
 
-    public Single<Boolean> isSessionValid() {
-        return Single.create((SingleOnSubscribe<Boolean>) e -> {
+    private static final String TAG = "SessionManager";
 
-            e.onSuccess(false);
-        }).subscribeOn(Schedulers.io());
+    private SessionRepository sessionRepository;
+
+    private Store store;
+
+    SessionManager() {
+        sessionRepository = SessionRepository.INSTANCE;
+        getSessionStore()
+                .doOnSuccess(this::buildSessionHeader)
+                .doOnSuccess(store -> this.store = store)
+                .subscribe();
+    }
+
+    public Store getCurrentStore() {
+        return store;
+    }
+
+    public boolean isSessionAvailable() {
+        return store != null;
+    }
+
+    public Maybe<Store> getSessionStore() {
+        return sessionRepository.getStoreFromCache()
+                .doOnError(throwable -> Log.e(TAG, "getSessionStore: ", throwable))
+                .subscribeOn(Schedulers.io());
+    }
+
+    private void buildSessionHeader(Store store) {
+        new SessionRepository.SessionBuilder()
+                .put(SessionRepository.KEY_STORE_UUID, store.uuid)
+                .build();
     }
 }

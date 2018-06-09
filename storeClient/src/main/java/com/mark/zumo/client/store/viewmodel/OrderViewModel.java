@@ -17,9 +17,9 @@ import com.mark.zumo.client.core.entity.MenuOption;
 import com.mark.zumo.client.core.entity.MenuOrder;
 import com.mark.zumo.client.core.entity.OrderDetail;
 import com.mark.zumo.client.core.util.context.ContextHolder;
-import com.mark.zumo.client.store.model.MenuOrderManager;
+import com.mark.zumo.client.store.model.OrderManager;
+import com.mark.zumo.client.store.model.entity.OrderBucket;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -31,30 +31,23 @@ import io.reactivex.disposables.CompositeDisposable;
 public class OrderViewModel extends AndroidViewModel {
 
     public static final String TAG = "OrderViewModel";
-    private MenuOrderManager menuOrderManager;
+    private OrderManager orderManager;
 
-    private List<MenuOrder> requestedMenuOrderList;
     private CompositeDisposable compositeDisposable;
 
     public OrderViewModel(@NonNull final Application application) {
         super(application);
 
-        menuOrderManager = MenuOrderManager.INSTANCE;
-
-        requestedMenuOrderList = new ArrayList<>();
+        orderManager = OrderManager.INSTANCE;
         compositeDisposable = new CompositeDisposable();
-    }
-
-    private void onMenuOrderRequested(MutableLiveData<List<MenuOrder>> liveData, MenuOrder menuOrder) {
-        requestedMenuOrderList.add(menuOrder);
-        liveData.setValue(requestedMenuOrderList);
     }
 
     public LiveData<List<MenuOrder>> acceptedMenuOrderList() {
         MutableLiveData<List<MenuOrder>> liveData = new MutableLiveData<>();
-        menuOrderManager.getAcceptedMenuOrderList()
+        orderManager.acceptedOrderBucket()
+                .map(OrderBucket::getOrderList)
                 .observeOn(AndroidSchedulers.mainThread())
-                .doOnSuccess(liveData::setValue)
+                .doOnNext(liveData::setValue)
                 .doOnSubscribe(compositeDisposable::add)
                 .subscribe();
         return liveData;
@@ -62,9 +55,10 @@ public class OrderViewModel extends AndroidViewModel {
 
     public LiveData<List<MenuOrder>> requestedMenuOrderList() {
         MutableLiveData<List<MenuOrder>> liveData = new MutableLiveData<>();
-        menuOrderManager.getRequestedMenuOrderList()
+        orderManager.requestedOrderBucket()
+                .map(OrderBucket::getOrderList)
                 .observeOn(AndroidSchedulers.mainThread())
-                .doOnNext(menuOrder -> onMenuOrderRequested(liveData, menuOrder))
+                .doOnNext(liveData::setValue)
                 .doOnSubscribe(compositeDisposable::add)
                 .subscribe();
         return liveData;
@@ -72,7 +66,7 @@ public class OrderViewModel extends AndroidViewModel {
 
     public LiveData<List<OrderDetail>> orderDetailList(String orderUuid) {
         MutableLiveData<List<OrderDetail>> liveData = new MutableLiveData<>();
-        menuOrderManager.getOrderDetailList(orderUuid)
+        orderManager.getOrderDetailList(orderUuid)
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnNext(liveData::setValue)
                 .doOnSubscribe(compositeDisposable::add)
@@ -82,7 +76,7 @@ public class OrderViewModel extends AndroidViewModel {
 
     public LiveData<List<MenuOption>> menuOptionList(List<String> menuOptionUuid) {
         MutableLiveData<List<MenuOption>> liveData = new MutableLiveData<>();
-        menuOrderManager.getMenuOptionList(menuOptionUuid)
+        orderManager.getMenuOptionList(menuOptionUuid)
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnNext(liveData::setValue)
                 .doOnSubscribe(compositeDisposable::add)

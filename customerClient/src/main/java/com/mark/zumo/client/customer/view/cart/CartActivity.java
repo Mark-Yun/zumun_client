@@ -36,13 +36,15 @@ public class CartActivity extends AppCompatActivity {
 
     public static final String KEY_STORE_UUID = "store_uuid";
 
-    private String storeUuid;
+    public static final int REQUEST_CODE = 2;
 
+    public static final int RESULT_CODE_PAYMENT_SUCCESS = PaymentActivity.RESULT_CODE_PAYMENT_SUCCESS;
+    public static final int RESULT_CODE_PAYMENT_FAILED = PaymentActivity.RESULT_CODE_PAYMENT_FAILED;
     @BindView(R.id.store_cover_image) AppCompatImageView storeImage;
     @BindView(R.id.store_cover_title) AppCompatTextView storeTitle;
     @BindView(R.id.cart_item_recycler_view) RecyclerView cartItemRecyclerView;
     @BindView(R.id.total_price) AppCompatTextView totalPrice;
-
+    private String storeUuid;
     private CartViewModel cartViewModel;
 
     @Override
@@ -105,7 +107,15 @@ public class CartActivity extends AppCompatActivity {
 
         switch (requestCode) {
             case PaymentActivity.REQ_CODE_PAYMENT:
+                switch (resultCode) {
+                    case PaymentActivity.RESULT_CODE_PAYMENT_SUCCESS:
+                        setResult(RESULT_CODE_PAYMENT_SUCCESS, data);
+                        break;
 
+                    case PaymentActivity.RESULT_CODE_PAYMENT_FAILED:
+                        setResult(RESULT_CODE_PAYMENT_FAILED);
+                        break;
+                }
                 break;
         }
     }

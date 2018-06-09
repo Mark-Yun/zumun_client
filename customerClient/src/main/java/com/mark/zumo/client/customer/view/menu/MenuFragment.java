@@ -157,7 +157,7 @@ public class MenuFragment extends Fragment {
                 } else {
                     Intent intent = new Intent(getContext(), CartActivity.class);
                     intent.putExtra(CartActivity.KEY_STORE_UUID, storeUuid);
-                    startActivity(intent);
+                    startActivityForResult(intent, CartActivity.REQUEST_CODE);
                 }
 
                 cartLiveData.removeObserver(this);
