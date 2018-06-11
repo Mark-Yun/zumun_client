@@ -53,9 +53,8 @@ public enum OrderRepository {
                 .doOnNext(diskRepository::insertMenuOrder);
     }
 
-    public Observable<MenuOrder> getMenuOrderFromDisk(String orderUuid) {
+    public Maybe<MenuOrder> getMenuOrderFromDisk(String orderUuid) {
         return diskRepository.getMenuOrder(orderUuid)
-                .toObservable()
                 .subscribeOn(Schedulers.io());
     }
 

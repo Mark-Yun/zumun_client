@@ -82,12 +82,16 @@ public class CartViewModel extends AndroidViewModel {
                 .subscribe();
     }
 
+    public void clearCartItem() {
+        cartManager.clearCart(currentStoreUuid);
+    }
+
     public LiveData<Store> getStore(String storeUuid) {
         MutableLiveData<Store> storeLiveData = new MutableLiveData<>();
 
         storeManager.getStoreFromDisk(storeUuid)
                 .observeOn(AndroidSchedulers.mainThread())
-                .doOnNext(storeLiveData::setValue)
+                .doOnSuccess(storeLiveData::setValue)
                 .doOnSubscribe(disposables::add)
                 .subscribe();
 

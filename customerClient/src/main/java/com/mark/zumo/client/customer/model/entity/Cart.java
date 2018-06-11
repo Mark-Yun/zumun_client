@@ -66,6 +66,7 @@ public class Cart {
 
     public void clear() {
         orderDetailList.clear();
+        notifyOnNext();
     }
 
     public void removeCartItem(int position) {

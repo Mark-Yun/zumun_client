@@ -42,7 +42,7 @@ public class DebugUtil {
                 "TESTNAME",
                 UUID.randomUUID().toString(),
                 UUID.randomUUID().toString(),
-                "24", "3/6/2018 15:33", 5, 25500);
+                "24", "3/6/2018 15:33", 5, 25500, 0);
     }
 
     public static List<OrderDetail> orderDetailList(String orderUuid) {

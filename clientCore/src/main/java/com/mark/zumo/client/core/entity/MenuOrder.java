@@ -12,6 +12,7 @@ import android.arch.persistence.room.PrimaryKey;
 import android.support.annotation.NonNull;
 
 import com.google.gson.annotations.SerializedName;
+import com.mark.zumo.client.core.R;
 import com.mark.zumo.client.core.entity.util.EntityHelper;
 
 import java.io.Serializable;
@@ -42,8 +43,10 @@ public class MenuOrder implements Serializable {
     public final int totalQuantity;
     @ColumnInfo(name = Schema.totalPrice) @SerializedName(Schema.totalPrice)
     public final int totalPrice;
+    @ColumnInfo(name = Schema.state) @SerializedName(Schema.state)
+    public final int state;
 
-    public MenuOrder(@NonNull final String uuid, final String name, final String customerUuid, final String storeUuid, final String orderNumber, final String createdDate, final int totalQuantity, final int totalPrice) {
+    public MenuOrder(@NonNull final String uuid, final String name, final String customerUuid, final String storeUuid, final String orderNumber, final String createdDate, final int totalQuantity, final int totalPrice, final int state) {
         this.uuid = uuid;
         this.name = name;
         this.customerUuid = customerUuid;
@@ -52,11 +55,35 @@ public class MenuOrder implements Serializable {
         this.createdDate = createdDate;
         this.totalQuantity = totalQuantity;
         this.totalPrice = totalPrice;
+        this.state = state;
     }
 
     @Override
     public String toString() {
         return EntityHelper.toString(this, this.getClass());
+    }
+
+    public enum State {
+
+        PAYMENT_READY(R.string.order_state_payment_ready),
+        ACCEPTED(R.string.order_state_accepted),
+        COMPLETE(R.string.order_state_complete),
+        REJECTED(R.string.order_state_rejected),
+        CANCELED(R.string.order_state_canceled);
+
+        public final int res;
+
+        State(final int res) {
+            this.res = res;
+        }
+
+        public static State of(int orderState) {
+            for (State state : values())
+                if (orderState == state.ordinal())
+                    return state;
+
+            throw new UnsupportedOperationException();
+        }
     }
 
     public interface Schema {
@@ -68,5 +95,6 @@ public class MenuOrder implements Serializable {
         String createdDate = "created_date";
         String totalQuantity = "total_quantity";
         String totalPrice = "total_price";
+        String state = "menu_order_state";
     }
 }

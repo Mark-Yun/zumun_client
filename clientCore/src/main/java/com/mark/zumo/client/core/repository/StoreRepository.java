@@ -69,8 +69,8 @@ public enum StoreRepository {
                 .distinctUntilChanged(new EntityComparator<>());
     }
 
-    public Observable<Store> getStoreFromDisk(String storeUuid) {
-        return diskRepository.getStore(storeUuid).toObservable()
+    public Maybe<Store> getStoreFromDisk(String storeUuid) {
+        return diskRepository.getStore(storeUuid)
                 .doOnError(this::onErrorOccurred);
     }
 

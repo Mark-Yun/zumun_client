@@ -128,6 +128,7 @@ public class MenuDetailActivity extends AppCompatActivity {
                 switch (resultCode) {
                     case PaymentActivity.RESULT_CODE_PAYMENT_SUCCESS:
                         setResult(RESULT_CODE_PAYMENT_SUCCESS, data);
+                        finish();
                         break;
 
                     case PaymentActivity.RESULT_CODE_PAYMENT_FAILED:

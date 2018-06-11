@@ -52,8 +52,7 @@ public enum OrderManager {
                 .subscribeOn(Schedulers.io());
     }
 
-    public Observable<MenuOrder> getMenuOrderFromDisk(String orderUuid) {
-
+    public Maybe<MenuOrder> getMenuOrderFromDisk(String orderUuid) {
         return orderRepository.getMenuOrderFromDisk(orderUuid)
                 .subscribeOn(Schedulers.io());
     }

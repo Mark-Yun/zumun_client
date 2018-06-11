@@ -6,4 +6,10 @@
 
 <resources>
     <string name="google_api_key">AIzaSyBG1TvGy6sHkwhQewFnWIXbDzjXwnrp310</string>
+
+    <string name="order_state_payment_ready">Payment Ready</string>
+    <string name="order_state_accepted">Accepted</string>
+    <string name="order_state_complete">Complete</string>
+    <string name="order_state_rejected">Rejected</string>
+    <string name="order_state_canceled">Canceled</string>
 </resources>

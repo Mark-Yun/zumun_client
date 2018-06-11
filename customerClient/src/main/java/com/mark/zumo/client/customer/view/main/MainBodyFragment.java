@@ -24,6 +24,7 @@ import com.mark.zumo.client.customer.R;
 import com.mark.zumo.client.customer.view.cart.CartActivity;
 import com.mark.zumo.client.customer.view.menu.detail.MenuDetailActivity;
 import com.mark.zumo.client.customer.view.order.OrderFragment;
+import com.mark.zumo.client.customer.view.payment.PaymentActivity;
 import com.mark.zumo.client.customer.viewmodel.MainViewModel;
 
 import butterknife.BindView;
@@ -99,7 +100,8 @@ public class MainBodyFragment extends Fragment {
             case CartActivity.REQUEST_CODE:
                 switch (resultCode) {
                     case CartActivity.RESULT_CODE_PAYMENT_SUCCESS:
-                        selectTabFragment(OrderFragment.class.getName());
+                        String orderUuid = data.getStringExtra(PaymentActivity.KEY_ORDER_UUID);
+                        onSuccessPayment(orderUuid);
                         break;
 
                     case CartActivity.RESULT_CODE_PAYMENT_FAILED:
@@ -110,7 +112,8 @@ public class MainBodyFragment extends Fragment {
             case MenuDetailActivity.REQUEST_CODE:
                 switch (resultCode) {
                     case MenuDetailActivity.RESULT_CODE_PAYMENT_SUCCESS:
-                        selectTabFragment(OrderFragment.class.getName());
+                        String orderUuid = data.getStringExtra(PaymentActivity.KEY_ORDER_UUID);
+                        onSuccessPayment(orderUuid);
                         break;
 
                     case MenuDetailActivity.RESULT_CODE_PAYMENT_FAILED:
@@ -120,5 +123,10 @@ public class MainBodyFragment extends Fragment {
         }
 
         super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    private void onSuccessPayment(String orderUuid) {
+        mainViewModel.onSuccessPayment(orderUuid);
+        selectTabFragment(OrderFragment.class.getName());
     }
 }

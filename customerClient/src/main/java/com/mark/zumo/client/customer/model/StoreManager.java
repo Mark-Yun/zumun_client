@@ -14,6 +14,7 @@ import com.mark.zumo.client.core.repository.StoreRepository;
 
 import java.util.List;
 
+import io.reactivex.Maybe;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
@@ -54,9 +55,9 @@ public enum StoreManager {
                 .doOnNext(store -> Log.d(TAG, "getStore: " + store));
     }
 
-    public Observable<Store> getStoreFromDisk(String storeUuid) {
+    public Maybe<Store> getStoreFromDisk(String storeUuid) {
         return storeRepository.getStoreFromDisk(storeUuid)
                 .subscribeOn(Schedulers.io())
-                .doOnNext(store -> Log.d(TAG, "getStoreFromDisk: " + store));
+                .doOnSuccess(store -> Log.d(TAG, "getStoreFromDisk: " + store));
     }
 }

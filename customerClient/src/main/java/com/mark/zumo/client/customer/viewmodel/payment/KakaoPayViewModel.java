@@ -51,9 +51,9 @@ public class KakaoPayViewModel extends AndroidViewModel {
         MutableLiveData<PaymentReadyResponse> liveData = new MutableLiveData<>();
 
         orderManager.getMenuOrderFromDisk(orderUuid)
-                .flatMapMaybe(kakaoPaymentManager::preparePayment)
+                .flatMap(kakaoPaymentManager::preparePayment)
                 .observeOn(AndroidSchedulers.mainThread())
-                .doOnNext(liveData::setValue)
+                .doOnSuccess(liveData::setValue)
                 .doOnSubscribe(compositeDisposable::add)
                 .subscribe();
 
