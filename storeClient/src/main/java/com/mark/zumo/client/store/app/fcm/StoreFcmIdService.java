@@ -24,7 +24,7 @@ import com.mark.zumo.client.store.model.StoreManager;
  * Created by mark on 18. 6. 8.
  */
 public class StoreFcmIdService extends FirebaseInstanceIdService {
-    public static final String TAG = "StoreFcmIdService";
+    private static final String TAG = "StoreFcmIdService";
 
     private StoreManager storeManager;
     private SessionManager sessionManager;

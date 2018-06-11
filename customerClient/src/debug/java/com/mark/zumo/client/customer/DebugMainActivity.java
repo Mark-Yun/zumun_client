@@ -23,7 +23,7 @@ import android.widget.LinearLayout;
 
 public class DebugMainActivity extends Activity {
 
-    public static final String TAG = "DebugMainActivity";
+    private static final String TAG = "DebugMainActivity";
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {

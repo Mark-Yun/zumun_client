@@ -39,7 +39,7 @@ import io.reactivex.disposables.CompositeDisposable;
  */
 public class MenuDetailViewModel extends AndroidViewModel {
 
-    public static final String TAG = "MenuDetailViewModel";
+    private static final String TAG = "MenuDetailViewModel";
 
     private MenuManager menuManager;
     private CartManager cartManager;
@@ -71,7 +71,7 @@ public class MenuDetailViewModel extends AndroidViewModel {
 
         menuManager.getMenuFromDisk(uuid)
                 .observeOn(AndroidSchedulers.mainThread())
-                .doOnNext(liveData::setValue)
+                .doOnSuccess(liveData::setValue)
                 .doOnSubscribe(disposables::add)
                 .subscribe();        
 

@@ -27,7 +27,6 @@ import io.reactivex.Maybe;
 public enum SessionRepository {
     INSTANCE;
 
-
     public static final String KEY_CUSTOMER_UUID = "customer_uuid";
     public static final String KEY_STORE_UUID = "store_uuid";
 

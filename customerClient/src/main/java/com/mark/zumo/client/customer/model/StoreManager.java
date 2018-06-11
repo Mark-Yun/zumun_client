@@ -25,7 +25,7 @@ import io.reactivex.schedulers.Schedulers;
 public enum StoreManager {
     INSTANCE;
 
-    public static final String TAG = "StoreManager";
+    private static final String TAG = "StoreManager";
     private StoreRepository storeRepository;
     private AppLocationProvider locationProvider;
 

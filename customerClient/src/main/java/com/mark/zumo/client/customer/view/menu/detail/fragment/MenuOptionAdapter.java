@@ -25,7 +25,7 @@ import java.util.Map;
  */
 public class MenuOptionAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    public static final String TAG = "MenuOptionAdapter";
+    private static final String TAG = "MenuOptionAdapter";
 
     private MenuDetailViewModel menuDetailViewModel;
     private LifecycleOwner lifecycleOwner;

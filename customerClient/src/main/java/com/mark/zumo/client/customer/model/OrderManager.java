@@ -14,6 +14,7 @@ import com.mark.zumo.client.customer.R;
 
 import java.util.List;
 
+import io.reactivex.Maybe;
 import io.reactivex.Observable;
 import io.reactivex.schedulers.Schedulers;
 
@@ -30,7 +31,7 @@ public enum OrderManager {
         orderRepository = OrderRepository.INSTANCE;
     }
 
-    public Observable<MenuOrder> createMenuOrder(List<OrderDetail> orderDetailList) {
+    public Maybe<MenuOrder> createMenuOrder(List<OrderDetail> orderDetailList) {
         String generatedOrderName = orderDetailList.get(0).menuName;
         if (orderDetailList.size() > 1) {
             String amount = String.valueOf(orderDetailList.size() - 1);
@@ -42,7 +43,7 @@ public enum OrderManager {
                 .map(orderDetail -> {
                     orderDetail.menuOrderName = orderName;
                     return orderDetail;
-                }).toList().flatMapObservable(orderRepository::createMenuOrder)
+                }).toList().flatMapMaybe(orderRepository::createMenuOrder)
                 .subscribeOn(Schedulers.io());
     }
 

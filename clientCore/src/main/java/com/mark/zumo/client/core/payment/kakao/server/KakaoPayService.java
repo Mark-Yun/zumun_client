@@ -4,7 +4,13 @@
  * Proprietary and confidential
  */
 
-package com.mark.zumo.client.core.payment.kakao;
+/*
+ * Copyright (c) 2018. Mark Soft - All Rights Reserved
+ * Unauthorized copying of this file, via any medium is strictly prohibited
+ * Proprietary and confidential
+ */
+
+package com.mark.zumo.client.core.payment.kakao.server;
 
 import com.mark.zumo.client.core.payment.kakao.entity.CancelResponse;
 import com.mark.zumo.client.core.payment.kakao.entity.PaidDetailResponse;
@@ -16,6 +22,7 @@ import java.util.List;
 import io.reactivex.Maybe;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
+import retrofit2.http.Header;
 import retrofit2.http.POST;
 
 /**
@@ -23,6 +30,7 @@ import retrofit2.http.POST;
  */
 public interface KakaoPayService {
     String URL = "https://kapi.kakao.com";
+    String CID = "TC0ONETIME";
 
     @FormUrlEncoded
     @POST("/v1/payment/ready")
@@ -45,7 +53,8 @@ public interface KakaoPayService {
 
     @FormUrlEncoded
     @POST("/v1/payment/approve")
-    Maybe<PaymentApprovalResponse> approvalPayment(@Field("cid") String cId,
+    Maybe<PaymentApprovalResponse> approvalPayment(@Header("Authorization") String token,
+                                                   @Field("cid") String cId,
                                                    @Field("tid") String tId,
                                                    @Field("partner_order_id") String partnerOrderId,
                                                    @Field("partner_user_id") String partnerUserId,

@@ -33,7 +33,7 @@ import java.util.Objects;
 
 class NearbyUtil {
 
-    public static final String TAG = "NearbyUtil";
+    private static final String TAG = "NearbyUtil";
 
     static String convertString(BleSignal bleSignal) {
         return "BleSignal rssi=" + bleSignal.getRssi()

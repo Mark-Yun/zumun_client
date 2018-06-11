@@ -18,6 +18,7 @@ import com.google.gson.GsonBuilder;
 import com.mark.zumo.client.core.util.context.ContextHolder;
 
 import java.io.File;
+import java.util.concurrent.TimeUnit;
 
 import okhttp3.Cache;
 import okhttp3.Interceptor;
@@ -38,6 +39,7 @@ public enum AppServerServiceProvider {
     private static final String TAG = "AppServerServiceProvider";
 
     private static final int MAX_CACHE_SIZE = 20 * 1024 * 1024;
+
     public NetworkRepository networkRepository;
     public PaymentService paymentService;
 
@@ -64,6 +66,8 @@ public enum AppServerServiceProvider {
                 .cache(cache())
                 .addInterceptor(interceptor)
                 .addInterceptor(logger())
+                .connectTimeout(20, TimeUnit.SECONDS)
+                .readTimeout(20, TimeUnit.SECONDS)
                 .build();
     }
 

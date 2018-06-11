@@ -40,17 +40,20 @@ public interface DiskRepository {
     void insertStoreList(List<Store> stores);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    void insert(Store store);
+    void insertStore(Store store);
 
 
     @Query("SELECT * FROM " + OrderDetail.TABLE + " WHERE order_detail_uuid LIKE :uuid LIMIT 1")
     Maybe<OrderDetail> getOrderDetail(String uuid);
 
+    @Query("SELECT * FROM " + OrderDetail.TABLE + " WHERE menu_order_uuid LIKE :menuOrderUuid ")
+    Maybe<List<OrderDetail>> getOrderDetailListByMenuOrderUuid(String menuOrderUuid);
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertOrderDetailList(List<OrderDetail> orderDetailList);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    void insert(OrderDetail orderDetailList);
+    void insertOrderDetail(OrderDetail orderDetailList);
 
 
     @Query("SELECT * FROM " + MenuOrder.TABLE + " WHERE menu_order_uuid LIKE :menuOrderUuid LIMIT 1")
@@ -61,7 +64,7 @@ public interface DiskRepository {
 
 
     @Query("SELECT * FROM " + MenuOption.TABLE + " WHERE menu_uuid LIKE :menuUuid LIMIT 1")
-    Maybe<List<MenuOption>> getMenuOptionList(String menuUuid);
+    Maybe<List<MenuOption>> getMenuOptionListByMenuUuid(String menuUuid);
 
     @Query("SELECT * FROM " + MenuOption.TABLE + " WHERE menu_option_uuid LIKE :menuOptionUuid LIMIT 1")
     Maybe<MenuOption> getMenuOption(String menuOptionUuid);
@@ -70,7 +73,7 @@ public interface DiskRepository {
     void insertMenuOptionList(List<MenuOption> menuOptions);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    void insert(MenuOption menuOption);
+    void insertMenuOption(MenuOption menuOption);
 
 
     @Query("SELECT * FROM " + Menu.MENU_TABLE + " WHERE menu_uuid LIKE :uuid LIMIT 1")
@@ -83,14 +86,14 @@ public interface DiskRepository {
     void insertMenuList(List<Menu> menus);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    void insert(Menu menu);
+    void insertMenu(Menu menu);
 
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    void insert(MenuOrder menuOrder);
+    void insertMenuOrder(MenuOrder menuOrder);
 
     @Insert
-    void insert(VisitStore visitStore);
+    void insertVisitStore(VisitStore visitStore);
 
     @Query("SELECT store_uuid, visit_date FROM" +
             "(SELECT * FROM " + VisitStore.TABLE + ")" +

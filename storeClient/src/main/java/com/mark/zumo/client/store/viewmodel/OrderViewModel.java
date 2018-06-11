@@ -16,7 +16,7 @@ import android.widget.Toast;
 import com.mark.zumo.client.core.entity.MenuOption;
 import com.mark.zumo.client.core.entity.MenuOrder;
 import com.mark.zumo.client.core.entity.OrderDetail;
-import com.mark.zumo.client.core.util.context.ContextHolder;
+import com.mark.zumo.client.store.model.MenuManager;
 import com.mark.zumo.client.store.model.OrderManager;
 import com.mark.zumo.client.store.model.entity.OrderBucket;
 
@@ -30,8 +30,10 @@ import io.reactivex.disposables.CompositeDisposable;
  */
 public class OrderViewModel extends AndroidViewModel {
 
-    public static final String TAG = "OrderViewModel";
+    private static final String TAG = "OrderViewModel";
+
     private OrderManager orderManager;
+    private MenuManager menuManager;
 
     private CompositeDisposable compositeDisposable;
 
@@ -39,6 +41,8 @@ public class OrderViewModel extends AndroidViewModel {
         super(application);
 
         orderManager = OrderManager.INSTANCE;
+        menuManager = MenuManager.INSTANCE;
+
         compositeDisposable = new CompositeDisposable();
     }
 
@@ -76,7 +80,7 @@ public class OrderViewModel extends AndroidViewModel {
 
     public LiveData<List<MenuOption>> menuOptionList(List<String> menuOptionUuid) {
         MutableLiveData<List<MenuOption>> liveData = new MutableLiveData<>();
-        orderManager.getMenuOptionList(menuOptionUuid)
+        menuManager.getMenuOptionList(menuOptionUuid)
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnNext(liveData::setValue)
                 .doOnSubscribe(compositeDisposable::add)
@@ -84,16 +88,35 @@ public class OrderViewModel extends AndroidViewModel {
         return liveData;
     }
 
-    public void acceptOrder(MenuOrder menuOrder) {
-        Toast.makeText(ContextHolder.getContext(), "acceptOrder", Toast.LENGTH_SHORT).show();
+    public LiveData<MenuOrder> acceptOrder(MenuOrder menuOrder) {
+        MutableLiveData<MenuOrder> liveData = new MutableLiveData<>();
+        orderManager.acceptOrder(menuOrder)
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnSuccess(liveData::setValue)
+                .doOnSuccess(order -> showToast("accepted " + order.name))
+                .subscribe();
+        showToast("acceptOrder");
+
+        return liveData;
+    }
+
+    private void showToast(final String acceptOrder) {
+        Toast.makeText(getApplication(), acceptOrder, Toast.LENGTH_SHORT).show();
+    }
+
+    public void acceptAllOrder() {
+        orderManager.acceptAllOrder()
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnSuccess(count -> showToast("accepted " + count + "orders."))
+                .subscribe();
     }
 
     public void rejectOrder(MenuOrder menuOrder) {
-        Toast.makeText(ContextHolder.getContext(), "rejectOrder", Toast.LENGTH_SHORT).show();
+        showToast("rejectOrder");
     }
 
     public void completeOrder(MenuOrder menuOrder) {
-        Toast.makeText(ContextHolder.getContext(), "completeOrder" + menuOrder.uuid, Toast.LENGTH_SHORT).show();
+        showToast("completeOrder" + menuOrder.uuid);
     }
 
     @Override

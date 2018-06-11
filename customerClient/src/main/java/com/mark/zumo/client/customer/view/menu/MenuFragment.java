@@ -45,7 +45,7 @@ import butterknife.OnClick;
  */
 public class MenuFragment extends Fragment {
 
-    public static final String TAG = "MenuFragment";
+    private static final String TAG = "MenuFragment";
 
     public static final String KEY_STORE_UUID = "store_uuid";
     public static final String KEY_IS_D2D = "is_d2d";

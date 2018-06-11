@@ -6,11 +6,9 @@
 
 package com.mark.zumo.client.customer.view.payment.fragment.concrete;
 
-import android.annotation.TargetApi;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -20,7 +18,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.WebResourceRequest;
 import android.webkit.WebResourceResponse;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -156,19 +153,6 @@ public class KakaoPayFragment extends Fragment {
         private static final String INTENT_KAKAO_PAY = "intent://kakaopay/pg";
         private static final String KEY_PG_TOKEN = "pg_token";
 
-        @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-        @Override
-        public boolean shouldOverrideUrlLoading(final WebView view, final WebResourceRequest request) {
-            Log.d(TAG, "shouldOverrideUrlLoading: " + request.getUrl());
-            Uri url = request.getUrl();
-
-            if (url.toString().startsWith(INTENT_KAKAO_PAY)) {
-                startKakaoPayApp(Uri.parse(paymentReadyResponse.androidAppScheme));
-                return true;
-            }
-            return super.shouldOverrideUrlLoading(view, request);
-        }
-
         @Override
         public boolean shouldOverrideUrlLoading(final WebView view, final String url) {
             Log.d(TAG, "shouldOverrideUrlLoading: " + url);
@@ -180,27 +164,17 @@ public class KakaoPayFragment extends Fragment {
             return super.shouldOverrideUrlLoading(view, url);
         }
 
-        @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-        @Nullable
-        @Override
-        public WebResourceResponse shouldInterceptRequest(final WebView view, final WebResourceRequest request) {
-            Uri url = request.getUrl();
-            Log.d(TAG, "shouldInterceptRequest: " + url);
-
-            if (url.toString().contains(KEY_PG_TOKEN)) {
-                String pgToken = url.getQueryParameter(KEY_PG_TOKEN);
-                String orderUuid = getArguments().getString(PaymentActivity.KEY_ORDER_UUID);
-                kakaoPayViewModel.postTokenInfo(orderUuid, pgToken)
-                        .observe(KakaoPayFragment.this, KakaoPayFragment.this::onSuccessCreatePaymentToken);
-            }
-
-            return super.shouldInterceptRequest(view, request);
-        }
-
         @Nullable
         @Override
         public WebResourceResponse shouldInterceptRequest(final WebView view, final String url) {
             Log.d(TAG, "shouldInterceptRequest: " + url);
+
+            if (url.contains(KEY_PG_TOKEN)) {
+                String pgToken = Uri.parse(url).getQueryParameter(KEY_PG_TOKEN);
+                String orderUuid = getArguments().getString(PaymentActivity.KEY_ORDER_UUID);
+                kakaoPayViewModel.postTokenInfo(orderUuid, paymentReadyResponse.tId, pgToken)
+                        .observe(KakaoPayFragment.this, KakaoPayFragment.this::onSuccessCreatePaymentToken);
+            }
             return super.shouldInterceptRequest(view, url);
         }
     }

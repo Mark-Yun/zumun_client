@@ -53,7 +53,7 @@ public class Store {
         return EntityHelper.toString(this, this.getClass());
     }
 
-    private interface Schema {
+    public interface Schema {
         String uuid = TABLE + "_uuid";
         String name = TABLE + "_name";
         String latitude = "latitude";

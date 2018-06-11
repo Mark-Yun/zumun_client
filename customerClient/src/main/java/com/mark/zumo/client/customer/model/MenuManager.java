@@ -18,6 +18,7 @@ import com.mark.zumo.client.core.util.DebugUtil;
 
 import java.util.List;
 
+import io.reactivex.Maybe;
 import io.reactivex.Observable;
 import io.reactivex.Single;
 import io.reactivex.observables.GroupedObservable;
@@ -48,7 +49,7 @@ public enum MenuManager {
                 .subscribeOn(Schedulers.io());
     }
 
-    public Observable<Menu> getMenuFromDisk(String uuid) {
+    public Maybe<Menu> getMenuFromDisk(String uuid) {
         return menuRepository.getMenuFromDisk(uuid)
                 .subscribeOn(Schedulers.io());
     }
@@ -72,7 +73,7 @@ public enum MenuManager {
                 .subscribeOn(Schedulers.computation());
     }
 
-    public Observable<MenuOption> getMenuOptionFromDisk(String menuOptionUuid) {
+    public Maybe<MenuOption> getMenuOptionFromDisk(String menuOptionUuid) {
         return menuRepository.getMenuOptionFromDisk(menuOptionUuid)
                 .subscribeOn(Schedulers.io());
     }

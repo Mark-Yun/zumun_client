@@ -37,7 +37,7 @@ import io.reactivex.schedulers.Schedulers;
  */
 public class CartViewModel extends AndroidViewModel {
 
-    public static final String TAG = "CartViewModel";
+    private static final String TAG = "CartViewModel";
 
     private CartManager cartManager;
     private StoreManager storeManager;
@@ -99,7 +99,7 @@ public class CartViewModel extends AndroidViewModel {
 
         menuManager.getMenuFromDisk(menuUuid)
                 .observeOn(AndroidSchedulers.mainThread())
-                .doOnNext(menuLiveData::setValue)
+                .doOnSuccess(menuLiveData::setValue)
                 .doOnSubscribe(disposables::add)
                 .subscribe();
 
@@ -111,7 +111,7 @@ public class CartViewModel extends AndroidViewModel {
 
         menuManager.getMenuOptionFromDisk(menuOptionUuid)
                 .observeOn(AndroidSchedulers.mainThread())
-                .doOnNext(menuOptionLiveData::setValue)
+                .doOnSuccess(menuOptionLiveData::setValue)
                 .doOnSubscribe(disposables::add)
                 .subscribe();
 
@@ -147,7 +147,7 @@ public class CartViewModel extends AndroidViewModel {
 
     private Maybe<Integer> getOptionListPrice(OrderDetail orderDetail) {
         return Observable.fromIterable(orderDetail.menuOptionUuidList)
-                .flatMap(menuManager::getMenuOptionFromDisk)
+                .flatMapMaybe(menuManager::getMenuOptionFromDisk)
                 .map(menuOption -> menuOption.price)
                 .reduce((integer, integer2) -> integer + integer2)
                 .doOnSubscribe(disposables::add)
@@ -157,7 +157,6 @@ public class CartViewModel extends AndroidViewModel {
     private Maybe<Integer> getMenuPrice(OrderDetail orderDetail) {
         return menuManager.getMenuFromDisk(orderDetail.menuUuid)
                 .map(menu -> menu.price)
-                .firstElement()
                 .subscribeOn(Schedulers.io());
     }
 
@@ -195,7 +194,7 @@ public class CartViewModel extends AndroidViewModel {
 
         cartManager.getCart(storeUuid)
                 .map(Cart::getOrderDetailList)
-                .flatMap(orderManager::createMenuOrder)
+                .flatMapMaybe(orderManager::createMenuOrder)
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnNext(unused -> cartManager.clearCart(storeUuid))
                 .doOnNext(liveData::setValue)

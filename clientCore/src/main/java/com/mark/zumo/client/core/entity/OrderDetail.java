@@ -80,7 +80,7 @@ public class OrderDetail implements Serializable {
                 this.menuOptionUuidList.equals(orderDetail.menuOptionUuidList);
     }
 
-    private interface Schema {
+    public interface Schema {
         String uuid = "order_detail_uuid";
         String menuUuid = "menu_uuid";
         String menuName = "menu_name";

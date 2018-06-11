@@ -22,7 +22,7 @@ import io.reactivex.ObservableEmitter;
  */
 public class Cart {
 
-    public static final String TAG = "Cart";
+    private static final String TAG = "Cart";
 
     private List<OrderDetail> orderDetailList;
     private Collection<ObservableEmitter<Cart>> emitterCollection;

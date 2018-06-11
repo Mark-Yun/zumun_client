@@ -13,11 +13,13 @@ import com.google.gson.annotations.SerializedName;
  */
 public class PaymentToken {
     @SerializedName("menu_order_uuid") public final String menuOrderUuid;
+    @SerializedName("tid") public final String tid;
     @SerializedName("pg_token") public final String pgToken;
     @SerializedName("kakao_access_token") public final String kakaoAccessToken;
 
-    public PaymentToken(final String menuOrderUuid, final String kakaoAccessToken, final String pgToken) {
+    public PaymentToken(final String menuOrderUuid, final String tid, final String kakaoAccessToken, final String pgToken) {
         this.menuOrderUuid = menuOrderUuid;
+        this.tid = tid;
         this.pgToken = pgToken;
         this.kakaoAccessToken = kakaoAccessToken;
     }

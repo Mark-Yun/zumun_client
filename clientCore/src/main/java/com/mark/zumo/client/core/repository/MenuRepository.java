@@ -19,6 +19,7 @@ import com.mark.zumo.client.core.entity.util.ListComparator;
 
 import java.util.List;
 
+import io.reactivex.Maybe;
 import io.reactivex.Observable;
 import io.reactivex.observables.GroupedObservable;
 import io.reactivex.schedulers.Schedulers;
@@ -31,7 +32,7 @@ public enum MenuRepository {
 
     INSTANCE;
 
-    public static final String TAG = "MenuRepository";
+    private static final String TAG = "MenuRepository";
 
     private DiskRepository diskRepository;
     private NetworkRepository networkRepository;
@@ -48,23 +49,24 @@ public enum MenuRepository {
     public Observable<List<Menu>> getMenuItemsOfStore(Store store) {
         String storeUuid = store.uuid;
 
-        Observable<List<Menu>> menuListDB = diskRepository.getMenuList(storeUuid).toObservable();
-        Observable<List<Menu>> menuListApi = networkRepository.getMenuList(storeUuid)
-                .doOnNext(diskRepository::insertMenuList);
+        Maybe<List<Menu>> menuListDB = diskRepository.getMenuList(storeUuid);
+        Maybe<List<Menu>> menuListApi = networkRepository.getMenuList(storeUuid)
+                .doOnSuccess(diskRepository::insertMenuList);
 
-        return Observable.merge(menuListDB, menuListApi)
+        return Maybe.merge(menuListDB, menuListApi)
+                .toObservable()
                 .doOnError(this::onErrorOccurred)
                 .distinctUntilChanged(new ListComparator<>());
     }
 
     private Observable<List<MenuOption>> getMenuOptionsOfMenu(String menuUuid) {
-        Observable<List<MenuOption>> menuOptionListDB = diskRepository.getMenuOptionList(menuUuid).toObservable();
-        Observable<List<MenuOption>> menuOptionListApi = networkRepository.getMenuOptionList(menuUuid)
-                .doOnNext(diskRepository::insertMenuOptionList);
+        Maybe<List<MenuOption>> menuOptionListDB = diskRepository.getMenuOptionListByMenuUuid(menuUuid);
+        Maybe<List<MenuOption>> menuOptionListApi = networkRepository.getMenuOptionList(menuUuid)
+                .doOnSuccess(diskRepository::insertMenuOptionList);
 
-        return Observable.merge(menuOptionListDB, menuOptionListApi)
+        return Maybe.merge(menuOptionListDB, menuOptionListApi)
+                .toObservable()
                 .doOnError(this::onErrorOccurred)
-                .subscribeOn(Schedulers.io())
                 .distinctUntilChanged(new ListComparator<>());
     }
 
@@ -74,11 +76,25 @@ public enum MenuRepository {
                 .groupBy(menuOption -> menuOption.name);
     }
 
-    public Observable<Menu> getMenuFromDisk(final String uuid) {
-        return diskRepository.getMenu(uuid).toObservable();
+    public Maybe<Menu> getMenuFromDisk(final String uuid) {
+        return diskRepository.getMenu(uuid);
     }
 
-    public Observable<MenuOption> getMenuOptionFromDisk(final String menuOptionUuid) {
-        return diskRepository.getMenuOption(menuOptionUuid).toObservable();
+    public Maybe<MenuOption> getMenuOptionFromDisk(final String menuOptionUuid) {
+        return diskRepository.getMenuOption(menuOptionUuid);
+    }
+
+    public Observable<List<MenuOption>> getMenuOptionList(List<String> menuOptionUuidList) {
+        Maybe<List<MenuOption>> menuOptionListDB = Observable.fromIterable(menuOptionUuidList)
+                .flatMapMaybe(diskRepository::getMenuOption)
+                .toList().toMaybe();
+
+        Maybe<List<MenuOption>> menuOptionListApi = networkRepository.getMenuOptionList(menuOptionUuidList)
+                .doOnSuccess(diskRepository::insertMenuOptionList);
+
+        return Maybe.merge(menuOptionListDB, menuOptionListApi)
+                .toObservable()
+                .subscribeOn(Schedulers.io())
+                .distinctUntilChanged(new ListComparator<>());
     }
 }

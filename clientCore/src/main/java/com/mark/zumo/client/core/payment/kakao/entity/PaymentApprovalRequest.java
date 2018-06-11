@@ -41,7 +41,7 @@ public class PaymentApprovalRequest {
         return EntityHelper.toString(this, PaymentApprovalRequest.class);
     }
 
-    public class Builder {
+    public static class Builder {
 
         private String cId;//	가맹점 코드. 10자.	O
         private String tId;//	결제 고유번호. 결제준비 API의 응답에서 얻을 수 있음	O
@@ -60,37 +60,37 @@ public class PaymentApprovalRequest {
             return new PaymentApprovalRequest(this);
         }
 
-        private Builder setcId(final String cId) {
+        public Builder setcId(final String cId) {
             this.cId = cId;
             return this;
         }
 
-        private Builder settId(final String tId) {
+        public Builder settId(final String tId) {
             this.tId = tId;
             return this;
         }
 
-        private Builder setPartnerOrderId(final String partnerOrderId) {
+        public Builder setPartnerOrderId(final String partnerOrderId) {
             this.partnerOrderId = partnerOrderId;
             return this;
         }
 
-        private Builder setPartnerUserId(final String partnerUserId) {
+        public Builder setPartnerUserId(final String partnerUserId) {
             this.partnerUserId = partnerUserId;
             return this;
         }
 
-        private Builder setPgToken(final String pgToken) {
+        public Builder setPgToken(final String pgToken) {
             this.pgToken = pgToken;
             return this;
         }
 
-        private Builder setPayload(final String payload) {
+        public Builder setPayload(final String payload) {
             this.payload = payload;
             return this;
         }
 
-        private Builder setTotalAmount(final int totalAmount) {
+        public Builder setTotalAmount(final int totalAmount) {
             this.totalAmount = totalAmount;
             return this;
         }

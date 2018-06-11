@@ -59,13 +59,13 @@ public class MenuOrder implements Serializable {
         return EntityHelper.toString(this, this.getClass());
     }
 
-    private interface Schema {
+    public interface Schema {
         String uuid = "menu_order_uuid";
         String name = "menu_order_name";
         String customerUuid = "customer_uuid";
         String storeUuid = "store_uuid";
         String orderNumber = "menu_order_num";
-        String createdDate = "create_date";
+        String createdDate = "created_date";
         String totalQuantity = "total_quantity";
         String totalPrice = "total_price";
     }

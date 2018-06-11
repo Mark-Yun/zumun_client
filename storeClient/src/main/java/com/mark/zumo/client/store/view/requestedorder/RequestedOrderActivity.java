@@ -81,4 +81,10 @@ public class RequestedOrderActivity extends AppCompatActivity {
         Navigator.setBlurLayoutVisible(false);
         overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
     }
+
+    @OnClick(R.id.accept_all)
+    void acceptAll() {
+        orderViewModel.acceptAllOrder();
+        finish();
+    }
 }

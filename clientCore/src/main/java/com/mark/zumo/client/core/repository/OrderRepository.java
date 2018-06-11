@@ -12,6 +12,7 @@ import com.mark.zumo.client.core.dao.AppDatabaseProvider;
 import com.mark.zumo.client.core.dao.DiskRepository;
 import com.mark.zumo.client.core.entity.MenuOrder;
 import com.mark.zumo.client.core.entity.OrderDetail;
+import com.mark.zumo.client.core.entity.util.ListComparator;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,6 +28,8 @@ import io.reactivex.schedulers.Schedulers;
 public enum OrderRepository {
     INSTANCE;
 
+    private static final String TAG = "OrderRepository";
+
     private NetworkRepository networkRepository;
     private DiskRepository diskRepository;
 
@@ -35,9 +38,9 @@ public enum OrderRepository {
         diskRepository = AppDatabaseProvider.INSTANCE.diskRepository;
     }
 
-    public Observable<MenuOrder> createMenuOrder(List<OrderDetail> orderDetailCollection) {
+    public Maybe<MenuOrder> createMenuOrder(List<OrderDetail> orderDetailCollection) {
         return networkRepository.createOrder(orderDetailCollection)
-                .doOnNext(diskRepository::insert);
+                .doOnSuccess(diskRepository::insertMenuOrder);
     }
 
     public Observable<MenuOrder> createMenuOrder(OrderDetail orderDetail) {
@@ -46,8 +49,8 @@ public enum OrderRepository {
                     arrayList.add(orderDetail);
                     return arrayList;
                 })
-                .flatMap(orderDetailList -> networkRepository.createOrder(orderDetailList))
-                .doOnNext(diskRepository::insert);
+                .flatMapMaybe(networkRepository::createOrder)
+                .doOnNext(diskRepository::insertMenuOrder);
     }
 
     public Observable<MenuOrder> getMenuOrderFromDisk(String orderUuid) {
@@ -56,9 +59,19 @@ public enum OrderRepository {
                 .subscribeOn(Schedulers.io());
     }
 
-    public Observable<MenuOrder> getMenuOrderFromApi(String orderUuid) {
-        Maybe<MenuOrder> menuOrderApi = networkRepository.getMenuOrder(orderUuid);
-        return menuOrderApi.toObservable()
-                .subscribeOn(Schedulers.io());
+    public Maybe<MenuOrder> getMenuOrderFromApi(String orderUuid) {
+        Maybe<MenuOrder> menuOrderApi = networkRepository.getMenuOrder(orderUuid)
+                .doOnSuccess(menuOrder -> diskRepository.insertMenuOrder(menuOrder));
+        return menuOrderApi.subscribeOn(Schedulers.io());
+    }
+
+    public Observable<List<OrderDetail>> getOrderDetailListByOrderUuid(String orderUuid) {
+        Maybe<List<OrderDetail>> orderDetailListDB = diskRepository.getOrderDetailListByMenuOrderUuid(orderUuid);
+        Maybe<List<OrderDetail>> orderDetailListApi = networkRepository.getOrderDetailList(orderUuid)
+                .doOnSuccess(diskRepository::insertOrderDetailList);
+
+        return Maybe.merge(orderDetailListDB, orderDetailListApi)
+                .toObservable()
+                .distinctUntilChanged(new ListComparator<>());
     }
 }

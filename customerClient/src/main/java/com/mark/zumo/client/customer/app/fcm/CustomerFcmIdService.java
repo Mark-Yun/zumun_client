@@ -16,7 +16,7 @@ import com.google.firebase.iid.FirebaseInstanceIdService;
  */
 public class CustomerFcmIdService extends FirebaseInstanceIdService {
 
-    public static final String TAG = "CustomerFcmIdService";
+    private static final String TAG = "CustomerFcmIdService";
 
     @Override
     public void onTokenRefresh() {

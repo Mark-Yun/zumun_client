@@ -6,20 +6,22 @@
 
 package com.mark.zumo.client.store.model;
 
-import com.mark.zumo.client.core.entity.MenuOption;
 import com.mark.zumo.client.core.entity.MenuOrder;
 import com.mark.zumo.client.core.entity.OrderDetail;
+import com.mark.zumo.client.core.payment.kakao.KakaoPayAdapter;
+import com.mark.zumo.client.core.payment.kakao.entity.PaymentApprovalRequest;
 import com.mark.zumo.client.core.payment.kakao.entity.PaymentToken;
+import com.mark.zumo.client.core.payment.kakao.server.KakaoPayService;
 import com.mark.zumo.client.core.repository.OrderRepository;
-import com.mark.zumo.client.core.util.DebugUtil;
 import com.mark.zumo.client.store.model.entity.OrderBucket;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import io.reactivex.Maybe;
 import io.reactivex.Observable;
 import io.reactivex.ObservableOnSubscribe;
-import io.reactivex.Single;
 import io.reactivex.schedulers.Schedulers;
 
 
@@ -31,6 +33,8 @@ public enum OrderManager {
     INSTANCE;
 
     private OrderRepository orderRepository;
+    private KakaoPayAdapter kakaoPayAdapter;
+
     private OrderBucket acceptedOrderBucket;
     private OrderBucket requestedOrderBucket;
     private Map<String, PaymentToken> paymentTokenMap;
@@ -39,7 +43,10 @@ public enum OrderManager {
         acceptedOrderBucket = new OrderBucket();
         requestedOrderBucket = new OrderBucket();
 
+        paymentTokenMap = new HashMap<>();
+
         orderRepository = OrderRepository.INSTANCE;
+        kakaoPayAdapter = KakaoPayAdapter.INSTANCE;
     }
 
     public void putRequestedOrderBucket(PaymentToken paymentToken) {
@@ -47,7 +54,7 @@ public enum OrderManager {
 
         orderRepository.getMenuOrderFromApi(paymentToken.menuOrderUuid)
                 .subscribeOn(Schedulers.io())
-                .doOnNext(requestedOrderBucket::addOrder)
+                .doOnSuccess(requestedOrderBucket::addOrder)
                 .subscribe();
     }
 
@@ -63,33 +70,42 @@ public enum OrderManager {
         ).subscribeOn(Schedulers.computation());
     }
 
-    public Single<List<MenuOrder>> getAcceptedOrderList() {
-        return Observable.create((ObservableOnSubscribe<MenuOrder>) e -> {
-            for (int i = 0; i < 10; i++) {
-                e.onNext(DebugUtil.menuOrder());
-            }
-            e.onComplete();
-        }).toList().subscribeOn(Schedulers.computation());
-    }
-
-    public Observable<MenuOrder> getRequestedOrderList() {
-        return Observable.create((ObservableOnSubscribe<MenuOrder>) e -> {
-            for (int i = 0; i < 10; i++) {
-                e.onNext(DebugUtil.menuOrder());
-            }
-        }).subscribeOn(Schedulers.computation());
-    }
-
     public Observable<List<OrderDetail>> getOrderDetailList(String orderUuid) {
-        return Observable.create((ObservableOnSubscribe<List<OrderDetail>>) e -> {
-            e.onNext(DebugUtil.orderDetailList(orderUuid));
-            e.onComplete();
-        }).subscribeOn(Schedulers.io());
+        return orderRepository.getOrderDetailListByOrderUuid(orderUuid)
+                .subscribeOn(Schedulers.io());
     }
 
-    public Observable<List<MenuOption>> getMenuOptionList(List<String> menuOptionUuidList) {
-        return Observable.create((ObservableOnSubscribe<List<MenuOption>>) e -> {
-            e.onNext(DebugUtil.menuOptionListFromOrder());
-        }).subscribeOn(Schedulers.io());
+    public Maybe<MenuOrder> acceptOrder(MenuOrder menuOrder) {
+        PaymentToken paymentToken = paymentTokenMap.remove(menuOrder.uuid);
+
+        String kakaoAccessToken = paymentToken.kakaoAccessToken;
+        String pgToken = paymentToken.pgToken;
+        String tid = paymentToken.tid;
+
+        PaymentApprovalRequest approvalRequest = new PaymentApprovalRequest.Builder()
+                .setcId(KakaoPayService.CID)
+                .setPartnerOrderId(menuOrder.uuid)
+                .setPartnerUserId(menuOrder.storeUuid)
+                .setPgToken(pgToken)
+                .settId(tid)
+                .setTotalAmount(menuOrder.totalQuantity)
+                .build();
+
+        return kakaoPayAdapter.approvalPayment(kakaoAccessToken, approvalRequest)
+                .map(paymentApprovalResponse -> requestedOrderBucket.removeOrder(paymentApprovalResponse.partnerOrderId))
+                .doOnSuccess(order -> acceptedOrderBucket.addOrder(order))
+                .subscribeOn(Schedulers.io());
+    }
+
+    public Maybe<Long> acceptAllOrder() {
+        return Observable.fromIterable(acceptedOrderBucket.getOrderList())
+                .flatMapMaybe(this::acceptOrder)
+                .count().toMaybe();
+    }
+
+    public void clear() {
+        requestedOrderBucket.clear();
+        requestedOrderBucket.clear();
+        paymentTokenMap.clear();
     }
 }

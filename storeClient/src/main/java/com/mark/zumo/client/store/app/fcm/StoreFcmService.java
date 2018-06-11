@@ -22,6 +22,7 @@ public class StoreFcmService extends FirebaseMessagingService {
     private final static String TAG = "StoreFcmService";
 
     private final static String KEY_ORDER_UUID = "menu_order_uuid";
+    private final static String KEY_TID = "tid";
     private final static String KEY_KAKAO_ACCESS_TOKEN = "kakao_access_token";
     private final static String KEY_PG_TOKEN = "pg_token";
 
@@ -44,11 +45,12 @@ public class StoreFcmService extends FirebaseMessagingService {
         if (data.size() > 0) {
             Log.d(TAG, "Message data payload: " + data);
 
-            String orderUuid = data.get(KEY_ORDER_UUID);
-            String kakaoAccessToken = data.get(KEY_KAKAO_ACCESS_TOKEN);
+            String menuOrderUuid = data.get(KEY_ORDER_UUID);
+            String tid = data.get(KEY_TID);
+            String accessToken = data.get(KEY_KAKAO_ACCESS_TOKEN);
             String pgToken = data.get(KEY_PG_TOKEN);
 
-            PaymentToken paymentToken = new PaymentToken(orderUuid, kakaoAccessToken, pgToken);
+            PaymentToken paymentToken = new PaymentToken(menuOrderUuid, tid, pgToken, accessToken);
 
             orderManager.putRequestedOrderBucket(paymentToken);
         }

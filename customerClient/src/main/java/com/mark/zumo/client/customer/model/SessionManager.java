@@ -20,25 +20,19 @@ public enum SessionManager {
 
     INSTANCE;
 
-    public static final String TAG = "SessionManager";
+    private static final String TAG = "SessionManager";
 
     private SessionRepository sessionRepository;
-
-    private GuestUser guestUser;
 
     SessionManager() {
         sessionRepository = SessionRepository.INSTANCE;
         getSessionUser()
                 .doOnSuccess(this::buildSessionHeader)
-                .doOnSuccess(guestUser -> this.guestUser = guestUser)
                 .subscribe();
     }
 
-    public GuestUser getCurrentGuestUser() {
-        return guestUser;
-    }
-
     public Maybe<GuestUser> getSessionUser() {
+        //TODO: fix issue
         return Maybe.fromCallable(() -> sessionRepository.getGuestUserFromCache())
                 .switchIfEmpty(sessionRepository.createGuestUser()
                         .map(sessionRepository::saveGuestUser)

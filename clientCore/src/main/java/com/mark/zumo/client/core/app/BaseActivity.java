@@ -27,7 +27,7 @@ import java.util.Arrays;
 public class BaseActivity extends AppCompatActivity {
 
     public static final int R_PERM = 2822;
-    public static final String TAG = "BaseActivity";
+    private static final String TAG = "BaseActivity";
     private static final int REQUEST = 112;
 
     private static boolean hasPermissions(Context context, String... permissions) {

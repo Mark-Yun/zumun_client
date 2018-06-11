@@ -30,7 +30,7 @@ import io.reactivex.schedulers.Schedulers;
 public enum StoreRepository {
     INSTANCE;
 
-    public static final String TAG = "StoreRepository";
+    private static final String TAG = "StoreRepository";
 
     private NetworkRepository networkRepository;
     private DiskRepository diskRepository;
@@ -54,15 +54,16 @@ public enum StoreRepository {
 
     public Maybe<Store> updateStore(Store store) {
         return networkRepository.updateStore(store.uuid, store)
-                .doOnSuccess(updatedStore -> diskRepository.insert(updatedStore));
+                .doOnSuccess(updatedStore -> diskRepository.insertStore(updatedStore));
     }
 
     public Observable<Store> getStore(String storeUuid) {
-        Observable<Store> storeDB = diskRepository.getStore(storeUuid).toObservable();
-        Observable<Store> storeApi = networkRepository.getStore(storeUuid)
-                .doOnNext(diskRepository::insert);
+        Maybe<Store> storeDB = diskRepository.getStore(storeUuid);
+        Maybe<Store> storeApi = networkRepository.getStore(storeUuid)
+                .doOnSuccess(diskRepository::insertStore);
 
-        return Observable.merge(storeDB, storeApi)
+        return Maybe.merge(storeDB, storeApi)
+                .toObservable()
                 .doOnError(this::onErrorOccurred)
                 .subscribeOn(Schedulers.io())
                 .distinctUntilChanged(new EntityComparator<>());

@@ -45,7 +45,7 @@ public class MenuOption implements Serializable {
         this.price = price;
     }
 
-    private interface Schema {
+    public interface Schema {
         String uuid = "menu_option_uuid";
         String menuUuid = "menu_uuid";
         String name = "option_name";

@@ -19,10 +19,9 @@ import android.arch.lifecycle.MutableLiveData;
 import android.support.annotation.NonNull;
 
 import com.mark.zumo.client.core.entity.MenuOrder;
-import com.mark.zumo.client.core.payment.kakao.entity.PaidDetailResponse;
 import com.mark.zumo.client.core.payment.kakao.entity.PaymentReadyResponse;
 import com.mark.zumo.client.customer.model.OrderManager;
-import com.mark.zumo.client.customer.model.payment.adapter.KakaoPayAdapter;
+import com.mark.zumo.client.customer.model.payment.KakaoPaymentManager;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
@@ -32,7 +31,7 @@ import io.reactivex.disposables.CompositeDisposable;
  */
 public class KakaoPayViewModel extends AndroidViewModel {
 
-    private KakaoPayAdapter kakaoPayAdapter;
+    private KakaoPaymentManager kakaoPaymentManager;
     private OrderManager orderManager;
 
     private CompositeDisposable compositeDisposable;
@@ -40,19 +39,19 @@ public class KakaoPayViewModel extends AndroidViewModel {
     public KakaoPayViewModel(@NonNull final Application application) {
         super(application);
 
-        kakaoPayAdapter = KakaoPayAdapter.INSTANCE;
+        kakaoPaymentManager = KakaoPaymentManager.INSTANCE;
         orderManager = OrderManager.INSTANCE;
         compositeDisposable = new CompositeDisposable();
     }
 
     public LiveData<PaymentReadyResponse> preparePayment(@NonNull String orderUuid, @NonNull String accessToken) {
 
-        kakaoPayAdapter.setAccessToken(accessToken);
+        kakaoPaymentManager.setAccessToken(accessToken);
 
         MutableLiveData<PaymentReadyResponse> liveData = new MutableLiveData<>();
 
         orderManager.getMenuOrderFromDisk(orderUuid)
-                .flatMapMaybe(kakaoPayAdapter::preparePayment)
+                .flatMapMaybe(kakaoPaymentManager::preparePayment)
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnNext(liveData::setValue)
                 .doOnSubscribe(compositeDisposable::add)
@@ -61,26 +60,13 @@ public class KakaoPayViewModel extends AndroidViewModel {
         return liveData;
     }
 
-    public LiveData<PaidDetailResponse> paiedDetail(String tId) {
-        MutableLiveData<PaidDetailResponse> liveData = new MutableLiveData<>();
-
-        kakaoPayAdapter.paidDetail(tId)
-                .observeOn(AndroidSchedulers.mainThread())
-                .doOnSuccess(liveData::setValue)
-                .doOnSubscribe(compositeDisposable::add)
-                .subscribe();
-
-        return liveData;
-    }
-
-    public LiveData<MenuOrder> postTokenInfo(String menuOrderUuid, String pgToken) {
+    public LiveData<MenuOrder> postTokenInfo(String menuOrderUuid, String tid, String pgToken) {
 
         MutableLiveData<MenuOrder> liveData = new MutableLiveData<>();
 
-        kakaoPayAdapter.createPaymentToken(menuOrderUuid, pgToken)
+        kakaoPaymentManager.createPaymentToken(menuOrderUuid, tid, pgToken)
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSuccess(liveData::setValue)
-                .doOnSubscribe(compositeDisposable::add)
                 .subscribe();
 
         return liveData;

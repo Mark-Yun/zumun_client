@@ -32,7 +32,7 @@ import butterknife.ButterKnife;
 
 public class SplashActivity extends BaseActivity {
 
-    public static final String TAG = "SplashActivity";
+    private static final String TAG = "SplashActivity";
     private static final int SPLASH_DISPLAY_LENGTH = 1000;
     private SignUpViewModel signUpViewModel;
 

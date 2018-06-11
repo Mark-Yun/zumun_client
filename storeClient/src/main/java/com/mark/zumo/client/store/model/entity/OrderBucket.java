@@ -6,6 +6,8 @@
 
 package com.mark.zumo.client.store.model.entity;
 
+import android.util.Log;
+
 import com.mark.zumo.client.core.entity.MenuOrder;
 
 import java.util.ArrayList;
@@ -19,6 +21,7 @@ import io.reactivex.ObservableEmitter;
  */
 public class OrderBucket {
 
+    public static final String TAG = "OrderBucket";
     private List<MenuOrder> orderList;
     private Collection<ObservableEmitter<OrderBucket>> emitterCollection;
 
@@ -29,6 +32,7 @@ public class OrderBucket {
 
     public void addOrder(MenuOrder menuOrder) {
         orderList.add(menuOrder);
+        Log.d(TAG, "addOrder: " + menuOrder);
         notifyOnNext();
     }
 
@@ -45,10 +49,6 @@ public class OrderBucket {
         }
     }
 
-    public MenuOrder getOrderList(int position) {
-        return orderList.get(position);
-    }
-
     public List<MenuOrder> getOrderList() {
         return orderList;
     }
@@ -57,9 +57,27 @@ public class OrderBucket {
         orderList.clear();
     }
 
-    public void removeCartItem(int position) {
-        orderList.remove(position);
+    public MenuOrder removeOrder(int position) {
+        MenuOrder remove = orderList.remove(position);
         notifyOnNext();
+        return remove;
+    }
+
+    public MenuOrder removeOrder(String uuid) {
+        MenuOrder remove = orderList.remove(getMenuOrderPosition(uuid));
+        notifyOnNext();
+        return remove;
+    }
+
+    private int getMenuOrderPosition(String uuid) {
+        for (int i = 0; i < orderList.size(); i++) {
+            MenuOrder menuOrder = orderList.get(i);
+            if (uuid.equals(menuOrder.uuid)) {
+                return i;
+            }
+        }
+
+        return -1;
     }
 
     public int getItemCount() {

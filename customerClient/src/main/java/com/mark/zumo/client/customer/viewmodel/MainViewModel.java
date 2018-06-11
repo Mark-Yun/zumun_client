@@ -47,7 +47,7 @@ public class MainViewModel extends AndroidViewModel {
     public LiveData<Store> findStore(Activity activity) {
         MutableLiveData<Store> liveData = new MutableLiveData<>();
 
-        Maybe.fromCallable(sessionManager::getCurrentGuestUser)
+        sessionManager.getSessionUser()
                 .map(guestUser -> guestUser.uuid)
                 .flatMap(sessionId -> p2pClient.findStore(activity, sessionId))
                 .flatMapObservable(storeId -> storeManager.getStore(storeId))

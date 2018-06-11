@@ -16,7 +16,6 @@ import com.mark.zumo.client.core.entity.user.GuestUser;
 import java.util.List;
 
 import io.reactivex.Maybe;
-import io.reactivex.Observable;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
@@ -36,21 +35,27 @@ public interface NetworkRepository {
     Maybe<GuestUser> createGuestUser();
 
     @GET("menu")
-    Observable<List<Menu>> getMenuList(@Query("store_uuid") String storeUuid);
+    Maybe<List<Menu>> getMenuList(@Query(Menu.Schema.storeUuid) String storeUuid);
 
-    @GET("store/{store_uuid}")
-    Observable<Store> getStore(@Path("store_uuid") String storeUuid);
+    @GET("store/{" + Store.Schema.uuid + "}")
+    Maybe<Store> getStore(@Path(Store.Schema.uuid) String storeUuid);
 
     @GET("option")
-    Observable<List<MenuOption>> getMenuOptionList(@Query("menu_uuid") String uuid);
+    Maybe<List<MenuOption>> getMenuOptionList(@Query(MenuOption.Schema.menuUuid) String uuid);
 
     @POST("order")
-    Observable<MenuOrder> createOrder(@Body List<OrderDetail> orderDetailCollection);
+    Maybe<MenuOrder> createOrder(@Body List<OrderDetail> orderDetailCollection);
 
-    @POST("order/{menu_order_uuid}")
-    Maybe<MenuOrder> getMenuOrder(@Path("menu_order_uuid") String uuid);
+    @GET("order/{" + MenuOrder.Schema.uuid + "}")
+    Maybe<MenuOrder> getMenuOrder(@Path(MenuOrder.Schema.uuid) String uuid);
 
-    @PUT("store/{store_uuid}")
-    Maybe<Store> updateStore(@Path("store_uuid") String storeUuid,
+    @PUT("store/{" + Store.Schema.uuid + "}")
+    Maybe<Store> updateStore(@Path(Store.Schema.uuid) String storeUuid,
                              @Body Store store);
+
+    @GET("order/detail")
+    Maybe<List<OrderDetail>> getOrderDetailList(@Query(OrderDetail.Schema.menuOrderUuid) String menuOrderUuid);
+
+    @GET("menu/option")
+    Maybe<List<MenuOption>> getMenuOptionList(@Query(MenuOption.Schema.uuid) List<String> menuOptionUuidList);
 }

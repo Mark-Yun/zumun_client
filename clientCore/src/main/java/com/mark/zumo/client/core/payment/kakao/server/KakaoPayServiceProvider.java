@@ -4,7 +4,13 @@
  * Proprietary and confidential
  */
 
-package com.mark.zumo.client.core.payment.kakao;
+/*
+ * Copyright (c) 2018. Mark Soft - All Rights Reserved
+ * Unauthorized copying of this file, via any medium is strictly prohibited
+ * Proprietary and confidential
+ */
+
+package com.mark.zumo.client.core.payment.kakao.server;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -38,6 +44,7 @@ public enum KakaoPayServiceProvider {
     public KakaoPayService service;
 
     KakaoPayServiceProvider() {
+        service = buildService("");
     }
 
     @NonNull

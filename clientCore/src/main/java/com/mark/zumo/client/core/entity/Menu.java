@@ -53,7 +53,7 @@ public class Menu implements Serializable {
         return EntityHelper.toString(this, this.getClass());
     }
 
-    private interface Schema {
+    public interface Schema {
         String uuid = "menu_uuid";
         String name = "menu_name";
         String storeUuid = "store_uuid";

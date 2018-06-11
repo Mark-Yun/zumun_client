@@ -34,7 +34,7 @@ import butterknife.ButterKnife;
  */
 public class MainBodyFragment extends Fragment {
 
-    public static final String TAG = "MainBodyFragment";
+    private static final String TAG = "MainBodyFragment";
     @BindView(R.id.tab_layout) TabLayout tabLayout;
     @BindView(R.id.view_pager) ViewPager viewPager;
 
@@ -57,7 +57,7 @@ public class MainBodyFragment extends Fragment {
     }
 
     private void inflateTabLayout() {
-        tabPagerAdapter = new TabPagerAdapter(getFragmentManager());
+        tabPagerAdapter = new TabPagerAdapter(getChildFragmentManager());
         viewPager.setAdapter(tabPagerAdapter);
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
 
