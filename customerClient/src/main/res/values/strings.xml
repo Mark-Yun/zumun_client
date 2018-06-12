@@ -28,4 +28,7 @@
     <string name="press_again_to_exit">Press again to exit</string>
 
     <string name="menu_order_name_and">And, %s etc.</string>
+
+    <string name="order_number_description">Order Number:&#160;</string>
+    <string name="order_time_description">Order Time:&#160;</string>
 </resources>

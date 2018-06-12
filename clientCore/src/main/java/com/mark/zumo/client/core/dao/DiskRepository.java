@@ -59,6 +59,22 @@ public interface DiskRepository {
     @Query("SELECT * FROM " + MenuOrder.TABLE + " WHERE menu_order_uuid LIKE :menuOrderUuid LIMIT 1")
     Maybe<MenuOrder> getMenuOrder(String menuOrderUuid);
 
+    @Query("SELECT * FROM " + MenuOrder.TABLE +
+            " WHERE customer_uuid LIKE :customerUuid" +
+            " ORDER BY created_date DESC" +
+            " LIMIT :offset, :limit")
+    Maybe<List<MenuOrder>> getMenuOrderByCustomerUuid(String customerUuid,
+                                                      int offset,
+                                                      int limit);
+
+    @Query("SELECT * FROM " + MenuOrder.TABLE +
+            " WHERE store_uuid LIKE :storeUuid" +
+            " ORDER BY created_date DESC" +
+            " LIMIT :offset, :limit")
+    Maybe<List<MenuOrder>> getMenuOrderByStoreUuid(String storeUuid,
+                                                   int offset,
+                                                   int limit);
+
     @Insert
     void insertMenuOrderList(List<MenuOrder> userList);
 

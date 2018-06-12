@@ -65,16 +65,18 @@ public class MenuOrder implements Serializable {
 
     public enum State {
 
-        PAYMENT_READY(R.string.order_state_payment_ready),
-        ACCEPTED(R.string.order_state_accepted),
-        COMPLETE(R.string.order_state_complete),
-        REJECTED(R.string.order_state_rejected),
-        CANCELED(R.string.order_state_canceled);
+        PAYMENT_READY(R.string.order_state_payment_ready, R.color.order_state_payment_ready),
+        ACCEPTED(R.string.order_state_accepted, R.color.order_state_accepted),
+        COMPLETE(R.string.order_state_complete, R.color.order_state_complete),
+        REJECTED(R.string.order_state_rejected, R.color.order_state_rejected),
+        CANCELED(R.string.order_state_canceled, R.color.order_state_canceled);
 
-        public final int res;
+        public final int stringRes;
+        public final int colorRes;
 
-        State(final int res) {
-            this.res = res;
+        State(final int stringRes, final int colorRes) {
+            this.stringRes = stringRes;
+            this.colorRes = colorRes;
         }
 
         public static State of(int orderState) {

@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (c) 2018. Mark Soft - All Rights Reserved
+  ~ Unauthorized copying of this file, via any medium is strictly prohibited
+  ~ Proprietary and confidential
+  -->
+
+<!--
+  ~ Copyright (c) 2018. Mark Soft - All Rights Reserved
+  ~ Unauthorized copying of this file, via any medium is strictly prohibited
+  ~ Proprietary and confidential
+  -->
+
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="?attr/selectableItemBackground"
+    android:clickable="true"
+    android:focusable="true"
+    android:paddingTop="10dp">
+
+    <android.support.v7.widget.AppCompatImageView
+        android:id="@+id/image"
+        android:layout_width="@dimen/card_view_place_item_height"
+        android:layout_height="@dimen/card_view_place_item_height"
+        android:padding="10dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <android.support.v7.widget.AppCompatTextView
+        android:id="@+id/title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:textColor="@color/colorTextDark"
+        app:layout_constraintBottom_toTopOf="@+id/sub_title"
+        app:layout_constraintStart_toEndOf="@+id/image"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_chainStyle="packed" />
+
+    <android.support.v7.widget.AppCompatTextView
+        android:id="@+id/sub_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/colorTextDark"
+        app:layout_constraintStart_toStartOf="@+id/title"
+        app:layout_constraintTop_toBottomOf="@+id/title"
+        app:layout_constraintVertical_chainStyle="packed" />
+
+    <android.support.v7.widget.AppCompatTextView
+        android:id="@+id/order_number_description"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/order_number_description"
+        android:textColor="@color/colorSecondaryText"
+        android:textSize="@dimen/menu_price_text_size"
+        app:layout_constraintStart_toStartOf="@+id/title"
+        app:layout_constraintTop_toBottomOf="@+id/sub_title" />
+
+    <android.support.v7.widget.AppCompatTextView
+        android:id="@+id/order_number"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/colorSecondaryText"
+        android:textSize="@dimen/menu_price_text_size"
+        app:layout_constraintBottom_toBottomOf="@+id/order_number_description"
+        app:layout_constraintStart_toEndOf="@+id/order_number_description" />
+
+    <android.support.v7.widget.AppCompatTextView
+        android:id="@+id/order_time_description"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/order_time_description"
+        android:textColor="@color/colorSecondaryText"
+        android:textSize="@dimen/menu_price_text_size"
+        app:layout_constraintStart_toStartOf="@+id/title"
+        app:layout_constraintTop_toBottomOf="@+id/order_number_description" />
+
+    <android.support.v7.widget.AppCompatTextView
+        android:id="@+id/order_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/colorSecondaryText"
+        android:textSize="@dimen/menu_price_text_size"
+        app:layout_constraintBottom_toBottomOf="@+id/order_time_description"
+        app:layout_constraintStart_toEndOf="@+id/order_time_description" />
+
+    <android.support.v7.widget.AppCompatImageView
+        android:id="@+id/right_arrow_image_view"
+        android:layout_width="@dimen/icon_size_small"
+        android:layout_height="@dimen/icon_size_small"
+        android:layout_marginEnd="30dp"
+        android:scaleType="fitXY"
+        android:src="@drawable/black_arrow_right"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <android.support.v7.widget.AppCompatTextView
+        android:id="@+id/order_state"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_marginEnd="10dp"
+        android:gravity="center_vertical|center_horizontal"
+        android:paddingEnd="10dp"
+        android:paddingStart="10dp"
+        android:textColor="@color/colorText"
+        app:layout_constraintBottom_toBottomOf="@+id/right_arrow_image_view"
+        app:layout_constraintEnd_toStartOf="@+id/right_arrow_image_view"
+        app:layout_constraintTop_toTopOf="@+id/right_arrow_image_view" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="10dp"
+        android:background="@color/colorDivider"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/order_time_description" />
+</android.support.constraint.ConstraintLayout>

@@ -45,6 +45,50 @@ public class DebugUtil {
                 "24", "3/6/2018 15:33", 5, 25500, 0);
     }
 
+    public static List<MenuOrder> menuOrderList() {
+        return Arrays.asList(new MenuOrder(UUID.randomUUID().toString(),
+                        "TESTNAME",
+                        UUID.randomUUID().toString(),
+                        TEST_STORE_UUID,
+                        "24", "3/6/2018 15:33", 5, 25500, 0),
+
+                new MenuOrder(UUID.randomUUID().toString(),
+                        "TESTNAME1",
+                        UUID.randomUUID().toString(),
+                        TEST_STORE_UUID,
+                        "24", "3/6/2018 15:33", 5, 25500, 1),
+
+                new MenuOrder(UUID.randomUUID().toString(),
+                        "TESTNAME2",
+                        UUID.randomUUID().toString(),
+                        TEST_STORE_UUID,
+                        "24", "3/6/2018 15:33", 5, 25500, 2),
+
+                new MenuOrder(UUID.randomUUID().toString(),
+                        "TESTNAME3",
+                        UUID.randomUUID().toString(),
+                        TEST_STORE_UUID,
+                        "24", "3/6/2018 15:33", 5, 25500, 3),
+
+                new MenuOrder(UUID.randomUUID().toString(),
+                        "TESTNAME4",
+                        UUID.randomUUID().toString(),
+                        TEST_STORE_UUID,
+                        "24", "3/6/2018 15:33", 5, 25500, 4),
+
+                new MenuOrder(UUID.randomUUID().toString(),
+                        "TESTNAME5",
+                        UUID.randomUUID().toString(),
+                        TEST_STORE_UUID,
+                        "24", "3/6/2018 15:33", 5, 25500, 0),
+
+                new MenuOrder(UUID.randomUUID().toString(),
+                        "TESTNAME6",
+                        UUID.randomUUID().toString(),
+                        TEST_STORE_UUID,
+                        "24", "3/6/2018 15:33", 5, 25500, 1));
+    }
+
     public static List<OrderDetail> orderDetailList(String orderUuid) {
         OrderDetail[] orderDetails = {
                 new OrderDetail(UUID.randomUUID().toString(),

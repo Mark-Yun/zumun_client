@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright (c) 2018. Mark Soft - All Rights Reserved
   ~ Unauthorized copying of this file, via any medium is strictly prohibited
   ~ Proprietary and confidential
@@ -20,4 +19,10 @@
     <color name="colorDivider">#BDBDBD</color>
     <color name="colorTitle">#FFFFFF</color>
     <color name="colorBadge">#EEF43F34</color>
+
+    <color name="order_state_payment_ready">@android:color/holo_blue_dark</color>
+    <color name="order_state_accepted">@android:color/holo_orange_dark</color>
+    <color name="order_state_complete">@android:color/holo_green_dark</color>
+    <color name="order_state_rejected">@android:color/holo_red_dark</color>
+    <color name="order_state_canceled">@android:color/holo_red_dark</color>
 </resources>

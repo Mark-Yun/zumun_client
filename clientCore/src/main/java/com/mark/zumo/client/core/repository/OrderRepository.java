@@ -13,6 +13,7 @@ import com.mark.zumo.client.core.dao.DiskRepository;
 import com.mark.zumo.client.core.entity.MenuOrder;
 import com.mark.zumo.client.core.entity.OrderDetail;
 import com.mark.zumo.client.core.entity.util.ListComparator;
+import com.mark.zumo.client.core.util.DebugUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -70,6 +71,29 @@ public enum OrderRepository {
                 .doOnSuccess(diskRepository::insertOrderDetailList);
 
         return Maybe.merge(orderDetailListDB, orderDetailListApi)
+                .toObservable()
+                .distinctUntilChanged(new ListComparator<>());
+    }
+
+    public Observable<List<MenuOrder>> getMenuOrderListByCustomerUuid(String customerUuid, int offset, int limit) {
+        //TODO: remove test data
+
+        return Observable.fromCallable(DebugUtil::menuOrderList);
+//        Maybe<List<MenuOrder>> menuOrderListDB = diskRepository.getMenuOrderByCustomerUuid(customerUuid, offset, limit);
+//        Maybe<List<MenuOrder>> menuOrderListApi = networkRepository.getMenuOrderListByCustomerUuid(customerUuid, offset, limit)
+//                .doOnSuccess(diskRepository::insertMenuOrderList);
+//
+//        return Maybe.merge(menuOrderListDB, menuOrderListApi)
+//                .toObservable()
+//                .distinctUntilChanged(new ListComparator<>());
+    }
+
+    public Observable<List<MenuOrder>> getMenuOrderListByStoreUuid(String storeUuid, int offset, int limit) {
+        Maybe<List<MenuOrder>> menuOrderListDB = diskRepository.getMenuOrderByStoreUuid(storeUuid, offset, limit);
+        Maybe<List<MenuOrder>> menuOrderListApi = networkRepository.getMenuOrderListByStoreUuid(storeUuid, offset, limit)
+                .doOnSuccess(diskRepository::insertMenuOrderList);
+
+        return Maybe.merge(menuOrderListDB, menuOrderListApi)
                 .toObservable()
                 .distinctUntilChanged(new ListComparator<>());
     }

@@ -99,7 +99,7 @@ public class MainViewModel extends AndroidViewModel {
 
     @WorkerThread
     private Notification createOrderNotification(MenuOrder menuOrder) {
-        int orderStateRes = MenuOrder.State.of(menuOrder.state).res;
+        int orderStateRes = MenuOrder.State.of(menuOrder.state).stringRes;
         String orderStateString = getApplication().getString(orderStateRes);
         Store store = storeManager.getStoreFromDisk(menuOrder.storeUuid).blockingGet();
         Bitmap iconBitmap = getBitmapFromURL(store.thumbnailUrl);

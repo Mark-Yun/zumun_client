@@ -49,13 +49,28 @@ public interface NetworkRepository {
     @GET("order/{" + MenuOrder.Schema.uuid + "}")
     Maybe<MenuOrder> getMenuOrder(@Path(MenuOrder.Schema.uuid) String uuid);
 
+    //TODO: replace with PUT/store/{uuid}/token
     @PUT("store/{" + Store.Schema.uuid + "}")
     Maybe<Store> updateStore(@Path(Store.Schema.uuid) String storeUuid,
                              @Body Store store);
+
+    @PUT("store/{" + Store.Schema.uuid + "}/token")
+    Maybe<Store> updateStoreFcmToken(@Path(Store.Schema.uuid) String storeUuid,
+                                     @Body String fcmToken);
 
     @GET("order/detail")
     Maybe<List<OrderDetail>> getOrderDetailList(@Query(OrderDetail.Schema.menuOrderUuid) String menuOrderUuid);
 
     @GET("menu/option")
     Maybe<List<MenuOption>> getMenuOptionList(@Query(MenuOption.Schema.uuid) List<String> menuOptionUuidList);
+
+    @GET("order")
+    Maybe<List<MenuOrder>> getMenuOrderListByCustomerUuid(@Query(MenuOrder.Schema.customerUuid) String customerUuid,
+                                                          @Query("offset") int offset,
+                                                          @Query("limit") int limit);
+
+    @GET("order")
+    Maybe<List<MenuOrder>> getMenuOrderListByStoreUuid(@Query(MenuOrder.Schema.storeUuid) String customerUuid,
+                                                       @Query("offset") int offset,
+                                                       @Query("limit") int limit);
 }
