@@ -4,6 +4,12 @@
   ~ Proprietary and confidential
   -->
 
+<!--
+  ~ Copyright (c) 2018. Mark Soft - All Rights Reserved
+  ~ Unauthorized copying of this file, via any medium is strictly prohibited
+  ~ Proprietary and confidential
+  -->
+
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
@@ -16,7 +22,7 @@
         android:layout_height="0dp"
         android:background="@color/colorPrimary"
         android:elevation="3dp"
-        app:layout_constraintBottom_toTopOf="@+id/cart_item_recycler_view"
+        app:layout_constraintBottom_toTopOf="@+id/order_detail_recycler_view"
         app:layout_constraintDimensionRatio="H, 14:3"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -58,9 +64,9 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginBottom="15dp"
+        android:fadeScrollbars="false"
         android:isScrollContainer="true"
         android:nestedScrollingEnabled="true"
-        android:fadeScrollbars="false"
         android:scrollbars="vertical"
         app:layout_constraintBottom_toTopOf="@+id/total_price_container"
         app:layout_constraintTop_toBottomOf="@+id/store_cover_image"
@@ -94,11 +100,11 @@
     </android.support.constraint.ConstraintLayout>
 
     <android.support.v7.widget.AppCompatButton
-        android:id="@+id/place_order"
+        android:id="@+id/cancel_order"
         style="?android:attr/borderlessButtonStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/colorAccent"
-        android:text="@string/button_text_send_order"
+        android:background="@android:color/holo_red_dark"
+        android:text="@string/order_cancel_button_text"
         app:layout_constraintBottom_toBottomOf="parent" />
 </android.support.constraint.ConstraintLayout>

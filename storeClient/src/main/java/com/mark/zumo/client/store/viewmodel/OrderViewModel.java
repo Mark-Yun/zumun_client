@@ -93,7 +93,7 @@ public class OrderViewModel extends AndroidViewModel {
         orderManager.acceptOrder(menuOrder)
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSuccess(liveData::setValue)
-                .doOnSuccess(order -> showToast("accepted " + order.name))
+                .doOnSuccess(order -> showToast("accepted " + order.orderName))
                 .subscribe();
         showToast("acceptOrder");
 

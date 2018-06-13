@@ -77,4 +77,9 @@ public enum MenuManager {
         return menuRepository.getMenuOptionFromDisk(menuOptionUuid)
                 .subscribeOn(Schedulers.io());
     }
+
+    public Observable<List<MenuOption>> getMenuOptionList(List<String> menuOptionUuidList) {
+        return menuRepository.getMenuOptionList(menuOptionUuidList)
+                .subscribeOn(Schedulers.io());
+    }
 }

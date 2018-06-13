@@ -7,11 +7,11 @@
 package com.mark.zumo.client.customer.view.order;
 
 import android.arch.lifecycle.LifecycleOwner;
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.AppCompatTextView;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,6 +20,7 @@ import com.mark.zumo.client.core.entity.MenuOrder;
 import com.mark.zumo.client.core.util.glide.GlideApp;
 import com.mark.zumo.client.core.util.glide.GlideUtils;
 import com.mark.zumo.client.customer.R;
+import com.mark.zumo.client.customer.view.order.detail.OrderDetailActivity;
 import com.mark.zumo.client.customer.viewmodel.OrderViewModel;
 
 import java.util.ArrayList;
@@ -62,13 +63,12 @@ class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.ViewHolder> {
     public void onBindViewHolder(@NonNull final ViewHolder holder, final int position) {
         MenuOrder menuOrder = orderList.get(position);
 
-        holder.title.setText(menuOrder.name);
+        holder.title.setText(menuOrder.orderName);
         holder.orderNumber.setText(menuOrder.orderNumber);
         holder.orderTime.setText(menuOrder.createdDate);
 
         MenuOrder.State state = MenuOrder.State.of(menuOrder.state);
         holder.orderState.setText(state.stringRes);
-        Log.d(TAG, "onBindViewHolder: state.colorRes=" + state.colorRes);
         int color = holder.itemView.getContext().getResources().getColor(state.colorRes);
         holder.orderState.setBackgroundColor(color);
 
@@ -84,6 +84,13 @@ class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.ViewHolder> {
                     .apply(GlideUtils.storeCoverImageOptions())
                     .transition(GlideUtils.storeTransitionOptions())
                     .into(holder.image);
+        });
+
+        holder.itemView.setOnClickListener(v -> {
+            Intent intent = new Intent(v.getContext(), OrderDetailActivity.class);
+            intent.putExtra(OrderDetailActivity.KEY_ORDER_UUID, menuOrder.uuid);
+            intent.putExtra(OrderDetailActivity.KEY_STORE_UUID, menuOrder.storeUuid);
+            v.getContext().startActivity(intent);
         });
     }
 

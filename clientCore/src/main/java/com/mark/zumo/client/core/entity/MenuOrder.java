@@ -29,8 +29,8 @@ public class MenuOrder implements Serializable {
 
     @PrimaryKey @NonNull @ColumnInfo(name = Schema.uuid) @SerializedName(Schema.uuid)
     public final String uuid;
-    @ColumnInfo(name = Schema.name) @SerializedName(Schema.name)
-    public final String name;
+    @ColumnInfo(name = Schema.orderName) @SerializedName(Schema.orderName)
+    public final String orderName;
     @ColumnInfo(name = Schema.customerUuid) @SerializedName(Schema.customerUuid)
     public final String customerUuid;
     @ColumnInfo(name = Schema.storeUuid) @SerializedName(Schema.storeUuid)
@@ -46,9 +46,9 @@ public class MenuOrder implements Serializable {
     @ColumnInfo(name = Schema.state) @SerializedName(Schema.state)
     public final int state;
 
-    public MenuOrder(@NonNull final String uuid, final String name, final String customerUuid, final String storeUuid, final String orderNumber, final String createdDate, final int totalQuantity, final int totalPrice, final int state) {
+    public MenuOrder(@NonNull final String uuid, final String orderName, final String customerUuid, final String storeUuid, final String orderNumber, final String createdDate, final int totalQuantity, final int totalPrice, final int state) {
         this.uuid = uuid;
-        this.name = name;
+        this.orderName = orderName;
         this.customerUuid = customerUuid;
         this.storeUuid = storeUuid;
         this.orderNumber = orderNumber;
@@ -90,7 +90,7 @@ public class MenuOrder implements Serializable {
 
     public interface Schema {
         String uuid = "menu_order_uuid";
-        String name = "menu_order_name";
+        String orderName = "menu_order_name";
         String customerUuid = "customer_uuid";
         String storeUuid = "store_uuid";
         String orderNumber = "menu_order_num";

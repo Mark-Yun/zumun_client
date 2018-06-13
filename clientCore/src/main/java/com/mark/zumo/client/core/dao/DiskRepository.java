@@ -79,7 +79,7 @@ public interface DiskRepository {
     void insertMenuOrderList(List<MenuOrder> userList);
 
 
-    @Query("SELECT * FROM " + MenuOption.TABLE + " WHERE menu_uuid LIKE :menuUuid LIMIT 1")
+    @Query("SELECT * FROM " + MenuOption.TABLE + " WHERE menu_uuid LIKE :menuUuid")
     Maybe<List<MenuOption>> getMenuOptionListByMenuUuid(String menuUuid);
 
     @Query("SELECT * FROM " + MenuOption.TABLE + " WHERE menu_option_uuid LIKE :menuOptionUuid LIMIT 1")

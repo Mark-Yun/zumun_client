@@ -44,8 +44,6 @@ public class CartViewModel extends AndroidViewModel {
     private MenuManager menuManager;
     private OrderManager orderManager;
 
-    private String currentStoreUuid;
-
     private CompositeDisposable disposables;
 
     public CartViewModel(@NonNull final Application application) {
@@ -60,8 +58,6 @@ public class CartViewModel extends AndroidViewModel {
     }
 
     public LiveData<List<OrderDetail>> getCartItemList(String storeUuid) {
-        currentStoreUuid = storeUuid;
-
         MutableLiveData<List<OrderDetail>> cartItemLiveData = new MutableLiveData<>();
 
         cartManager.getCart(storeUuid)
@@ -74,16 +70,16 @@ public class CartViewModel extends AndroidViewModel {
         return cartItemLiveData;
     }
 
-    public void removeCartItem(int position) {
-        cartManager.getCart(currentStoreUuid)
+    public void removeCartItem(String storeUuid, int position) {
+        cartManager.getCart(storeUuid)
                 .firstElement()
                 .doOnSuccess(cart -> cart.removeCartItem(position))
                 .doOnSubscribe(disposables::add)
                 .subscribe();
     }
 
-    public void clearCartItem() {
-        cartManager.clearCart(currentStoreUuid);
+    public void clearCartItem(String storeUuid) {
+        cartManager.clearCart(storeUuid);
     }
 
     public LiveData<Store> getStore(String storeUuid) {
@@ -200,7 +196,6 @@ public class CartViewModel extends AndroidViewModel {
                 .map(Cart::getOrderDetailList)
                 .flatMapMaybe(orderManager::createMenuOrder)
                 .observeOn(AndroidSchedulers.mainThread())
-                .doOnNext(unused -> cartManager.clearCart(storeUuid))
                 .doOnNext(liveData::setValue)
                 .doOnSubscribe(disposables::add)
                 .subscribe();

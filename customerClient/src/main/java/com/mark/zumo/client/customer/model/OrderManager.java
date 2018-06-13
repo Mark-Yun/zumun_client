@@ -61,4 +61,9 @@ public enum OrderManager {
         return orderRepository.getMenuOrderListByCustomerUuid(customerUuid, 0, 10)
                 .subscribeOn(Schedulers.io());
     }
+
+    public Observable<List<OrderDetail>> getOrderDetailListByOrderUuid(String orderUuid) {
+        return orderRepository.getOrderDetailListByOrderUuid(orderUuid)
+                .subscribeOn(Schedulers.io());
+    }
 }

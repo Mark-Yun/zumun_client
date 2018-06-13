@@ -105,7 +105,7 @@ public class MainViewModel extends AndroidViewModel {
         Bitmap iconBitmap = getBitmapFromURL(store.thumbnailUrl);
 
         return new Notification.Builder(getApplication())
-                .setContentTitle(menuOrder.name)
+                .setContentTitle(menuOrder.orderName)
                 .setContentText(orderStateString)
                 .setWhen(System.currentTimeMillis())
                 .setSmallIcon(Icon.createWithBitmap(iconBitmap))

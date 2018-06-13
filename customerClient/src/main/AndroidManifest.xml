@@ -59,6 +59,7 @@
             android:theme="@style/AppTheme.NoActionBar.Translucent" />
         <activity android:name=".view.payment.PaymentActivity" />
         <activity android:name=".view.signup.kakao.KakaoSignActivity" />
+        <activity android:name=".view.order.detail.OrderDetailActivity" />
     </application>
 
 </manifest>

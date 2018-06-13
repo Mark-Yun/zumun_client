@@ -12,8 +12,11 @@ import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.support.annotation.NonNull;
 
+import com.mark.zumo.client.core.entity.MenuOption;
 import com.mark.zumo.client.core.entity.MenuOrder;
+import com.mark.zumo.client.core.entity.OrderDetail;
 import com.mark.zumo.client.core.entity.Store;
+import com.mark.zumo.client.customer.model.MenuManager;
 import com.mark.zumo.client.customer.model.OrderManager;
 import com.mark.zumo.client.customer.model.SessionManager;
 import com.mark.zumo.client.customer.model.StoreManager;
@@ -33,6 +36,7 @@ public class OrderViewModel extends AndroidViewModel {
     private SessionManager sessionManager;
 
     private CompositeDisposable compositeDisposable;
+    private MenuManager menuManager;
 
     public OrderViewModel(@NonNull final Application application) {
         super(application);
@@ -40,6 +44,7 @@ public class OrderViewModel extends AndroidViewModel {
         orderManager = OrderManager.INSTANCE;
         storeManager = StoreManager.INSTANCE;
         sessionManager = SessionManager.INSTANCE;
+        menuManager = MenuManager.INSTANCE;
 
         compositeDisposable = new CompositeDisposable();
     }
@@ -67,6 +72,40 @@ public class OrderViewModel extends AndroidViewModel {
                 .doOnSubscribe(compositeDisposable::add)
                 .subscribe();
 
+        return liveData;
+    }
+
+    public LiveData<MenuOrder> getMenuOrder(String orderUuid) {
+        MutableLiveData<MenuOrder> liveData = new MutableLiveData<>();
+
+        orderManager.getMenuOrderFromDisk(orderUuid)
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnSuccess(liveData::setValue)
+                .doOnSubscribe(compositeDisposable::add)
+                .subscribe();
+
+        return liveData;
+    }
+
+    public LiveData<List<OrderDetail>> getMenuOrderDetail(String orderUuid) {
+        MutableLiveData<List<OrderDetail>> liveData = new MutableLiveData<>();
+
+        orderManager.getOrderDetailListByOrderUuid(orderUuid)
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnNext(liveData::setValue)
+                .doOnSubscribe(compositeDisposable::add)
+                .subscribe();
+
+        return liveData;
+    }
+
+    public LiveData<List<MenuOption>> getMenuOptionList(List<String> menuOptionUuidList) {
+        MutableLiveData<List<MenuOption>> liveData = new MutableLiveData<>();
+        menuManager.getMenuOptionList(menuOptionUuidList)
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnNext(liveData::setValue)
+                .doOnSubscribe(compositeDisposable::add)
+                .subscribe();
         return liveData;
     }
 }

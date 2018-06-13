@@ -59,7 +59,7 @@ public enum KakaoPaymentManager {
                 .setCId(KakaoPayService.CID)
                 .setPartnerOrderId(menuOrder.uuid)
                 .setPartnerUserId(menuOrder.customerUuid)
-                .setItemName(menuOrder.name)
+                .setItemName(menuOrder.orderName)
                 .setTotalAmount(menuOrder.totalPrice)
                 .setQuantity(menuOrder.totalQuantity)
                 .setTaxFreeAmount(0)

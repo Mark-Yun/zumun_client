@@ -37,12 +37,14 @@ public class CartMenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
     private CartViewModel cartViewModel;
     private LifecycleOwner lifecycleOwner;
+    private String storeUuid;
 
     private List<OrderDetail> orderDetailList;
 
-    CartMenuAdapter(final CartViewModel cartViewModel, final LifecycleOwner lifecycleOwner) {
+    CartMenuAdapter(final CartViewModel cartViewModel, final LifecycleOwner lifecycleOwner, final String storeUuid) {
         this.cartViewModel = cartViewModel;
         this.lifecycleOwner = lifecycleOwner;
+        this.storeUuid = storeUuid;
 
         orderDetailList = new ArrayList<>();
     }
@@ -107,7 +109,7 @@ public class CartMenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
         holder.removeButton.setOnClickListener(v -> {
             TouchResponse.big();
-            cartViewModel.removeCartItem(position);
+            cartViewModel.removeCartItem(storeUuid, position);
         });
     }
 

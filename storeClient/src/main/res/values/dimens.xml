@@ -7,11 +7,8 @@
 <resources>
     <dimen name="order_number_text_size">33dp</dimen>
     <dimen name="divider_height">1dp</dimen>
-    <dimen name="order_card_view_medium_margin">10dp</dimen>
     <dimen name="order_card_view_date_text_size">14dp</dimen>
-    <dimen name="order_card_view_big_margin">20dp</dimen>
     <dimen name="order_card_view_item_name_description_text_size">16dp</dimen>
-    <dimen name="order_card_view_small_margin">5dp</dimen>
     <dimen name="order_card_view_margin">40dp</dimen>
     <dimen name="order_card_view_padding">20dp</dimen>
     <dimen name="tab_order_number_background_width">65dp</dimen>

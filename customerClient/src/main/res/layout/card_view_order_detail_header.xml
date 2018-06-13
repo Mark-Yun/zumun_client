@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (c) 2018. Mark Soft - All Rights Reserved
+  ~ Unauthorized copying of this file, via any medium is strictly prohibited
+  ~ Proprietary and confidential
+  -->
+
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <android.support.v7.widget.AppCompatTextView
+        android:id="@+id/order_info"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/order_information_title"
+        android:textColor="@color/colorTextDark"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <View
+        android:id="@+id/order_info_divider"
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:layout_marginTop="@dimen/order_card_view_small_margin"
+        android:background="@color/colorTextDark"
+        app:layout_constraintTop_toBottomOf="@+id/order_info" />
+
+    <android.support.v7.widget.AppCompatTextView
+        android:id="@+id/order_name_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/order_card_view_big_margin"
+        android:layout_marginTop="@dimen/order_card_view_medium_margin"
+        android:text="@string/order_name_title"
+        android:textColor="@color/colorTextDark"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/order_info_divider" />
+
+    <android.support.v7.widget.AppCompatTextView
+        android:id="@+id/order_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/colorSecondaryText"
+        app:layout_constraintBottom_toBottomOf="@+id/order_name_title"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/order_name_title" />
+
+    <android.support.v7.widget.AppCompatTextView
+        android:id="@+id/order_number_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/order_number_title"
+        android:textColor="@color/colorTextDark"
+        app:layout_constraintStart_toStartOf="@+id/order_name_title"
+        app:layout_constraintTop_toBottomOf="@+id/order_name_title" />
+
+    <android.support.v7.widget.AppCompatTextView
+        android:id="@+id/order_number"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/colorSecondaryText"
+        app:layout_constraintBottom_toBottomOf="@+id/order_number_title"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/order_number_title" />
+
+    <android.support.v7.widget.AppCompatTextView
+        android:id="@+id/order_time_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/order_time_title"
+        android:textColor="@color/colorTextDark"
+        app:layout_constraintStart_toStartOf="@+id/order_name_title"
+        app:layout_constraintTop_toBottomOf="@+id/order_number_title" />
+
+    <android.support.v7.widget.AppCompatTextView
+        android:id="@+id/order_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/colorSecondaryText"
+        app:layout_constraintBottom_toBottomOf="@+id/order_time_title"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/order_time_title" />
+
+    <android.support.v7.widget.AppCompatTextView
+        android:id="@+id/order_price_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/order_price_title"
+        android:textColor="@color/colorTextDark"
+        app:layout_constraintStart_toStartOf="@+id/order_name_title"
+        app:layout_constraintTop_toBottomOf="@+id/order_time" />
+
+    <android.support.v7.widget.AppCompatTextView
+        android:id="@+id/order_price"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/colorSecondaryText"
+        app:layout_constraintBottom_toBottomOf="@+id/order_price_title"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/order_price_title" />
+
+    <android.support.v7.widget.AppCompatTextView
+        android:id="@+id/order_detail_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/order_card_view_big_margin"
+        android:text="@string/order_detail_title"
+        android:textColor="@color/colorTextDark"
+        android:textStyle="bold"
+        app:layout_constraintTop_toBottomOf="@+id/order_price_title" />
+
+    <View
+        android:id="@+id/order_detail_divider"
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:layout_marginTop="@dimen/order_card_view_small_margin"
+        android:background="@color/colorTextDark"
+        app:layout_constraintTop_toBottomOf="@+id/order_detail_title" />
+</android.support.constraint.ConstraintLayout>

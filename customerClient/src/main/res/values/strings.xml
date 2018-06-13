@@ -31,4 +31,13 @@
 
     <string name="order_number_description">Order Number:&#160;</string>
     <string name="order_time_description">Order Time:&#160;</string>
+
+    <string name="order_information_title">Order Information</string>
+    <string name="order_name_title">Order Name</string>
+    <string name="order_number_title">Order Number</string>
+    <string name="order_price_title">Order Price</string>
+    <string name="order_detail_title">Order Detail</string>
+    <string name="order_time_title">Order Detail</string>
+    <string name="order_cancel_button_text">Cancel Order</string>
+    <string name="order_amount_title">Amount</string>
 </resources>

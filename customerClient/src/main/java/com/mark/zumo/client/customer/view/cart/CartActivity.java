@@ -43,7 +43,7 @@ public class CartActivity extends AppCompatActivity {
 
     @BindView(R.id.store_cover_image) AppCompatImageView storeImage;
     @BindView(R.id.store_cover_title) AppCompatTextView storeTitle;
-    @BindView(R.id.cart_item_recycler_view) RecyclerView cartItemRecyclerView;
+    @BindView(R.id.order_detail_recycler_view) RecyclerView cartItemRecyclerView;
     @BindView(R.id.total_price) AppCompatTextView totalPrice;
 
     private String storeUuid;
@@ -68,7 +68,7 @@ public class CartActivity extends AppCompatActivity {
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
         cartItemRecyclerView.setLayoutManager(layoutManager);
 
-        CartMenuAdapter cartMenuAdapter = new CartMenuAdapter(cartViewModel, this);
+        CartMenuAdapter cartMenuAdapter = new CartMenuAdapter(cartViewModel, this, storeUuid);
         cartItemRecyclerView.setAdapter(cartMenuAdapter);
 
         cartViewModel.getCartItemList(storeUuid).observe(this, cartMenuAdapter::setOrderDetailList);
@@ -112,7 +112,7 @@ public class CartActivity extends AppCompatActivity {
                 switch (resultCode) {
                     case PaymentActivity.RESULT_CODE_PAYMENT_SUCCESS:
                         setResult(RESULT_CODE_PAYMENT_SUCCESS, data);
-                        cartViewModel.clearCartItem();
+                        cartViewModel.clearCartItem(storeUuid);
                         finish();
                         break;
 

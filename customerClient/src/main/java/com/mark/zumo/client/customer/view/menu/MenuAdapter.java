@@ -10,6 +10,7 @@ import android.arch.lifecycle.LifecycleOwner;
 import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.AppCompatImageView;
@@ -18,7 +19,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.mark.zumo.client.core.entity.Menu;
 import com.mark.zumo.client.core.util.glide.GlideApp;
@@ -91,7 +91,7 @@ class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.ViewHolder> {
 
     private void onAddCartComplete(final View itemView, final Menu menu) {
         String text = itemView.getContext().getString(R.string.added_to_cart, menu.name);
-        Toast.makeText(itemView.getContext(), text, Toast.LENGTH_SHORT).show();
+        Snackbar.make(itemView, text, Snackbar.LENGTH_LONG).show();
     }
 
     private boolean onLongClickMenu(final View itemView, final Menu menu) {
