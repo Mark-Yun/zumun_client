@@ -40,4 +40,6 @@
     <string name="order_time_title">Order Detail</string>
     <string name="order_cancel_button_text">Cancel Order</string>
     <string name="order_amount_title">Amount</string>
+
+    <string name="is_finding_store">If inside ZUMUN store, \nthe menu will appear in here.</string>
 </resources>

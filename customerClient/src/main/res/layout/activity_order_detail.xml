@@ -104,6 +104,7 @@
         style="?android:attr/borderlessButtonStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:visibility="gone"
         android:background="@android:color/holo_red_dark"
         android:text="@string/order_cancel_button_text"
         app:layout_constraintBottom_toBottomOf="parent" />
