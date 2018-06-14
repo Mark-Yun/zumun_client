@@ -7,6 +7,7 @@
 package com.mark.zumo.client.customer.view.main;
 
 import android.os.Bundle;
+import android.support.transition.Fade;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
@@ -62,7 +63,8 @@ public class TabPagerAdapter extends FragmentStatePagerAdapter {
         Fragment fragment = Fragment.instantiate(ContextHolder.getContext(), MenuFragment.class.getName(), bundle);
         fragmentList.remove(0);
         fragmentList.put(0, fragment);
-
+        fragment.setEnterTransition(new Fade(Fade.IN));
+        fragment.setExitTransition(new Fade(Fade.OUT));
         notifyDataSetChanged();
     }
 
