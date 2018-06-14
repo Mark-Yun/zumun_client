@@ -51,7 +51,7 @@ public class LatestVisitStoreAdapter extends RecyclerView.Adapter<RecyclerView.V
         } else if (holder instanceof StoreViewHolder) {
             StoreViewHolder storeViewHolder = (StoreViewHolder) holder;
             Store store = storeList.get(position - 1);
-            ViewHolderUtils.inject(fragmentManager, storeViewHolder, store);
+            ViewHolderUtils.inject(storeViewHolder, store);
         }
     }
 

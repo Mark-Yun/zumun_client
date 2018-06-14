@@ -6,9 +6,7 @@
 
 package com.mark.zumo.client.customer.view.place.adapter;
 
-import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,6 +17,7 @@ import com.mark.zumo.client.core.util.glide.GlideApp;
 import com.mark.zumo.client.core.util.glide.GlideUtils;
 import com.mark.zumo.client.customer.R;
 import com.mark.zumo.client.customer.view.TouchResponse;
+import com.mark.zumo.client.customer.view.menu.MenuActivity;
 import com.mark.zumo.client.customer.view.menu.MenuFragment;
 
 import io.reactivex.exceptions.OnErrorNotImplementedException;
@@ -62,7 +61,7 @@ final class ViewHolderUtils {
         }
     }
 
-    static void inject(FragmentManager fragmentManager, StoreViewHolder storeViewHolder, Store store) {
+    static void inject(StoreViewHolder storeViewHolder, Store store) {
         storeViewHolder.title.setText(store.name);
         storeViewHolder.distance.setText(store.latitude + ", " + store.longitude);
 
@@ -75,20 +74,9 @@ final class ViewHolderUtils {
 
         storeViewHolder.itemView.setOnClickListener(v -> {
             TouchResponse.small();
-
-            Bundle bundle = new Bundle();
-            bundle.putString(MenuFragment.KEY_STORE_UUID, store.uuid);
-            Fragment menuFragment = Fragment.instantiate(storeViewHolder.itemView.getContext(), MenuFragment.class.getName(), bundle);
-
-            fragmentManager.beginTransaction()
-                    .setCustomAnimations(
-                            R.anim.slide_in_left,
-                            R.anim.slide_out_right,
-                            R.anim.slide_in_left,
-                            R.anim.slide_out_right)
-                    .replace(R.id.place_main_fragment, menuFragment)
-                    .addToBackStack(store.uuid)
-                    .commit();
+            Intent intent = new Intent(storeViewHolder.itemView.getContext(), MenuActivity.class);
+            intent.putExtra(MenuFragment.KEY_STORE_UUID, store.uuid);
+            storeViewHolder.itemView.getContext().startActivity(intent);
         });
     }
 }

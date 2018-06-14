@@ -51,7 +51,7 @@ public class NearbyStoreAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         } else if (holder instanceof StoreViewHolder) {
             StoreViewHolder storeViewHolder = (StoreViewHolder) holder;
             Store store = storeList.get(position - 1);
-            ViewHolderUtils.inject(fragmentManager, storeViewHolder, store);
+            ViewHolderUtils.inject(storeViewHolder, store);
         }
     }
 
