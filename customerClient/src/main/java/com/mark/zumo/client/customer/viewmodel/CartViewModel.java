@@ -193,10 +193,11 @@ public class CartViewModel extends AndroidViewModel {
         MutableLiveData<MenuOrder> liveData = new MutableLiveData<>();
 
         cartManager.getCart(storeUuid)
+                .firstElement()
                 .map(Cart::getOrderDetailList)
-                .flatMapMaybe(orderManager::createMenuOrder)
+                .flatMap(orderManager::createMenuOrder)
                 .observeOn(AndroidSchedulers.mainThread())
-                .doOnNext(liveData::setValue)
+                .doOnSuccess(liveData::setValue)
                 .doOnSubscribe(disposables::add)
                 .subscribe();
 

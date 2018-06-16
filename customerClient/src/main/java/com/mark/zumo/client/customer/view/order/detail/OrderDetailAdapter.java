@@ -72,7 +72,7 @@ class OrderDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             if (orderDetailList.size() < 1) {
                 return;
             }
-            OrderDetail orderDetail = orderDetailList.get(position - 1);
+            OrderDetail orderDetail = orderDetailList.get(0);
 
             orderViewModel.getMenuOrder(orderDetail.menuOrderUuid).observe(lifecycleOwner, menuOrder -> {
                 if (menuOrder == null) {

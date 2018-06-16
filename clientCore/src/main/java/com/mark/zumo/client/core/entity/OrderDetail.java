@@ -88,7 +88,7 @@ public class OrderDetail implements Serializable {
         String menuOrderUuid = "menu_order_uuid";
         String menuOrderName = "menu_order_name";
         String storeUuid = "store_uuid";
-        String quantity = "menu_quantity";
-        String price = "price";
+        String quantity = "ordered_quantity";
+        String price = "ordered_price";
     }
 }

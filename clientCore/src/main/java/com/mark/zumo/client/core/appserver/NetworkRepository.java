@@ -10,6 +10,7 @@ import com.mark.zumo.client.core.entity.Menu;
 import com.mark.zumo.client.core.entity.MenuOption;
 import com.mark.zumo.client.core.entity.MenuOrder;
 import com.mark.zumo.client.core.entity.OrderDetail;
+import com.mark.zumo.client.core.entity.SnsToken;
 import com.mark.zumo.client.core.entity.Store;
 import com.mark.zumo.client.core.entity.user.GuestUser;
 
@@ -40,8 +41,8 @@ public interface NetworkRepository {
     @GET("store/{" + Store.Schema.uuid + "}")
     Maybe<Store> getStore(@Path(Store.Schema.uuid) String storeUuid);
 
-    @GET("option")
-    Maybe<List<MenuOption>> getMenuOptionList(@Query(MenuOption.Schema.menuUuid) String uuid);
+    @GET("menu/option")
+    Maybe<List<MenuOption>> getMenuOptionListByMenuUuid(@Query(MenuOption.Schema.menuUuid) String menuUuid);
 
     @POST("order")
     Maybe<MenuOrder> createOrder(@Body List<OrderDetail> orderDetailCollection);
@@ -54,15 +55,14 @@ public interface NetworkRepository {
     Maybe<Store> updateStore(@Path(Store.Schema.uuid) String storeUuid,
                              @Body Store store);
 
-    @PUT("store/{" + Store.Schema.uuid + "}/token")
-    Maybe<Store> updateStoreFcmToken(@Path(Store.Schema.uuid) String storeUuid,
-                                     @Body String fcmToken);
+    @POST("token")
+    Maybe<SnsToken> createSnsToken(@Body SnsToken snsToken);
 
     @GET("order/detail")
     Maybe<List<OrderDetail>> getOrderDetailList(@Query(OrderDetail.Schema.menuOrderUuid) String menuOrderUuid);
 
-    @GET("menu/option")
-    Maybe<List<MenuOption>> getMenuOptionList(@Query(MenuOption.Schema.uuid) List<String> menuOptionUuidList);
+    @GET("menu/option/{" + MenuOption.Schema.uuid + "}")
+    Maybe<MenuOption> getMenuOptionList(@Path(MenuOption.Schema.uuid) String menuOptionUuid);
 
     @GET("order")
     Maybe<List<MenuOrder>> getMenuOrderListByCustomerUuid(@Query(MenuOrder.Schema.customerUuid) String customerUuid,
@@ -73,4 +73,8 @@ public interface NetworkRepository {
     Maybe<List<MenuOrder>> getMenuOrderListByStoreUuid(@Query(MenuOrder.Schema.storeUuid) String customerUuid,
                                                        @Query("offset") int offset,
                                                        @Query("limit") int limit);
+
+    @PUT("order/{menu_order_uuid}/menu_order_state")
+    Maybe<MenuOrder> updateMenuOrderState(@Path("menu_order_uuid") String menuOrderUuid,
+                                          @Body int state);
 }

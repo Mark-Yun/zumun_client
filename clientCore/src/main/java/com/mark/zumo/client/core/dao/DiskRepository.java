@@ -75,8 +75,8 @@ public interface DiskRepository {
                                                    int offset,
                                                    int limit);
 
-    @Insert
-    void insertMenuOrderList(List<MenuOrder> userList);
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    void insertMenuOrderList(List<MenuOrder> menuOrderList);
 
 
     @Query("SELECT * FROM " + MenuOption.TABLE + " WHERE menu_uuid LIKE :menuUuid")
@@ -108,7 +108,7 @@ public interface DiskRepository {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertMenuOrder(MenuOrder menuOrder);
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertVisitStore(VisitStore visitStore);
 
     @Query("SELECT store_uuid, visit_date FROM" +

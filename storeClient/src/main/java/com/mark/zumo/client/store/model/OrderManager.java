@@ -75,6 +75,13 @@ public enum OrderManager {
                 .subscribeOn(Schedulers.io());
     }
 
+    public void loadMenuOrderByStoreUuid(String storeUuid) {
+        orderRepository.getMenuOrderListByStoreUuid(storeUuid, 0, 30)
+                .subscribeOn(Schedulers.io())
+                .doOnNext(requestedOrderBucket::addOrderList)
+                .subscribe();
+    }
+
     public Maybe<MenuOrder> acceptOrder(MenuOrder menuOrder) {
         PaymentToken paymentToken = paymentTokenMap.remove(menuOrder.uuid);
 
@@ -92,8 +99,17 @@ public enum OrderManager {
                 .build();
 
         return kakaoPayAdapter.approvalPayment(kakaoAccessToken, approvalRequest)
-                .map(paymentApprovalResponse -> requestedOrderBucket.removeOrder(paymentApprovalResponse.partnerOrderId))
+                .map(paymentApprovalResponse -> paymentApprovalResponse.partnerOrderId)
+                .map(menuOrderUuid -> requestedOrderBucket.removeOrder(menuOrderUuid))
+                .flatMap(menuOrder1 -> updateOrderState(menuOrder1, MenuOrder.State.ACCEPTED))
                 .doOnSuccess(order -> acceptedOrderBucket.addOrder(order))
+                .subscribeOn(Schedulers.io());
+    }
+
+    private Maybe<MenuOrder> updateOrderState(MenuOrder menuOrder, MenuOrder.State menuOrderState) {
+        String menuOrderUuid = menuOrder.uuid;
+        int state = menuOrderState.ordinal();
+        return orderRepository.updateMenuOrderState(menuOrderUuid, state)
                 .subscribeOn(Schedulers.io());
     }
 

@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "4320bd2e11918ecbb457dcfd50b214e3",
+    "identityHash": "3ef50b494169a02fd2de1502304595cb",
     "entities": [
       {
         "tableName": "menu",
@@ -65,7 +65,7 @@
             "notNull": true
           },
           {
-            "fieldPath": "name",
+            "fieldPath": "orderName",
             "columnName": "menu_order_name",
             "affinity": "TEXT",
             "notNull": false
@@ -200,7 +200,7 @@
       },
       {
         "tableName": "order_detail",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`order_detail_uuid` TEXT NOT NULL, `store_uuid` TEXT, `menu_uuid` TEXT, `menu_name` TEXT, `menu_order_uuid` TEXT, `menu_order_name` TEXT, `menu_option_uuid_list` TEXT, `menu_quantity` INTEGER NOT NULL, `price` INTEGER NOT NULL, PRIMARY KEY(`order_detail_uuid`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`order_detail_uuid` TEXT NOT NULL, `store_uuid` TEXT, `menu_uuid` TEXT, `menu_name` TEXT, `menu_order_uuid` TEXT, `menu_order_name` TEXT, `menu_option_uuid_list` TEXT, `ordered_quantity` INTEGER NOT NULL, `ordered_price` INTEGER NOT NULL, PRIMARY KEY(`order_detail_uuid`))",
         "fields": [
           {
             "fieldPath": "uuid",
@@ -246,13 +246,13 @@
           },
           {
             "fieldPath": "quantity",
-            "columnName": "menu_quantity",
+            "columnName": "ordered_quantity",
             "affinity": "INTEGER",
             "notNull": true
           },
           {
             "fieldPath": "price",
-            "columnName": "price",
+            "columnName": "ordered_price",
             "affinity": "INTEGER",
             "notNull": true
           }
@@ -340,7 +340,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"4320bd2e11918ecbb457dcfd50b214e3\")"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"3ef50b494169a02fd2de1502304595cb\")"
     ]
   }
 }

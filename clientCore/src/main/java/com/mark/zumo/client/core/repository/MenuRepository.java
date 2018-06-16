@@ -61,7 +61,7 @@ public enum MenuRepository {
 
     private Observable<List<MenuOption>> getMenuOptionsOfMenu(String menuUuid) {
         Maybe<List<MenuOption>> menuOptionListDB = diskRepository.getMenuOptionListByMenuUuid(menuUuid);
-        Maybe<List<MenuOption>> menuOptionListApi = networkRepository.getMenuOptionList(menuUuid)
+        Maybe<List<MenuOption>> menuOptionListApi = networkRepository.getMenuOptionListByMenuUuid(menuUuid)
                 .doOnSuccess(diskRepository::insertMenuOptionList);
 
         return Maybe.merge(menuOptionListDB, menuOptionListApi)
@@ -89,8 +89,11 @@ public enum MenuRepository {
                 .flatMapMaybe(diskRepository::getMenuOption)
                 .toList().toMaybe();
 
-        Maybe<List<MenuOption>> menuOptionListApi = networkRepository.getMenuOptionList(menuOptionUuidList)
-                .doOnSuccess(diskRepository::insertMenuOptionList);
+        Maybe<List<MenuOption>> menuOptionListApi = Observable.fromIterable(menuOptionUuidList)
+                .flatMapMaybe(networkRepository::getMenuOptionList)
+                .toList()
+                .doOnSuccess(diskRepository::insertMenuOptionList)
+                .toMaybe();
 
         return Maybe.merge(menuOptionListDB, menuOptionListApi)
                 .toObservable()

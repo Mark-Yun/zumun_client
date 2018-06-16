@@ -7,9 +7,12 @@
 package com.mark.zumo.client.core.repository;
 
 import android.os.Bundle;
+import android.text.TextUtils;
+import android.util.Log;
 
 import com.mark.zumo.client.core.appserver.AppServerServiceProvider;
 import com.mark.zumo.client.core.appserver.NetworkRepository;
+import com.mark.zumo.client.core.entity.SnsToken;
 import com.mark.zumo.client.core.entity.Store;
 import com.mark.zumo.client.core.entity.user.GuestUser;
 import com.mark.zumo.client.core.security.SecurePreferences;
@@ -19,6 +22,7 @@ import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Flowable;
 import io.reactivex.Maybe;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * Created by mark on 18. 4. 30.
@@ -47,6 +51,8 @@ public enum SessionRepository {
 
     public GuestUser getGuestUserFromCache() {
         String guestUserUuid = securePreferences.getString(SessionRepository.KEY_CUSTOMER_UUID);
+        if (TextUtils.isEmpty(guestUserUuid))
+            return null;
         return new GuestUser(guestUserUuid);
     }
 
@@ -57,8 +63,15 @@ public enum SessionRepository {
 
     public Maybe<GuestUser> createGuestUser() {
         return networkRepository.createGuestUser()
+                .doOnError(throwable -> Log.e(TAG, "createGuestUser: ", throwable))
                 .retryWhen(errors -> errors.flatMap(error -> Flowable.timer(3, TimeUnit.SECONDS)))
                 .retry(2);
+    }
+
+    public Maybe<SnsToken> createToken(SnsToken snsToken) {
+        return networkRepository.createSnsToken(snsToken)
+                .doOnError(throwable -> Log.e(TAG, "createToken: ", throwable))
+                .subscribeOn(Schedulers.io());
     }
 
     public static class SessionBuilder {

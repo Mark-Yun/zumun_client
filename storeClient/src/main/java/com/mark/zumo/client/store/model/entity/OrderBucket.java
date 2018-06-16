@@ -6,8 +6,6 @@
 
 package com.mark.zumo.client.store.model.entity;
 
-import android.util.Log;
-
 import com.mark.zumo.client.core.entity.MenuOrder;
 
 import java.util.ArrayList;
@@ -32,7 +30,11 @@ public class OrderBucket {
 
     public void addOrder(MenuOrder menuOrder) {
         orderList.add(menuOrder);
-        Log.d(TAG, "addOrder: " + menuOrder);
+        notifyOnNext();
+    }
+
+    public void addOrderList(List<MenuOrder> menuOrderList) {
+        orderList.addAll(menuOrderList);
         notifyOnNext();
     }
 

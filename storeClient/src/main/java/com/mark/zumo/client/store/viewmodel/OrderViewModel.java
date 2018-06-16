@@ -18,6 +18,7 @@ import com.mark.zumo.client.core.entity.MenuOrder;
 import com.mark.zumo.client.core.entity.OrderDetail;
 import com.mark.zumo.client.store.model.MenuManager;
 import com.mark.zumo.client.store.model.OrderManager;
+import com.mark.zumo.client.store.model.SessionManager;
 import com.mark.zumo.client.store.model.entity.OrderBucket;
 
 import java.util.List;
@@ -34,6 +35,7 @@ public class OrderViewModel extends AndroidViewModel {
 
     private OrderManager orderManager;
     private MenuManager menuManager;
+    private SessionManager sessionManager;
 
     private CompositeDisposable compositeDisposable;
 
@@ -42,6 +44,7 @@ public class OrderViewModel extends AndroidViewModel {
 
         orderManager = OrderManager.INSTANCE;
         menuManager = MenuManager.INSTANCE;
+        sessionManager = SessionManager.INSTANCE;
 
         compositeDisposable = new CompositeDisposable();
     }
@@ -63,6 +66,12 @@ public class OrderViewModel extends AndroidViewModel {
                 .map(OrderBucket::getOrderList)
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnNext(liveData::setValue)
+                .doOnSubscribe(compositeDisposable::add)
+                .subscribe();
+
+        sessionManager.getSessionStore()
+                .map(store -> store.uuid)
+                .doOnSuccess(orderManager::loadMenuOrderByStoreUuid)
                 .doOnSubscribe(compositeDisposable::add)
                 .subscribe();
         return liveData;

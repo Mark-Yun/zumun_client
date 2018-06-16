@@ -8,6 +8,7 @@ package com.mark.zumo.client.store.model;
 
 import android.util.Log;
 
+import com.mark.zumo.client.core.entity.SnsToken;
 import com.mark.zumo.client.core.entity.Store;
 import com.mark.zumo.client.core.repository.SessionRepository;
 
@@ -53,5 +54,11 @@ public enum SessionManager {
         new SessionRepository.SessionBuilder()
                 .put(SessionRepository.KEY_STORE_UUID, store.uuid)
                 .build();
+    }
+
+    public Maybe<SnsToken> registerToken(Store store, String token) {
+        SnsToken snsToken = new SnsToken(store.uuid, "android", token);
+        return sessionRepository.createToken(snsToken)
+                .subscribeOn(Schedulers.io());
     }
 }

@@ -16,7 +16,6 @@ import android.util.Log;
 
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.FirebaseInstanceIdService;
-import com.mark.zumo.client.core.entity.Store;
 import com.mark.zumo.client.store.model.SessionManager;
 import com.mark.zumo.client.store.model.StoreManager;
 
@@ -55,8 +54,8 @@ public class StoreFcmIdService extends FirebaseInstanceIdService {
     }
 
     private void registerToken(final String refreshedToken) {
-        Store currentStore = sessionManager.getCurrentStore();
-        storeManager.registerToken(currentStore, refreshedToken)
+        sessionManager.getSessionStore()
+                .flatMap(store -> sessionManager.registerToken(store, refreshedToken))
                 .doOnSuccess(store -> Log.d(TAG, "onTokenRefresh: updated Success-" + store))
                 .subscribe();
     }
