@@ -17,7 +17,7 @@
         android:layout_height="@dimen/tab_height"
         android:background="@color/colorPrimary"
         style="@style/AppTheme.NoActionBar.TabStyle"
-        android:elevation="1dp"
+        android:elevation="4dp"
         app:layout_constraintBottom_toTopOf="@+id/view_pager"
         app:layout_constraintTop_toTopOf="parent"
         design:tabMode="fixed">
