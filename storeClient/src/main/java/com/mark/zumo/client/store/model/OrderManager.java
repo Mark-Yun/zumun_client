@@ -6,6 +6,8 @@
 
 package com.mark.zumo.client.store.model;
 
+import android.util.Log;
+
 import com.mark.zumo.client.core.entity.MenuOrder;
 import com.mark.zumo.client.core.entity.OrderDetail;
 import com.mark.zumo.client.core.payment.kakao.KakaoPayAdapter;
@@ -32,6 +34,7 @@ import io.reactivex.schedulers.Schedulers;
 public enum OrderManager {
     INSTANCE;
 
+    public static final String TAG = "OrderManager";
     private OrderRepository orderRepository;
     private KakaoPayAdapter kakaoPayAdapter;
 
@@ -49,6 +52,8 @@ public enum OrderManager {
 
     public void putRequestedOrderBucket(PaymentToken paymentToken) {
         paymentTokenMap.put(paymentToken.menuOrderUuid, paymentToken);
+        orderRepository.savePaymentToken(paymentToken);
+        Log.d(TAG, "putRequestedOrderBucket: " + paymentToken);
 
         orderRepository.getMenuOrderFromApi(paymentToken.menuOrderUuid)
                 .subscribeOn(Schedulers.io())

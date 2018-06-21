@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "3ef50b494169a02fd2de1502304595cb",
+    "identityHash": "05ea26506ab9c9124b34502235d36727",
     "entities": [
       {
         "tableName": "menu",
@@ -336,11 +336,49 @@
         },
         "indices": [],
         "foreignKeys": []
+      },
+      {
+        "tableName": "payment_token",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`menu_order_uuid` TEXT NOT NULL, `tid` TEXT, `pg_token` TEXT, `kakao_access_token` TEXT, PRIMARY KEY(`menu_order_uuid`))",
+        "fields": [
+          {
+            "fieldPath": "menuOrderUuid",
+            "columnName": "menu_order_uuid",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "tid",
+            "columnName": "tid",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "pgToken",
+            "columnName": "pg_token",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "kakaoAccessToken",
+            "columnName": "kakao_access_token",
+            "affinity": "TEXT",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "menu_order_uuid"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [],
+        "foreignKeys": []
       }
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"3ef50b494169a02fd2de1502304595cb\")"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"05ea26506ab9c9124b34502235d36727\")"
     ]
   }
 }

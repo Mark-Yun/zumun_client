@@ -15,6 +15,7 @@ import com.mark.zumo.client.core.dao.DiskRepository;
 import com.mark.zumo.client.core.entity.MenuOrder;
 import com.mark.zumo.client.core.entity.OrderDetail;
 import com.mark.zumo.client.core.entity.util.ListComparator;
+import com.mark.zumo.client.core.payment.kakao.entity.PaymentToken;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -107,5 +108,9 @@ public enum OrderRepository {
         return networkRepository.updateMenuOrderState(menuOrderUuid, state)
                 .doOnError(throwable -> Log.e(TAG, "updateMenuOrderState: ", throwable))
                 .doOnSuccess(diskRepository::insertMenuOrder);
+    }
+
+    public void savePaymentToken(PaymentToken paymentToken) {
+        diskRepository.insertPaymentToken(paymentToken);
     }
 }

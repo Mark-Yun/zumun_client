@@ -16,15 +16,14 @@ import com.mark.zumo.client.core.entity.util.EntityHelper;
 
 import java.io.Serializable;
 
-import static com.mark.zumo.client.core.entity.MenuOption.TABLE;
+import static com.mark.zumo.client.core.entity.MenuOption.Schema.table;
 
 /**
  * Created by mark on 18. 5. 23.
  */
 
-@Entity(tableName = TABLE)
+@Entity(tableName = table)
 public class MenuOption implements Serializable {
-    public static final String TABLE = "menu_option";
 
     @PrimaryKey @NonNull @SerializedName(Schema.uuid) @ColumnInfo(name = Schema.uuid)
     public final String uuid;
@@ -46,6 +45,7 @@ public class MenuOption implements Serializable {
     }
 
     public interface Schema {
+        String table = "menu_option";
         String uuid = "menu_option_uuid";
         String menuUuid = "menu_uuid";
         String name = "option_name";
