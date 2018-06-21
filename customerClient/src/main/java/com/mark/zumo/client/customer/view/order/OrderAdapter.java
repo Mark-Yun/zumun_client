@@ -20,6 +20,7 @@ import com.mark.zumo.client.core.entity.MenuOrder;
 import com.mark.zumo.client.core.util.glide.GlideApp;
 import com.mark.zumo.client.core.util.glide.GlideUtils;
 import com.mark.zumo.client.customer.R;
+import com.mark.zumo.client.customer.view.TouchResponse;
 import com.mark.zumo.client.customer.view.order.detail.OrderDetailActivity;
 import com.mark.zumo.client.customer.viewmodel.OrderViewModel;
 
@@ -87,6 +88,7 @@ class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.ViewHolder> {
         });
 
         holder.itemView.setOnClickListener(v -> {
+            TouchResponse.small();
             Intent intent = new Intent(v.getContext(), OrderDetailActivity.class);
             intent.putExtra(OrderDetailActivity.KEY_ORDER_UUID, menuOrder.uuid);
             intent.putExtra(OrderDetailActivity.KEY_STORE_UUID, menuOrder.storeUuid);

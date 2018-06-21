@@ -78,7 +78,7 @@
         android:layout_height="wrap_content"
         android:background="@color/colorPrimary"
         android:padding="15dp"
-        app:layout_constraintBottom_toTopOf="@+id/place_order">
+        app:layout_constraintBottom_toTopOf="@+id/cancel_order">
 
         <TextView
             android:id="@+id/total_price_description"

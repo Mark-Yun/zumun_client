@@ -7,12 +7,15 @@
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="wrap_content"
+    android:layout_marginEnd="@dimen/order_card_view_big_margin"
+    android:layout_marginStart="@dimen/order_card_view_big_margin">
 
     <android.support.v7.widget.AppCompatTextView
         android:id="@+id/order_info"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/order_card_view_big_margin"
         android:text="@string/order_information_title"
         android:textColor="@color/colorTextDark"
         android:textStyle="bold"
@@ -31,7 +34,7 @@
         android:id="@+id/order_name_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/order_card_view_big_margin"
+        android:layout_marginStart="@dimen/order_card_view_medium_margin"
         android:layout_marginTop="@dimen/order_card_view_medium_margin"
         android:text="@string/order_name_title"
         android:textColor="@color/colorTextDark"

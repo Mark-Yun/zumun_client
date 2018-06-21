@@ -30,6 +30,7 @@ import io.reactivex.disposables.CompositeDisposable;
  * Created by mark on 18. 6. 12.
  */
 public class OrderViewModel extends AndroidViewModel {
+    private static final String TAG = "OrderViewModel";
 
     private OrderManager orderManager;
     private StoreManager storeManager;

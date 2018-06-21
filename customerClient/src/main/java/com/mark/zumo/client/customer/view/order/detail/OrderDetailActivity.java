@@ -26,6 +26,8 @@ import com.mark.zumo.client.core.util.glide.GlideUtils;
 import com.mark.zumo.client.customer.R;
 import com.mark.zumo.client.customer.viewmodel.OrderViewModel;
 
+import java.text.NumberFormat;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -91,7 +93,7 @@ public class OrderDetailActivity extends AppCompatActivity {
     }
 
     private void onLoadMenuOrder(MenuOrder menuOrder) {
-        totalPrice.setText(String.valueOf(menuOrder.totalPrice));
+        totalPrice.setText(NumberFormat.getCurrencyInstance().format(menuOrder.totalPrice));
         MenuOrder.State state = MenuOrder.State.of(menuOrder.state);
         cancelOrder.setVisibility(state == MenuOrder.State.PAYMENT_READY ? View.VISIBLE : View.GONE);
     }
