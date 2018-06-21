@@ -54,8 +54,8 @@ public class MainActivity extends BaseActivity {
         Fragment mainBodyFragment = Fragment.instantiate(this, MainBodyFragment.class.getName());
         Fragment mainHeaderFragment = Fragment.instantiate(this, MainHeaderFragment.class.getName());
         getSupportFragmentManager().beginTransaction()
-                .add(R.id.main_body_fragment, mainBodyFragment)
-                .add(R.id.main_header_fragment, mainHeaderFragment)
+                .replace(R.id.main_body_fragment, mainBodyFragment)
+                .replace(R.id.main_header_fragment, mainHeaderFragment)
                 .commit();
     }
 
