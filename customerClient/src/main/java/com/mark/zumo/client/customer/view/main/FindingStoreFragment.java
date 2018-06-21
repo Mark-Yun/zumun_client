@@ -10,6 +10,7 @@ import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.graphics.Path;
 import android.graphics.Point;
+import android.graphics.drawable.AnimationDrawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -69,6 +70,11 @@ public class FindingStoreFragment extends Fragment {
             animator.setRepeatCount(ValueAnimator.INFINITE);
             animator.setDuration(3000);
             animator.start();
+
+            AnimationDrawable animDrawable = (AnimationDrawable) storeImage.getDrawable();
+            animDrawable .setEnterFadeDuration(500);
+            animDrawable .setExitFadeDuration(500);
+            animDrawable.start();
         }
     }
 }

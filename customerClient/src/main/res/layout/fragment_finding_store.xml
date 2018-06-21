@@ -49,6 +49,7 @@
         android:layout_height="wrap_content"
         android:maxLines="2"
         android:text="@string/is_finding_store"
+        android:textAlignment="center"
         android:textColor="@color/colorTextDark"
         android:textSize="16sp"
         app:layout_constraintBottom_toBottomOf="parent"

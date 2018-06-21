@@ -17,7 +17,7 @@
         android:id="@+id/image"
         android:layout_width="@dimen/card_view_place_item_height"
         android:layout_height="@dimen/card_view_place_item_height"
-        android:padding="10dp"
+        android:padding="16dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -26,8 +26,8 @@
         android:id="@+id/title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
         android:textColor="@color/colorTextDark"
+        android:textSize="16sp"
         app:layout_constraintBottom_toTopOf="@+id/distance"
         app:layout_constraintStart_toEndOf="@+id/image"
         app:layout_constraintTop_toTopOf="parent"
@@ -37,8 +37,8 @@
         android:id="@+id/distance"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
         android:textColor="@color/colorSecondaryText"
+        android:textSize="14sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toEndOf="@+id/image"
         app:layout_constraintTop_toBottomOf="@+id/title"
@@ -47,7 +47,7 @@
     <ImageView
         android:layout_width="@dimen/icon_size_small"
         android:layout_height="@dimen/icon_size_small"
-        android:layout_marginEnd="30dp"
+        android:layout_marginEnd="16dp"
         android:scaleType="fitXY"
         android:src="@drawable/black_arrow_right"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -57,8 +57,8 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:layout_marginEnd="20dp"
-        android:layout_marginStart="20dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginStart="@dimen/card_view_place_item_height"
         android:background="@color/colorDivider"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintBottom_toBottomOf="parent" />
 </android.support.constraint.ConstraintLayout>

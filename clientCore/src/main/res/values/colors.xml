@@ -12,11 +12,11 @@
     <color name="colorPrimaryDark">#212121</color>
     <color name="colorPrimaryLight">#FFFFFF</color>
     <color name="colorText">#FFFFFF</color>
-    <color name="colorTextDark">#212121</color>
-    <color name="colorSecondaryText">#ABABAB</color>
+    <color name="colorTextDark">#DE000000</color>
+    <color name="colorSecondaryText">#55000000</color>
     <color name="colorIcon">#FFFFFF</color>
     <color name="colorAccent">#00CC99</color>
-    <color name="colorDivider">#BDBDBD</color>
+    <color name="colorDivider">#1E000000</color>
     <color name="colorTitle">#FFFFFF</color>
     <color name="colorBadge">#EEF43F34</color>
 
