@@ -51,7 +51,9 @@ public class OrderViewModel extends AndroidViewModel {
 
     public LiveData<List<MenuOrder>> acceptedMenuOrderList() {
         MutableLiveData<List<MenuOrder>> liveData = new MutableLiveData<>();
-        orderManager.acceptedOrderBucket()
+        sessionManager.getSessionStore()
+                .map(store -> store.uuid)
+                .flatMapObservable(orderManager::acceptedOrderBucket)
                 .map(OrderBucket::getOrderList)
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnNext(liveData::setValue)
@@ -62,16 +64,12 @@ public class OrderViewModel extends AndroidViewModel {
 
     public LiveData<List<MenuOrder>> requestedMenuOrderList() {
         MutableLiveData<List<MenuOrder>> liveData = new MutableLiveData<>();
-        orderManager.requestedOrderBucket()
+        sessionManager.getSessionStore()
+                .map(store -> store.uuid)
+                .flatMapObservable(orderManager::requestedOrderBucket)
                 .map(OrderBucket::getOrderList)
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnNext(liveData::setValue)
-                .doOnSubscribe(compositeDisposable::add)
-                .subscribe();
-
-        sessionManager.getSessionStore()
-                .map(store -> store.uuid)
-                .doOnSuccess(orderManager::loadMenuOrderByStoreUuid)
                 .doOnSubscribe(compositeDisposable::add)
                 .subscribe();
         return liveData;

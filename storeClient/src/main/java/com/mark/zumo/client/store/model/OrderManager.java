@@ -40,8 +40,6 @@ public enum OrderManager {
     private Map<String, PaymentToken> paymentTokenMap;
 
     OrderManager() {
-        acceptedOrderBucket = new OrderBucket();
-        requestedOrderBucket = new OrderBucket();
 
         paymentTokenMap = new HashMap<>();
 
@@ -58,13 +56,43 @@ public enum OrderManager {
                 .subscribe();
     }
 
-    public Observable<OrderBucket> requestedOrderBucket() {
+    private OrderBucket createRequestedOrderBucket(String storeUuid) {
+        requestedOrderBucket = new OrderBucket();
+
+        orderRepository.getMenuOrderListByStoreUuid(storeUuid, 0, 30)
+                .subscribeOn(Schedulers.io())
+                .doOnNext(requestedOrderBucket::addOrderList)
+                .subscribe();
+
+        return requestedOrderBucket;
+    }
+
+    private OrderBucket createAcceptedOrderBucket(String storeUuid) {
+        acceptedOrderBucket = new OrderBucket();
+
+        orderRepository.getMenuOrderListByStoreUuid(storeUuid, 0, 30)
+                .subscribeOn(Schedulers.io())
+                .doOnNext(acceptedOrderBucket::addOrderList)
+                .subscribe();
+
+        return acceptedOrderBucket;
+    }
+
+    public Observable<OrderBucket> requestedOrderBucket(String storeUuid) {
+        if (requestedOrderBucket == null) {
+            requestedOrderBucket = createRequestedOrderBucket(storeUuid);
+        }
+
         return Observable.create(
                 (ObservableOnSubscribe<OrderBucket>) e -> e.onNext(requestedOrderBucket.addEmitter(e))
         ).subscribeOn(Schedulers.computation());
     }
 
-    public Observable<OrderBucket> acceptedOrderBucket() {
+    public Observable<OrderBucket> acceptedOrderBucket(String storeUuid) {
+        if (acceptedOrderBucket == null) {
+            acceptedOrderBucket = createAcceptedOrderBucket(storeUuid);
+        }
+
         return Observable.create(
                 (ObservableOnSubscribe<OrderBucket>) e -> e.onNext(acceptedOrderBucket.addEmitter(e))
         ).subscribeOn(Schedulers.computation());
@@ -73,13 +101,6 @@ public enum OrderManager {
     public Observable<List<OrderDetail>> getOrderDetailList(String orderUuid) {
         return orderRepository.getOrderDetailListByOrderUuid(orderUuid)
                 .subscribeOn(Schedulers.io());
-    }
-
-    public void loadMenuOrderByStoreUuid(String storeUuid) {
-        orderRepository.getMenuOrderListByStoreUuid(storeUuid, 0, 30)
-                .subscribeOn(Schedulers.io())
-                .doOnNext(requestedOrderBucket::addOrderList)
-                .subscribe();
     }
 
     public Maybe<MenuOrder> acceptOrder(MenuOrder menuOrder) {
