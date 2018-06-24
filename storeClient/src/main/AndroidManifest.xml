@@ -30,19 +30,9 @@
 
         <activity android:name="com.mark.zumo.client.store.view.signup.SignUpActivity" />
 
-        <activity
-            android:name="com.mark.zumo.client.store.view.SplashActivity"
-            android:label="@string/app_name"
-            android:launchMode="singleTop"
-            android:theme="@style/AppTheme.NoActionBar">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
-
         <activity android:name="com.mark.zumo.client.store.view.acceptedorder.AcceptedOrderActivity">
             <intent-filter>
+                <category android:name="android.intent.category.LAUNCHER" />
                 <action android:name="android.intent.action.MAIN" />
             </intent-filter>
         </activity>

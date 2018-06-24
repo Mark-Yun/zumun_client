@@ -37,7 +37,7 @@ public class MenuActivity extends AppCompatActivity {
     private void inflateMenuFragment() {
         Fragment fragment = Fragment.instantiate(this, MenuFragment.class.getName(), getIntent().getExtras());
         getSupportFragmentManager().beginTransaction()
-                .add(R.id.menu_fragment, fragment)
+                .replace(R.id.menu_fragment, fragment)
                 .commit();
     }
 

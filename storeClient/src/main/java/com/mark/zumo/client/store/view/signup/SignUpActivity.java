@@ -34,7 +34,7 @@ public class SignUpActivity extends BaseActivity {
 
     private void inflateView() {
         getSupportFragmentManager().beginTransaction()
-                .add(R.id.console_fragment, Fragment.instantiate(this, SignInFragment.class.getName()))
+                .replace(R.id.console_fragment, Fragment.instantiate(this, SignInFragment.class.getName()))
                 .commit();
     }
 }

@@ -59,7 +59,7 @@ public class AcceptedOrderActivity extends BaseActivity {
         Fragment consoleFragment = Fragment.instantiate(this, OrderConsoleFragment.class.getName());
 
         getSupportFragmentManager().beginTransaction()
-                .add(R.id.console_fragment, consoleFragment)
+                .replace(R.id.console_fragment, consoleFragment)
                 .commit();
     }
 

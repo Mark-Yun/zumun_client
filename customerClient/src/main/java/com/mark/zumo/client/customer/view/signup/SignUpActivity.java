@@ -38,7 +38,7 @@ public class SignUpActivity extends BaseActivity {
 
         getSupportFragmentManager()
                 .beginTransaction()
-                .add(R.id.sign_up_button_fragment, signUpButtonFragment)
+                .replace(R.id.sign_up_button_fragment, signUpButtonFragment)
                 .commit();
     }
 }

@@ -75,8 +75,8 @@ public class MenuDetailActivity extends AppCompatActivity {
         Fragment menuOptionFragment = Fragment.instantiate(this, MenuOptionFragment.class.getName(), bundle);
 
         getSupportFragmentManager().beginTransaction()
-                .add(R.id.menu_info_fragment, menuInfoFragment)
-                .add(R.id.menu_option_fragment, menuOptionFragment)
+                .replace(R.id.menu_info_fragment, menuInfoFragment)
+                .replace(R.id.menu_option_fragment, menuOptionFragment)
                 .commit();
     }
 

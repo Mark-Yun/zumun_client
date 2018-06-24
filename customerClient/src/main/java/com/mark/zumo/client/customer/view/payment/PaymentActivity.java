@@ -42,7 +42,7 @@ public class PaymentActivity extends AppCompatActivity {
     private void inflateKakaoPay() {
         Fragment fragment = Fragment.instantiate(this, KakaoPayFragment.class.getName(), getIntent().getExtras());
         getSupportFragmentManager().beginTransaction()
-                .add(R.id.payment_main, fragment)
+                .replace(R.id.payment_main, fragment)
                 .commit();
     }
 }
