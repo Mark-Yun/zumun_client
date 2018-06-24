@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="TitleTextLight">
+        <item name="android:textColor">@color/colorTextLight</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+    </style>
+
+    <style name="TitleTextDark">
+        <item name="android:textColor">@color/colorTextDark</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+    </style>
+
+    <style name="HeadLineTextLight">
+        <item name="android:textColor">@color/colorTextLight</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+    </style>
+
+    <style name="HeadLineTextDark">
+        <item name="android:textColor">@color/colorTextDark</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+    </style>
+
+    <style name="SubheadLineTextLight">
+        <item name="android:textColor">@color/colorTextLight</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+    </style>
+
+    <style name="SubheadLineTextDark">
+        <item name="android:textColor">@color/colorTextDark</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+    </style>
+
+    <style name="SubtitleTextLight">
+        <item name="android:textColor">@color/colorTextLight</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:fontFamily">sans-serif</item>
+    </style>
+
+    <style name="SubtitleTextDark">
+        <item name="android:textColor">@color/colorTextDark</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:fontFamily">sans-serif</item>
+    </style>
+
+    <style name="SecondaryLineTextLight">
+        <item name="android:textColor">@color/colorSecondaryTextLight</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:fontFamily">sans-serif</item>
+    </style>
+
+    <style name="SecondaryLineTextDark">
+        <item name="android:textColor">@color/colorSecondaryTextDark</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:fontFamily">sans-serif</item>
+    </style>
+
+    <style name="TabTextLight">
+        <item name="android:textColor">@color/colorTextLight</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:textAllCaps">true</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+    </style>
+
+    <style name="TabTextDark">
+        <item name="android:textColor">@color/colorTextDark</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:textAllCaps">true</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+    </style>
+
+    <style name="ButtonTextLight" parent="Widget.AppCompat.Button.Borderless">
+        <item name="android:textColor">@color/colorTextLight</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:textAllCaps">true</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+    </style>
+
+    <style name="ButtonTextDark" parent="Widget.AppCompat.Button.Borderless">
+        <item name="android:textColor">@color/colorTextDark</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:textAllCaps">true</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+    </style>
+
+    <style name="DescriptionTextLight">
+        <item name="android:textColor">@color/colorTextLight</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:fontFamily">sans-serif</item>
+    </style>
+
+    <style name="DescriptionTextDark">
+        <item name="android:textColor">@color/colorTextDark</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:fontFamily">sans-serif</item>
+    </style>
+</resources>

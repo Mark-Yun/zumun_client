@@ -17,20 +17,20 @@
         <item name="android:colorControlHighlight" tools:targetApi="lollipop">@color/colorDivider
         </item>
         <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="android:colorPrimaryDark" tools:targetApi="m">@color/colorPrimaryDark</item>
+        <item name="android:colorPrimaryDark" tools:targetApi="m">@color/colorPrimaryLight</item>
         <item name="android:windowBackground">@color/colorPrimary</item>
         <item name="android:textColorHighlight">@color/colorAccent</item>
         <item name="android:colorAccent" tools:targetApi="lollipop">@color/colorAccent</item>
-        <item name="android:textColor">@color/colorText</item>
-        <item name="android:textColorPrimary">@color/colorTextDark</item>
-        <item name="android:textColorPrimaryInverse">@color/colorText</item>
+        <item name="android:textColor">@color/colorTextDark</item>
+        <item name="android:textColorPrimary">@color/colorTextLight</item>
+        <item name="android:textColorPrimaryInverse">@color/colorTextDark</item>
         <item name="android:borderlessButtonStyle">@style/AppTheme.NoActionBar.ButtonStyle</item>
         <item name="android:tabWidgetStyle">@style/AppTheme.NoActionBar.TabStyle</item>
         <item name="android:actionButtonStyle">@style/AppTheme.NoActionBar.ActionButtonStyle</item>
     </style>
 
     <style name="AppTheme.NoActionBar.ButtonStyle" parent="Widget.AppCompat.Button.Borderless">
-        <item name="android:textColor">@color/colorText</item>
+        <item name="android:textColor">@color/colorTextDark</item>
     </style>
 
     <style name="AppTheme.NoActionBar.ActionButtonStyle" parent="Widget.Design.FloatingActionButton">
@@ -40,8 +40,9 @@
 
     <style name="AppTheme.NoActionBar.TabStyle" parent="Widget.Design.TabLayout">
         <item name="tabIndicatorColor">@color/colorAccent</item>
-        <item name="tabSelectedTextColor">@color/colorTextDark</item>
-        <item name="tabTextColor">@color/colorSecondaryText</item>
+        <item name="tabSelectedTextColor">@color/colorTextLight</item>
+        <item name="tabTextColor">@color/colorSecondaryTextLight</item>
+        <item name="tabTextAppearance">@style/TabTextLight</item>
     </style>
 
     <style name="AppTheme.NoActionBar.Translucent" parent="AppTheme.NoActionBar">
@@ -63,14 +64,14 @@
 
     <style name="CartMenuOptionNameText">
         <item name="android:padding">2dp</item>
-        <item name="android:textColor">@color/colorTextDark</item>
+        <item name="android:textColor">@color/colorTextLight</item>
         <item name="android:textSize">13sp</item>
         <item name="android:textStyle">bold</item>
     </style>
 
     <style name="CartMenuOptionValueText">
         <item name="android:padding">2dp</item>
-        <item name="android:textColor">@color/colorSecondaryText</item>
+        <item name="android:textColor">@color/colorSecondaryTextLight</item>
         <item name="android:textSize">13sp</item>
         <item name="android:textStyle">bold</item>
     </style>

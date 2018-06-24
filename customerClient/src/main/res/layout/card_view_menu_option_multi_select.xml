@@ -16,6 +16,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
+        style="@style/SubtitleTextDark"
         app:layout_constraintBottom_toBottomOf="@+id/icon"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/icon" />
@@ -26,8 +27,7 @@
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:layout_marginEnd="10dp"
-        android:textSize="@dimen/selected_menu_option_size"
-        android:textColor="@color/colorAccent"
+        style="@style/SecondaryLineTextDark"
         app:layout_constraintBottom_toBottomOf="@+id/icon"
         app:layout_constraintEnd_toStartOf="@+id/divider"
         app:layout_constraintTop_toTopOf="@+id/icon" />
@@ -37,7 +37,7 @@
         android:layout_width="@dimen/stroke_width"
         android:layout_height="0dp"
         android:layout_marginEnd="10dp"
-        android:background="@color/colorText"
+        android:background="@color/colorTextDark"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/icon"
         app:layout_constraintTop_toTopOf="parent"
