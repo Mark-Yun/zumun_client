@@ -72,8 +72,8 @@ public class FindingStoreFragment extends Fragment {
             animator.start();
 
             AnimationDrawable animDrawable = (AnimationDrawable) storeImage.getDrawable();
-            animDrawable .setEnterFadeDuration(500);
-            animDrawable .setExitFadeDuration(500);
+            animDrawable.setEnterFadeDuration(500);
+            animDrawable.setExitFadeDuration(500);
             animDrawable.start();
         }
     }

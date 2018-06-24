@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright (c) 2018. Mark Soft - All Rights Reserved
   ~ Unauthorized copying of this file, via any medium is strictly prohibited
   ~ Proprietary and confidential
@@ -7,47 +6,61 @@
 
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/card_view_2_line_item_height"
     android:background="?attr/selectableItemBackground"
     android:clickable="true"
-    android:focusable="true"
-    android:layout_width="match_parent"
-    android:layout_height="@dimen/card_view_place_item_height">
+    android:focusable="true">
 
-    <ImageView
+    <android.support.v7.widget.AppCompatImageView
         android:id="@+id/image"
-        android:layout_width="@dimen/card_view_place_item_height"
-        android:layout_height="@dimen/card_view_place_item_height"
-        android:padding="16dp"
+        android:layout_width="@dimen/card_view_place_image_width"
+        android:layout_height="@dimen/card_view_place_image_height"
+        android:layout_marginBottom="@dimen/small_margin"
+        android:layout_marginTop="@dimen/small_margin"
+        android:scaleType="center"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
+    <android.support.constraint.Guideline
+        android:id="@+id/title_base_line"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_begin="@dimen/card_view_2_line_item_title_base_line_top_margin" />
+
+    <android.support.v7.widget.AppCompatTextView
         android:id="@+id/title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/medium_margin"
         android:textColor="@color/colorTextDark"
         android:textSize="16sp"
-        app:layout_constraintBottom_toTopOf="@+id/distance"
+        app:layout_constraintBottom_toBottomOf="@+id/title_base_line"
         app:layout_constraintStart_toEndOf="@+id/image"
-        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_chainStyle="packed" />
 
-    <TextView
+    <android.support.constraint.Guideline
+        android:id="@+id/secondary_text_base_line"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_begin="@dimen/card_view_2_line_item_secondary_text_base_line_top_margin" />
+
+    <android.support.v7.widget.AppCompatTextView
         android:id="@+id/distance"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="@color/colorSecondaryText"
         android:textSize="14sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/image"
-        app:layout_constraintTop_toBottomOf="@+id/title"
-        app:layout_constraintVertical_chainStyle="packed" />
+        app:layout_constraintBottom_toBottomOf="@+id/secondary_text_base_line"
+        app:layout_constraintStart_toStartOf="@+id/title" />
 
-    <ImageView
+    <android.support.v7.widget.AppCompatImageView
         android:layout_width="@dimen/icon_size_small"
         android:layout_height="@dimen/icon_size_small"
-        android:layout_marginEnd="16dp"
+        android:layout_marginEnd="@dimen/medium_margin"
         android:scaleType="fitXY"
         android:src="@drawable/black_arrow_right"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -55,10 +68,12 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <View
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="1dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginStart="@dimen/card_view_place_item_height"
+        android:layout_marginEnd="@dimen/medium_margin"
         android:background="@color/colorDivider"
-        app:layout_constraintBottom_toBottomOf="parent" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_weight="1"
+        app:layout_constraintStart_toStartOf="@+id/title" />
 </android.support.constraint.ConstraintLayout>

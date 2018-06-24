@@ -13,40 +13,44 @@
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="@dimen/card_view_3_line_item_height"
     android:background="?attr/selectableItemBackground"
     android:clickable="true"
-    android:focusable="true"
-    android:paddingTop="10dp">
+    android:focusable="true">
 
     <android.support.v7.widget.AppCompatImageView
         android:id="@+id/image"
-        android:layout_width="@dimen/card_view_place_item_height"
-        android:layout_height="@dimen/card_view_place_item_height"
-        android:padding="10dp"
+        android:layout_width="@dimen/card_view_place_image_width"
+        android:layout_height="@dimen/card_view_place_image_height"
+        android:layout_marginBottom="@dimen/medium_margin"
+        android:layout_marginTop="@dimen/medium_margin"
+        android:scaleType="center"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <android.support.constraint.Guideline
+        android:id="@+id/title_base_line"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_begin="@dimen/card_view_3_line_item_title_base_line_top_margin" />
 
     <android.support.v7.widget.AppCompatTextView
         android:id="@+id/title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
+        android:layout_marginStart="@dimen/card_view_3_line_item_title_start_margin"
         android:textColor="@color/colorTextDark"
-        app:layout_constraintBottom_toTopOf="@+id/sub_title"
-        app:layout_constraintStart_toEndOf="@+id/image"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_chainStyle="packed" />
+        app:layout_constraintBottom_toBottomOf="@+id/title_base_line"
+        app:layout_constraintStart_toEndOf="@+id/image" />
 
-    <android.support.v7.widget.AppCompatTextView
-        android:id="@+id/sub_title"
+    <android.support.constraint.Guideline
+        android:id="@+id/secondary_text_base_line"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="@color/colorTextDark"
-        app:layout_constraintStart_toStartOf="@+id/title"
-        app:layout_constraintTop_toBottomOf="@+id/title"
-        app:layout_constraintVertical_chainStyle="packed" />
+        android:orientation="horizontal"
+        app:layout_constraintGuide_begin="@dimen/card_view_3_line_item_secondary_text_top_margin" />
 
     <android.support.v7.widget.AppCompatTextView
         android:id="@+id/order_number_description"
@@ -55,8 +59,8 @@
         android:text="@string/order_number_description"
         android:textColor="@color/colorSecondaryText"
         android:textSize="@dimen/menu_price_text_size"
-        app:layout_constraintStart_toStartOf="@+id/title"
-        app:layout_constraintTop_toBottomOf="@+id/sub_title" />
+        app:layout_constraintBottom_toBottomOf="@+id/secondary_text_base_line"
+        app:layout_constraintStart_toStartOf="@+id/title" />
 
     <android.support.v7.widget.AppCompatTextView
         android:id="@+id/order_number"
@@ -67,6 +71,13 @@
         app:layout_constraintBottom_toBottomOf="@+id/order_number_description"
         app:layout_constraintStart_toEndOf="@+id/order_number_description" />
 
+    <android.support.constraint.Guideline
+        android:id="@+id/third_text_base_line"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_begin="@dimen/card_view_3_line_item_third_text_top_margin" />
+
     <android.support.v7.widget.AppCompatTextView
         android:id="@+id/order_time_description"
         android:layout_width="wrap_content"
@@ -74,8 +85,8 @@
         android:text="@string/order_time_description"
         android:textColor="@color/colorSecondaryText"
         android:textSize="@dimen/menu_price_text_size"
-        app:layout_constraintStart_toStartOf="@+id/title"
-        app:layout_constraintTop_toBottomOf="@+id/order_number_description" />
+        app:layout_constraintBottom_toBottomOf="@+id/third_text_base_line"
+        app:layout_constraintStart_toStartOf="@+id/title" />
 
     <android.support.v7.widget.AppCompatTextView
         android:id="@+id/order_time"
@@ -90,10 +101,10 @@
         android:id="@+id/right_arrow_image_view"
         android:layout_width="@dimen/icon_size_small"
         android:layout_height="@dimen/icon_size_small"
-        android:layout_marginEnd="30dp"
+        android:layout_marginEnd="@dimen/medium_margin"
+        android:layout_marginTop="@dimen/medium_margin"
         android:scaleType="fitXY"
         android:src="@drawable/black_arrow_right"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -101,22 +112,22 @@
         android:id="@+id/order_state"
         android:layout_width="wrap_content"
         android:layout_height="0dp"
-        android:layout_marginEnd="10dp"
+        android:layout_marginEnd="@dimen/small_margin"
         android:gravity="center_vertical|center_horizontal"
-        android:paddingEnd="10dp"
-        android:paddingStart="10dp"
+        android:paddingEnd="@dimen/small_margin"
+        android:paddingStart="@dimen/small_margin"
         android:textColor="@color/colorText"
         app:layout_constraintBottom_toBottomOf="@+id/right_arrow_image_view"
         app:layout_constraintEnd_toStartOf="@+id/right_arrow_image_view"
         app:layout_constraintTop_toTopOf="@+id/right_arrow_image_view" />
 
     <View
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="1dp"
-        android:layout_marginEnd="20dp"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="10dp"
+        android:layout_marginEnd="@dimen/medium_margin"
         android:background="@color/colorDivider"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/order_time_description" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_weight="1"
+        app:layout_constraintStart_toStartOf="@+id/title" />
 </android.support.constraint.ConstraintLayout>

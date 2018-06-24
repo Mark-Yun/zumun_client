@@ -5,7 +5,15 @@
   -->
 
 <resources>
-    <dimen name="order_card_view_small_margin">5dp</dimen>
-    <dimen name="order_card_view_medium_margin">10dp</dimen>
-    <dimen name="order_card_view_big_margin">20dp</dimen>
+    <dimen name="small_margin">8dp</dimen>
+    <dimen name="medium_margin">16dp</dimen>
+    <dimen name="big_margin">24dp</dimen>
+
+    <dimen name="card_view_3_line_item_title_start_margin">20dp</dimen>
+    <dimen name="card_view_3_line_item_title_base_line_top_margin">28dp</dimen>
+    <dimen name="card_view_3_line_item_secondary_text_top_margin">48dp</dimen>
+    <dimen name="card_view_3_line_item_third_text_top_margin">68dp</dimen>
+
+    <dimen name="card_view_2_line_item_title_base_line_top_margin">32dp</dimen>
+    <dimen name="card_view_2_line_item_secondary_text_base_line_top_margin">52dp</dimen>
 </resources>

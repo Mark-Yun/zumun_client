@@ -35,14 +35,16 @@ public enum AppLocationProvider {
     private LocationManager locationManager;
     private Context context;
 
+    public final Observable<Location> currentLocationObservable;
     private Location location;
 
     AppLocationProvider() {
         context = ContextHolder.getContext();
         locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
+        currentLocationObservable = currentLocation();
     }
 
-    public Observable<Location> currentLocation() {
+    private Observable<Location> currentLocation() {
         return Observable.create(e -> {
             boolean isGPSEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
             boolean isNetworkEnabled = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);

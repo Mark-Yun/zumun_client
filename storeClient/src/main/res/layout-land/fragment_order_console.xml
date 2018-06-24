@@ -76,7 +76,7 @@
         android:id="@+id/requested_order_fab"
         android:layout_width="@dimen/order_control_button_height"
         android:layout_height="@dimen/order_control_button_height"
-        android:layout_marginStart="@dimen/order_card_view_big_margin"
+        android:layout_marginStart="@dimen/big_margin"
         android:layout_marginTop="@dimen/order_controller_button_bottom_margin"
         android:background="@android:color/holo_red_dark"
         android:scaleType="fitXY"

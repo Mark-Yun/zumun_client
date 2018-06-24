@@ -14,7 +14,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginTop="@dimen/order_card_view_medium_margin">
+    android:layout_marginTop="@dimen/medium_margin">
 
     <android.support.v7.widget.AppCompatTextView
         android:id="@+id/name"
@@ -30,7 +30,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="@color/colorTextDark"
-        android:layout_marginEnd="@dimen/order_card_view_medium_margin"
+        android:layout_marginEnd="@dimen/medium_margin"
         android:textSize="@dimen/order_card_view_item_name_description_text_size"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -39,7 +39,7 @@
         android:id="@+id/requested_order_card_view_menu_option_recycler_view"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/order_card_view_big_margin"
+        android:layout_marginStart="@dimen/big_margin"
         android:nestedScrollingEnabled="false"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

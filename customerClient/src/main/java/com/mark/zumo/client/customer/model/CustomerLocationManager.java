@@ -28,7 +28,7 @@ public enum CustomerLocationManager {
 
     public Observable<Float> distanceFrom(double latitude, double longitude) {
         Location location = from(latitude, longitude);
-        return locationProvider.currentLocation()
+        return locationProvider.currentLocationObservable
                 .subscribeOn(AndroidSchedulers.mainThread())
                 .map(location1 -> location1.distanceTo(location))
                 .subscribeOn(Schedulers.io());

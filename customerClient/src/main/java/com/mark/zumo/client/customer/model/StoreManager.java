@@ -36,7 +36,7 @@ public enum StoreManager {
     }
 
     public Observable<List<Store>> nearByStore() {
-        return locationProvider.currentLocation()
+        return locationProvider.currentLocationObservable
                 .subscribeOn(AndroidSchedulers.mainThread())
                 .flatMap(storeRepository::nearByStore)
                 .subscribeOn(Schedulers.newThread())

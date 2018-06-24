@@ -72,7 +72,6 @@ final class ViewHolderUtils {
         //TODO REMOVE TEST DATA
         GlideApp.with(storeViewHolder.itemView.getContext())
                 .load(R.drawable.data_3_hot)
-                .apply(GlideUtils.storeImageOptions())
                 .transition(GlideUtils.storeTransitionOptions())
                 .into(storeViewHolder.image);
 

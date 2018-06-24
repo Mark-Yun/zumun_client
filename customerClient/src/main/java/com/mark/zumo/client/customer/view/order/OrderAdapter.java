@@ -64,7 +64,6 @@ class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.ViewHolder> {
     public void onBindViewHolder(@NonNull final ViewHolder holder, final int position) {
         MenuOrder menuOrder = orderList.get(position);
 
-        holder.title.setText(menuOrder.orderName);
         holder.orderNumber.setText(menuOrder.orderNumber);
         holder.orderTime.setText(menuOrder.createdDate);
 
@@ -78,10 +77,12 @@ class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.ViewHolder> {
                 return;
             }
 
-            holder.subTitle.setText(store.name);
+            holder.title.setText(store.name);
 
             GlideApp.with(holder.image)
-                    .load(store.thumbnailUrl)
+                    //TODO REMOVETEST DATA
+//                    .load(store.thumbnailUrl)
+                    .load(R.drawable.data_5_ice)
                     .apply(GlideUtils.storeCoverImageOptions())
                     .transition(GlideUtils.storeTransitionOptions())
                     .into(holder.image);
@@ -103,7 +104,6 @@ class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.ViewHolder> {
 
     class ViewHolder extends RecyclerView.ViewHolder {
         @BindView(R.id.title) AppCompatTextView title;
-        @BindView(R.id.sub_title) AppCompatTextView subTitle;
         @BindView(R.id.order_number) AppCompatTextView orderNumber;
         @BindView(R.id.order_time) AppCompatTextView orderTime;
         @BindView(R.id.image) AppCompatImageView image;

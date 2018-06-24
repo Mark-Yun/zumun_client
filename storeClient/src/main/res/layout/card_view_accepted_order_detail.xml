@@ -8,7 +8,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginTop="@dimen/order_card_view_medium_margin">
+    android:layout_marginTop="@dimen/medium_margin">
 
     <android.support.v7.widget.AppCompatTextView
         android:id="@+id/name"
@@ -65,7 +65,7 @@
         android:id="@+id/accepted_order_card_view_menu_option_recycler_view"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/order_card_view_big_margin"
+        android:layout_marginStart="@dimen/big_margin"
         app:layout_constraintEnd_toEndOf="@+id/item_quantity_guide_line"
         app:layout_constraintHorizontal_weight="1"
         app:layout_constraintStart_toStartOf="parent"

@@ -15,8 +15,8 @@
 
     <android.support.v7.widget.AppCompatImageView
         android:id="@+id/menu_image"
-        android:layout_width="@dimen/card_view_place_item_height"
-        android:layout_height="@dimen/card_view_place_item_height"
+        android:layout_width="@dimen/card_view_2_line_item_height"
+        android:layout_height="@dimen/card_view_2_line_item_height"
         android:layout_marginBottom="@dimen/icon_size_small"
         android:layout_marginTop="@dimen/icon_size_small"
         app:layout_constraintBottom_toBottomOf="parent"
