@@ -6,6 +6,8 @@
 
 package com.mark.zumo.client.customer.model.payment;
 
+import android.util.Log;
+
 import com.mark.zumo.client.core.entity.MenuOrder;
 import com.mark.zumo.client.core.payment.kakao.KakaoPayAdapter;
 import com.mark.zumo.client.core.payment.kakao.entity.PaymentReadyRequest;
@@ -45,6 +47,7 @@ public enum KakaoPaymentManager {
 
     public Maybe<MenuOrder> createPaymentToken(String menuOrderUuid, String tid, String pgToken) {
         PaymentToken paymentToken = new PaymentToken(menuOrderUuid, tid, pgToken, accessToken);
+        Log.d(TAG, "createPaymentToken: " + paymentToken);
         return kakaoPayAdapter.createPaymentToken(paymentToken)
                 .subscribeOn(Schedulers.io());
     }

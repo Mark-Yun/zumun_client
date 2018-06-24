@@ -39,6 +39,9 @@ public final class Navigator {
     }
 
     public static void setBlurLayoutVisible(boolean visible) {
+        if (blurLayoutStack.size() < 1) {
+            return;
+        }
         final BlurLayout blurLayout = getTopBlurLayout();
         if (blurLayout == null) return;
         if ((blurLayout.getVisibility() == View.VISIBLE) == visible) return;

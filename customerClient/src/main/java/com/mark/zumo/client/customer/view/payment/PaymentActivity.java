@@ -26,6 +26,9 @@ public class PaymentActivity extends AppCompatActivity {
     public static final int RESULT_CODE_PAYMENT_SUCCESS = 1;
     public static final int RESULT_CODE_PAYMENT_FAILED = 2;
 
+    public static final String PAYMENT_TYPE = "payment_type";
+    public static final String KAKAO_PAY = "kakao_pay";
+
     private static final String TAG = "PaymentActivity";
 
     @Override

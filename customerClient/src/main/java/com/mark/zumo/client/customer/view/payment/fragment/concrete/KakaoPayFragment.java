@@ -12,8 +12,8 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,12 +25,14 @@ import android.webkit.WebViewClient;
 import com.kakao.auth.ISessionCallback;
 import com.kakao.auth.Session;
 import com.kakao.util.exception.KakaoException;
-import com.mark.zumo.client.core.entity.MenuOrder;
 import com.mark.zumo.client.core.payment.kakao.entity.PaymentReadyResponse;
 import com.mark.zumo.client.customer.R;
 import com.mark.zumo.client.customer.view.payment.PaymentActivity;
+import com.mark.zumo.client.customer.view.payment.fragment.PaymentRequestingFragment;
 import com.mark.zumo.client.customer.view.signup.kakao.KakaoSignActivity;
 import com.mark.zumo.client.customer.viewmodel.payment.KakaoPayViewModel;
+
+import java.io.ByteArrayInputStream;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -45,7 +47,12 @@ public class KakaoPayFragment extends Fragment {
     private static final int REQ_CODE_KAKAO_PAY = 10;
     private static final int REQ_CODE_KAKAO_SIGN = 11;
 
+    public static final String KEY_TID = "tid";
+    public static final String KEY_PG_TOKEN = "pg_token";
+    private static final String INTENT_KAKAO_PAY = "intent://kakaopay/pg";
+
     @BindView(R.id.web_view) WebView webView;
+    @BindView(R.id.requesting_fragment) ConstraintLayout requestingFragment;
 
     private KakaoPayViewModel kakaoPayViewModel;
     private ISessionCallback sessionCallback;
@@ -63,7 +70,6 @@ public class KakaoPayFragment extends Fragment {
     public View onCreateView(@NonNull final LayoutInflater inflater, @Nullable final ViewGroup container, @Nullable final Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_kakao_pay, container, false);
         ButterKnife.bind(this, view);
-
         sessionCallback = getSessionCallback();
         Session.getCurrentSession().addCallback(sessionCallback);
         if (!Session.getCurrentSession().checkAndImplicitOpen()) {
@@ -140,18 +146,7 @@ public class KakaoPayFragment extends Fragment {
         super.onActivityResult(requestCode, resultCode, data);
     }
 
-    private void onSuccessCreatePaymentToken(MenuOrder menuOrder) {
-        FragmentActivity activity = getActivity();
-        Intent intent = new Intent();
-        intent.putExtra(PaymentActivity.KEY_ORDER_UUID, menuOrder.uuid);
-        activity.setResult(PaymentActivity.RESULT_CODE_PAYMENT_SUCCESS, intent);
-        activity.finish();
-    }
-
     private class KakaoWebViewClient extends WebViewClient {
-
-        private static final String INTENT_KAKAO_PAY = "intent://kakaopay/pg";
-        private static final String KEY_PG_TOKEN = "pg_token";
 
         @Override
         public boolean shouldOverrideUrlLoading(final WebView view, final String url) {
@@ -172,8 +167,20 @@ public class KakaoPayFragment extends Fragment {
             if (url.contains(KEY_PG_TOKEN)) {
                 String pgToken = Uri.parse(url).getQueryParameter(KEY_PG_TOKEN);
                 String orderUuid = getArguments().getString(PaymentActivity.KEY_ORDER_UUID);
-                kakaoPayViewModel.postTokenInfo(orderUuid, paymentReadyResponse.tId, pgToken)
-                        .observe(KakaoPayFragment.this, KakaoPayFragment.this::onSuccessCreatePaymentToken);
+                String tId = paymentReadyResponse.tId;
+
+                Bundle bundle = new Bundle();
+                bundle.putString(KEY_PG_TOKEN, pgToken);
+                bundle.putString(PaymentActivity.KEY_ORDER_UUID, orderUuid);
+                bundle.putString(KEY_TID, tId);
+                bundle.putString(PaymentActivity.PAYMENT_TYPE, PaymentActivity.KAKAO_PAY);
+
+                Fragment fragment = Fragment.instantiate(getActivity(), PaymentRequestingFragment.class.getName(), bundle);
+                getFragmentManager().beginTransaction()
+                        .replace(R.id.payment_main, fragment)
+                        .commit();
+
+                return new WebResourceResponse("text/plain", "utf-8", new ByteArrayInputStream("".getBytes()));
             }
             return super.shouldInterceptRequest(view, url);
         }
