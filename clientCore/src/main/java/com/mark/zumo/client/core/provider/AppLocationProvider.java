@@ -35,6 +35,8 @@ public enum AppLocationProvider {
     private LocationManager locationManager;
     private Context context;
 
+    private Location location;
+
     AppLocationProvider() {
         context = ContextHolder.getContext();
         locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
@@ -48,10 +50,16 @@ public enum AppLocationProvider {
             Log.d(TAG, "isGPSEnabled=" + isGPSEnabled);
             Log.d(TAG, "isNetworkEnabled=" + isNetworkEnabled);
 
+            if (location != null) {
+                e.onNext(location);
+                e.onComplete();
+            }
+
             LocationListener locationListener = new LocationListener() {
                 @Override
                 public void onLocationChanged(Location location) {
                     e.onNext(location);
+                    AppLocationProvider.this.location = location;
                     e.onComplete();
                     locationManager.removeUpdates(this);
                 }

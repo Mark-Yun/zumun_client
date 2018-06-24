@@ -13,6 +13,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
@@ -55,6 +56,7 @@ public class MenuFragment extends Fragment {
 
     @BindView(R.id.store_cart_badge_image) ImageView cartBadgeImage;
     @BindView(R.id.store_cart_badge_text) TextView cartBadgeText;
+    @BindView(R.id.store_cart_button) FloatingActionButton cartButton;
 
     @BindView(R.id.menu_recycler_view) RecyclerView recyclerView;
 
@@ -132,6 +134,7 @@ public class MenuFragment extends Fragment {
                 .into(storeCoverImage);
 
         storeCoverTitle.setText(store.name);
+        cartButton.setVisibility(View.VISIBLE);
     }
 
     private void onLoadCart(Cart cart) {

@@ -6,13 +6,14 @@
 
 package com.mark.zumo.client.customer.view.place.adapter;
 
+import android.arch.lifecycle.LifecycleOwner;
 import android.support.annotation.NonNull;
-import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.ViewGroup;
 
 import com.mark.zumo.client.core.entity.Store;
 import com.mark.zumo.client.customer.R;
+import com.mark.zumo.client.customer.viewmodel.PlaceViewModel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,11 +23,15 @@ import java.util.List;
  */
 public class LatestVisitStoreAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    private FragmentManager fragmentManager;
+    private PlaceViewModel placeViewModel;
+    private LifecycleOwner lifecycleOwner;
+
     private List<Store> storeList;
 
-    public LatestVisitStoreAdapter(FragmentManager fragmentManager) {
-        this.fragmentManager = fragmentManager;
+    public LatestVisitStoreAdapter(final PlaceViewModel placeViewModel, final LifecycleOwner lifecycleOwner) {
+        this.placeViewModel = placeViewModel;
+        this.lifecycleOwner = lifecycleOwner;
+
         storeList = new ArrayList<>();
     }
 
@@ -51,7 +56,7 @@ public class LatestVisitStoreAdapter extends RecyclerView.Adapter<RecyclerView.V
         } else if (holder instanceof StoreViewHolder) {
             StoreViewHolder storeViewHolder = (StoreViewHolder) holder;
             Store store = storeList.get(position - 1);
-            ViewHolderUtils.inject(storeViewHolder, store);
+            ViewHolderUtils.inject(storeViewHolder, store, placeViewModel, lifecycleOwner);
         }
     }
 

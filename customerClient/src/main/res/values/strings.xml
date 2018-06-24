@@ -7,8 +7,12 @@
 <resources>
     <string name="kakao_app_key">265e130b23d5b75316022561ec01ea5e</string>
     <string name="app_name">Zumun</string>
+
     <string name="place_latest_visit_store_header_text">Latest Visit Stores</string>
     <string name="place_near_by_header_text">Near by Stores</string>
+    <string name="distance_format_kilo_meter">%skm</string>
+    <string name="distance_format_meter">%sm</string>
+
     <string name="added_to_cart">Added %s into cart.</string>
     <string name="cancel_action">Cancel</string>
     <string name="menu_option_not_selected">Not Selected</string>
@@ -37,7 +41,7 @@
     <string name="order_number_title">Order Number</string>
     <string name="order_price_title">Order Price</string>
     <string name="order_detail_title">Order Detail</string>
-    <string name="order_time_title">Order Detail</string>
+    <string name="order_time_title">Order Time</string>
     <string name="order_cancel_button_text">Cancel Order</string>
     <string name="order_amount_title">Amount</string>
 

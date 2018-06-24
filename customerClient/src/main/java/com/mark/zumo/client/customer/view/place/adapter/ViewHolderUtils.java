@@ -6,6 +6,7 @@
 
 package com.mark.zumo.client.customer.view.place.adapter;
 
+import android.arch.lifecycle.LifecycleOwner;
 import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -19,6 +20,7 @@ import com.mark.zumo.client.customer.R;
 import com.mark.zumo.client.customer.view.TouchResponse;
 import com.mark.zumo.client.customer.view.menu.MenuActivity;
 import com.mark.zumo.client.customer.view.menu.MenuFragment;
+import com.mark.zumo.client.customer.viewmodel.PlaceViewModel;
 
 import io.reactivex.exceptions.OnErrorNotImplementedException;
 
@@ -31,9 +33,9 @@ final class ViewHolderUtils {
     static final int BODY_TYPE = 1;
     static final int FOOTER_TYPE = 2;
 
-    static final int HEADER_RES = R.layout.card_view_place_header;
-    static final int BODY_RES = R.layout.card_view_place;
-    static final int FOOTER_RES = R.layout.card_view_place_footer;
+    private static final int HEADER_RES = R.layout.card_view_place_header;
+    private static final int BODY_RES = R.layout.card_view_place;
+    private static final int FOOTER_RES = R.layout.card_view_place_footer;
 
     private ViewHolderUtils() {
         /*Empty Body*/
@@ -61,9 +63,11 @@ final class ViewHolderUtils {
         }
     }
 
-    static void inject(StoreViewHolder storeViewHolder, Store store) {
+    static void inject(final StoreViewHolder storeViewHolder, final Store store,
+                       final PlaceViewModel placeViewModel, final LifecycleOwner lifecycleOwner) {
         storeViewHolder.title.setText(store.name);
-        storeViewHolder.distance.setText(store.latitude + ", " + store.longitude);
+        placeViewModel.distanceFrom(store.latitude, store.longitude)
+                .observe(lifecycleOwner, storeViewHolder.distance::setText);
 
         //TODO REMOVE TEST DATA
         GlideApp.with(storeViewHolder.itemView.getContext())

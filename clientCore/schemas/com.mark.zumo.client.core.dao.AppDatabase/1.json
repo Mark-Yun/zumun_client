@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "05ea26506ab9c9124b34502235d36727",
+    "identityHash": "cc643cc7ff4c529c480efd5b12599ad7",
     "entities": [
       {
         "tableName": "menu",
@@ -124,7 +124,7 @@
       },
       {
         "tableName": "store",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`store_uuid` TEXT NOT NULL, `store_name` TEXT, `latitude` INTEGER NOT NULL, `longitude` INTEGER NOT NULL, `cover_image_url` TEXT, `thumbnail_image_url` TEXT, `fcm_token` TEXT, PRIMARY KEY(`store_uuid`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`store_uuid` TEXT NOT NULL, `store_name` TEXT, `latitude` REAL NOT NULL, `longitude` REAL NOT NULL, `cover_image_url` TEXT, `thumbnail_image_url` TEXT, `fcm_token` TEXT, PRIMARY KEY(`store_uuid`))",
         "fields": [
           {
             "fieldPath": "uuid",
@@ -141,13 +141,13 @@
           {
             "fieldPath": "latitude",
             "columnName": "latitude",
-            "affinity": "INTEGER",
+            "affinity": "REAL",
             "notNull": true
           },
           {
             "fieldPath": "longitude",
             "columnName": "longitude",
-            "affinity": "INTEGER",
+            "affinity": "REAL",
             "notNull": true
           },
           {
@@ -378,7 +378,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"05ea26506ab9c9124b34502235d36727\")"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"cc643cc7ff4c529c480efd5b12599ad7\")"
     ]
   }
 }

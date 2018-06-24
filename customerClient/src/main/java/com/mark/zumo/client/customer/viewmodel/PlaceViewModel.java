@@ -13,6 +13,8 @@ import android.arch.lifecycle.MutableLiveData;
 import android.support.annotation.NonNull;
 
 import com.mark.zumo.client.core.entity.Store;
+import com.mark.zumo.client.customer.R;
+import com.mark.zumo.client.customer.model.CustomerLocationManager;
 import com.mark.zumo.client.customer.model.StoreManager;
 
 import java.util.List;
@@ -26,6 +28,7 @@ import io.reactivex.disposables.CompositeDisposable;
 public class PlaceViewModel extends AndroidViewModel {
 
     private StoreManager storeManager;
+    private CustomerLocationManager locationManager;
 
     private CompositeDisposable disposables;
 
@@ -34,6 +37,7 @@ public class PlaceViewModel extends AndroidViewModel {
 
         storeManager = StoreManager.INSTANCE;
         disposables = new CompositeDisposable();
+        locationManager = CustomerLocationManager.INSTANCE;
     }
 
     public LiveData<List<Store>> nearByStore() {
@@ -58,6 +62,27 @@ public class PlaceViewModel extends AndroidViewModel {
                 .subscribe();
 
         return latestVisitStore;
+    }
+
+    public LiveData<String> distanceFrom(double latitude, double longitude) {
+        MutableLiveData<String> liveData = new MutableLiveData<>();
+        locationManager.distanceFrom(latitude, longitude)
+                .map(this::convertKm)
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnNext(liveData::setValue)
+                .doOnSubscribe(disposables::add)
+                .subscribe();
+
+        return liveData;
+    }
+
+    private String convertKm(float distance) {
+        if (distance < 1000) {
+            return getApplication().getString(R.string.distance_format_meter, String.valueOf(distance));
+        } else {
+            String distKm = String.format("%.2f", distance / 1000);
+            return getApplication().getString(R.string.distance_format_kilo_meter, distKm);
+        }
     }
 
     @Override
