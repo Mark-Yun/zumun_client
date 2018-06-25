@@ -32,8 +32,8 @@ public class DebugMainActivity extends Activity {
 
         LinearLayout linearLayout = findViewById(R.id.debug_main_activity);
 
-        setupPackageActivities(linearLayout, "com.mark.zumo.server.store.debug");
-        setupPackageActivities(linearLayout, "com.mark.zumo.server.store");
+        setupPackageActivities(linearLayout, "com.mark.zumo.client.store.debug");
+        setupPackageActivities(linearLayout, "com.mark.zumo.client.store");
     }
 
     private void setupPackageActivities(LinearLayout linearLayout, String packageName) {

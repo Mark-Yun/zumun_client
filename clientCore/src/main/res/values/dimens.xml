@@ -16,4 +16,8 @@
 
     <dimen name="card_view_2_line_item_title_base_line_top_margin">32dp</dimen>
     <dimen name="card_view_2_line_item_secondary_text_base_line_top_margin">52dp</dimen>
+
+    <dimen name="icon_size_big">33.3dp</dimen>
+    <dimen name="icon_size_small">24dp</dimen>
+    <dimen name="stroke_width">2dp</dimen>
 </resources>

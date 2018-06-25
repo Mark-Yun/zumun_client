@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (c) 2018. Mark Soft - All Rights Reserved
+  ~ Unauthorized copying of this file, via any medium is strictly prohibited
+  ~ Proprietary and confidential
+  -->
+
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <Preference
+        android:fragment="com.mark.zumo.client.store.view.setting.fragment.StoreProfileSettingFragment"
+        android:key="@string/setting_preference_key_store_profile"
+        android:summary="@string/setting_preference_summary_store_profile"
+        android:title="@string/setting_preference_title_store_profile" />
+
+    <Preference
+        android:fragment="com.mark.zumo.client.store.view.setting.fragment.MenuSettingFragment"
+        android:key="@string/setting_preference_key_menu_setting"
+        android:summary="@string/setting_preference_summary_menu_setting"
+        android:title="@string/setting_preference_title_menu_setting" />
+
+    <Preference
+        android:fragment="com.mark.zumo.client.store.view.setting.fragment.MenuOptionSettingFragment"
+        android:key="@string/setting_preference_key_menu_option_setting"
+        android:summary="@string/setting_preference_summary_menu_option_setting"
+        android:title="@string/setting_preference_title_menu_option_setting" />
+</PreferenceScreen>

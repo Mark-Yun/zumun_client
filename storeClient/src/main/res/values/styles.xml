@@ -24,6 +24,7 @@
         </item>
         <item name="android:tabWidgetStyle">@style/AppTheme.NoActionBar.TabStyle</item>
         <item name="android:actionButtonStyle">@style/AppTheme.NoActionBar.ActionButtonStyle</item>
+        <item name="preferenceTheme">@style/PreferenceThemeOverlay</item>
     </style>
 
     <style name="AppTheme.NoActionBar.ButtonStyle.Borderless" parent="Widget.AppCompat.Button.Borderless.Colored">
