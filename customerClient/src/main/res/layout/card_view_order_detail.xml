@@ -18,7 +18,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/medium_margin"
-        android:textColor="@color/colorTextDark"
+        android:textColor="@color/colorTextLight"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -27,7 +27,7 @@
         android:id="@+id/menu_price"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="@color/colorSecondaryText"
+        android:textColor="@color/colorSecondaryTextLight"
         app:layout_constraintBottom_toBottomOf="@+id/menu_name"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/menu_name" />

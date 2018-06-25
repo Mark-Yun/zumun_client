@@ -13,7 +13,7 @@
         android:id="@+id/name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="@color/colorTextDark"
+        android:textColor="@color/colorTextLight"
         android:textSize="@dimen/order_card_view_date_text_size"
         app:layout_constraintStart_toStartOf="parent" />
 
@@ -22,7 +22,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/small_margin"
-        android:textColor="@color/colorTextDark"
+        android:textColor="@color/colorTextLight"
         android:textSize="@dimen/order_card_view_date_text_size"
         app:layout_constraintStart_toEndOf="@+id/name" />
 
@@ -30,7 +30,7 @@
         android:id="@+id/price"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="@color/colorTextDark"
+        android:textColor="@color/colorTextLight"
         android:textSize="@dimen/order_card_view_date_text_size"
         app:layout_constraintEnd_toEndOf="parent" />
 </android.support.constraint.ConstraintLayout>

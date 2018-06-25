@@ -17,7 +17,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/big_margin"
         android:text="@string/order_information_title"
-        android:textColor="@color/colorTextDark"
+        android:textColor="@color/colorTextLight"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -27,7 +27,7 @@
         android:layout_width="match_parent"
         android:layout_height="2dp"
         android:layout_marginTop="@dimen/small_margin"
-        android:background="@color/colorTextDark"
+        android:background="@color/colorTextLight"
         app:layout_constraintTop_toBottomOf="@+id/order_info" />
 
     <android.support.v7.widget.AppCompatTextView
@@ -37,7 +37,7 @@
         android:layout_marginStart="@dimen/medium_margin"
         android:layout_marginTop="@dimen/medium_margin"
         android:text="@string/order_name_title"
-        android:textColor="@color/colorTextDark"
+        android:textColor="@color/colorTextLight"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/order_info_divider" />
 
@@ -45,7 +45,7 @@
         android:id="@+id/order_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="@color/colorSecondaryText"
+        android:textColor="@color/colorSecondaryTextLight"
         app:layout_constraintBottom_toBottomOf="@+id/order_name_title"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/order_name_title" />
@@ -55,7 +55,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/order_number_title"
-        android:textColor="@color/colorTextDark"
+        android:textColor="@color/colorTextLight"
         app:layout_constraintStart_toStartOf="@+id/order_name_title"
         app:layout_constraintTop_toBottomOf="@+id/order_name_title" />
 
@@ -63,7 +63,7 @@
         android:id="@+id/order_number"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="@color/colorSecondaryText"
+        android:textColor="@color/colorSecondaryTextLight"
         app:layout_constraintBottom_toBottomOf="@+id/order_number_title"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/order_number_title" />
@@ -73,7 +73,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/order_time_title"
-        android:textColor="@color/colorTextDark"
+        android:textColor="@color/colorTextLight"
         app:layout_constraintStart_toStartOf="@+id/order_name_title"
         app:layout_constraintTop_toBottomOf="@+id/order_number_title" />
 
@@ -81,7 +81,7 @@
         android:id="@+id/order_time"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="@color/colorSecondaryText"
+        android:textColor="@color/colorSecondaryTextLight"
         app:layout_constraintBottom_toBottomOf="@+id/order_time_title"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/order_time_title" />
@@ -91,7 +91,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/order_price_title"
-        android:textColor="@color/colorTextDark"
+        android:textColor="@color/colorTextLight"
         app:layout_constraintStart_toStartOf="@+id/order_name_title"
         app:layout_constraintTop_toBottomOf="@+id/order_time" />
 
@@ -99,7 +99,7 @@
         android:id="@+id/order_price"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="@color/colorSecondaryText"
+        android:textColor="@color/colorSecondaryTextLight"
         app:layout_constraintBottom_toBottomOf="@+id/order_price_title"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/order_price_title" />
@@ -110,7 +110,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/big_margin"
         android:text="@string/order_detail_title"
-        android:textColor="@color/colorTextDark"
+        android:textColor="@color/colorTextLight"
         android:textStyle="bold"
         app:layout_constraintTop_toBottomOf="@+id/order_price_title" />
 
@@ -119,6 +119,6 @@
         android:layout_width="match_parent"
         android:layout_height="2dp"
         android:layout_marginTop="@dimen/small_margin"
-        android:background="@color/colorTextDark"
+        android:background="@color/colorTextLight"
         app:layout_constraintTop_toBottomOf="@+id/order_detail_title" />
 </android.support.constraint.ConstraintLayout>

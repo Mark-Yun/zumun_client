@@ -35,7 +35,7 @@
         android:id="@+id/divider"
         android:layout_width="@dimen/stroke_width"
         android:layout_height="0dp"
-        android:background="@color/colorText"
+        android:background="@color/colorTextDark"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/check_box"
         app:layout_constraintTop_toTopOf="parent"

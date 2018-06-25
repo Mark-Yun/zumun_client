@@ -41,7 +41,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/icon_size_small"
         android:layout_marginTop="@dimen/icon_size_small"
-        android:textColor="@color/colorTextDark"
+        android:textColor="@color/colorTextLight"
         android:textSize="16sp"
         android:textStyle="bold"
         app:layout_constraintStart_toEndOf="@+id/menu_image"

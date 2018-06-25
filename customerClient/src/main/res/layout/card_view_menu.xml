@@ -28,8 +28,7 @@
         android:layout_height="wrap_content"
         android:background="@color/backgroundMenuTitle"
         android:textAlignment="center"
-        android:textColor="@color/colorText"
-        android:textSize="@dimen/menu_price_text_size"
+        style="@style/SecondaryLineTextDark"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
@@ -39,7 +38,6 @@
         android:layout_height="wrap_content"
         android:background="@color/backgroundMenuTitle"
         android:textAlignment="center"
-        android:textColor="@color/colorText"
-        android:textSize="@dimen/menu_name_text_size"
+        style="@style/SubtitleTextDark"
         app:layout_constraintBottom_toTopOf="@+id/price" />
 </android.support.constraint.ConstraintLayout>
