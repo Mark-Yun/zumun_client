@@ -12,7 +12,6 @@ import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -23,8 +22,8 @@ import android.widget.TextView;
 import com.mark.zumo.client.core.entity.Menu;
 import com.mark.zumo.client.core.util.glide.GlideApp;
 import com.mark.zumo.client.core.util.glide.GlideUtils;
+import com.mark.zumo.client.core.view.TouchResponse;
 import com.mark.zumo.client.customer.R;
-import com.mark.zumo.client.customer.view.TouchResponse;
 import com.mark.zumo.client.customer.view.menu.detail.MenuDetailActivity;
 import com.mark.zumo.client.customer.view.payment.PaymentActivity;
 import com.mark.zumo.client.customer.view.rebound.Rebound;
@@ -44,15 +43,13 @@ class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.ViewHolder> {
 
     private LifecycleOwner lifecycleOwner;
     private MenuViewModel menuViewModel;
-    private FragmentManager fragmentManager;
 
     private List<Menu> menuList;
 
-    MenuAdapter(LifecycleOwner lifecycleOwner, MenuViewModel menuViewModel, FragmentManager fragmentManager) {
+    MenuAdapter(LifecycleOwner lifecycleOwner, MenuViewModel menuViewModel) {
         menuList = new ArrayList<>();
         this.lifecycleOwner = lifecycleOwner;
         this.menuViewModel = menuViewModel;
-        this.fragmentManager = fragmentManager;
     }
 
     public void setMenuList(final List<Menu> menuList) {

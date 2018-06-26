@@ -20,8 +20,8 @@ import com.mark.zumo.client.core.entity.MenuOrder;
 import com.mark.zumo.client.core.entity.Store;
 import com.mark.zumo.client.core.util.glide.GlideApp;
 import com.mark.zumo.client.core.util.glide.GlideUtils;
+import com.mark.zumo.client.core.view.TouchResponse;
 import com.mark.zumo.client.customer.R;
-import com.mark.zumo.client.customer.view.TouchResponse;
 import com.mark.zumo.client.customer.view.payment.PaymentActivity;
 import com.mark.zumo.client.customer.viewmodel.CartViewModel;
 

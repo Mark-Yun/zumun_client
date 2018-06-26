@@ -28,9 +28,9 @@ import com.mark.zumo.client.core.entity.Menu;
 import com.mark.zumo.client.core.entity.Store;
 import com.mark.zumo.client.core.util.glide.GlideApp;
 import com.mark.zumo.client.core.util.glide.GlideUtils;
+import com.mark.zumo.client.core.view.TouchResponse;
 import com.mark.zumo.client.customer.R;
 import com.mark.zumo.client.customer.model.entity.Cart;
-import com.mark.zumo.client.customer.view.TouchResponse;
 import com.mark.zumo.client.customer.view.cart.CartActivity;
 import com.mark.zumo.client.customer.viewmodel.MainViewModel;
 import com.mark.zumo.client.customer.viewmodel.MenuViewModel;
@@ -46,11 +46,8 @@ import butterknife.OnClick;
  */
 public class MenuFragment extends Fragment {
 
-    private static final String TAG = "MenuFragment";
-
     public static final String KEY_STORE_UUID = "store_uuid";
-    public static final String KEY_IS_D2D = "is_d2d";
-
+    private static final String TAG = "MenuFragment";
     @BindView(R.id.store_cover_image) ImageView storeCoverImage;
     @BindView(R.id.store_cover_title) TextView storeCoverTitle;
 
@@ -65,7 +62,6 @@ public class MenuFragment extends Fragment {
     private MainViewModel mainViewModel;
 
     private String storeUuid;
-    private boolean isD2D;
 
     @Override
     public void onCreate(@Nullable final Bundle savedInstanceState) {
@@ -74,7 +70,6 @@ public class MenuFragment extends Fragment {
         mainViewModel = ViewModelProviders.of(getActivity()).get(MainViewModel.class);
 
         storeUuid = getArguments().getString(KEY_STORE_UUID);
-        isD2D = getArguments().getBoolean(KEY_IS_D2D);
     }
 
     @Nullable
@@ -100,16 +95,10 @@ public class MenuFragment extends Fragment {
         recyclerView.setNestedScrollingEnabled(false);
 
         // specify an menuAdapter (see also next example)
-        menuAdapter = new MenuAdapter(this, menuViewModel, getFragmentManager());
+        menuAdapter = new MenuAdapter(this, menuViewModel);
         recyclerView.setAdapter(menuAdapter);
 
-        //TODO: remove test code
-        isD2D = false;
-        if (isD2D) {
-            mainViewModel.requestMenuItemList(storeUuid).observe(getActivity(), this::onLoadMenuItemList);
-        } else {
-            menuViewModel.getMenuItemList(getActivity()).observe(this, this::onLoadMenuItemList);
-        }
+        menuViewModel.getMenuItemList(storeUuid).observe(this, this::onLoadMenuItemList);
     }
 
     private void inflateCartBadge() {

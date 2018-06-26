@@ -6,7 +6,6 @@
 
 package com.mark.zumo.client.customer.viewmodel;
 
-import android.app.Activity;
 import android.app.Application;
 import android.arch.lifecycle.AndroidViewModel;
 import android.arch.lifecycle.LiveData;
@@ -19,7 +18,6 @@ import com.mark.zumo.client.core.entity.Store;
 import com.mark.zumo.client.customer.model.CartManager;
 import com.mark.zumo.client.customer.model.MenuManager;
 import com.mark.zumo.client.customer.model.StoreManager;
-import com.mark.zumo.client.customer.model.UserManager;
 import com.mark.zumo.client.customer.model.entity.Cart;
 
 import java.util.List;
@@ -33,7 +31,6 @@ import io.reactivex.disposables.CompositeDisposable;
 public class MenuViewModel extends AndroidViewModel {
 
     private MenuManager menuManager;
-    private UserManager userManager;
     private CartManager cartManager;
     private StoreManager storeManager;
 
@@ -45,17 +42,15 @@ public class MenuViewModel extends AndroidViewModel {
         super(application);
 
         menuManager = MenuManager.INSTANCE;
-        userManager = UserManager.INSTANCE;
         cartManager = CartManager.INSTANCE;
         storeManager = StoreManager.INSTANCE;
 
         disposables = new CompositeDisposable();
     }
 
-    public LiveData<List<Menu>> getMenuItemList(Activity activity) {
+    public LiveData<List<Menu>> getMenuItemList(String storeUuid) {
         MutableLiveData<List<Menu>> listMutableLiveData = new MutableLiveData<>();
-        userManager.getCurrentUser()
-                .flatMap(customerUser -> menuManager.acquireMenuItem(activity, customerUser))
+        menuManager.acquireMenuItem(storeUuid)
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnNext(listMutableLiveData::setValue)
                 .doOnSubscribe(disposables::add)

@@ -17,8 +17,8 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 
 import com.mark.zumo.client.core.entity.MenuOption;
+import com.mark.zumo.client.core.view.TouchResponse;
 import com.mark.zumo.client.customer.R;
-import com.mark.zumo.client.customer.view.TouchResponse;
 import com.mark.zumo.client.customer.viewmodel.MenuDetailViewModel;
 
 import java.util.ArrayList;

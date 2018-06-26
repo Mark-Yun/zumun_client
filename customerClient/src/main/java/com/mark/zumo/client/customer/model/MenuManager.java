@@ -6,12 +6,9 @@
 
 package com.mark.zumo.client.customer.model;
 
-import android.app.Activity;
-
 import com.mark.zumo.client.core.entity.Menu;
 import com.mark.zumo.client.core.entity.MenuOption;
 import com.mark.zumo.client.core.entity.Store;
-import com.mark.zumo.client.core.entity.user.GuestUser;
 import com.mark.zumo.client.core.p2p.P2pClient;
 import com.mark.zumo.client.core.repository.MenuRepository;
 import com.mark.zumo.client.core.util.DebugUtil;
@@ -39,13 +36,8 @@ public enum MenuManager {
         menuRepository = MenuRepository.INSTANCE;
     }
 
-    public Observable<List<Menu>> acquireMenuItem(Activity activity, GuestUser guestUser) {
-        //TODO: remove Test data
-//        return p2pClient(activity, guestUser)
-//                .flatMap(P2pClient::acquireMenuItems);
-
-        return currentStore()
-                .flatMapObservable(menuRepository::getMenuItemsOfStore)
+    public Observable<List<Menu>> acquireMenuItem(String storeUuid) {
+        return menuRepository.getMenuItemsOfStore(storeUuid)
                 .subscribeOn(Schedulers.io());
     }
 

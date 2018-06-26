@@ -14,7 +14,6 @@ import com.mark.zumo.client.core.dao.AppDatabaseProvider;
 import com.mark.zumo.client.core.dao.DiskRepository;
 import com.mark.zumo.client.core.entity.Menu;
 import com.mark.zumo.client.core.entity.MenuOption;
-import com.mark.zumo.client.core.entity.Store;
 import com.mark.zumo.client.core.entity.util.ListComparator;
 
 import java.util.List;
@@ -46,9 +45,7 @@ public enum MenuRepository {
         Log.e(TAG, "onErrorOccurred: ", throwable);
     }
 
-    public Observable<List<Menu>> getMenuItemsOfStore(Store store) {
-        String storeUuid = store.uuid;
-
+    public Observable<List<Menu>> getMenuItemsOfStore(String storeUuid) {
         Maybe<List<Menu>> menuListDB = diskRepository.getMenuList(storeUuid);
         Maybe<List<Menu>> menuListApi = networkRepository.getMenuList(storeUuid)
                 .doOnSuccess(diskRepository::insertMenuList);

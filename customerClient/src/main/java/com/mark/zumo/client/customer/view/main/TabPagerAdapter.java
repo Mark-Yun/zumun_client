@@ -59,7 +59,6 @@ public class TabPagerAdapter extends FragmentStatePagerAdapter {
     public void onD2dLoadStore(Store store) {
         Bundle bundle = new Bundle();
         bundle.putString(MenuFragment.KEY_STORE_UUID, store.uuid);
-        bundle.putBoolean(MenuFragment.KEY_IS_D2D, true);
         Fragment fragment = Fragment.instantiate(ContextHolder.getContext(), MenuFragment.class.getName(), bundle);
         fragmentList.remove(0);
         fragmentList.put(0, fragment);
