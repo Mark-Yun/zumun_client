@@ -41,9 +41,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/icon_size_small"
         android:layout_marginTop="@dimen/icon_size_small"
-        android:textColor="@color/colorTextLight"
-        android:textSize="16sp"
-        android:textStyle="bold"
+        style="@style/SubtitleTextLight"
         app:layout_constraintStart_toEndOf="@+id/menu_image"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -58,7 +56,7 @@
 
     <android.support.v7.widget.AppCompatTextView
         android:id="@+id/menu_amount_name"
-        style="@style/CartMenuOptionNameText"
+        style="@style/SecondaryLineNameTextLight"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/amount_description"
@@ -67,9 +65,10 @@
 
     <android.support.v7.widget.AppCompatTextView
         android:id="@+id/menu_amount_value"
-        style="@style/CartMenuOptionValueText"
+        style="@style/SecondaryLineValueTextLight"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/small_margin"
         app:layout_constraintStart_toEndOf="@+id/menu_amount_name"
         app:layout_constraintTop_toBottomOf="@+id/cart_option_recycler_view" />
 
@@ -78,8 +77,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="10dp"
+        style="@style/HeadLineTextLight"
+        android:fontFamily="sans-serif"
         android:textColor="@color/colorAccent"
-        android:textSize="20sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/remove_button" />
 
