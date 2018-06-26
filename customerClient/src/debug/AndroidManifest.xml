@@ -10,7 +10,7 @@
     <application>
         <meta-data
             android:name="com.google.android.nearby.messages.API_KEY"
-            android:value="@string/google_api_key" />
+            android:value="@string/nearby_api_key" />
 
         <activity android:name="com.mark.zumo.client.customer.DebugMainActivity"
             android:label="@string/debug_app_name">

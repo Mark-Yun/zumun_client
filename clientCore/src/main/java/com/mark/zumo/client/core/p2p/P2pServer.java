@@ -81,7 +81,7 @@ public class P2pServer {
         Log.e(TAG, "onFailureAdvertising: ", e);
     }
 
-    public Observable<String> findCustomer(Store store) {
+    public Observable<String> findCustomer() {
         return Observable.just(store)
                 .map(storeConsumer -> storeConsumer.uuid)
                 .map(String::valueOf)

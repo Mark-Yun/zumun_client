@@ -17,10 +17,15 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.VIBRATE" />
 
     <application>
         <meta-data
             android:name="com.google.android.nearby.messages.API_KEY"
-            android:value="@string/google_api_key" />
+            android:value="@string/nearby_api_key" />
+
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="@string/google_map_api_key" />
     </application>
 </manifest>

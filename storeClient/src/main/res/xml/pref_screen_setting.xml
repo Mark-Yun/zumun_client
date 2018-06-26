@@ -5,21 +5,31 @@
   -->
 
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
-    <Preference
-        android:fragment="com.mark.zumo.client.store.view.setting.fragment.StoreProfileSettingFragment"
-        android:key="@string/setting_preference_key_store_profile"
-        android:summary="@string/setting_preference_summary_store_profile"
-        android:title="@string/setting_preference_title_store_profile" />
+    <PreferenceCategory android:title="@string/preference_title_store_category">
+        <Preference
+            android:fragment="com.mark.zumo.client.store.view.setting.fragment.StoreProfileSettingFragment"
+            android:key="@string/preference_key_store_profile"
+            android:summary="@string/preference_summary_store_profile"
+            android:title="@string/preference_title_store_profile" />
+    </PreferenceCategory>
 
-    <Preference
-        android:fragment="com.mark.zumo.client.store.view.setting.fragment.MenuSettingFragment"
-        android:key="@string/setting_preference_key_menu_setting"
-        android:summary="@string/setting_preference_summary_menu_setting"
-        android:title="@string/setting_preference_title_menu_setting" />
+    <PreferenceCategory android:title="@string/preference_title_menu_category">
+        <Preference
+            android:fragment="com.mark.zumo.client.store.view.setting.fragment.menu.MenuSettingFragment"
+            android:key="@string/preference_key_menu_management"
+            android:summary="@string/preference_summary_menu_management"
+            android:title="@string/preference_title_menu_management" />
 
-    <Preference
-        android:fragment="com.mark.zumo.client.store.view.setting.fragment.MenuOptionSettingFragment"
-        android:key="@string/setting_preference_key_menu_option_setting"
-        android:summary="@string/setting_preference_summary_menu_option_setting"
-        android:title="@string/setting_preference_title_menu_option_setting" />
+        <Preference
+            android:fragment="com.mark.zumo.client.store.view.setting.fragment.MenuOptionSettingFragment"
+            android:key="@string/preference_key_menu_option_management"
+            android:summary="@string/preference_summary_menu_option_management"
+            android:title="@string/preference_title_menu_option_management" />
+
+        <Preference
+            android:fragment="com.mark.zumo.client.store.view.setting.fragment.category.MenuCategorySettingFragment"
+            android:key="@string/preference_key_menu_category_management"
+            android:summary="@string/preference_summary_menu_category_management"
+            android:title="@string/preference_title_menu_category_management" />
+    </PreferenceCategory>
 </PreferenceScreen>

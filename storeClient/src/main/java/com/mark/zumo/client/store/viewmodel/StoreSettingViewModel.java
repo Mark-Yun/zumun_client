@@ -6,44 +6,41 @@
 
 package com.mark.zumo.client.store.viewmodel;
 
-import android.app.Activity;
 import android.app.Application;
 import android.arch.lifecycle.AndroidViewModel;
+import android.arch.lifecycle.LiveData;
+import android.arch.lifecycle.MutableLiveData;
 import android.support.annotation.NonNull;
-import android.util.Log;
 
-import com.mark.zumo.client.core.p2p.P2pServer;
+import com.mark.zumo.client.core.entity.Store;
 import com.mark.zumo.client.store.model.SessionManager;
 
+import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 
-
 /**
- * Created by mark on 18. 6. 9.
+ * Created by mark on 18. 6. 25.
  */
-public class AcceptedOrderViewModel extends AndroidViewModel {
-
-    private static final String TAG = "AcceptedOrderViewModel";
+public class StoreSettingViewModel extends AndroidViewModel {
 
     private SessionManager sessionManager;
-
     private CompositeDisposable compositeDisposable;
 
-    public AcceptedOrderViewModel(@NonNull final Application application) {
+    public StoreSettingViewModel(@NonNull final Application application) {
         super(application);
 
         sessionManager = SessionManager.INSTANCE;
-
         compositeDisposable = new CompositeDisposable();
     }
 
-    public void findCustomer(Activity activity) {
+    public LiveData<Store> getCurrentStore() {
+        MutableLiveData<Store> liveData = new MutableLiveData<>();
         sessionManager.getSessionStore()
-                .map(store -> new P2pServer(activity, store))
-                .flatMapObservable(P2pServer::findCustomer)
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnSuccess(liveData::setValue)
                 .doOnSubscribe(compositeDisposable::add)
-                .doOnNext(customerUuid -> Log.d(TAG, "findCustomer: " + customerUuid))
                 .subscribe();
+        return liveData;
     }
 
     @Override

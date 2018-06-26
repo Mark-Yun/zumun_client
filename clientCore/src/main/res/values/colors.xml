@@ -20,6 +20,7 @@
     <color name="colorDivider">#1E000000</color>
     <color name="colorTitle">#FFFFFF</color>
     <color name="colorBadge">#EEF43F34</color>
+    <color name="backgroundMenuTitle">#32212121</color>
 
     <color name="order_state_payment_ready">@android:color/holo_blue_dark</color>
     <color name="order_state_accepted">@android:color/holo_orange_dark</color>

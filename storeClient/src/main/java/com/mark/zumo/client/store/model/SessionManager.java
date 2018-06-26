@@ -36,10 +36,6 @@ public enum SessionManager {
                 .subscribe();
     }
 
-    public Store getCurrentStore() {
-        return store;
-    }
-
     public boolean isSessionAvailable() {
         return store != null;
     }

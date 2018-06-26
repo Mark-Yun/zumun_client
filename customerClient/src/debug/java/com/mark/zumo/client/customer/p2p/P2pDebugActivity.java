@@ -126,7 +126,7 @@ public class P2pDebugActivity extends Activity {
 
     private void startAdvertising(View view) {
         initConsole("Advertising...");
-        p2pServer.findCustomer(testStore)
+        p2pServer.findCustomer()
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnNext(this::updateConsole)
                 .subscribe();

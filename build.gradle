@@ -38,7 +38,8 @@ ext {
 
     java = '1.7'
     support = '27.1.1'
-    playService = '15.0.2'
+    playService = '15.0.1'
+    firebase = '15.0.2'
     viewModel = '1.1.1'
     room = '1.1.0'
     butterKnife = '8.8.1'
@@ -96,8 +97,16 @@ configure(applications) {
         androidTestImplementation "com.android.support.test.espresso:espresso-core:$esspressoCore"
 
         implementation "com.facebook.rebound:rebound:$rebound"
-        implementation "com.google.firebase:firebase-messaging:$playService"
-        implementation "com.google.firebase:firebase-core:$playService"
+
+        implementation "com.google.firebase:firebase-messaging:$firebase"
+        implementation "com.google.firebase:firebase-core:$firebase"
+
+        implementation "com.google.android.gms:play-services-maps:$playService"
+        implementation "com.google.android.gms:play-services-location:$playService"
+        implementation "com.google.android.gms:play-services-places:$playService"
+
+        implementation 'com.library.tangxiaolv:telegramgallery:1.0.5'
+        implementation 'com.appeaser.sublimepickerlibrary:sublimepickerlibrary:2.1.1'
     }
 }
 

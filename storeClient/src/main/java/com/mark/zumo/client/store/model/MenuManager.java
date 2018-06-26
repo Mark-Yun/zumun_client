@@ -6,6 +6,7 @@
 
 package com.mark.zumo.client.store.model;
 
+import com.mark.zumo.client.core.entity.Menu;
 import com.mark.zumo.client.core.entity.MenuOption;
 import com.mark.zumo.client.core.repository.MenuRepository;
 
@@ -29,6 +30,12 @@ public enum MenuManager {
 
     public Observable<List<MenuOption>> getMenuOptionList(List<String> menuOptionUuidList) {
         return menuRepository.getMenuOptionList(menuOptionUuidList)
+                .subscribeOn(Schedulers.io());
+    }
+
+
+    public Observable<List<Menu>> getMenuList(String storeUuid) {
+        return menuRepository.getMenuItemsOfStore(storeUuid)
                 .subscribeOn(Schedulers.io());
     }
 }

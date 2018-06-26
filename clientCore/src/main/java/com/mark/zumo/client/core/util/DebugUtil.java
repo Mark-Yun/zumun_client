@@ -34,7 +34,7 @@ public class DebugUtil {
     }
 
     public static Store store() {
-        return new Store(TEST_STORE_UUID, Build.MODEL, 0, 0, "TEST", "TEST", null);
+        return new Store(TEST_STORE_UUID, Build.MODEL, 37.2624914, 127.0446137, "TEST", "TEST", null);
     }
 
     public static MenuOrder menuOrder() {
