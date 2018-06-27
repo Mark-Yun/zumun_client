@@ -11,6 +11,7 @@ import android.arch.persistence.room.RoomDatabase;
 import android.arch.persistence.room.TypeConverters;
 
 import com.mark.zumo.client.core.entity.Menu;
+import com.mark.zumo.client.core.entity.MenuCategory;
 import com.mark.zumo.client.core.entity.MenuOption;
 import com.mark.zumo.client.core.entity.MenuOrder;
 import com.mark.zumo.client.core.entity.OrderDetail;
@@ -25,7 +26,8 @@ import com.mark.zumo.client.core.payment.kakao.entity.PaymentToken;
 @Database(
         entities = {
                 Menu.class, MenuOrder.class, Store.class, GuestUser.class,
-                OrderDetail.class, MenuOption.class, VisitStore.class, PaymentToken.class
+                OrderDetail.class, MenuOption.class, VisitStore.class, PaymentToken.class,
+                MenuCategory.class
         }, version = 1)
 @TypeConverters({Converters.class})
 public abstract class AppDatabase extends RoomDatabase {

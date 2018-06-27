@@ -14,6 +14,7 @@ import android.support.annotation.NonNull;
 
 import com.mark.zumo.client.core.entity.Store;
 import com.mark.zumo.client.store.model.SessionManager;
+import com.mark.zumo.client.store.model.StoreManager;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
@@ -24,18 +25,32 @@ import io.reactivex.disposables.CompositeDisposable;
 public class StoreSettingViewModel extends AndroidViewModel {
 
     private SessionManager sessionManager;
+    private StoreManager storeManager;
     private CompositeDisposable compositeDisposable;
 
     public StoreSettingViewModel(@NonNull final Application application) {
         super(application);
 
         sessionManager = SessionManager.INSTANCE;
+        storeManager = StoreManager.INSTANCE;
+
         compositeDisposable = new CompositeDisposable();
     }
 
     public LiveData<Store> getCurrentStore() {
         MutableLiveData<Store> liveData = new MutableLiveData<>();
         sessionManager.getSessionStore()
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnSuccess(liveData::setValue)
+                .doOnSubscribe(compositeDisposable::add)
+                .subscribe();
+        return liveData;
+    }
+
+    public LiveData<Store> updateStoreName(String newName) {
+        MutableLiveData<Store> liveData = new MutableLiveData<>();
+        sessionManager.getSessionStore()
+                .flatMap(store -> storeManager.updateStoreName(store, newName))
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSuccess(liveData::setValue)
                 .doOnSubscribe(compositeDisposable::add)

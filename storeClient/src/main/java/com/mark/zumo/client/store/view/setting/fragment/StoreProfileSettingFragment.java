@@ -117,6 +117,7 @@ public class StoreProfileSettingFragment extends Fragment {
     public void onStoreNameClicked() {
         AppCompatEditText editText = new AppCompatEditText(getActivity());
         editText.setText(storeName.getText().toString());
+        editText.selectAll();
 
         new AlertDialog.Builder(getActivity())
                 .setTitle(R.string.store_profile_name_editor_title)
@@ -125,7 +126,8 @@ public class StoreProfileSettingFragment extends Fragment {
                 .setCancelable(true)
                 .setNegativeButton(R.string.button_text_cancel, (dialog, which) -> dialog.dismiss())
                 .setPositiveButton(R.string.button_text_apply, (dialog, which) -> {
-                    //TODO: impl
+                    storeSettingViewModel.updateStoreName(editText.getText().toString())
+                            .observe(this, this::onLoadStore);
                     dialog.dismiss();
                 })
                 .create()
