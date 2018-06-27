@@ -53,7 +53,7 @@ public enum SessionManager {
     }
 
     public Maybe<SnsToken> registerToken(Store store, String token) {
-        SnsToken snsToken = new SnsToken(store.uuid, "android", token);
+        SnsToken snsToken = new SnsToken(store.uuid, SnsToken.TokenType.ANDROID, token);
         return sessionRepository.createToken(snsToken)
                 .subscribeOn(Schedulers.io());
     }

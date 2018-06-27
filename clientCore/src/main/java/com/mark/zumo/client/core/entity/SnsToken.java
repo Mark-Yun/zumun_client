@@ -27,4 +27,8 @@ public class SnsToken {
         String tokenValue = "token_value";
         String tokenType = "token_type";
     }
+
+    public interface TokenType {
+        String ANDROID = "android";
+    }
 }
