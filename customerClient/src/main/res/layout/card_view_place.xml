@@ -35,8 +35,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/medium_margin"
-        android:textColor="@color/colorTextLight"
-        android:textSize="16sp"
+        style="@style/SubtitleTextLight"
         app:layout_constraintBottom_toBottomOf="@+id/title_base_line"
         app:layout_constraintStart_toEndOf="@+id/image"
         app:layout_constraintVertical_chainStyle="packed" />
@@ -52,8 +51,7 @@
         android:id="@+id/distance"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="@color/colorSecondaryTextLight"
-        android:textSize="14sp"
+        style="@style/SecondaryLineTextLight"
         app:layout_constraintBottom_toBottomOf="@+id/secondary_text_base_line"
         app:layout_constraintStart_toStartOf="@+id/title" />
 
