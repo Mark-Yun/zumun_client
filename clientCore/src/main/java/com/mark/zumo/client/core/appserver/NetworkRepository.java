@@ -7,6 +7,7 @@
 package com.mark.zumo.client.core.appserver;
 
 import com.mark.zumo.client.core.entity.Menu;
+import com.mark.zumo.client.core.entity.MenuCategory;
 import com.mark.zumo.client.core.entity.MenuOption;
 import com.mark.zumo.client.core.entity.MenuOrder;
 import com.mark.zumo.client.core.entity.OrderDetail;
@@ -35,14 +36,34 @@ public interface NetworkRepository {
     @POST("users/guest")
     Maybe<GuestUser> createGuestUser();
 
-    @GET("menu")
-    Maybe<List<Menu>> getMenuList(@Query(Menu.Schema.storeUuid) String storeUuid);
 
+    @PUT("store/{" + Store.Schema.uuid + "}")
+    Maybe<Store> updateStore(@Path(Store.Schema.uuid) String storeUuid,
+                             @Body Store store);
     @GET("store/{" + Store.Schema.uuid + "}")
     Maybe<Store> getStore(@Path(Store.Schema.uuid) String storeUuid);
 
+    @GET("menu")
+    Maybe<List<Menu>> getMenuList(@Query(Menu.Schema.storeUuid) String storeUuid);
+
+
+    @GET("menu/option/{" + MenuOption.Schema.uuid + "}")
+    Maybe<MenuOption> getMenuOptionList(@Path(MenuOption.Schema.uuid) String menuOptionUuid);
+
     @GET("menu/option")
     Maybe<List<MenuOption>> getMenuOptionListByMenuUuid(@Query(MenuOption.Schema.menuUuid) String menuUuid);
+
+
+    @GET("category")
+    Maybe<List<MenuCategory>> getMenuCategoryListByStoreUuid(@Query(MenuCategory.Schema.storeUuid) String storeUuid);
+
+    @PUT("category/{" + MenuCategory.Schema.uuid + "}")
+    Maybe<MenuCategory> updateMenuCategory(@Path(MenuCategory.Schema.uuid) final String menuCategoryUuid,
+                                           @Body MenuCategory menuCategory);
+
+    @POST("menu")
+    Maybe<MenuCategory> createMenuCategory(@Body MenuCategory menuCategory);
+
 
     @POST("order")
     Maybe<MenuOrder> createOrder(@Body List<OrderDetail> orderDetailCollection);
@@ -50,24 +71,13 @@ public interface NetworkRepository {
     @GET("order/{" + MenuOrder.Schema.uuid + "}")
     Maybe<MenuOrder> getMenuOrder(@Path(MenuOrder.Schema.uuid) String uuid);
 
-    @PUT("store/{" + Store.Schema.uuid + "}")
-    Maybe<Store> updateStore(@Path(Store.Schema.uuid) String storeUuid,
-                             @Body Store store);
-
-    @POST("token")
-    Maybe<SnsToken> createSnsToken(@Body SnsToken snsToken);
-
     @GET("order/detail")
     Maybe<List<OrderDetail>> getOrderDetailList(@Query(OrderDetail.Schema.menuOrderUuid) String menuOrderUuid);
-
-    @GET("menu/option/{" + MenuOption.Schema.uuid + "}")
-    Maybe<MenuOption> getMenuOptionList(@Path(MenuOption.Schema.uuid) String menuOptionUuid);
 
     @GET("order")
     Maybe<List<MenuOrder>> getMenuOrderListByCustomerUuid(@Query(MenuOrder.Schema.customerUuid) String customerUuid,
                                                           @Query("offset") int offset,
                                                           @Query("limit") int limit);
-
     @GET("order")
     Maybe<List<MenuOrder>> getMenuOrderListByStoreUuid(@Query(MenuOrder.Schema.storeUuid) String customerUuid,
                                                        @Query("offset") int offset,
@@ -76,4 +86,10 @@ public interface NetworkRepository {
     @PUT("order/{menu_order_uuid}/state")
     Maybe<MenuOrder> updateMenuOrderState(@Path("menu_order_uuid") String menuOrderUuid,
                                           @Body int state);
+
+
+    @POST("token")
+    Maybe<SnsToken> createSnsToken(@Body SnsToken snsToken);
+
+
 }

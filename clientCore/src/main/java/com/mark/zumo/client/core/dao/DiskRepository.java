@@ -12,6 +12,7 @@ import android.arch.persistence.room.OnConflictStrategy;
 import android.arch.persistence.room.Query;
 
 import com.mark.zumo.client.core.entity.Menu;
+import com.mark.zumo.client.core.entity.MenuCategory;
 import com.mark.zumo.client.core.entity.MenuOption;
 import com.mark.zumo.client.core.entity.MenuOrder;
 import com.mark.zumo.client.core.entity.OrderDetail;
@@ -109,6 +110,17 @@ public interface DiskRepository {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertMenuOrder(MenuOrder menuOrder);
 
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    void insertMenuCategory(MenuCategory menuCategory);
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    void insertMenuCategoryList(List<MenuCategory> menuCategoryList);
+
+    @Query("SELECT * FROM " + MenuCategory.Schema.table + " WHERE store_uuid LIKE :storeUuid")
+    Maybe<List<MenuCategory>> getMenuCategoryList(String storeUuid);
+
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertVisitStore(VisitStore visitStore);
 
@@ -116,6 +128,7 @@ public interface DiskRepository {
             "(SELECT * FROM " + VisitStore.TABLE + ")" +
             "GROUP BY store_uuid ORDER BY visit_date DESC LIMIT :limit")
     Maybe<List<VisitStore>> getLatestVisitStore(int limit);
+
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertPaymentToken(PaymentToken paymentToken);

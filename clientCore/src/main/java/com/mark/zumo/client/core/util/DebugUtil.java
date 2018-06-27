@@ -10,6 +10,7 @@ import android.os.Build;
 
 import com.mark.zumo.client.core.R;
 import com.mark.zumo.client.core.entity.Menu;
+import com.mark.zumo.client.core.entity.MenuCategory;
 import com.mark.zumo.client.core.entity.MenuOption;
 import com.mark.zumo.client.core.entity.MenuOrder;
 import com.mark.zumo.client.core.entity.OrderDetail;
@@ -35,6 +36,19 @@ public class DebugUtil {
 
     public static Store store() {
         return new Store(TEST_STORE_UUID, Build.MODEL, 37.2624914, 127.0446137, "TEST", "TEST", null);
+    }
+
+    public static List<MenuCategory> menuCategoryList() {
+        return Arrays.asList(
+                new MenuCategory("UUID1", "Espresso", TEST_STORE_UUID, 6),
+                new MenuCategory("UUID2", "De-caffeine", TEST_STORE_UUID, 4),
+                new MenuCategory("UUID3", "Juice", TEST_STORE_UUID, 7),
+                new MenuCategory("UUID4", "Ade", TEST_STORE_UUID, 3),
+                new MenuCategory("UUID5", "Tee", TEST_STORE_UUID, 1),
+                new MenuCategory("UUID6", "Dutch", TEST_STORE_UUID, 5),
+                new MenuCategory("UUID7", "Sale", TEST_STORE_UUID, 0),
+                new MenuCategory("UUID8", "Cake", TEST_STORE_UUID, 2)
+        );
     }
 
     public static MenuOrder menuOrder() {

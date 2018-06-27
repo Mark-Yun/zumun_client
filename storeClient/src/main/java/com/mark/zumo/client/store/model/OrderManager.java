@@ -15,9 +15,7 @@ import com.mark.zumo.client.core.payment.kakao.entity.PaymentToken;
 import com.mark.zumo.client.core.repository.OrderRepository;
 import com.mark.zumo.client.store.model.entity.OrderBucket;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import io.reactivex.Maybe;
 import io.reactivex.Observable;
@@ -38,20 +36,19 @@ public enum OrderManager {
 
     private OrderBucket acceptedOrderBucket;
     private OrderBucket requestedOrderBucket;
-    private Map<String, PaymentToken> paymentTokenMap;
 
     OrderManager() {
-
-        paymentTokenMap = new HashMap<>();
-
         orderRepository = OrderRepository.INSTANCE;
         kakaoPayAdapter = KakaoPayAdapter.INSTANCE;
     }
 
     public void putRequestedOrderBucket(PaymentToken paymentToken) {
-        paymentTokenMap.put(paymentToken.menuOrderUuid, paymentToken);
         orderRepository.savePaymentToken(paymentToken);
         Log.d(TAG, "putRequestedOrderBucket: " + paymentToken);
+
+        if (requestedOrderBucket == null) {
+            return;
+        }
 
         orderRepository.getMenuOrderFromApi(paymentToken.menuOrderUuid)
                 .subscribeOn(Schedulers.io())
@@ -63,8 +60,10 @@ public enum OrderManager {
         requestedOrderBucket = new OrderBucket();
 
         orderRepository.getMenuOrderListByStoreUuid(storeUuid, 0, 30)
+                .flatMap(Observable::fromIterable)
+                .filter(menuOrder -> menuOrder.state == MenuOrder.State.PAYMENT_READY.ordinal())
                 .subscribeOn(Schedulers.io())
-                .doOnNext(requestedOrderBucket::addOrderList)
+                .doOnNext(requestedOrderBucket::addOrder)
                 .subscribe();
 
         return requestedOrderBucket;
@@ -74,8 +73,10 @@ public enum OrderManager {
         acceptedOrderBucket = new OrderBucket();
 
         orderRepository.getMenuOrderListByStoreUuid(storeUuid, 0, 30)
+                .flatMap(Observable::fromIterable)
+                .filter(menuOrder -> menuOrder.state == MenuOrder.State.ACCEPTED.ordinal())
                 .subscribeOn(Schedulers.io())
-                .doOnNext(acceptedOrderBucket::addOrderList)
+                .doOnNext(requestedOrderBucket::addOrder)
                 .subscribe();
 
         return acceptedOrderBucket;
@@ -132,6 +133,5 @@ public enum OrderManager {
     public void clear() {
         requestedOrderBucket.clear();
         requestedOrderBucket.clear();
-        paymentTokenMap.clear();
     }
 }

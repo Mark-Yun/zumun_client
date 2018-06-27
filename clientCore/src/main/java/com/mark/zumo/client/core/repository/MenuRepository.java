@@ -13,6 +13,7 @@ import com.mark.zumo.client.core.appserver.NetworkRepository;
 import com.mark.zumo.client.core.dao.AppDatabaseProvider;
 import com.mark.zumo.client.core.dao.DiskRepository;
 import com.mark.zumo.client.core.entity.Menu;
+import com.mark.zumo.client.core.entity.MenuCategory;
 import com.mark.zumo.client.core.entity.MenuOption;
 import com.mark.zumo.client.core.entity.util.ListComparator;
 
@@ -21,7 +22,6 @@ import java.util.List;
 import io.reactivex.Maybe;
 import io.reactivex.Observable;
 import io.reactivex.observables.GroupedObservable;
-import io.reactivex.schedulers.Schedulers;
 
 /**
  * Created by mark on 18. 4. 30.
@@ -94,7 +94,21 @@ public enum MenuRepository {
 
         return Maybe.merge(menuOptionListDB, menuOptionListApi)
                 .toObservable()
-                .subscribeOn(Schedulers.io())
                 .distinctUntilChanged(new ListComparator<>());
+    }
+
+    public Observable<List<MenuCategory>> getMenuCategoryList(final String storeUuid) {
+        Maybe<List<MenuCategory>> menuCategoryListDB = diskRepository.getMenuCategoryList(storeUuid);
+        Maybe<List<MenuCategory>> menuCategoryListApi = networkRepository.getMenuCategoryListByStoreUuid(storeUuid)
+                .doOnSuccess(diskRepository::insertMenuCategoryList);
+
+        return Maybe.merge(menuCategoryListDB, menuCategoryListApi)
+                .toObservable()
+                .distinctUntilChanged(new ListComparator<>());
+    }
+
+    public Maybe<MenuCategory> createMenuCategory(final MenuCategory menuCategory) {
+        return networkRepository.createMenuCategory(menuCategory)
+                .doOnSuccess(diskRepository::insertMenuCategory);
     }
 }

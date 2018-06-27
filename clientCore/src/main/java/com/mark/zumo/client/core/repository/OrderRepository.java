@@ -66,7 +66,6 @@ public enum OrderRepository {
     public Maybe<MenuOrder> getMenuOrderFromApi(String orderUuid) {
         return networkRepository.getMenuOrder(orderUuid)
                 .doOnSuccess(menuOrder -> diskRepository.insertMenuOrder(menuOrder))
-                .doOnError(throwable -> Log.e(TAG, "getMenuOrderFromApi: ", throwable))
                 .subscribeOn(Schedulers.io());
     }
 

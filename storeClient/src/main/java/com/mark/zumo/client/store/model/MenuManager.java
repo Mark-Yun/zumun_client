@@ -7,11 +7,13 @@
 package com.mark.zumo.client.store.model;
 
 import com.mark.zumo.client.core.entity.Menu;
+import com.mark.zumo.client.core.entity.MenuCategory;
 import com.mark.zumo.client.core.entity.MenuOption;
 import com.mark.zumo.client.core.repository.MenuRepository;
 
 import java.util.List;
 
+import io.reactivex.Maybe;
 import io.reactivex.Observable;
 import io.reactivex.schedulers.Schedulers;
 
@@ -36,6 +38,17 @@ public enum MenuManager {
 
     public Observable<List<Menu>> getMenuList(String storeUuid) {
         return menuRepository.getMenuItemsOfStore(storeUuid)
+                .subscribeOn(Schedulers.io());
+    }
+
+    public Observable<List<MenuCategory>> getMenuCategoryList(String storeUuid) {
+        return menuRepository.getMenuCategoryList(storeUuid)
+                .subscribeOn(Schedulers.io());
+    }
+
+    public Maybe<MenuCategory> createMenuCategory(String name, String storeUuid, int seqNum) {
+        return Maybe.fromCallable(() -> new MenuCategory(null, name, storeUuid, seqNum))
+                .flatMap(menuRepository::createMenuCategory)
                 .subscribeOn(Schedulers.io());
     }
 }

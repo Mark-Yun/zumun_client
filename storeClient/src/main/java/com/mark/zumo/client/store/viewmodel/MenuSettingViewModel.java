@@ -11,8 +11,10 @@ import android.arch.lifecycle.AndroidViewModel;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.support.annotation.NonNull;
+import android.widget.Toast;
 
 import com.mark.zumo.client.core.entity.Menu;
+import com.mark.zumo.client.core.entity.MenuCategory;
 import com.mark.zumo.client.store.model.MenuManager;
 import com.mark.zumo.client.store.model.SessionManager;
 
@@ -52,6 +54,34 @@ public class MenuSettingViewModel extends AndroidViewModel {
                 .subscribe();
 
         return liveData;
+    }
+
+    public LiveData<List<MenuCategory>> categoryList() {
+        MutableLiveData<List<MenuCategory>> liveData = new MutableLiveData<>();
+        sessionManager.getSessionStore()
+                .map(store -> store.uuid)
+                .flatMapObservable(menuManager::getMenuCategoryList)
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnSubscribe(compositeDisposable::add)
+                .doOnNext(liveData::setValue)
+                .subscribe();
+        return liveData;
+    }
+
+    public LiveData<MenuCategory> createCategory(String categoryName, int seqNum) {
+        MutableLiveData<MenuCategory> liveData = new MutableLiveData<>();
+        sessionManager.getSessionStore()
+                .map(store -> store.uuid)
+                .flatMap(storeUuid -> menuManager.createMenuCategory(categoryName, storeUuid, seqNum))
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnSubscribe(compositeDisposable::add)
+                .doOnSuccess(liveData::setValue)
+                .subscribe();
+        return liveData;
+    }
+
+    public void updateCategorySeqNum(List<MenuCategory> menuCategoryList) {
+        Toast.makeText(getApplication(), "update SeqNum", Toast.LENGTH_SHORT).show();
     }
 
     @Override

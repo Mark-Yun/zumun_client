@@ -52,4 +52,8 @@
 
     <string name="button_text_apply">Apply</string>
     <string name="button_text_cancel">Cancel</string>
+
+    <string name="menu_category_setting_add_new_category">Add new category</string>
+    <string name="menu_category_setting_add_new_category_dialog_title">Create new category</string>
+    <string name="menu_category_setting_add_new_category_dialog_message">Insert new category name</string>
 </resources>

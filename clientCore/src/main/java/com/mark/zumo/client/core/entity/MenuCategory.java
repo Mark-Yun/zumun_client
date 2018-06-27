@@ -29,7 +29,7 @@ public class MenuCategory {
     @ColumnInfo(name = Schema.storeUuid) @SerializedName(Schema.storeUuid)
     public final String storeUuid;
     @ColumnInfo(name = Schema.seqNum) @SerializedName(Schema.seqNum)
-    public final int seqNum;
+    public int seqNum;
 
     public MenuCategory(@NonNull final String uuid, final String name, final String storeUuid, final int seqNum) {
         this.uuid = uuid;
