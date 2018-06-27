@@ -18,6 +18,7 @@ import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.AppCompatTextView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -63,6 +64,7 @@ class RequestedOrderAdapter extends RecyclerView.Adapter<RequestedOrderAdapter.V
     @Override
     public void onBindViewHolder(@NonNull final ViewHolder holder, final int position) {
         MenuOrder menuOrder = menuOrderList.get(position);
+        Log.d("RequestedOrderAdapter", "onBindViewHolder: " + menuOrder);
 
         holder.number.setText(menuOrder.orderNumber);
         holder.date.setText(menuOrder.createdDate.split(" ")[0]);

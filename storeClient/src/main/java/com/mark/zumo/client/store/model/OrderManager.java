@@ -11,9 +11,7 @@ import android.util.Log;
 import com.mark.zumo.client.core.entity.MenuOrder;
 import com.mark.zumo.client.core.entity.OrderDetail;
 import com.mark.zumo.client.core.payment.kakao.KakaoPayAdapter;
-import com.mark.zumo.client.core.payment.kakao.entity.PaymentApprovalRequest;
 import com.mark.zumo.client.core.payment.kakao.entity.PaymentToken;
-import com.mark.zumo.client.core.payment.kakao.server.KakaoPayService;
 import com.mark.zumo.client.core.repository.OrderRepository;
 import com.mark.zumo.client.store.model.entity.OrderBucket;
 
@@ -109,22 +107,8 @@ public enum OrderManager {
     }
 
     public Maybe<MenuOrder> acceptOrder(MenuOrder menuOrder) {
-        PaymentToken paymentToken = paymentTokenMap.remove(menuOrder.uuid);
-
-        String kakaoAccessToken = paymentToken.kakaoAccessToken;
-        String pgToken = paymentToken.pgToken;
-        String tid = paymentToken.tid;
-
-        PaymentApprovalRequest approvalRequest = new PaymentApprovalRequest.Builder()
-                .setcId(KakaoPayService.CID)
-                .setPartnerOrderId(menuOrder.uuid)
-                .setPartnerUserId(menuOrder.storeUuid)
-                .setPgToken(pgToken)
-                .settId(tid)
-                .setTotalAmount(menuOrder.totalQuantity)
-                .build();
-
-        return kakaoPayAdapter.approvalPayment(kakaoAccessToken, approvalRequest)
+        return orderRepository.getPaymentToken(menuOrder.uuid)
+                .flatMap(paymentToken -> kakaoPayAdapter.approvalPayment(paymentToken, menuOrder))
                 .map(paymentApprovalResponse -> paymentApprovalResponse.partnerOrderId)
                 .map(menuOrderUuid -> requestedOrderBucket.removeOrder(menuOrderUuid))
                 .flatMap(menuOrder1 -> updateOrderState(menuOrder1, MenuOrder.State.ACCEPTED))

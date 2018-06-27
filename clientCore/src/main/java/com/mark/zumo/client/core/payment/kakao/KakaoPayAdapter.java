@@ -77,8 +77,23 @@ public enum KakaoPayAdapter {
                 .subscribeOn(Schedulers.io());
     }
 
-    public Maybe<PaymentApprovalResponse> approvalPayment(final String accessToken,
-                                                          final PaymentApprovalRequest paymentApprovalRequest) {
+    public Maybe<PaymentApprovalResponse> approvalPayment(final PaymentToken paymentToken,
+                                                          final MenuOrder menuOrder) {
+
+        String accessToken = paymentToken.kakaoAccessToken;
+        String pgToken = paymentToken.pgToken;
+        String tid = paymentToken.tid;
+
+        PaymentApprovalRequest paymentApprovalRequest = new PaymentApprovalRequest.Builder()
+                .setcId(KakaoPayService.CID)
+                .setPartnerOrderId(menuOrder.uuid)
+                .setPartnerUserId(menuOrder.customerUuid)
+                .setPgToken(pgToken)
+                .settId(tid)
+                .setTotalAmount(menuOrder.totalPrice)
+                .build();
+
+        buildService(accessToken);
 
         return kakaoPayService.approvalPayment(accessToken,
                 paymentApprovalRequest.cId,

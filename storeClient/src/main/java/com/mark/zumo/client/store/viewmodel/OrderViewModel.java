@@ -102,7 +102,6 @@ public class OrderViewModel extends AndroidViewModel {
                 .doOnSuccess(liveData::setValue)
                 .doOnSuccess(order -> showToast("accepted " + order.orderName))
                 .subscribe();
-        showToast("acceptOrder");
 
         return liveData;
     }

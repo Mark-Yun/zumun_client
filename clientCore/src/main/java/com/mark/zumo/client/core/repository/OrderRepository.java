@@ -113,4 +113,8 @@ public enum OrderRepository {
     public void savePaymentToken(PaymentToken paymentToken) {
         diskRepository.insertPaymentToken(paymentToken);
     }
+
+    public Maybe<PaymentToken> getPaymentToken(String menuOrderUuid) {
+        return diskRepository.getPaymentToken(menuOrderUuid);
+    }
 }

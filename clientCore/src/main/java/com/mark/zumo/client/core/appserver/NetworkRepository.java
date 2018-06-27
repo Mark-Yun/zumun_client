@@ -73,7 +73,7 @@ public interface NetworkRepository {
                                                        @Query("offset") int offset,
                                                        @Query("limit") int limit);
 
-    @PUT("order/{menu_order_uuid}/menu_order_state")
+    @PUT("order/{menu_order_uuid}/state")
     Maybe<MenuOrder> updateMenuOrderState(@Path("menu_order_uuid") String menuOrderUuid,
                                           @Body int state);
 }

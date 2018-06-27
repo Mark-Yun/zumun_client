@@ -120,4 +120,7 @@ public interface DiskRepository {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertPaymentToken(PaymentToken paymentToken);
 
+    @Query("SELECT * FROM " + PaymentToken.Schema.table + " WHERE menu_order_uuid LIKE :menuOrderUuid LIMIT 1")
+    Maybe<PaymentToken> getPaymentToken(String menuOrderUuid);
+
 }

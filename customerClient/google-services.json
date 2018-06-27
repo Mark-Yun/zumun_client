@@ -25,6 +25,46 @@
         {
           "client_id": "929411035844-gchjanfjrq93vpnf875aet438j0hrhq8.apps.googleusercontent.com",
           "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyApwDnG-wSi0JAbcI_Fxp5s92Xx_sZ-FA4"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "929411035844-gchjanfjrq93vpnf875aet438j0hrhq8.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:929411035844:android:909fc7de0d9ea976",
+        "android_client_info": {
+          "package_name": "com.mark.zumo.client.store"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "929411035844-qpkss97bvqmqtlh37a3j34leg2s6ngo2.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.mark.zumo.client.store",
+            "certificate_hash": "148e8b8bc0af18d431760b7fc3b48b38b3c30ecb"
+          }
         },
         {
           "client_id": "929411035844-gchjanfjrq93vpnf875aet438j0hrhq8.apps.googleusercontent.com",

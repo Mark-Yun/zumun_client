@@ -23,7 +23,7 @@ public class StoreFcmService extends FirebaseMessagingService {
 
     private final static String KEY_ORDER_UUID = "menu_order_uuid";
     private final static String KEY_TID = "tid";
-    private final static String KEY_KAKAO_ACCESS_TOKEN = "kakao_access_token";
+    private final static String KEY_KAKAO_ACCESS_TOKEN = "access_token";
     private final static String KEY_PG_TOKEN = "pg_token";
 
     private OrderManager orderManager;
