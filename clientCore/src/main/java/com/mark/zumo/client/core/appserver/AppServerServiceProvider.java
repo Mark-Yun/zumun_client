@@ -109,7 +109,6 @@ public enum AppServerServiceProvider {
     }
 
     private static Bundle buildDefaultHeader() {
-        //TODO: Impl
         Bundle bundle = new Bundle();
         bundle.putString(AndroidSdk.KEY, String.valueOf(Build.VERSION.SDK_INT));
         bundle.putString(Model.KEY, Build.MODEL);

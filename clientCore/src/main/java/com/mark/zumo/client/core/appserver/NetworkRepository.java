@@ -50,7 +50,6 @@ public interface NetworkRepository {
     @GET("order/{" + MenuOrder.Schema.uuid + "}")
     Maybe<MenuOrder> getMenuOrder(@Path(MenuOrder.Schema.uuid) String uuid);
 
-    //TODO: replace with PUT/store/{uuid}/token
     @PUT("store/{" + Store.Schema.uuid + "}")
     Maybe<Store> updateStore(@Path(Store.Schema.uuid) String storeUuid,
                              @Body Store store);

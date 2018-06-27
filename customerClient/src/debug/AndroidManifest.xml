@@ -13,6 +13,7 @@
             android:value="@string/nearby_api_key" />
 
         <activity android:name="com.mark.zumo.client.customer.DebugMainActivity"
+            android:icon="@drawable/customer_client_debug_icon"
             android:label="@string/debug_app_name">
             <intent-filter>
                 <category android:name="android.intent.category.LAUNCHER" />

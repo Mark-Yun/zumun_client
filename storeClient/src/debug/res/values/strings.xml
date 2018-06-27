@@ -5,5 +5,5 @@
   -->
 
 <resources>
-    <string name="app_name">Store_Server_Debug</string>
+    <string name="debug_app_name">Store Debug</string>
 </resources>
