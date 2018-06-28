@@ -61,8 +61,8 @@ public enum P2pClient {
 
     private String currentEndpointId;
 
-    private SimpleArrayMap<String, String> endPointMap;
-    private SimpleArrayMap<String, Payload> incomingPayloads;
+    private final SimpleArrayMap<String, String> endPointMap;
+    private final SimpleArrayMap<String, Payload> incomingPayloads;
 
     private MessagesClient messagesClient;
     private ConnectionsClient connectionsClient;
@@ -217,8 +217,8 @@ public enum P2pClient {
                                 currentEndpointId = endpointId1;
 
                                 Single.just(packet)
-                                        .observeOn(AndroidSchedulers.mainThread())
                                         .flatMap(packet -> sendPayload(endpointId1, packet))
+                                        .observeOn(AndroidSchedulers.mainThread())
                                         .doOnSuccess(payload -> e.onSuccess("Send Payload Success" + payload)).subscribe();
                                 break;
                             case ConnectionsStatusCodes.STATUS_CONNECTION_REJECTED:

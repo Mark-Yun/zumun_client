@@ -28,7 +28,7 @@ import io.reactivex.schedulers.Schedulers;
 public enum MenuManager {
     INSTANCE;
 
-    private MenuRepository menuRepository;
+    private final MenuRepository menuRepository;
 
     private P2pClient p2pClient;
 

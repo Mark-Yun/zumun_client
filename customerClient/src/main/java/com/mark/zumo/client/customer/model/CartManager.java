@@ -21,7 +21,7 @@ import io.reactivex.schedulers.Schedulers;
 public enum CartManager {
     INSTANCE;
 
-    private Map<String, Cart> storeCartMap;
+    private final Map<String, Cart> storeCartMap;
 
     CartManager() {
         storeCartMap = new HashMap<>();
@@ -33,9 +33,7 @@ public enum CartManager {
             storeCartMap.put(storeUuid, cart);
         }
 
-        return Observable.create((ObservableOnSubscribe<Cart>) e -> {
-            e.onNext(storeCartMap.get(storeUuid).addEmitter(e));
-        }).subscribeOn(Schedulers.computation());
+        return Observable.create((ObservableOnSubscribe<Cart>) e -> e.onNext(storeCartMap.get(storeUuid).addEmitter(e))).subscribeOn(Schedulers.computation());
     }
 
     public void clearCart(final String storeUuid) {

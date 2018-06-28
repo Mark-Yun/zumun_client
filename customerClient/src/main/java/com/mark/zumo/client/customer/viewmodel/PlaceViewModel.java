@@ -27,10 +27,10 @@ import io.reactivex.disposables.CompositeDisposable;
  */
 public class PlaceViewModel extends AndroidViewModel {
 
-    private StoreManager storeManager;
-    private CustomerLocationManager locationManager;
+    private final StoreManager storeManager;
+    private final CustomerLocationManager locationManager;
 
-    private CompositeDisposable disposables;
+    private final CompositeDisposable disposables;
 
     public PlaceViewModel(@NonNull final Application application) {
         super(application);

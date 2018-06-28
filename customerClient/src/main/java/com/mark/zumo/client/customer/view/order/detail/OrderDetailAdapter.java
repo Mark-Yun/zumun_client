@@ -34,8 +34,8 @@ class OrderDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private static final int VIEW_TYPE_HEADER = 0;
     private static final int VIEW_TYPE_BODY = 1;
 
-    private OrderViewModel orderViewModel;
-    private LifecycleOwner lifecycleOwner;
+    private final OrderViewModel orderViewModel;
+    private final LifecycleOwner lifecycleOwner;
 
     private List<OrderDetail> orderDetailList;
 
@@ -54,14 +54,17 @@ class OrderDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull final ViewGroup parent, final int viewType) {
-        if (viewType == VIEW_TYPE_HEADER) {
-            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_view_order_detail_header, parent, false);
-            return new HeaderViewHolder(view);
-        } else if (viewType == VIEW_TYPE_BODY) {
-            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_view_order_detail, parent, false);
-            return new BodyViewHolder(view);
-        } else {
-            throw new UnsupportedOperationException();
+        switch (viewType) {
+            case VIEW_TYPE_HEADER: {
+                View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_view_order_detail_header, parent, false);
+                return new HeaderViewHolder(view);
+            }
+            case VIEW_TYPE_BODY: {
+                View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_view_order_detail, parent, false);
+                return new BodyViewHolder(view);
+            }
+            default:
+                throw new UnsupportedOperationException();
         }
     }
 

@@ -35,9 +35,9 @@ import butterknife.ButterKnife;
  */
 class MenuCategoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements ItemTouchHelperAdapter {
 
-    private MenuSettingViewModel menuSettingViewModel;
-    private LifecycleOwner lifecycleOwner;
-    private OnStartDragListener dragStartListener;
+    private final MenuSettingViewModel menuSettingViewModel;
+    private final LifecycleOwner lifecycleOwner;
+    private final OnStartDragListener dragStartListener;
 
     private List<MenuCategory> menuCategoryList;
 

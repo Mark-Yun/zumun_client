@@ -24,9 +24,9 @@ import io.reactivex.disposables.CompositeDisposable;
  */
 public class StoreSettingViewModel extends AndroidViewModel {
 
-    private SessionManager sessionManager;
-    private StoreManager storeManager;
-    private CompositeDisposable compositeDisposable;
+    private final SessionManager sessionManager;
+    private final StoreManager storeManager;
+    private final CompositeDisposable compositeDisposable;
 
     public StoreSettingViewModel(@NonNull final Application application) {
         super(application);

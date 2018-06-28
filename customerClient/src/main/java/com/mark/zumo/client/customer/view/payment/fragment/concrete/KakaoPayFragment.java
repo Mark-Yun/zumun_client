@@ -33,6 +33,7 @@ import com.mark.zumo.client.customer.view.signup.kakao.KakaoSignActivity;
 import com.mark.zumo.client.customer.viewmodel.payment.KakaoPayViewModel;
 
 import java.io.ByteArrayInputStream;
+import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -98,8 +99,8 @@ public class KakaoPayFragment extends Fragment {
     }
 
     private void inflateView(String accessToken) {
-        String orderUuid = getArguments().getString(PaymentActivity.KEY_ORDER_UUID);
-        kakaoPayViewModel.preparePayment(orderUuid, accessToken).observe(this, this::onLoadPaymentReadyResponse);
+        String orderUuid = Objects.requireNonNull(getArguments()).getString(PaymentActivity.KEY_ORDER_UUID);
+        kakaoPayViewModel.preparePayment(Objects.requireNonNull(orderUuid), accessToken).observe(this, this::onLoadPaymentReadyResponse);
         webView.setVisibility(View.VISIBLE);
     }
 
@@ -135,12 +136,16 @@ public class KakaoPayFragment extends Fragment {
                 break;
 
             case REQ_CODE_KAKAO_SIGN:
-                if (resultCode == KakaoSignActivity.RESULT_CODE_SESSION_OPENED) {
-                    Session.getCurrentSession().addCallback(sessionCallback);
-                    Session.getCurrentSession().checkAndImplicitOpen();
-                } else if (resultCode == KakaoSignActivity.RESULT_CODE_SESSION_FAILED) {
-                } else {
+                switch (resultCode) {
+                    case KakaoSignActivity.RESULT_CODE_SESSION_OPENED:
+                        Session.getCurrentSession().addCallback(sessionCallback);
+                        Session.getCurrentSession().checkAndImplicitOpen();
+                        break;
+                    case KakaoSignActivity.RESULT_CODE_SESSION_FAILED:
+                        break;
+                    default:
 
+                        break;
                 }
         }
         super.onActivityResult(requestCode, resultCode, data);
@@ -166,7 +171,7 @@ public class KakaoPayFragment extends Fragment {
 
             if (url.contains(KEY_PG_TOKEN)) {
                 String pgToken = Uri.parse(url).getQueryParameter(KEY_PG_TOKEN);
-                String orderUuid = getArguments().getString(PaymentActivity.KEY_ORDER_UUID);
+                String orderUuid = Objects.requireNonNull(getArguments()).getString(PaymentActivity.KEY_ORDER_UUID);
                 String tId = paymentReadyResponse.tId;
 
                 Bundle bundle = new Bundle();
@@ -176,7 +181,7 @@ public class KakaoPayFragment extends Fragment {
                 bundle.putString(PaymentActivity.PAYMENT_TYPE, PaymentActivity.KAKAO_PAY);
 
                 Fragment fragment = Fragment.instantiate(getActivity(), PaymentRequestingFragment.class.getName(), bundle);
-                getFragmentManager().beginTransaction()
+                Objects.requireNonNull(getFragmentManager()).beginTransaction()
                         .replace(R.id.payment_main, fragment)
                         .commit();
 

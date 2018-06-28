@@ -61,9 +61,7 @@ public class SecurePreferences {
             this.preferences = context.getSharedPreferences(preferenceName, Context.MODE_PRIVATE);
 
             this.encryptKeys = encryptKeys;
-        } catch (GeneralSecurityException e) {
-            throw new SecurePreferencesException(e);
-        } catch (UnsupportedEncodingException e) {
+        } catch (GeneralSecurityException | UnsupportedEncodingException e) {
             throw new SecurePreferencesException(e);
         }
     }
@@ -76,7 +74,7 @@ public class SecurePreferences {
         }
     }
 
-    protected void initCiphers(String secureKey) throws UnsupportedEncodingException, NoSuchAlgorithmException, InvalidKeyException,
+    private void initCiphers(String secureKey) throws UnsupportedEncodingException, NoSuchAlgorithmException, InvalidKeyException,
             InvalidAlgorithmParameterException {
         IvParameterSpec ivSpec = getIv();
         SecretKeySpec secretKey = getSecretKey(secureKey);
@@ -86,18 +84,18 @@ public class SecurePreferences {
         keyWriter.init(Cipher.ENCRYPT_MODE, secretKey);
     }
 
-    protected IvParameterSpec getIv() {
+    private IvParameterSpec getIv() {
         byte[] iv = new byte[writer.getBlockSize()];
         System.arraycopy("fldsjfodasjifudslfjdsaofshaufihadsf".getBytes(), 0, iv, 0, writer.getBlockSize());
         return new IvParameterSpec(iv);
     }
 
-    protected SecretKeySpec getSecretKey(String key) throws UnsupportedEncodingException, NoSuchAlgorithmException {
+    private SecretKeySpec getSecretKey(String key) throws UnsupportedEncodingException, NoSuchAlgorithmException {
         byte[] keyBytes = createKeyBytes(key);
         return new SecretKeySpec(keyBytes, TRANSFORMATION);
     }
 
-    protected byte[] createKeyBytes(String key) throws UnsupportedEncodingException, NoSuchAlgorithmException {
+    private byte[] createKeyBytes(String key) throws UnsupportedEncodingException, NoSuchAlgorithmException {
         MessageDigest md = MessageDigest.getInstance(SECRET_KEY_HASH_TRANSFORMATION);
         md.reset();
         byte[] keyBytes = md.digest(key.getBytes(CHARSET));
@@ -144,7 +142,7 @@ public class SecurePreferences {
         preferences.edit().putString(key, secureValueEncoded).apply();
     }
 
-    protected String encrypt(String value, Cipher writer) throws SecurePreferencesException {
+    private String encrypt(String value, Cipher writer) throws SecurePreferencesException {
         byte[] secureValue;
         try {
             secureValue = convert(writer, value.getBytes(CHARSET));
@@ -154,7 +152,7 @@ public class SecurePreferences {
         return Base64.encodeToString(secureValue, Base64.NO_WRAP);
     }
 
-    protected String decrypt(String securedEncodedValue) {
+    private String decrypt(String securedEncodedValue) {
         byte[] securedValue = Base64.decode(securedEncodedValue, Base64.NO_WRAP);
         byte[] value = convert(reader, securedValue);
         try {
@@ -166,7 +164,7 @@ public class SecurePreferences {
 
     public static class SecurePreferencesException extends RuntimeException {
 
-        public SecurePreferencesException(Throwable e) {
+        SecurePreferencesException(Throwable e) {
             super(e);
         }
 

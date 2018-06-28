@@ -28,10 +28,10 @@ import io.reactivex.disposables.CompositeDisposable;
  */
 public class MenuSettingViewModel extends AndroidViewModel {
 
-    private SessionManager sessionManager;
-    private MenuManager menuManager;
+    private final SessionManager sessionManager;
+    private final MenuManager menuManager;
 
-    private CompositeDisposable compositeDisposable;
+    private final CompositeDisposable compositeDisposable;
 
     public MenuSettingViewModel(@NonNull final Application application) {
         super(application);

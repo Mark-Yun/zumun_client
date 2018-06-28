@@ -27,8 +27,8 @@ public enum StoreManager {
     INSTANCE;
 
     private static final String TAG = "StoreManager";
-    private StoreRepository storeRepository;
-    private AppLocationProvider locationProvider;
+    private final StoreRepository storeRepository;
+    private final AppLocationProvider locationProvider;
 
     StoreManager() {
         storeRepository = StoreRepository.INSTANCE;

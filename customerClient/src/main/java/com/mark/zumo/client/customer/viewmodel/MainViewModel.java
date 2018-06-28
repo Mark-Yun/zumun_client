@@ -33,6 +33,7 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.List;
+import java.util.Objects;
 
 import io.reactivex.Maybe;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -43,12 +44,12 @@ import io.reactivex.disposables.CompositeDisposable;
  */
 public class MainViewModel extends AndroidViewModel {
 
-    private P2pClient p2pClient;
-    private SessionManager sessionManager;
-    private StoreManager storeManager;
+    private final P2pClient p2pClient;
+    private final SessionManager sessionManager;
+    private final StoreManager storeManager;
     private OrderManager orderManager;
 
-    private CompositeDisposable compositeDisposable;
+    private final CompositeDisposable compositeDisposable;
 
     public MainViewModel(@NonNull final Application application) {
         super(application);
@@ -92,7 +93,7 @@ public class MainViewModel extends AndroidViewModel {
         orderManager.getMenuOrderFromDisk(orderUuid)
                 .map(this::createOrderNotification)
                 .observeOn(AndroidSchedulers.mainThread())
-                .doOnSuccess(notification -> notificationManager.notify(orderUuid.hashCode(), notification))
+                .doOnSuccess(notification -> Objects.requireNonNull(notificationManager).notify(orderUuid.hashCode(), notification))
                 .doOnSubscribe(compositeDisposable::add)
                 .subscribe();
     }

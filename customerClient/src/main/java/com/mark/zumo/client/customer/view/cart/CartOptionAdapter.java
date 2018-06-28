@@ -19,6 +19,7 @@ import com.mark.zumo.client.customer.viewmodel.CartViewModel;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -28,8 +29,8 @@ import butterknife.ButterKnife;
  */
 public class CartOptionAdapter extends RecyclerView.Adapter<CartOptionAdapter.OptionViewHolder> {
 
-    private CartViewModel cartViewModel;
-    private LifecycleOwner lifecycleOwner;
+    private final CartViewModel cartViewModel;
+    private final LifecycleOwner lifecycleOwner;
 
     private List<String> menuOptionList;
 
@@ -58,7 +59,7 @@ public class CartOptionAdapter extends RecyclerView.Adapter<CartOptionAdapter.Op
         String menuOptionUuid = menuOptionList.get(position);
 
         cartViewModel.getMenuOption(menuOptionUuid).observe(lifecycleOwner, menuOption -> {
-            holder.name.setText(menuOption.name);
+            holder.name.setText(Objects.requireNonNull(menuOption).name);
             holder.value.setText(menuOption.value);
         });
     }

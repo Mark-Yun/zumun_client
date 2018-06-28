@@ -30,11 +30,11 @@ import io.reactivex.disposables.CompositeDisposable;
  */
 public class MenuViewModel extends AndroidViewModel {
 
-    private MenuManager menuManager;
-    private CartManager cartManager;
-    private StoreManager storeManager;
+    private final MenuManager menuManager;
+    private final CartManager cartManager;
+    private final StoreManager storeManager;
 
-    private CompositeDisposable disposables;
+    private final CompositeDisposable disposables;
 
     private String currentStoreUuid;
 

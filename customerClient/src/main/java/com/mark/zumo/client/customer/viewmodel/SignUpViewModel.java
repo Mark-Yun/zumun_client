@@ -20,7 +20,7 @@ import com.mark.zumo.client.customer.model.SessionManager;
 
 public class SignUpViewModel extends AndroidViewModel {
 
-    private SessionManager sessionManager;
+    private final SessionManager sessionManager;
 
     public SignUpViewModel(@NonNull Application application) {
         super(application);

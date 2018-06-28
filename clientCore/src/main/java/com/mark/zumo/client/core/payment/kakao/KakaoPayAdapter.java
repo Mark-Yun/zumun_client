@@ -36,10 +36,10 @@ import io.reactivex.schedulers.Schedulers;
 public enum KakaoPayAdapter {
     INSTANCE;
 
-    public static final String TAG = "KakaoPayAdapter";
+    private static final String TAG = "KakaoPayAdapter";
 
     private KakaoPayService kakaoPayService;
-    private PaymentService paymentService;
+    private final PaymentService paymentService;
 
     KakaoPayAdapter() {
         paymentService = AppServerServiceProvider.INSTANCE.buildPaymentService();

@@ -33,11 +33,11 @@ public class OrderViewModel extends AndroidViewModel {
 
     private static final String TAG = "OrderViewModel";
 
-    private OrderManager orderManager;
-    private MenuManager menuManager;
-    private SessionManager sessionManager;
+    private final OrderManager orderManager;
+    private final MenuManager menuManager;
+    private final SessionManager sessionManager;
 
-    private CompositeDisposable compositeDisposable;
+    private final CompositeDisposable compositeDisposable;
 
     public OrderViewModel(@NonNull final Application application) {
         super(application);

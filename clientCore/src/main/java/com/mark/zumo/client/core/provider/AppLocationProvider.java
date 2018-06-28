@@ -32,8 +32,8 @@ public enum AppLocationProvider {
     INSTANCE;
 
     private static final String TAG = "AppLocationProvider";
-    private LocationManager locationManager;
-    private Context context;
+    private final LocationManager locationManager;
+    private final Context context;
 
     public final Observable<Location> currentLocationObservable;
     private Location location;

@@ -33,8 +33,8 @@ public enum OrderRepository {
 
     private static final String TAG = "OrderRepository";
 
-    private NetworkRepository networkRepository;
-    private DiskRepository diskRepository;
+    private final NetworkRepository networkRepository;
+    private final DiskRepository diskRepository;
 
     OrderRepository() {
         networkRepository = AppServerServiceProvider.INSTANCE.networkRepository;

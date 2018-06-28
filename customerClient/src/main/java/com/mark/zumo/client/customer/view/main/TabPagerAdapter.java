@@ -7,6 +7,7 @@
 package com.mark.zumo.client.customer.view.main;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.transition.Fade;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -30,7 +31,7 @@ public class TabPagerAdapter extends FragmentStatePagerAdapter {
             OrderFragment.class.getName()
     };
 
-    private SparseArray<Fragment> fragmentList;
+    private final SparseArray<Fragment> fragmentList;
 
     TabPagerAdapter(final FragmentManager fragmentManager) {
         super(fragmentManager);
@@ -48,7 +49,7 @@ public class TabPagerAdapter extends FragmentStatePagerAdapter {
     }
 
     @Override
-    public int getItemPosition(Object object) {
+    public int getItemPosition(@NonNull Object object) {
         if (fragmentList.indexOfValue((Fragment) object) < 1) {
             return POSITION_NONE;
         } else {

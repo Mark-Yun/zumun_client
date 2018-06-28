@@ -32,12 +32,12 @@ import io.reactivex.disposables.CompositeDisposable;
 public class OrderViewModel extends AndroidViewModel {
     private static final String TAG = "OrderViewModel";
 
-    private OrderManager orderManager;
-    private StoreManager storeManager;
-    private SessionManager sessionManager;
+    private final OrderManager orderManager;
+    private final StoreManager storeManager;
+    private final SessionManager sessionManager;
 
-    private CompositeDisposable compositeDisposable;
-    private MenuManager menuManager;
+    private final CompositeDisposable compositeDisposable;
+    private final MenuManager menuManager;
 
     public OrderViewModel(@NonNull final Application application) {
         super(application);

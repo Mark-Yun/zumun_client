@@ -39,12 +39,12 @@ public class CartViewModel extends AndroidViewModel {
 
     private static final String TAG = "CartViewModel";
 
-    private CartManager cartManager;
-    private StoreManager storeManager;
-    private MenuManager menuManager;
-    private OrderManager orderManager;
+    private final CartManager cartManager;
+    private final StoreManager storeManager;
+    private final MenuManager menuManager;
+    private final OrderManager orderManager;
 
-    private CompositeDisposable disposables;
+    private final CompositeDisposable disposables;
 
     public CartViewModel(@NonNull final Application application) {
         super(application);

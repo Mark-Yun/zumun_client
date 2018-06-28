@@ -23,12 +23,12 @@ import java.util.Map;
 /**
  * Created by mark on 18. 5. 24.
  */
-public class MenuOptionAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+class MenuOptionAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private static final String TAG = "MenuOptionAdapter";
 
-    private MenuDetailViewModel menuDetailViewModel;
-    private LifecycleOwner lifecycleOwner;
+    private final MenuDetailViewModel menuDetailViewModel;
+    private final LifecycleOwner lifecycleOwner;
 
     private Map<String, List<MenuOption>> optionMap;
 

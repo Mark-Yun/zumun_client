@@ -24,7 +24,7 @@ import butterknife.ButterKnife;
 /**
  * Created by mark on 18. 5. 27.
  */
-public class MenuOptionSelectionAdapter extends BaseAdapter {
+class MenuOptionSelectionAdapter extends BaseAdapter {
     private List<MenuOption> menuOptionList;
 
     private MenuOptionSelectionAdapter() {
@@ -70,7 +70,7 @@ public class MenuOptionSelectionAdapter extends BaseAdapter {
     }
 
     class ViewHolder {
-        View rootView;
+        final View rootView;
         @BindView(R.id.name) AppCompatTextView name;
 
         ViewHolder(final View rootView) {

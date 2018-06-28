@@ -45,8 +45,8 @@ public class P2pServer {
 
     private static final String TAG = "P2pServer";
 
-    private Activity activity;
-    private Store store;
+    private final Activity activity;
+    private final Store store;
     private Message storeMessage;
 
     public P2pServer(Activity activity, Store store) {

@@ -25,6 +25,7 @@ import com.lsjwzh.widget.recyclerviewpager.RecyclerViewPager.OnPageChangedListen
 import com.lsjwzh.widget.recyclerviewpager.ViewUtils;
 
 import java.lang.ref.WeakReference;
+import java.util.Objects;
 
 public class TabLayoutSupport {
 
@@ -55,13 +56,13 @@ public class TabLayoutSupport {
         int getItemCount();
     }
 
-    public static class TabLayoutOnPageChangeListener extends OnScrollListener implements OnPageChangedListener {
+    static class TabLayoutOnPageChangeListener extends OnScrollListener implements OnPageChangedListener {
         private final WeakReference<TabLayout> mTabLayoutRef;
         private final WeakReference<RecyclerViewPager> mViewPagerRef;
         private int mPositionBeforeScroll;
         private int mPagerLeftBeforeScroll;
 
-        public TabLayoutOnPageChangeListener(TabLayout tabLayout, RecyclerViewPager viewPager) {
+        TabLayoutOnPageChangeListener(TabLayout tabLayout, RecyclerViewPager viewPager) {
             this.mTabLayoutRef = new WeakReference<>(tabLayout);
             this.mViewPagerRef = new WeakReference<>(viewPager);
         }
@@ -120,17 +121,17 @@ public class TabLayoutSupport {
 
                 TabLayout tabLayout = this.mTabLayoutRef.get();
                 if (tabLayout != null && tabLayout.getTabAt(newPosition) != null) {
-                    tabLayout.getTabAt(newPosition).select();
+                    Objects.requireNonNull(tabLayout.getTabAt(newPosition)).select();
                 }
 
             }
         }
     }
 
-    public static class ViewPagerOnTabSelectedListener implements OnTabSelectedListener {
+    static class ViewPagerOnTabSelectedListener implements OnTabSelectedListener {
         private final RecyclerViewPager mViewPager;
 
-        public ViewPagerOnTabSelectedListener(RecyclerViewPager viewPager) {
+        ViewPagerOnTabSelectedListener(RecyclerViewPager viewPager) {
             this.mViewPager = viewPager;
         }
 

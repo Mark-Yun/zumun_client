@@ -29,8 +29,8 @@ import butterknife.ButterKnife;
  * Created by mark on 18. 6. 6.
  */
 class AcceptedOrderOptionAdapter extends RecyclerView.Adapter<AcceptedOrderOptionAdapter.ViewHolder> {
-    private OrderViewModel orderViewModel;
-    private LifecycleOwner lifecycleOwner;
+    private final OrderViewModel orderViewModel;
+    private final LifecycleOwner lifecycleOwner;
 
     private List<MenuOption> menuOptionList;
 

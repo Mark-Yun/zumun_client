@@ -41,15 +41,15 @@ public class MenuDetailViewModel extends AndroidViewModel {
 
     private static final String TAG = "MenuDetailViewModel";
 
-    private MenuManager menuManager;
-    private CartManager cartManager;
-    private OrderManager orderManager;
+    private final MenuManager menuManager;
+    private final CartManager cartManager;
+    private final OrderManager orderManager;
 
-    private Map<String, List<MenuOption>> menuOptionMap;
-    private Map<String, MenuOption> selectedOptionMap;
-    private Map<String, MutableLiveData<MenuOption>> selectedOptionLiveDataMap;
+    private final Map<String, List<MenuOption>> menuOptionMap;
+    private final Map<String, MenuOption> selectedOptionMap;
+    private final Map<String, MutableLiveData<MenuOption>> selectedOptionLiveDataMap;
 
-    private CompositeDisposable disposables;
+    private final CompositeDisposable disposables;
 
     private int amount;
 

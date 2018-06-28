@@ -30,9 +30,9 @@ import io.reactivex.schedulers.Schedulers;
 public enum OrderManager {
     INSTANCE;
 
-    public static final String TAG = "OrderManager";
-    private OrderRepository orderRepository;
-    private KakaoPayAdapter kakaoPayAdapter;
+    private static final String TAG = "OrderManager";
+    private final OrderRepository orderRepository;
+    private final KakaoPayAdapter kakaoPayAdapter;
 
     private OrderBucket acceptedOrderBucket;
     private OrderBucket requestedOrderBucket;

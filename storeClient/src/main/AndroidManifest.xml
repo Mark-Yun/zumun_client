@@ -9,20 +9,23 @@
 
     <application
         android:name="com.mark.zumo.client.store.app.StoreServerApp"
-        android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme.NoActionBar">
 
-        <service android:name="com.mark.zumo.client.store.app.fcm.StoreFcmService">
+        <service
+            android:name="com.mark.zumo.client.store.app.fcm.StoreFcmService"
+            android:exported="false">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
 
-        <service android:name="com.mark.zumo.client.store.app.fcm.StoreFcmIdService">
+        <service
+            android:name="com.mark.zumo.client.store.app.fcm.StoreFcmIdService"
+            android:exported="false">
             <intent-filter>
                 <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
             </intent-filter>

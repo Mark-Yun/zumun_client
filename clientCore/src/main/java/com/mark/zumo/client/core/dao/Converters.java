@@ -54,18 +54,18 @@ public class Converters {
 
     @TypeConverter
     public static String fromLongList(List<Long> list) {
-        String ret = "[";
+        StringBuilder ret = new StringBuilder("[");
         for (long item : list) {
-            ret += item + ",";
+            ret.append(item).append(",");
         }
         return ret + "]";
     }
 
     @TypeConverter
     public static String fromStringList(List<String> list) {
-        String ret = "[";
+        StringBuilder ret = new StringBuilder("[");
         for (String item : list) {
-            ret += item + ",";
+            ret.append(item).append(",");
         }
         return ret + "]";
     }

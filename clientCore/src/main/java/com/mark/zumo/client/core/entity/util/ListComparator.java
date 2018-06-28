@@ -15,7 +15,7 @@ import io.reactivex.functions.BiPredicate;
  */
 public class ListComparator<T> implements BiPredicate<List<T>, List<T>> {
     @Override
-    public boolean test(final List<T> list, final List<T> list2) throws Exception {
+    public boolean test(final List<T> list, final List<T> list2) {
         if (list.size() != list2.size()) return false;
         for (int i = 0; i < list.size(); i++) {
             if (!list.get(i).toString().equals(list2.get(i).toString())) return false;

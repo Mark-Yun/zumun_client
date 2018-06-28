@@ -24,8 +24,8 @@ public class Cart {
 
     private static final String TAG = "Cart";
 
-    private List<OrderDetail> orderDetailList;
-    private Collection<ObservableEmitter<Cart>> emitterCollection;
+    private final List<OrderDetail> orderDetailList;
+    private final Collection<ObservableEmitter<Cart>> emitterCollection;
 
     public Cart() {
         orderDetailList = new ArrayList<>();

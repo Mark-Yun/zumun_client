@@ -28,6 +28,7 @@ import com.mark.zumo.client.store.view.requestedorder.RequestedOrderActivity;
 import com.mark.zumo.client.store.viewmodel.OrderViewModel;
 
 import java.util.List;
+import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -48,7 +49,7 @@ public class OrderConsoleFragment extends Fragment {
     public void onCreate(@Nullable final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        orderViewModel = ViewModelProviders.of(getActivity()).get(OrderViewModel.class);
+        orderViewModel = ViewModelProviders.of(Objects.requireNonNull(getActivity())).get(OrderViewModel.class);
     }
 
     @Nullable

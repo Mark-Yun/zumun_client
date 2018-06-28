@@ -19,6 +19,7 @@ import com.mark.zumo.client.core.entity.user.GuestUser;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
@@ -28,7 +29,7 @@ import java.util.UUID;
 
 public class DebugUtil {
 
-    public static final String TEST_STORE_UUID = "FD8BC4DD00B04E60A166A5FBD3454E8F";
+    private static final String TEST_STORE_UUID = "FD8BC4DD00B04E60A166A5FBD3454E8F";
 
     public static GuestUser guestUser() {
         return new GuestUser(UUID.randomUUID().toString());
@@ -128,7 +129,7 @@ public class DebugUtil {
                         "AE62797461FA4F2292AF11F48D2F5C30",
                         "Iced Americano",
                         orderUuid,
-                        Arrays.asList("5007D8547CAC47D38C41C4F419986D49"),
+                        Collections.singletonList("5007D8547CAC47D38C41C4F419986D49"),
                         3,
                         100000
                 ),
@@ -137,7 +138,7 @@ public class DebugUtil {
                         "AE62797461FA4F2292AF11F48D2F5C30",
                         "Iced Americano",
                         orderUuid,
-                        Arrays.asList("5007D8547CAC47D38C41C4F419986D49"),
+                        Collections.singletonList("5007D8547CAC47D38C41C4F419986D49"),
                         5,
                         100000
                 ),
@@ -255,11 +256,11 @@ public class DebugUtil {
     }
 
     private static class FakeData {
-        public int drawableId;
-        public String name;
-        public int price;
+        final int drawableId;
+        final String name;
+        final int price;
 
-        public FakeData(int drawableId, String name, int price) {
+        FakeData(int drawableId, String name, int price) {
             //TODO: remove test data
             this.drawableId = drawableId;
             this.name = name;

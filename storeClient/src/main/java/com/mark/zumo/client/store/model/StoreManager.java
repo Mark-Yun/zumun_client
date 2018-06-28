@@ -20,7 +20,7 @@ public enum StoreManager {
 
     INSTANCE;
 
-    private StoreRepository storeRepository;
+    private final StoreRepository storeRepository;
 
     StoreManager() {
         storeRepository = StoreRepository.INSTANCE;

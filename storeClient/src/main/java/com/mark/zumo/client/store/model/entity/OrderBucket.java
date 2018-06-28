@@ -19,9 +19,9 @@ import io.reactivex.ObservableEmitter;
  */
 public class OrderBucket {
 
-    public static final String TAG = "OrderBucket";
+    private static final String TAG = "OrderBucket";
     private List<MenuOrder> orderList;
-    private Collection<ObservableEmitter<OrderBucket>> emitterCollection;
+    private final Collection<ObservableEmitter<OrderBucket>> emitterCollection;
 
     public OrderBucket() {
         orderList = new ArrayList<>();

@@ -36,8 +36,8 @@ public enum SessionRepository {
 
     private static final String TAG = "SessionRepository";
 
-    private SecurePreferences securePreferences;
-    private NetworkRepository networkRepository;
+    private final SecurePreferences securePreferences;
+    private final NetworkRepository networkRepository;
 
     SessionRepository() {
         securePreferences = SecuredRepository.INSTANCE.securePreferences();
@@ -82,7 +82,7 @@ public enum SessionRepository {
     }
 
     public static class SessionBuilder {
-        private Bundle bundle;
+        private final Bundle bundle;
 
         public SessionBuilder() {
             bundle = new Bundle();

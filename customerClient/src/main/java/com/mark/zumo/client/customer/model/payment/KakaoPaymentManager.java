@@ -26,7 +26,7 @@ public enum KakaoPaymentManager {
 
     private final static String TAG = "KakaoPaymentManager";
 
-    private KakaoPayAdapter kakaoPayAdapter;
+    private final KakaoPayAdapter kakaoPayAdapter;
     private String accessToken;
 
     KakaoPaymentManager() {

@@ -16,6 +16,8 @@ import android.view.ViewGroup;
 
 import com.mark.zumo.client.store.R;
 
+import java.util.Objects;
+
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
@@ -43,7 +45,7 @@ public class SignInFragment extends Fragment {
 
     @OnClick(R.id.go_to_sign_up)
     void goToSignUp() {
-        getFragmentManager().beginTransaction()
+        Objects.requireNonNull(getFragmentManager()).beginTransaction()
                 .replace(R.id.console_fragment, Fragment.instantiate(getActivity(), SignUpFragment.class.getName()))
                 .commit();
     }

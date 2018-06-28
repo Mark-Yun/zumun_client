@@ -26,6 +26,7 @@ import com.mark.zumo.client.customer.viewmodel.CartViewModel;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -35,9 +36,9 @@ import butterknife.ButterKnife;
  */
 public class CartMenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    private CartViewModel cartViewModel;
-    private LifecycleOwner lifecycleOwner;
-    private String storeUuid;
+    private final CartViewModel cartViewModel;
+    private final LifecycleOwner lifecycleOwner;
+    private final String storeUuid;
 
     private List<OrderDetail> orderDetailList;
 
@@ -85,7 +86,7 @@ public class CartMenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         OrderDetail orderDetail = orderDetailList.get(position);
 
         cartViewModel.getMenu(orderDetail.menuUuid).observe(lifecycleOwner, menu -> {
-            holder.menuName.setText(menu.name);
+            holder.menuName.setText(Objects.requireNonNull(menu).name);
 
             GlideApp.with(holder.itemView.getContext())
                     .load(menu.imageUrl)

@@ -29,6 +29,7 @@ import com.mark.zumo.client.customer.viewmodel.MenuDetailViewModel;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -50,8 +51,8 @@ public class MenuOptionFragment extends Fragment {
     public void onCreate(@Nullable final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        menuDetailViewModel = ViewModelProviders.of(getActivity()).get(MenuDetailViewModel.class);
-        menuUuid = getArguments().getString(MenuDetailActivity.KEY_MENU_UUID);
+        menuDetailViewModel = ViewModelProviders.of(Objects.requireNonNull(getActivity())).get(MenuDetailViewModel.class);
+        menuUuid = Objects.requireNonNull(getArguments()).getString(MenuDetailActivity.KEY_MENU_UUID);
     }
 
     @Nullable

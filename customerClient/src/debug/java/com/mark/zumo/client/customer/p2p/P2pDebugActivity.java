@@ -112,11 +112,11 @@ public class P2pDebugActivity extends Activity {
     }
 
     private String getSubscribeConsoleText(Set<Store> stores) {
-        String ret = "Subscribing..." + currentUser + "\n";
+        StringBuilder ret = new StringBuilder("Subscribing..." + currentUser + "\n");
         for (Store store : stores) {
-            ret += store + "\n";
+            ret.append(store).append("\n");
         }
-        return ret;
+        return ret.toString();
     }
 
     private void stopSubscribe(View v) {

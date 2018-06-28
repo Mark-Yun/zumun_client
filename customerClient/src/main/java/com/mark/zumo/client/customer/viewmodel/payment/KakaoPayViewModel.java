@@ -30,10 +30,10 @@ import io.reactivex.disposables.CompositeDisposable;
  */
 public class KakaoPayViewModel extends AndroidViewModel {
 
-    private KakaoPaymentManager kakaoPaymentManager;
-    private OrderManager orderManager;
+    private final KakaoPaymentManager kakaoPaymentManager;
+    private final OrderManager orderManager;
 
-    private CompositeDisposable compositeDisposable;
+    private final CompositeDisposable compositeDisposable;
 
     public KakaoPayViewModel(@NonNull final Application application) {
         super(application);

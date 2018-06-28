@@ -29,7 +29,7 @@ public enum Rebound {
 
     private static final SpringConfig CONFIG = SpringConfig.fromOrigamiTensionAndFriction(60, 8);
     private final BaseSpringSystem mSpringSystem = SpringSystem.create();
-    private Map<View, Spring> mSpringMap;
+    private final Map<View, Spring> mSpringMap;
 
     Rebound() {
         mSpringMap = new HashMap<>();
@@ -86,7 +86,7 @@ public enum Rebound {
     }
 
     private class ScaleSpringListener extends SimpleSpringListener {
-        private View view;
+        private final View view;
 
         private ScaleSpringListener(View view) {
             this.view = view;

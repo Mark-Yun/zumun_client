@@ -22,6 +22,8 @@ import com.mark.zumo.client.customer.view.payment.PaymentActivity;
 import com.mark.zumo.client.customer.view.payment.fragment.concrete.KakaoPayFragment;
 import com.mark.zumo.client.customer.viewmodel.PaymentViewModel;
 
+import java.util.Objects;
+
 import butterknife.ButterKnife;
 
 /**
@@ -35,8 +37,8 @@ public class PaymentRequestingFragment extends Fragment {
         super.onCreate(savedInstanceState);
 
         paymentViewModel = ViewModelProviders.of(this).get(PaymentViewModel.class);
-        String paymentType = getArguments().getString(PaymentActivity.PAYMENT_TYPE);
-        switch (paymentType) {
+        String paymentType = Objects.requireNonNull(getArguments()).getString(PaymentActivity.PAYMENT_TYPE);
+        switch (Objects.requireNonNull(paymentType)) {
             case PaymentActivity.KAKAO_PAY:
                 postKakaoToken();
                 break;
@@ -56,7 +58,7 @@ public class PaymentRequestingFragment extends Fragment {
     }
 
     private void postKakaoToken() {
-        String orderUuid = getArguments().getString(PaymentActivity.KEY_ORDER_UUID);
+        String orderUuid = Objects.requireNonNull(getArguments()).getString(PaymentActivity.KEY_ORDER_UUID);
         String tId = getArguments().getString(KakaoPayFragment.KEY_TID);
         String pgToken = getArguments().getString(KakaoPayFragment.KEY_PG_TOKEN);
 
@@ -67,7 +69,7 @@ public class PaymentRequestingFragment extends Fragment {
         FragmentActivity activity = getActivity();
         Intent intent = new Intent();
         intent.putExtra(PaymentActivity.KEY_ORDER_UUID, menuOrder.uuid);
-        activity.setResult(PaymentActivity.RESULT_CODE_PAYMENT_SUCCESS, intent);
+        Objects.requireNonNull(activity).setResult(PaymentActivity.RESULT_CODE_PAYMENT_SUCCESS, intent);
         activity.finish();
     }
 

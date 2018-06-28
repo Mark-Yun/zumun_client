@@ -23,8 +23,8 @@ import java.util.List;
  */
 public class NearbyStoreAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    private PlaceViewModel placeViewModel;
-    private LifecycleOwner lifecycleOwner;
+    private final PlaceViewModel placeViewModel;
+    private final LifecycleOwner lifecycleOwner;
 
     private List<Store> storeList;
 

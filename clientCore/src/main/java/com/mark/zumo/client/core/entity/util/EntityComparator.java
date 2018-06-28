@@ -13,7 +13,7 @@ import io.reactivex.functions.BiPredicate;
  */
 public class EntityComparator<T> implements BiPredicate<T, T> {
     @Override
-    public boolean test(final T t, final T t2) throws Exception {
+    public boolean test(final T t, final T t2) {
         return t.toString().equals(t2.toString());
     }
 }

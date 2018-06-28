@@ -34,8 +34,8 @@ import butterknife.ButterKnife;
  */
 class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.ViewHolder> {
 
-    private LifecycleOwner lifecycleOwner;
-    private MenuSettingViewModel menuViewModel;
+    private final LifecycleOwner lifecycleOwner;
+    private final MenuSettingViewModel menuViewModel;
 
     private List<Menu> menuList;
 

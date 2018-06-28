@@ -20,6 +20,7 @@ import com.google.gson.GsonBuilder;
 import com.mark.zumo.client.core.util.context.ContextHolder;
 
 import java.io.File;
+import java.util.Objects;
 
 import okhttp3.Cache;
 import okhttp3.Interceptor;
@@ -112,7 +113,7 @@ public enum KakaoPayServiceProvider {
 
             for (String key : bundle.keySet()) {
                 String value = bundle.getString(key);
-                builder.header(key, value);
+                builder.header(key, Objects.requireNonNull(value));
             }
 
             Request request = builder

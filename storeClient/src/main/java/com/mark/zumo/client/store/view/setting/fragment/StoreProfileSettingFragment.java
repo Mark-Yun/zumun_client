@@ -46,6 +46,7 @@ import com.mark.zumo.client.store.viewmodel.StoreSettingViewModel;
 import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -115,7 +116,7 @@ public class StoreProfileSettingFragment extends Fragment {
 
     @OnClick(R.id.store_name)
     public void onStoreNameClicked() {
-        AppCompatEditText editText = new AppCompatEditText(getActivity());
+        AppCompatEditText editText = new AppCompatEditText(Objects.requireNonNull(getActivity()));
         editText.setText(storeName.getText().toString());
         editText.selectAll();
 
@@ -137,7 +138,7 @@ public class StoreProfileSettingFragment extends Fragment {
     private void inflateMapFragment() {
         mapFragment = new SupportMapFragment();
         FragmentManager fragmentManager = getFragmentManager();
-        fragmentManager.beginTransaction()
+        Objects.requireNonNull(fragmentManager).beginTransaction()
                 .replace(R.id.map_fragment, mapFragment)
                 .commit();
 

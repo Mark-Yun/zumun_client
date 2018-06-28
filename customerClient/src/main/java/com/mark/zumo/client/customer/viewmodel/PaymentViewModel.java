@@ -21,7 +21,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
  * Created by mark on 18. 6. 24.
  */
 public class PaymentViewModel extends AndroidViewModel {
-    private KakaoPaymentManager kakaoPaymentManager;
+    private final KakaoPaymentManager kakaoPaymentManager;
 
     public PaymentViewModel(@NonNull final Application application) {
         super(application);

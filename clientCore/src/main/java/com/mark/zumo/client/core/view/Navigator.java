@@ -28,7 +28,7 @@ import java.util.List;
  */
 public final class Navigator {
 
-    private static List<BlurLayout> blurLayoutStack = new ArrayList<>();
+    private static final List<BlurLayout> blurLayoutStack = new ArrayList<>();
 
     public static void addBlurFilter(final BlurLayout blurLayout) {
         blurLayoutStack.add(blurLayout);

@@ -22,7 +22,7 @@ public enum SessionManager {
 
     private static final String TAG = "SessionManager";
 
-    private SessionRepository sessionRepository;
+    private final SessionRepository sessionRepository;
 
     SessionManager() {
         sessionRepository = SessionRepository.INSTANCE;

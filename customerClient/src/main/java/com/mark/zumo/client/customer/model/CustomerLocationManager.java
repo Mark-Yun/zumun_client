@@ -20,7 +20,7 @@ import io.reactivex.schedulers.Schedulers;
 public enum CustomerLocationManager {
     INSTANCE;
 
-    private AppLocationProvider locationProvider;
+    private final AppLocationProvider locationProvider;
 
     CustomerLocationManager() {
         locationProvider = AppLocationProvider.INSTANCE;

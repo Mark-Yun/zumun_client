@@ -31,8 +31,8 @@ import butterknife.ButterKnife;
  */
 class AcceptedOrderDetailAdapter extends RecyclerView.Adapter<AcceptedOrderDetailAdapter.ViewHolder> {
 
-    private OrderViewModel orderViewModel;
-    private LifecycleOwner lifecycleOwner;
+    private final OrderViewModel orderViewModel;
+    private final LifecycleOwner lifecycleOwner;
 
     private List<OrderDetail> orderDetailList;
 

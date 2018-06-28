@@ -34,11 +34,11 @@ import butterknife.ButterKnife;
 public class AcceptedOrderPageAdapter extends RecyclerView.Adapter<AcceptedOrderPageAdapter.ViewHolder>
         implements TabLayoutSupport.ViewPagerTabLayoutAdapter<AcceptedOrderPageAdapter.TabViewHolder> {
 
-    private OrderViewModel orderViewModel;
-    private LifecycleOwner lifecycleOwner;
+    private final OrderViewModel orderViewModel;
+    private final LifecycleOwner lifecycleOwner;
 
     private List<MenuOrder> menuOrderList;
-    private List<TabViewHolder> tabViewHolderList;
+    private final List<TabViewHolder> tabViewHolderList;
 
     AcceptedOrderPageAdapter(final OrderViewModel orderViewModel, final LifecycleOwner lifecycleOwner) {
         this.orderViewModel = orderViewModel;

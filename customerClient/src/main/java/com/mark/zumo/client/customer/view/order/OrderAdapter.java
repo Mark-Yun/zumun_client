@@ -35,9 +35,9 @@ import butterknife.ButterKnife;
  */
 class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.ViewHolder> {
 
-    public static final String TAG = "OrderAdapter";
-    private LifecycleOwner lifecycleOwner;
-    private OrderViewModel orderViewModel;
+    private static final String TAG = "OrderAdapter";
+    private final LifecycleOwner lifecycleOwner;
+    private final OrderViewModel orderViewModel;
 
     private List<MenuOrder> orderList;
 

@@ -33,8 +33,8 @@ public enum MenuRepository {
 
     private static final String TAG = "MenuRepository";
 
-    private DiskRepository diskRepository;
-    private NetworkRepository networkRepository;
+    private final DiskRepository diskRepository;
+    private final NetworkRepository networkRepository;
 
     MenuRepository() {
         diskRepository = AppDatabaseProvider.INSTANCE.diskRepository;

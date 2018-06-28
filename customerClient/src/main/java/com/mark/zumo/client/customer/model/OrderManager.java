@@ -25,7 +25,7 @@ import io.reactivex.schedulers.Schedulers;
 public enum OrderManager {
     INSTANCE;
 
-    private OrderRepository orderRepository;
+    private final OrderRepository orderRepository;
 
     OrderManager() {
         orderRepository = OrderRepository.INSTANCE;

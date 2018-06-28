@@ -30,7 +30,7 @@ public class PaymentToken {
     @ColumnInfo(name = Schema.kakaoAccessToken) @SerializedName(Schema.kakaoAccessToken)
     public final String kakaoAccessToken;
 
-    public PaymentToken(final String menuOrderUuid, final String tid, final String kakaoAccessToken, final String pgToken) {
+    public PaymentToken(@NonNull final String menuOrderUuid, final String tid, final String kakaoAccessToken, final String pgToken) {
         this.menuOrderUuid = menuOrderUuid;
         this.tid = tid;
         this.pgToken = pgToken;

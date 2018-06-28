@@ -32,8 +32,8 @@ public enum StoreRepository {
 
     private static final String TAG = "StoreRepository";
 
-    private NetworkRepository networkRepository;
-    private DiskRepository diskRepository;
+    private final NetworkRepository networkRepository;
+    private final DiskRepository diskRepository;
 
     StoreRepository() {
         networkRepository = AppServerServiceProvider.INSTANCE.networkRepository;
@@ -41,15 +41,11 @@ public enum StoreRepository {
     }
 
     public Observable<List<Store>> nearByStore(Location location) {
-        return Observable.create(e -> {
-            e.onNext(DebugUtil.storeList());
-        });
+        return Observable.create(e -> e.onNext(DebugUtil.storeList()));
     }
 
     public Observable<List<Store>> latestVisitStore() {
-        return Observable.create(e -> {
-            e.onNext(DebugUtil.storeList());
-        });
+        return Observable.create(e -> e.onNext(DebugUtil.storeList()));
     }
 
     public Maybe<Store> updateStore(Store store) {

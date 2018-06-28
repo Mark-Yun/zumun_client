@@ -13,6 +13,8 @@ import android.support.v7.preference.PreferenceFragmentCompat;
 
 import com.mark.zumo.client.store.R;
 
+import java.util.Objects;
+
 /**
  * Created by mark on 18. 6. 25.
  */
@@ -32,7 +34,7 @@ public class SettingPreferenceFragment extends PreferenceFragmentCompat {
         String fragmentName = preference.getFragment();
         Fragment fragment = Fragment.instantiate(getContext(), fragmentName);
 
-        getFragmentManager().beginTransaction()
+        Objects.requireNonNull(getFragmentManager()).beginTransaction()
                 .replace(R.id.setting_main_fragment, fragment)
                 .commit();
 

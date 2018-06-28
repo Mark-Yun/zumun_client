@@ -25,9 +25,9 @@ public class AcceptedOrderViewModel extends AndroidViewModel {
 
     private static final String TAG = "AcceptedOrderViewModel";
 
-    private SessionManager sessionManager;
+    private final SessionManager sessionManager;
 
-    private CompositeDisposable compositeDisposable;
+    private final CompositeDisposable compositeDisposable;
 
     public AcceptedOrderViewModel(@NonNull final Application application) {
         super(application);

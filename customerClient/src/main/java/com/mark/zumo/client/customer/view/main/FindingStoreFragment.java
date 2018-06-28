@@ -24,6 +24,8 @@ import android.view.ViewGroup;
 
 import com.mark.zumo.client.customer.R;
 
+import java.util.Objects;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -48,14 +50,9 @@ public class FindingStoreFragment extends Fragment {
         startFindingAnimation();
     }
 
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-    }
-
     private void startFindingAnimation() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            Display display = getActivity().getWindowManager().getDefaultDisplay();
+            Display display = Objects.requireNonNull(getActivity()).getWindowManager().getDefaultDisplay();
             Point size = new Point();
             display.getSize(size);
             int left = (int) (size.x * 0.25);
