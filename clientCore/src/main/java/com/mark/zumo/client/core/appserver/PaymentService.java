@@ -6,7 +6,6 @@
 
 package com.mark.zumo.client.core.appserver;
 
-import com.mark.zumo.client.core.entity.MenuOrder;
 import com.mark.zumo.client.core.payment.kakao.entity.PaymentToken;
 
 import io.reactivex.Maybe;
@@ -20,5 +19,5 @@ public interface PaymentService {
     String URL = "https://9e9owpd0lk.execute-api.ap-northeast-2.amazonaws.com/api/";
 
     @POST("payment/kakaopay")
-    Maybe<MenuOrder> createPaymentToken(@Body PaymentToken paymentToken);
+    Maybe<PaymentToken> createPaymentToken(@Body PaymentToken paymentToken);
 }

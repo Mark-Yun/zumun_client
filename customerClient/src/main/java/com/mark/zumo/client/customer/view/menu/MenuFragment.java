@@ -32,7 +32,6 @@ import com.mark.zumo.client.core.view.TouchResponse;
 import com.mark.zumo.client.customer.R;
 import com.mark.zumo.client.customer.model.entity.Cart;
 import com.mark.zumo.client.customer.view.cart.CartActivity;
-import com.mark.zumo.client.customer.viewmodel.MainViewModel;
 import com.mark.zumo.client.customer.viewmodel.MenuViewModel;
 
 import java.util.List;
@@ -60,7 +59,6 @@ public class MenuFragment extends Fragment {
 
     private MenuAdapter menuAdapter;
     private MenuViewModel menuViewModel;
-    private MainViewModel mainViewModel;
 
     private String storeUuid;
 
@@ -68,7 +66,6 @@ public class MenuFragment extends Fragment {
     public void onCreate(@Nullable final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         menuViewModel = ViewModelProviders.of(this).get(MenuViewModel.class);
-        mainViewModel = ViewModelProviders.of(Objects.requireNonNull(getActivity())).get(MainViewModel.class);
 
         storeUuid = Objects.requireNonNull(getArguments()).getString(KEY_STORE_UUID);
     }
@@ -150,7 +147,7 @@ public class MenuFragment extends Fragment {
                 } else {
                     Intent intent = new Intent(getContext(), CartActivity.class);
                     intent.putExtra(CartActivity.KEY_STORE_UUID, storeUuid);
-                    startActivityForResult(intent, CartActivity.REQUEST_CODE);
+                    getActivity().startActivityForResult(intent, CartActivity.REQUEST_CODE);
                 }
 
                 cartLiveData.removeObserver(this);

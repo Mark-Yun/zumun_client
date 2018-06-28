@@ -25,6 +25,7 @@ import android.webkit.WebViewClient;
 import com.kakao.auth.ISessionCallback;
 import com.kakao.auth.Session;
 import com.kakao.util.exception.KakaoException;
+import com.mark.zumo.client.core.payment.kakao.entity.PaymentReadyRequest;
 import com.mark.zumo.client.core.payment.kakao.entity.PaymentReadyResponse;
 import com.mark.zumo.client.customer.R;
 import com.mark.zumo.client.customer.view.payment.PaymentActivity;
@@ -43,13 +44,11 @@ import butterknife.ButterKnife;
  */
 public class KakaoPayFragment extends Fragment {
 
-    private static final String TAG = "KakaoPayFragment";
-
-    private static final int REQ_CODE_KAKAO_PAY = 10;
-    private static final int REQ_CODE_KAKAO_SIGN = 11;
-
     public static final String KEY_TID = "tid";
     public static final String KEY_PG_TOKEN = "pg_token";
+    private static final String TAG = "KakaoPayFragment";
+    private static final int REQ_CODE_KAKAO_PAY = 10;
+    private static final int REQ_CODE_KAKAO_SIGN = 11;
     private static final String INTENT_KAKAO_PAY = "intent://kakaopay/pg";
 
     @BindView(R.id.web_view) WebView webView;
@@ -132,7 +131,6 @@ public class KakaoPayFragment extends Fragment {
     public void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
         switch (requestCode) {
             case REQ_CODE_KAKAO_PAY:
-                Log.d(TAG, "onActivityResult: requestCode-" + requestCode + ", resultCode-" + resultCode);
                 break;
 
             case REQ_CODE_KAKAO_SIGN:
@@ -169,7 +167,7 @@ public class KakaoPayFragment extends Fragment {
         public WebResourceResponse shouldInterceptRequest(final WebView view, final String url) {
             Log.d(TAG, "shouldInterceptRequest: " + url);
 
-            if (url.contains(KEY_PG_TOKEN)) {
+            if (url.contains(PaymentReadyRequest.REDIRECT_URL_SUCCESS)) {
                 String pgToken = Uri.parse(url).getQueryParameter(KEY_PG_TOKEN);
                 String orderUuid = Objects.requireNonNull(getArguments()).getString(PaymentActivity.KEY_ORDER_UUID);
                 String tId = paymentReadyResponse.tId;
@@ -181,11 +179,16 @@ public class KakaoPayFragment extends Fragment {
                 bundle.putString(PaymentActivity.PAYMENT_TYPE, PaymentActivity.KAKAO_PAY);
 
                 Fragment fragment = Fragment.instantiate(getActivity(), PaymentRequestingFragment.class.getName(), bundle);
+
                 Objects.requireNonNull(getFragmentManager()).beginTransaction()
                         .replace(R.id.payment_main, fragment)
                         .commit();
 
                 return new WebResourceResponse("text/plain", "utf-8", new ByteArrayInputStream("".getBytes()));
+            } else if (url.contains(PaymentReadyRequest.REDIRECT_URL_FAIL)) {
+                getActivity().finish();
+            } else if (url.contains(PaymentReadyRequest.REDIRECT_URL_CANCEL)) {
+                getActivity().finish();
             }
             return super.shouldInterceptRequest(view, url);
         }

@@ -23,7 +23,6 @@ import com.mark.zumo.client.core.entity.Store;
 import com.mark.zumo.client.customer.R;
 import com.mark.zumo.client.customer.view.cart.CartActivity;
 import com.mark.zumo.client.customer.view.menu.detail.MenuDetailActivity;
-import com.mark.zumo.client.customer.view.order.OrderFragment;
 import com.mark.zumo.client.customer.view.payment.PaymentActivity;
 import com.mark.zumo.client.customer.viewmodel.MainViewModel;
 
@@ -94,15 +93,6 @@ public class MainBodyFragment extends Fragment {
         tabPagerAdapter.onD2dLoadStore(store);
     }
 
-    private void selectTabFragment(String className) {
-        int itemPosition = tabPagerAdapter.getItemPosition(className);
-        TabLayout.Tab tab = tabLayout.getTabAt(itemPosition);
-        if (tab == null) {
-            return;
-        }
-        tab.select();
-    }
-
     @Override
     public void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
         switch (requestCode) {
@@ -135,7 +125,13 @@ public class MainBodyFragment extends Fragment {
     }
 
     private void onSuccessPayment(String orderUuid) {
+        Log.d(TAG, "onSuccessPayment: " + orderUuid);
         mainViewModel.onSuccessPayment(orderUuid);
-        selectTabFragment(OrderFragment.class.getName());
+
+        TabLayout.Tab tab = tabLayout.getTabAt(2);
+        if (tab == null) {
+            return;
+        }
+        tab.select();
     }
 }

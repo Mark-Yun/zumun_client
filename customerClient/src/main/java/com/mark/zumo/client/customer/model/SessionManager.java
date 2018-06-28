@@ -6,6 +6,7 @@
 
 package com.mark.zumo.client.customer.model;
 
+import com.mark.zumo.client.core.entity.SnsToken;
 import com.mark.zumo.client.core.entity.user.GuestUser;
 import com.mark.zumo.client.core.repository.SessionRepository;
 
@@ -33,7 +34,7 @@ public enum SessionManager {
 
     public Maybe<GuestUser> getSessionUser() {
         //TODO: fix issue
-        return Maybe.fromCallable(() -> sessionRepository.getGuestUserFromCache())
+        return Maybe.fromCallable(sessionRepository::getGuestUserFromCache)
                 .switchIfEmpty(sessionRepository.createGuestUser()
                         .map(sessionRepository::saveGuestUser)
                 ).subscribeOn(Schedulers.io());
@@ -43,5 +44,11 @@ public enum SessionManager {
         new SessionRepository.SessionBuilder()
                 .put(SessionRepository.KEY_CUSTOMER_UUID, guestUser.uuid)
                 .build();
+    }
+
+    public Maybe<SnsToken> registerToken(GuestUser guestUser, String token) {
+        SnsToken snsToken = new SnsToken(guestUser.uuid, SnsToken.TokenType.ANDROID, token);
+        return sessionRepository.createToken(snsToken)
+                .subscribeOn(Schedulers.io());
     }
 }

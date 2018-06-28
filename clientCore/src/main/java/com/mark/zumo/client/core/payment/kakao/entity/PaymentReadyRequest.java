@@ -20,6 +20,10 @@ import java.util.List;
  */
 public class PaymentReadyRequest {
 
+    public static final String REDIRECT_URL_SUCCESS = "https://developers.kakao.com/success";
+    public static final String REDIRECT_URL_FAIL = "https://developers.kakao.com/fail";
+    public static final String REDIRECT_URL_CANCEL = "https://developers.kakao.com/cancel";
+
     @SerializedName("cid") public final String cId;//가맹점 코드. 10자. O
     @SerializedName("partner_order_id") public final String partnerOrderId;//가맹점 주문번호. 최대 100자	O
     @SerializedName("partner_user_id") public final String partnerUserId;//가맹점 회원 id. 최대 100자	O

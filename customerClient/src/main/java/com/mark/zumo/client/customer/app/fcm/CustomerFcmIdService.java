@@ -6,10 +6,12 @@
 
 package com.mark.zumo.client.customer.app.fcm;
 
+import android.text.TextUtils;
 import android.util.Log;
 
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.FirebaseInstanceIdService;
+import com.mark.zumo.client.customer.model.SessionManager;
 
 /**
  * Created by mark on 18. 6. 8.
@@ -17,6 +19,19 @@ import com.google.firebase.iid.FirebaseInstanceIdService;
 public class CustomerFcmIdService extends FirebaseInstanceIdService {
 
     private static final String TAG = "CustomerFcmIdService";
+
+    private SessionManager sessionManager;
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+
+        sessionManager = SessionManager.INSTANCE;
+
+        String refreshedToken = FirebaseInstanceId.getInstance().getToken();
+        Log.d(TAG, "Refreshed token: " + refreshedToken);
+        registerToken(refreshedToken);
+    }
 
     @Override
     public void onTokenRefresh() {
@@ -27,6 +42,18 @@ public class CustomerFcmIdService extends FirebaseInstanceIdService {
         // If you want to send messages to this application instance or
         // manage this apps subscriptions on the server side, send the
         // Instance ID token to your app server.
-//        sendRegistrationToServer(refreshedToken);
+        registerToken(refreshedToken);
+
+    }
+
+    private void registerToken(final String refreshedToken) {
+        if (TextUtils.isEmpty(refreshedToken)) {
+            return;
+        }
+
+        sessionManager.getSessionUser()
+                .flatMap(store -> sessionManager.registerToken(store, refreshedToken))
+                .doOnSuccess(snsToken -> Log.d(TAG, "onTokenRefresh: updated Success-" + snsToken))
+                .subscribe();
     }
 }

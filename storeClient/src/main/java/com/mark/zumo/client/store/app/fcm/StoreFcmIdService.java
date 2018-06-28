@@ -18,7 +18,6 @@ import android.util.Log;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.FirebaseInstanceIdService;
 import com.mark.zumo.client.store.model.SessionManager;
-import com.mark.zumo.client.store.model.StoreManager;
 
 /**
  * Created by mark on 18. 6. 8.
@@ -26,14 +25,12 @@ import com.mark.zumo.client.store.model.StoreManager;
 public class StoreFcmIdService extends FirebaseInstanceIdService {
     private static final String TAG = "StoreFcmIdService";
 
-    private StoreManager storeManager;
     private SessionManager sessionManager;
 
     @Override
     public void onCreate() {
         super.onCreate();
 
-        storeManager = StoreManager.INSTANCE;
         sessionManager = SessionManager.INSTANCE;
 
         String refreshedToken = FirebaseInstanceId.getInstance().getToken();

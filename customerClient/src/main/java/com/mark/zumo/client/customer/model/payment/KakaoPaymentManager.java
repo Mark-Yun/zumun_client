@@ -33,19 +33,7 @@ public enum KakaoPaymentManager {
         kakaoPayAdapter = KakaoPayAdapter.INSTANCE;
     }
 
-    private static String approvalUrl(MenuOrder menuOrder) {
-        return "https://developers.kakao.com/success";
-    }
-
-    private static String cancelUrl(MenuOrder menuOrder) {
-        return "https://developers.kakao.com/fail";
-    }
-
-    private static String failUrl(MenuOrder menuOrder) {
-        return "https://developers.kakao.com/cancel";
-    }
-
-    public Maybe<MenuOrder> createPaymentToken(String menuOrderUuid, String tid, String pgToken) {
+    public Maybe<PaymentToken> createPaymentToken(String menuOrderUuid, String tid, String pgToken) {
         PaymentToken paymentToken = new PaymentToken(menuOrderUuid, tid, pgToken, accessToken);
         Log.d(TAG, "createPaymentToken: " + paymentToken);
         return kakaoPayAdapter.createPaymentToken(paymentToken)
@@ -66,9 +54,9 @@ public enum KakaoPaymentManager {
                 .setTotalAmount(menuOrder.totalPrice)
                 .setQuantity(menuOrder.totalQuantity)
                 .setTaxFreeAmount(0)
-                .setApprovalUrl(approvalUrl(menuOrder))
-                .setCancelUrl(cancelUrl(menuOrder))
-                .setFailUrl(failUrl(menuOrder))
+                .setApprovalUrl(PaymentReadyRequest.REDIRECT_URL_SUCCESS)
+                .setCancelUrl(PaymentReadyRequest.REDIRECT_URL_CANCEL)
+                .setFailUrl(PaymentReadyRequest.REDIRECT_URL_FAIL)
                 .build();
 
         return kakaoPayAdapter.preparePayment(paymentReadyRequest)

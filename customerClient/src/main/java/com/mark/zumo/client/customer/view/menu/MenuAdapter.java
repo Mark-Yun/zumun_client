@@ -25,7 +25,6 @@ import com.mark.zumo.client.core.util.glide.GlideUtils;
 import com.mark.zumo.client.core.view.TouchResponse;
 import com.mark.zumo.client.customer.R;
 import com.mark.zumo.client.customer.view.menu.detail.MenuDetailActivity;
-import com.mark.zumo.client.customer.view.payment.PaymentActivity;
 import com.mark.zumo.client.customer.view.rebound.Rebound;
 import com.mark.zumo.client.customer.viewmodel.MenuViewModel;
 
@@ -97,7 +96,7 @@ class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.ViewHolder> {
         Intent intent = new Intent(context, MenuDetailActivity.class);
         intent.putExtra(MenuDetailActivity.KEY_MENU_UUID, menu.uuid);
         intent.putExtra(MenuDetailActivity.KEY_MENU_STORE_UUID, menu.storeUuid);
-        ((FragmentActivity) context).startActivityForResult(intent, PaymentActivity.REQ_CODE_PAYMENT);
+        ((FragmentActivity) context).startActivityForResult(intent, MenuDetailActivity.REQUEST_CODE);
         return true;
     }
 

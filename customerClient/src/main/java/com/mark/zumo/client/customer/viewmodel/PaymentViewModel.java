@@ -12,7 +12,7 @@ import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.support.annotation.NonNull;
 
-import com.mark.zumo.client.core.entity.MenuOrder;
+import com.mark.zumo.client.core.payment.kakao.entity.PaymentToken;
 import com.mark.zumo.client.customer.model.payment.KakaoPaymentManager;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -28,8 +28,8 @@ public class PaymentViewModel extends AndroidViewModel {
         kakaoPaymentManager = KakaoPaymentManager.INSTANCE;
     }
 
-    public LiveData<MenuOrder> postKakaoTokenInfo(String menuOrderUuid, String tid, String pgToken) {
-        MutableLiveData<MenuOrder> liveData = new MutableLiveData<>();
+    public LiveData<PaymentToken> postKakaoTokenInfo(String menuOrderUuid, String tid, String pgToken) {
+        MutableLiveData<PaymentToken> liveData = new MutableLiveData<>();
 
         kakaoPaymentManager.createPaymentToken(menuOrderUuid, tid, pgToken)
                 .observeOn(AndroidSchedulers.mainThread())

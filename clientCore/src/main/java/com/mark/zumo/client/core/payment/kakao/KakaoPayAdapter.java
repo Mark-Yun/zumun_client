@@ -49,7 +49,7 @@ public enum KakaoPayAdapter {
         kakaoPayService = KakaoPayServiceProvider.INSTANCE.buildService(accessToken);
     }
 
-    public Maybe<MenuOrder> createPaymentToken(PaymentToken paymentToken) {
+    public Maybe<PaymentToken> createPaymentToken(PaymentToken paymentToken) {
         return paymentService.createPaymentToken(paymentToken)
                 .doOnError(throwable -> Log.e(TAG, "createPaymentToken: ", throwable))
                 .retryWhen(flowable -> flowable.flatMap(error -> Flowable.timer(3, TimeUnit.SECONDS)))

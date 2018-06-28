@@ -16,7 +16,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.mark.zumo.client.core.entity.MenuOrder;
+import com.mark.zumo.client.core.payment.kakao.entity.PaymentToken;
 import com.mark.zumo.client.customer.R;
 import com.mark.zumo.client.customer.view.payment.PaymentActivity;
 import com.mark.zumo.client.customer.view.payment.fragment.concrete.KakaoPayFragment;
@@ -65,10 +65,10 @@ public class PaymentRequestingFragment extends Fragment {
         paymentViewModel.postKakaoTokenInfo(orderUuid, tId, pgToken).observe(this, this::onSuccessCreatePaymentToken);
     }
 
-    private void onSuccessCreatePaymentToken(MenuOrder menuOrder) {
-        FragmentActivity activity = getActivity();
+    private void onSuccessCreatePaymentToken(PaymentToken paymentToken) {
         Intent intent = new Intent();
-        intent.putExtra(PaymentActivity.KEY_ORDER_UUID, menuOrder.uuid);
+        intent.putExtra(PaymentActivity.KEY_ORDER_UUID, paymentToken.menuOrderUuid);
+        FragmentActivity activity = getActivity();
         Objects.requireNonNull(activity).setResult(PaymentActivity.RESULT_CODE_PAYMENT_SUCCESS, intent);
         activity.finish();
     }
