@@ -11,14 +11,14 @@
 
     <android.support.v7.widget.AppCompatTextView
         android:id="@+id/name"
-        style="@style/CartMenuOptionNameText"
+        style="@style/SecondaryLineValueTextLight"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintStart_toStartOf="parent" />
 
     <android.support.v7.widget.AppCompatTextView
         android:id="@+id/value"
-        style="@style/CartMenuOptionValueText"
+        style="@style/SecondaryLineNameTextLight"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent" />

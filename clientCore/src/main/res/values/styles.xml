@@ -28,13 +28,13 @@
     <style name="SubheadLineTextLight">
         <item name="android:textColor">@color/colorTextLight</item>
         <item name="android:textSize">14sp</item>
-        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:fontFamily">sans-serif</item>
     </style>
 
     <style name="SubheadLineTextDark">
         <item name="android:textColor">@color/colorTextDark</item>
         <item name="android:textSize">14sp</item>
-        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:fontFamily">sans-serif</item>
     </style>
 
     <style name="SubtitleTextLight">

@@ -17,8 +17,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/big_margin"
         android:text="@string/order_information_title"
-        android:textColor="@color/colorTextLight"
-        android:textStyle="bold"
+        style="@style/SubheadLineTextLight"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -37,7 +36,7 @@
         android:layout_marginStart="@dimen/medium_margin"
         android:layout_marginTop="@dimen/medium_margin"
         android:text="@string/order_name_title"
-        android:textColor="@color/colorTextLight"
+        style="@style/SecondaryLineNameTextLight"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/order_info_divider" />
 
@@ -45,7 +44,7 @@
         android:id="@+id/order_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="@color/colorSecondaryTextLight"
+        style="@style/SecondaryLineValueTextLight"
         app:layout_constraintBottom_toBottomOf="@+id/order_name_title"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/order_name_title" />
@@ -55,7 +54,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/order_number_title"
-        android:textColor="@color/colorTextLight"
+        style="@style/SecondaryLineNameTextLight"
         app:layout_constraintStart_toStartOf="@+id/order_name_title"
         app:layout_constraintTop_toBottomOf="@+id/order_name_title" />
 
@@ -63,7 +62,7 @@
         android:id="@+id/order_number"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="@color/colorSecondaryTextLight"
+        style="@style/SecondaryLineValueTextLight"
         app:layout_constraintBottom_toBottomOf="@+id/order_number_title"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/order_number_title" />
@@ -73,7 +72,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/order_time_title"
-        android:textColor="@color/colorTextLight"
+        style="@style/SecondaryLineNameTextLight"
         app:layout_constraintStart_toStartOf="@+id/order_name_title"
         app:layout_constraintTop_toBottomOf="@+id/order_number_title" />
 
@@ -81,7 +80,7 @@
         android:id="@+id/order_time"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="@color/colorSecondaryTextLight"
+        style="@style/SecondaryLineValueTextLight"
         app:layout_constraintBottom_toBottomOf="@+id/order_time_title"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/order_time_title" />
@@ -91,7 +90,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/order_price_title"
-        android:textColor="@color/colorTextLight"
+        style="@style/SecondaryLineNameTextLight"
         app:layout_constraintStart_toStartOf="@+id/order_name_title"
         app:layout_constraintTop_toBottomOf="@+id/order_time" />
 
@@ -99,7 +98,7 @@
         android:id="@+id/order_price"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="@color/colorSecondaryTextLight"
+        style="@style/SecondaryLineValueTextLight"
         app:layout_constraintBottom_toBottomOf="@+id/order_price_title"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/order_price_title" />
@@ -110,8 +109,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/big_margin"
         android:text="@string/order_detail_title"
-        android:textColor="@color/colorTextLight"
-        android:textStyle="bold"
+        style="@style/SubheadLineTextLight"
         app:layout_constraintTop_toBottomOf="@+id/order_price_title" />
 
     <View
