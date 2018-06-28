@@ -41,7 +41,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/card_view_3_line_item_title_start_margin"
-        android:textColor="@color/colorTextLight"
+        style="@style/SubtitleTextLight"
         app:layout_constraintBottom_toBottomOf="@+id/title_base_line"
         app:layout_constraintStart_toEndOf="@+id/image" />
 
@@ -57,8 +57,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/order_number_description"
-        android:textColor="@color/colorSecondaryTextLight"
-        android:textSize="@dimen/menu_price_text_size"
+        style="@style/SecondaryLineValueTextLight"
         app:layout_constraintBottom_toBottomOf="@+id/secondary_text_base_line"
         app:layout_constraintStart_toStartOf="@+id/title" />
 
@@ -66,8 +65,7 @@
         android:id="@+id/order_number"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="@color/colorSecondaryTextLight"
-        android:textSize="@dimen/menu_price_text_size"
+        style="@style/SecondaryLineValueTextLight"
         app:layout_constraintBottom_toBottomOf="@+id/order_number_description"
         app:layout_constraintStart_toEndOf="@+id/order_number_description" />
 
@@ -83,8 +81,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/order_time_description"
-        android:textColor="@color/colorSecondaryTextLight"
-        android:textSize="@dimen/menu_price_text_size"
+        style="@style/SecondaryLineValueTextLight"
         app:layout_constraintBottom_toBottomOf="@+id/third_text_base_line"
         app:layout_constraintStart_toStartOf="@+id/title" />
 
@@ -92,8 +89,7 @@
         android:id="@+id/order_time"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="@color/colorSecondaryTextLight"
-        android:textSize="@dimen/menu_price_text_size"
+        style="@style/SecondaryLineValueTextLight"
         app:layout_constraintBottom_toBottomOf="@+id/order_time_description"
         app:layout_constraintStart_toEndOf="@+id/order_time_description" />
 
@@ -116,7 +112,7 @@
         android:gravity="center_vertical|center_horizontal"
         android:paddingEnd="@dimen/small_margin"
         android:paddingStart="@dimen/small_margin"
-        android:textColor="@color/colorTextDark"
+        style="@style/SubheadLineTextDark"
         app:layout_constraintBottom_toBottomOf="@+id/right_arrow_image_view"
         app:layout_constraintEnd_toStartOf="@+id/right_arrow_image_view"
         app:layout_constraintTop_toTopOf="@+id/right_arrow_image_view" />

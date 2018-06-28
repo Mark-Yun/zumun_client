@@ -18,8 +18,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/medium_margin"
-        android:textColor="@color/colorTextLight"
-        android:textStyle="bold"
+        style="@style/SecondaryLineNameTextLight"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -27,7 +26,7 @@
         android:id="@+id/menu_price"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="@color/colorSecondaryTextLight"
+        style="@style/SecondaryLineValueTextLight"
         app:layout_constraintBottom_toBottomOf="@+id/menu_name"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/menu_name" />
@@ -40,7 +39,7 @@
 
     <android.support.v7.widget.AppCompatTextView
         android:id="@+id/amount_title"
-        style="@style/CartMenuOptionNameText"
+        style="@style/SecondaryLineNameTextLight"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/order_amount_title"
@@ -49,7 +48,7 @@
 
     <android.support.v7.widget.AppCompatTextView
         android:id="@+id/amount"
-        style="@style/CartMenuOptionValueText"
+        style="@style/SecondaryLineValueTextLight"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="@+id/amount_title"
