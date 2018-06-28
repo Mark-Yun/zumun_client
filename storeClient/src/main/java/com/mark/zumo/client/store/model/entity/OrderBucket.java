@@ -33,6 +33,11 @@ public class OrderBucket {
         notifyOnNext();
     }
 
+    public void setOrder(List<MenuOrder> menuOrderList) {
+        orderList = new ArrayList<>(menuOrderList);
+        notifyOnNext();
+    }
+
     public void addOrderList(List<MenuOrder> menuOrderList) {
         orderList.addAll(menuOrderList);
         notifyOnNext();

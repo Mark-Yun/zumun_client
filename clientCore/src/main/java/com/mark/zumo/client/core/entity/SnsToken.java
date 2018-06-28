@@ -7,6 +7,7 @@
 package com.mark.zumo.client.core.entity;
 
 import com.google.gson.annotations.SerializedName;
+import com.mark.zumo.client.core.entity.util.EntityHelper;
 
 /**
  * Created by mark on 18. 6. 15.
@@ -30,5 +31,10 @@ public class SnsToken {
 
     public interface TokenType {
         String ANDROID = "android";
+    }
+
+    @Override
+    public String toString() {
+        return EntityHelper.toString(this, SnsToken.class);
     }
 }

@@ -60,10 +60,14 @@ public enum OrderManager {
         requestedOrderBucket = new OrderBucket();
 
         orderRepository.getMenuOrderListByStoreUuid(storeUuid, 0, 30)
-                .flatMap(Observable::fromIterable)
-                .filter(menuOrder -> menuOrder.state == MenuOrder.State.PAYMENT_READY.ordinal())
-                .subscribeOn(Schedulers.io())
-                .doOnNext(requestedOrderBucket::addOrder)
+                .map(Observable::fromIterable)
+                .doOnNext(menuOrderObservable ->
+                        menuOrderObservable.filter(menuOrder -> menuOrder.state == MenuOrder.State.PAYMENT_READY.ordinal())
+                                .toList()
+                                .doOnSuccess(requestedOrderBucket::setOrder)
+                                .subscribeOn(Schedulers.io())
+                                .subscribe()
+                ).subscribeOn(Schedulers.io())
                 .subscribe();
 
         return requestedOrderBucket;
@@ -73,10 +77,14 @@ public enum OrderManager {
         acceptedOrderBucket = new OrderBucket();
 
         orderRepository.getMenuOrderListByStoreUuid(storeUuid, 0, 30)
-                .flatMap(Observable::fromIterable)
-                .filter(menuOrder -> menuOrder.state == MenuOrder.State.ACCEPTED.ordinal())
-                .subscribeOn(Schedulers.io())
-                .doOnNext(requestedOrderBucket::addOrder)
+                .map(Observable::fromIterable)
+                .doOnNext(menuOrderObservable ->
+                        menuOrderObservable.filter(menuOrder -> menuOrder.state == MenuOrder.State.ACCEPTED.ordinal())
+                                .toList()
+                                .doOnSuccess(acceptedOrderBucket::setOrder)
+                                .subscribeOn(Schedulers.io())
+                                .subscribe()
+                ).subscribeOn(Schedulers.io())
                 .subscribe();
 
         return acceptedOrderBucket;
@@ -113,7 +121,7 @@ public enum OrderManager {
                 .map(paymentApprovalResponse -> paymentApprovalResponse.partnerOrderId)
                 .map(menuOrderUuid -> requestedOrderBucket.removeOrder(menuOrderUuid))
                 .flatMap(menuOrder1 -> updateOrderState(menuOrder1, MenuOrder.State.ACCEPTED))
-                .doOnSuccess(order -> acceptedOrderBucket.addOrder(order))
+                .doOnSuccess(acceptedOrderBucket::addOrder)
                 .subscribeOn(Schedulers.io());
     }
 

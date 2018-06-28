@@ -12,6 +12,7 @@
 
 package com.mark.zumo.client.store.app.fcm;
 
+import android.text.TextUtils;
 import android.util.Log;
 
 import com.google.firebase.iid.FirebaseInstanceId;
@@ -54,9 +55,13 @@ public class StoreFcmIdService extends FirebaseInstanceIdService {
     }
 
     private void registerToken(final String refreshedToken) {
+        if (TextUtils.isEmpty(refreshedToken)) {
+            return;
+        }
+
         sessionManager.getSessionStore()
                 .flatMap(store -> sessionManager.registerToken(store, refreshedToken))
-                .doOnSuccess(store -> Log.d(TAG, "onTokenRefresh: updated Success-" + store))
+                .doOnSuccess(snsToken -> Log.d(TAG, "onTokenRefresh: updated Success-" + snsToken))
                 .subscribe();
     }
 }

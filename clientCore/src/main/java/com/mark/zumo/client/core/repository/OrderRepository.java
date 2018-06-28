@@ -114,6 +114,7 @@ public enum OrderRepository {
     }
 
     public Maybe<PaymentToken> getPaymentToken(String menuOrderUuid) {
-        return diskRepository.getPaymentToken(menuOrderUuid);
+        return diskRepository.getPaymentToken(menuOrderUuid)
+                .doOnSuccess(diskRepository::removePaymentToken);
     }
 }

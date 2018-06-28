@@ -12,12 +12,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
-import com.mark.zumo.client.core.entity.MenuOrder;
 import com.mark.zumo.client.core.view.Navigator;
 import com.mark.zumo.client.store.R;
 import com.mark.zumo.client.store.viewmodel.OrderViewModel;
-
-import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -32,8 +29,6 @@ public class RequestedOrderActivity extends AppCompatActivity {
 
     private OrderViewModel orderViewModel;
 
-    private RequestedOrderAdapter adapter;
-
     @Override
     public void onCreate(@Nullable final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,16 +42,12 @@ public class RequestedOrderActivity extends AppCompatActivity {
         LinearLayoutManager layout = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
         recyclerView.setLayoutManager(layout);
 
-        adapter = new RequestedOrderAdapter(orderViewModel, this);
+        RequestedOrderAdapter adapter = new RequestedOrderAdapter(orderViewModel, this);
         recyclerView.setAdapter(adapter);
         recyclerView.setItemViewCacheSize(20);
         recyclerView.setDrawingCacheEnabled(true);
         recyclerView.setHasFixedSize(true);
-        orderViewModel.requestedMenuOrderList().observe(this, this::onLoadRequestedMenuOrderList);
-    }
-
-    private void onLoadRequestedMenuOrderList(List<MenuOrder> menuOrderList) {
-        adapter.setMenuOrderList(menuOrderList);
+        orderViewModel.requestedMenuOrderList().observe(this, adapter::setMenuOrderList);
     }
 
     @OnClick(R.id.back_fab)

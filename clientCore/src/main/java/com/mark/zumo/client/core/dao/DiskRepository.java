@@ -7,6 +7,7 @@
 package com.mark.zumo.client.core.dao;
 
 import android.arch.persistence.room.Dao;
+import android.arch.persistence.room.Delete;
 import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.OnConflictStrategy;
 import android.arch.persistence.room.Query;
@@ -135,5 +136,8 @@ public interface DiskRepository {
 
     @Query("SELECT * FROM " + PaymentToken.Schema.table + " WHERE menu_order_uuid LIKE :menuOrderUuid LIMIT 1")
     Maybe<PaymentToken> getPaymentToken(String menuOrderUuid);
+
+    @Delete
+    void removePaymentToken(PaymentToken paymentToken);
 
 }
