@@ -59,6 +59,7 @@ public class MainBodyFragment extends Fragment {
 
     private void inflateTabLayout() {
         tabPagerAdapter = new TabPagerAdapter(getChildFragmentManager());
+        viewPager.setOffscreenPageLimit(5);
         viewPager.setAdapter(tabPagerAdapter);
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
 
@@ -85,13 +86,21 @@ public class MainBodyFragment extends Fragment {
 
     private void onD2dLoadStore(Store store) {
         Log.d(TAG, "onD2dLoadStore: " + store);
-        tabLayout.getTabAt(0).setText(store.name);
+        TabLayout.Tab tab = tabLayout.getTabAt(0);
+        if (tab == null) {
+            return;
+        }
+        tab.setText(store.name);
         tabPagerAdapter.onD2dLoadStore(store);
     }
 
     private void selectTabFragment(String className) {
         int itemPosition = tabPagerAdapter.getItemPosition(className);
-        tabLayout.getTabAt(itemPosition).select();
+        TabLayout.Tab tab = tabLayout.getTabAt(itemPosition);
+        if (tab == null) {
+            return;
+        }
+        tab.select();
     }
 
     @Override
