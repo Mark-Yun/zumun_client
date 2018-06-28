@@ -50,10 +50,17 @@ public enum SessionRepository {
     }
 
     public GuestUser getGuestUserFromCache() {
-        String guestUserUuid = securePreferences.getString(SessionRepository.KEY_CUSTOMER_UUID);
-        if (TextUtils.isEmpty(guestUserUuid))
+        try {
+            String guestUserUuid = securePreferences.getString(SessionRepository.KEY_CUSTOMER_UUID);
+            if (TextUtils.isEmpty(guestUserUuid)) {
+                return null;
+            }
+
+            return new GuestUser(guestUserUuid);
+        } catch (SecurePreferences.SecurePreferencesException e) {
+            Log.e(TAG, "getGuestUserFromCache: ", e);
             return null;
-        return new GuestUser(guestUserUuid);
+        }
     }
 
     public Maybe<Store> getStoreFromCache() {
