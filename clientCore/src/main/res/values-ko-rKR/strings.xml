@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (c) 2018. Mark Soft - All Rights Reserved
+  ~ Unauthorized copying of this file, via any medium is strictly prohibited
+  ~ Proprietary and confidential
+  -->
+
+<resources>
+    <string name="nearby_api_key">AIzaSyBG1TvGy6sHkwhQewFnWIXbDzjXwnrp310</string>
+    <string name="order_state_requested">주문됨</string>
+    <string name="order_state_accepted">접수됨</string>
+    <string name="order_state_complete">완료</string>
+    <string name="order_state_rejected">거절됨</string>
+    <string name="order_state_canceled">취소됨</string>
+</resources>

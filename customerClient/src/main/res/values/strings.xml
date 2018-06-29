@@ -5,7 +5,7 @@
   -->
 
 <resources>
-    <string name="kakao_app_key">265e130b23d5b75316022561ec01ea5e</string>
+    <string name="kakao_app_key" translatable="false">265e130b23d5b75316022561ec01ea5e</string>
     <string name="app_name">Zumun</string>
 
     <string name="place_latest_visit_store_header_text">Latest Visit Stores</string>
@@ -45,7 +45,6 @@
     <string name="order_cancel_button_text">Cancel Order</string>
     <string name="order_amount_title">Amount</string>
 
-    <string name="is_finding_store">If inside ZUMUN store, \nthe menu will appear in here.</string>
-
     <string name="order_progress_channel_name">ZUMUN Order progress</string>
+    <string name="is_finding_store">If inside ZUMUN store, \\nthe menu will appear in here.</string>
 </resources>

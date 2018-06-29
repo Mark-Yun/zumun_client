@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "a4e426f19029a97561b3c7d834b36f96",
+    "identityHash": "dc94b24ccf690c2c674def33bd5e2479",
     "entities": [
       {
         "tableName": "menu",
@@ -124,7 +124,7 @@
       },
       {
         "tableName": "store",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`store_uuid` TEXT NOT NULL, `store_name` TEXT, `latitude` REAL NOT NULL, `longitude` REAL NOT NULL, `cover_image_url` TEXT, `thumbnail_image_url` TEXT, `fcm_token` TEXT, PRIMARY KEY(`store_uuid`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`store_uuid` TEXT NOT NULL, `store_name` TEXT, `latitude` REAL NOT NULL, `longitude` REAL NOT NULL, `cover_image_url` TEXT, `thumbnail_image_url` TEXT, PRIMARY KEY(`store_uuid`))",
         "fields": [
           {
             "fieldPath": "uuid",
@@ -159,12 +159,6 @@
           {
             "fieldPath": "thumbnailUrl",
             "columnName": "thumbnail_image_url",
-            "affinity": "TEXT",
-            "notNull": false
-          },
-          {
-            "fieldPath": "fcmToken",
-            "columnName": "fcm_token",
             "affinity": "TEXT",
             "notNull": false
           }
@@ -416,7 +410,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"a4e426f19029a97561b3c7d834b36f96\")"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"dc94b24ccf690c2c674def33bd5e2479\")"
     ]
   }
 }
