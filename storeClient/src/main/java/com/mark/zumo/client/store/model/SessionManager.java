@@ -11,6 +11,7 @@ import android.util.Log;
 import com.mark.zumo.client.core.entity.SnsToken;
 import com.mark.zumo.client.core.entity.Store;
 import com.mark.zumo.client.core.repository.SessionRepository;
+import com.mark.zumo.client.core.repository.StoreRepository;
 
 import io.reactivex.Maybe;
 import io.reactivex.schedulers.Schedulers;
@@ -25,23 +26,20 @@ public enum SessionManager {
     private static final String TAG = "SessionManager";
 
     private final SessionRepository sessionRepository;
-
-    private Store store;
+    private final StoreRepository storeRepository;
 
     SessionManager() {
         sessionRepository = SessionRepository.INSTANCE;
+        storeRepository = StoreRepository.INSTANCE;
+
         getSessionStore()
                 .doOnSuccess(this::buildSessionHeader)
-                .doOnSuccess(store -> this.store = store)
                 .subscribe();
-    }
-
-    public boolean isSessionAvailable() {
-        return store != null;
     }
 
     public Maybe<Store> getSessionStore() {
         return sessionRepository.getStoreFromCache()
+                .flatMap(storeRepository::getStoreFromApi)
                 .doOnError(throwable -> Log.e(TAG, "getSessionStore: ", throwable))
                 .subscribeOn(Schedulers.io());
     }

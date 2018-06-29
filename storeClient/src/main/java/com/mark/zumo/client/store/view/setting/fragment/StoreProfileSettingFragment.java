@@ -24,7 +24,6 @@ import android.support.v7.widget.AppCompatTextView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
@@ -57,6 +56,7 @@ import butterknife.OnClick;
  */
 public class StoreProfileSettingFragment extends Fragment {
 
+    public static final int REQUEST_CODE_PLACE_ACTIVITY = 15;
     @BindView(R.id.cover_image) AppCompatImageView coverImage;
     @BindView(R.id.thumbnail_image) AppCompatImageView thumbnailImage;
     @BindView(R.id.store_name) AppCompatTextView storeName;
@@ -154,10 +154,11 @@ public class StoreProfileSettingFragment extends Fragment {
 
         LatLng selectedLatLng = new LatLng(store.latitude, store.longitude);
 
-        googleMap.addMarker(new MarkerOptions()
+        MarkerOptions markerOptions = new MarkerOptions()
                 .position(selectedLatLng)
-                .title(store.name));
+                .title(store.name);
 
+        googleMap.addMarker(markerOptions).showInfoWindow();
         CameraUpdate locationUpdate = CameraUpdateFactory.newLatLngZoom(selectedLatLng, 15);
 
         googleMap.setBuildingsEnabled(true);
@@ -176,7 +177,7 @@ public class StoreProfileSettingFragment extends Fragment {
         PlacePicker.IntentBuilder builder = new PlacePicker.IntentBuilder();
 
         try {
-            Intent pickerIntent = builder.build(getActivity());
+            Intent pickerIntent = builder.build(Objects.requireNonNull(getActivity()));
             startActivityForResult(pickerIntent, 15);
         } catch (GooglePlayServicesRepairableException | GooglePlayServicesNotAvailableException ignored) {
         }
@@ -187,16 +188,12 @@ public class StoreProfileSettingFragment extends Fragment {
         super.onActivityResult(requestCode, resultCode, data);
 
         switch (requestCode) {
-            case 15:
-                if (resultCode != AppCompatActivity.RESULT_OK) return;
-                Place place = PlacePicker.getPlace(getActivity(), data);
-                String toastMsg = String.format("Place: %s", place.getName());
-                Toast.makeText(getContext(), toastMsg, Toast.LENGTH_LONG).show();
-
-                LatLng latLng = place.getLatLng();
-//                geoLocation.setLatitude(latLng.latitude);
-//                geoLocation.setLongitude(latLng.longitude);
-//                geoLocation.setAddress(place.getAddress().toString());
+            case REQUEST_CODE_PLACE_ACTIVITY:
+                if (resultCode != AppCompatActivity.RESULT_OK) {
+                    return;
+                }
+                Place place = PlacePicker.getPlace(Objects.requireNonNull(getActivity()), data);
+                storeSettingViewModel.updateStoreLocation(place.getLatLng()).observe(this, this::onLoadStore);
                 break;
         }
     }
@@ -208,7 +205,7 @@ public class StoreProfileSettingFragment extends Fragment {
 
 
     @OnClick(R.id.thumbnail_image)
-    void onClickThunmnailImage() {
+    void onClickThumbnailImage() {
         ImagePickerUtils.showImagePickerStoreThumbnail(getActivity(), 12);
     }
 }

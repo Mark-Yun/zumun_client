@@ -11,7 +11,6 @@ import android.arch.lifecycle.AndroidViewModel;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.support.annotation.NonNull;
-import android.widget.Toast;
 
 import com.mark.zumo.client.core.entity.Menu;
 import com.mark.zumo.client.core.entity.MenuCategory;
@@ -80,8 +79,24 @@ public class MenuSettingViewModel extends AndroidViewModel {
         return liveData;
     }
 
-    public void updateCategorySeqNum(List<MenuCategory> menuCategoryList) {
-        Toast.makeText(getApplication(), "update SeqNum", Toast.LENGTH_SHORT).show();
+    public LiveData<List<MenuCategory>> updateCategorySeqNum(List<MenuCategory> menuCategoryList) {
+        MutableLiveData<List<MenuCategory>> liveData = new MutableLiveData<>();
+        menuManager.updateMenuCateogryList(menuCategoryList)
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnSubscribe(compositeDisposable::add)
+                .doOnSuccess(liveData::setValue)
+                .subscribe();
+        return liveData;
+    }
+
+    public LiveData<MenuCategory> updateCategoryName(MenuCategory menuCategory, String newName) {
+        MutableLiveData<MenuCategory> liveData = new MutableLiveData<>();
+        menuManager.updateMenuCateogryName(menuCategory, newName)
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnSubscribe(compositeDisposable::add)
+                .doOnSuccess(liveData::setValue)
+                .subscribe();
+        return liveData;
     }
 
     @Override

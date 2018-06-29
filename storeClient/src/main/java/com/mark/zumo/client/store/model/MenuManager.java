@@ -51,4 +51,17 @@ public enum MenuManager {
                 .flatMap(menuRepository::createMenuCategory)
                 .subscribeOn(Schedulers.io());
     }
+
+    public Maybe<List<MenuCategory>> updateMenuCateogryList(List<MenuCategory> menuCategoryList) {
+        return Observable.fromIterable(menuCategoryList)
+                .flatMapMaybe(menuRepository::updateMenuCategory)
+                .toList().toMaybe()
+                .subscribeOn(Schedulers.io());
+    }
+
+    public Maybe<MenuCategory> updateMenuCateogryName(MenuCategory menuCategory, String name) {
+        MenuCategory newCategory = new MenuCategory(menuCategory.uuid, name, menuCategory.storeUuid, menuCategory.seqNum);
+        return menuRepository.updateMenuCategory(newCategory)
+                .subscribeOn(Schedulers.io());
+    }
 }

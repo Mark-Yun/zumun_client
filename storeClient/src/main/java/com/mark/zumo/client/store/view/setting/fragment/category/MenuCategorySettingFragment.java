@@ -68,7 +68,6 @@ public class MenuCategorySettingFragment extends Fragment implements OnStartDrag
         ItemTouchHelper.Callback callback = new CategorySettingTouchHelperCallback(adapter);
         itemTouchHelper = new ItemTouchHelper(callback);
         itemTouchHelper.attachToRecyclerView(recyclerView);
-
         menuSettingViewModel.categoryList().observe(this, adapter::setMenuCategoryList);
     }
 

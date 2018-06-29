@@ -24,8 +24,4 @@ public class SignUpViewModel extends AndroidViewModel {
         super(application);
         sessionManager = SessionManager.INSTANCE;
     }
-
-    public boolean isSessionValid() {
-        return sessionManager.isSessionAvailable();
-    }
 }

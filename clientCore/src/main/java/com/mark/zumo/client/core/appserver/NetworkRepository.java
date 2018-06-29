@@ -59,9 +59,9 @@ public interface NetworkRepository {
 
     @PUT("category/{" + MenuCategory.Schema.uuid + "}")
     Maybe<MenuCategory> updateMenuCategory(@Path(MenuCategory.Schema.uuid) final String menuCategoryUuid,
-                                           @Body MenuCategory menuCategory);
+                                           @Body final MenuCategory menuCategory);
 
-    @POST("menu")
+    @POST("category")
     Maybe<MenuCategory> createMenuCategory(@Body MenuCategory menuCategory);
 
 

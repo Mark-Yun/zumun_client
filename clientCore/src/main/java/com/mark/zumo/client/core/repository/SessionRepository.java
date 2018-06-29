@@ -13,7 +13,6 @@ import android.util.Log;
 import com.mark.zumo.client.core.appserver.AppServerServiceProvider;
 import com.mark.zumo.client.core.appserver.NetworkRepository;
 import com.mark.zumo.client.core.entity.SnsToken;
-import com.mark.zumo.client.core.entity.Store;
 import com.mark.zumo.client.core.entity.user.GuestUser;
 import com.mark.zumo.client.core.security.SecurePreferences;
 import com.mark.zumo.client.core.util.DebugUtil;
@@ -63,9 +62,10 @@ public enum SessionRepository {
         }
     }
 
-    public Maybe<Store> getStoreFromCache() {
+    public Maybe<String> getStoreFromCache() {
         //TODO: remove test data
-        return Maybe.fromCallable(DebugUtil::store);
+        return Maybe.fromCallable(DebugUtil::store)
+                .map(store -> store.uuid);
     }
 
     public Maybe<GuestUser> createGuestUser() {

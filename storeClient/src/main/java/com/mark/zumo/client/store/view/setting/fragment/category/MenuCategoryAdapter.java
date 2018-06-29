@@ -6,6 +6,7 @@
 
 package com.mark.zumo.client.store.view.setting.fragment.category;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.arch.lifecycle.LifecycleOwner;
 import android.content.Context;
@@ -26,6 +27,7 @@ import com.mark.zumo.client.store.viewmodel.MenuSettingViewModel;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -68,6 +70,7 @@ class MenuCategoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         }
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     public void onBindViewHolder(@NonNull final RecyclerView.ViewHolder holder, final int position) {
         if (holder instanceof BodyViewHolder) {
@@ -75,10 +78,31 @@ class MenuCategoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             MenuCategory menuCategory = menuCategoryList.get(position - 1);
             viewHolder.name.setText(menuCategory.name);
             viewHolder.reorder.setOnTouchListener((v, event) -> {
-                if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                    dragStartListener.onStartDrag(holder);
+                int action = event.getAction();
+                switch (action) {
+                    case MotionEvent.ACTION_DOWN:
+                        dragStartListener.onStartDrag(holder);
+                        break;
                 }
                 return false;
+            });
+
+            viewHolder.itemView.setOnClickListener(v -> {
+                Context context = viewHolder.itemView.getContext();
+                AppCompatEditText editText = new AppCompatEditText(context);
+                new AlertDialog.Builder(context)
+                        .setTitle(R.string.menu_category_setting_update_category_dialog_title)
+                        .setMessage(R.string.menu_category_setting_update_category_dialog_message)
+                        .setView(editText)
+                        .setCancelable(true)
+                        .setNegativeButton(R.string.button_text_cancel, (dialog, which) -> dialog.dismiss())
+                        .setPositiveButton(R.string.button_text_apply, (dialog, which) -> {
+                            menuSettingViewModel.updateCategoryName(menuCategory, editText.getText().toString())
+                                    .observe(lifecycleOwner, updatedMenuCategory -> viewHolder.name.setText(Objects.requireNonNull(updatedMenuCategory).name));
+                            dialog.dismiss();
+                        })
+                        .create()
+                        .show();
             });
         } else if (holder instanceof HeaderViewHolder) {
             HeaderViewHolder viewHolder = (HeaderViewHolder) holder;
@@ -107,27 +131,8 @@ class MenuCategoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
     @Override
     public void onItemMove(final int fromPosition, final int toPosition) {
-        if (toPosition == 0) {
-            return;
-        }
-
-        if (fromPosition < toPosition) {
-            for (int i = fromPosition - 1; i < toPosition - 1; i++) {
-                Collections.swap(menuCategoryList, i, i + 1);
-            }
-        } else {
-            for (int i = fromPosition - 1; i > toPosition - 1; i--) {
-                Collections.swap(menuCategoryList, i, i - 1);
-            }
-        }
-
-        for (MenuCategory menuCategory : menuCategoryList) {
-            menuCategory.seqNum = menuCategoryList.indexOf(menuCategory);
-        }
-
+        Collections.swap(menuCategoryList, fromPosition - 1, toPosition - 1);
         notifyItemMoved(fromPosition, toPosition);
-
-        menuSettingViewModel.updateCategorySeqNum(menuCategoryList);
     }
 
     @Override
@@ -141,8 +146,26 @@ class MenuCategoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     }
 
     @Override
+    public void onDrop() {
+        saveCategoryListSeq();
+    }
+
+    @Override
     public int getItemViewType(final int position) {
-        return position;
+        return position == 0 ? 0 : 1;
+    }
+
+    private void saveCategoryListSeq() {
+        for (MenuCategory menuCategory : menuCategoryList) {
+            menuCategory.seqNum = menuCategoryList.indexOf(menuCategory);
+        }
+
+        menuSettingViewModel.updateCategorySeqNum(menuCategoryList).observe(lifecycleOwner, this::onLoadMenuCategoryList);
+    }
+
+    private void onLoadMenuCategoryList(List<MenuCategory> menuCategoryList) {
+        this.menuCategoryList = menuCategoryList;
+        notifyDataSetChanged();
     }
 
     @Override

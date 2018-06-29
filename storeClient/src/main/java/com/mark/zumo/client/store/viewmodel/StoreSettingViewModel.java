@@ -12,6 +12,7 @@ import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.support.annotation.NonNull;
 
+import com.google.android.gms.maps.model.LatLng;
 import com.mark.zumo.client.core.entity.Store;
 import com.mark.zumo.client.store.model.SessionManager;
 import com.mark.zumo.client.store.model.StoreManager;
@@ -51,6 +52,17 @@ public class StoreSettingViewModel extends AndroidViewModel {
         MutableLiveData<Store> liveData = new MutableLiveData<>();
         sessionManager.getSessionStore()
                 .flatMap(store -> storeManager.updateStoreName(store, newName))
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnSuccess(liveData::setValue)
+                .doOnSubscribe(compositeDisposable::add)
+                .subscribe();
+        return liveData;
+    }
+
+    public LiveData<Store> updateStoreLocation(LatLng latLng) {
+        MutableLiveData<Store> liveData = new MutableLiveData<>();
+        sessionManager.getSessionStore()
+                .flatMap(store -> storeManager.updateStoreLocation(store, latLng))
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSuccess(liveData::setValue)
                 .doOnSubscribe(compositeDisposable::add)

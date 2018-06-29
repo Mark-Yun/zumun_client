@@ -6,6 +6,7 @@
 
 package com.mark.zumo.client.store.model;
 
+import com.google.android.gms.maps.model.LatLng;
 import com.mark.zumo.client.core.entity.Store;
 import com.mark.zumo.client.core.repository.StoreRepository;
 
@@ -28,6 +29,12 @@ public enum StoreManager {
 
     public Maybe<Store> updateStoreName(Store store, String newName) {
         Store newStore = new Store(store.uuid, newName, store.latitude, store.longitude, store.coverImageUrl, store.thumbnailUrl, store.fcmToken);
+        return storeRepository.updateStore(newStore)
+                .subscribeOn(Schedulers.io());
+    }
+
+    public Maybe<Store> updateStoreLocation(Store store, LatLng latLng) {
+        Store newStore = new Store(store.uuid, store.name, latLng.latitude, latLng.longitude, store.coverImageUrl, store.thumbnailUrl, store.fcmToken);
         return storeRepository.updateStore(newStore)
                 .subscribeOn(Schedulers.io());
     }

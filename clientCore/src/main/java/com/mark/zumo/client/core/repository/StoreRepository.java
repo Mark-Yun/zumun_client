@@ -50,7 +50,7 @@ public enum StoreRepository {
 
     public Maybe<Store> updateStore(Store store) {
         return networkRepository.updateStore(store.uuid, store)
-                .doOnSuccess(updatedStore -> diskRepository.insertStore(updatedStore));
+                .doOnSuccess(diskRepository::insertStore);
     }
 
     public Observable<Store> getStore(String storeUuid) {
@@ -70,6 +70,11 @@ public enum StoreRepository {
                 .doOnError(this::onErrorOccurred);
     }
 
+    public Maybe<Store> getStoreFromApi(String storeUuid) {
+        return networkRepository.getStore(storeUuid)
+                .doOnSuccess(diskRepository::insertStore)
+                .doOnError(this::onErrorOccurred);
+    }
 
     private void onErrorOccurred(Throwable throwable) {
         Log.e(TAG, "onErrorOccurred: ", throwable);

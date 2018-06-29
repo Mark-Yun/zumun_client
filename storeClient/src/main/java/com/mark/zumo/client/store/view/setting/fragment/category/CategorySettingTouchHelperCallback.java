@@ -15,6 +15,7 @@ import android.support.v7.widget.helper.ItemTouchHelper;
 public class CategorySettingTouchHelperCallback extends ItemTouchHelper.Callback {
 
     private final ItemTouchHelperAdapter adapter;
+    private boolean isMoved;
 
     CategorySettingTouchHelperCallback(final ItemTouchHelperAdapter adapter) {
         this.adapter = adapter;
@@ -28,17 +29,39 @@ public class CategorySettingTouchHelperCallback extends ItemTouchHelper.Callback
     }
 
     @Override
+    public boolean isLongPressDragEnabled() {
+        return true;
+    }
+
+    @Override
+    public boolean isItemViewSwipeEnabled() {
+        return true;
+    }
+
+    @Override
     public boolean onMove(final RecyclerView recyclerView,
-                          final RecyclerView.ViewHolder viewHolder,
+                          final RecyclerView.ViewHolder source,
                           final RecyclerView.ViewHolder target) {
-
-        adapter.onItemMove(viewHolder.getAdapterPosition(), target.getAdapterPosition());
-
+        if (source.getItemViewType() != target.getItemViewType()) {
+            return false;
+        }
+        adapter.onItemMove(source.getAdapterPosition(), target.getAdapterPosition());
+        isMoved = true;
         return true;
     }
 
     @Override
     public void onSwiped(final RecyclerView.ViewHolder viewHolder, final int direction) {
-        adapter.onItemDismiss(viewHolder.getAdapterPosition());
+        adapter.onItemDismiss(viewHolder.getAdapterPosition() - 1);
+    }
+
+    @Override
+    public void onSelectedChanged(RecyclerView.ViewHolder viewHolder, int actionState) {
+        super.onSelectedChanged(viewHolder, actionState);
+
+        if (actionState == ItemTouchHelper.ACTION_STATE_IDLE && isMoved) {
+            adapter.onDrop();
+            isMoved = false;
+        }
     }
 }
