@@ -111,7 +111,7 @@ public enum P2pClient {
         return startDiscovery(activity, customerUuid)
                 .map(endPointMap::get)
                 .doOnError(throwable -> Log.e(TAG, "findStore: ", throwable))
-                .subscribeOn(Schedulers.newThread());
+                .subscribeOn(Schedulers.io());
     }
 
     @SuppressWarnings("unused")

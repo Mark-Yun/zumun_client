@@ -15,7 +15,6 @@ import android.support.annotation.NonNull;
 
 import com.mark.zumo.client.core.entity.Store;
 import com.mark.zumo.client.core.p2p.P2pClient;
-import com.mark.zumo.client.core.util.DebugUtil;
 import com.mark.zumo.client.customer.model.NotificationHandler;
 import com.mark.zumo.client.customer.model.OrderManager;
 import com.mark.zumo.client.customer.model.SessionManager;
@@ -47,7 +46,6 @@ public class MainViewModel extends AndroidViewModel {
         notificationHandler = NotificationHandler.INSTANCE;
 
         compositeDisposable = new CompositeDisposable();
-        notificationHandler.requestOrderProgressNotification(DebugUtil.menuOrder());
     }
 
     public LiveData<Store> findStore(Activity activity) {

@@ -25,6 +25,7 @@ import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.ContextCompat;
 
 import com.mark.zumo.client.core.entity.MenuOrder;
+import com.mark.zumo.client.core.entity.Store;
 import com.mark.zumo.client.core.util.context.ContextHolder;
 import com.mark.zumo.client.customer.R;
 import com.mark.zumo.client.customer.view.main.MainActivity;
@@ -38,9 +39,11 @@ public enum NotificationHandler {
     INSTANCE;
 
     private Context context;
+    private StoreManager storeManager;
 
     NotificationHandler() {
         context = ContextHolder.getContext();
+        storeManager = StoreManager.INSTANCE;
     }
 
     public void requestOrderProgressNotification(@NonNull MenuOrder menuOrder) {
@@ -52,8 +55,10 @@ public enum NotificationHandler {
             Objects.requireNonNull(notificationManager).createNotificationChannel(notificationChanel);
         }
 
-        Notification orderNotification = createOrderNotification(menuOrder);
-        Objects.requireNonNull(notificationManager).notify(menuOrder.uuid.hashCode(), orderNotification);
+        storeManager.getStoreFromDisk(menuOrder.storeUuid)
+                .map(store -> createOrderNotification(store, menuOrder))
+                .doOnSuccess(notification -> notificationManager.notify(menuOrder.uuid.hashCode(), notification))
+                .subscribe();
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -63,14 +68,14 @@ public enum NotificationHandler {
         return new NotificationChannel(menuOrder.uuid, name, importance);
     }
 
-    private Notification createOrderNotification(MenuOrder menuOrder) {
+    private Notification createOrderNotification(Store store, MenuOrder menuOrder) {
         int orderStateRes = MenuOrder.State.of(menuOrder.state).stringRes;
         String orderStateString = context.getString(orderStateRes);
         Intent intent = new Intent(context, MainActivity.class);
         PendingIntent activity = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         return new NotificationCompat.Builder(context, menuOrder.uuid)
-                .setContentTitle(menuOrder.orderName)
+                .setContentTitle(store.name + " - " + menuOrder.orderName)
                 .setChannelId(menuOrder.uuid)
                 .setContentText(orderStateString)
                 .setWhen(System.currentTimeMillis())
