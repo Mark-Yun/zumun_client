@@ -15,6 +15,7 @@ import android.support.annotation.NonNull;
 
 import com.mark.zumo.client.core.entity.Store;
 import com.mark.zumo.client.core.p2p.P2pClient;
+import com.mark.zumo.client.core.util.DebugUtil;
 import com.mark.zumo.client.customer.model.NotificationHandler;
 import com.mark.zumo.client.customer.model.OrderManager;
 import com.mark.zumo.client.customer.model.SessionManager;
@@ -46,7 +47,7 @@ public class MainViewModel extends AndroidViewModel {
         notificationHandler = NotificationHandler.INSTANCE;
 
         compositeDisposable = new CompositeDisposable();
-//        notificationHandler.requestOrderProgressNotification(DebugUtil.menuOrder());
+        notificationHandler.requestOrderProgressNotification(DebugUtil.menuOrder());
     }
 
     public LiveData<Store> findStore(Activity activity) {
@@ -54,7 +55,7 @@ public class MainViewModel extends AndroidViewModel {
 
         sessionManager.getSessionUser()
                 .map(guestUser -> guestUser.uuid)
-                .flatMap(sessionId -> p2pClient.findStore(activity, sessionId))
+                .flatMap(customerUuid -> p2pClient.findStore(activity, customerUuid))
                 .flatMapObservable(storeManager::getStore)
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnNext(liveData::setValue)

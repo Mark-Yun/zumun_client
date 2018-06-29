@@ -14,7 +14,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.mark.zumo.client.core.entity.Menu;
 import com.mark.zumo.client.core.entity.MenuOrder;
 import com.mark.zumo.client.core.entity.Store;
 import com.mark.zumo.client.core.entity.user.GuestUser;
@@ -85,11 +84,6 @@ public class P2pDebugActivity extends Activity {
     }
 
     private void sendOrder(View v) {
-        p2pClient.sendOrder(testMenuOrder, testStore.uuid)
-                .observeOn(AndroidSchedulers.mainThread())
-                .doOnSuccess(this::updateConsole)
-                .subscribe();
-        initConsole("Send MenuOrder...");
     }
 
     private void startPublish(View v) {
@@ -103,10 +97,6 @@ public class P2pDebugActivity extends Activity {
     }
 
     private void startSubscribe(View v) {
-        p2pClient.subscribe(this)
-                .observeOn(AndroidSchedulers.mainThread())
-                .doOnNext(stores -> initConsole(getSubscribeConsoleText(stores)))
-                .subscribe();
         initConsole(currentUser + "\n");
     }
 
@@ -119,7 +109,6 @@ public class P2pDebugActivity extends Activity {
     }
 
     private void stopSubscribe(View v) {
-        p2pClient.unsubscribe();
         initConsole("unsubscribed");
     }
 
@@ -137,16 +126,6 @@ public class P2pDebugActivity extends Activity {
     }
 
     private void acquireMenuItems(View view) {
-        p2pClient.acquireMenuItems(this, DebugUtil.guestUser().uuid)
-                .observeOn(AndroidSchedulers.mainThread())
-                .doOnSuccess(menuItemList -> {
-                    for (Menu menu : menuItemList) {
-                        updateConsole(menu + "\n");
-                    }
-                })
-                .subscribe();
-
-        initConsole("Discovering...");
     }
 
     @NonNull

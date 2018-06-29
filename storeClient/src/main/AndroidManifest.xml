@@ -15,17 +15,13 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme.NoActionBar">
 
-        <service
-            android:name="com.mark.zumo.client.store.app.fcm.StoreFcmService"
-            android:exported="false">
+        <service android:name="com.mark.zumo.client.store.app.fcm.StoreFcmService">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
 
-        <service
-            android:name="com.mark.zumo.client.store.app.fcm.StoreFcmIdService"
-            android:exported="false">
+        <service android:name="com.mark.zumo.client.store.app.fcm.StoreFcmIdService">
             <intent-filter>
                 <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
             </intent-filter>
