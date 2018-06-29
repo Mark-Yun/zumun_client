@@ -65,7 +65,7 @@ public class MenuOrder implements Serializable {
 
     public enum State {
 
-        PAYMENT_READY(R.string.order_state_payment_ready, R.color.order_state_payment_ready),
+        REQUESTED(R.string.order_state_requested, R.color.order_state_requested),
         ACCEPTED(R.string.order_state_accepted, R.color.order_state_accepted),
         COMPLETE(R.string.order_state_complete, R.color.order_state_complete),
         REJECTED(R.string.order_state_rejected, R.color.order_state_rejected),

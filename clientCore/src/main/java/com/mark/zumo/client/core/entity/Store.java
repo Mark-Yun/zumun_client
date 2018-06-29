@@ -35,17 +35,14 @@ public class Store {
     public final String coverImageUrl;
     @SerializedName(Schema.thumbnailUrl) @ColumnInfo(name = Schema.thumbnailUrl)
     public final String thumbnailUrl;
-    @SerializedName(Schema.fcmToken) @ColumnInfo(name = Schema.fcmToken)
-    public final String fcmToken;
 
-    public Store(@NonNull final String uuid, final String name, final double latitude, final double longitude, final String coverImageUrl, final String thumbnailUrl, final String fcmToken) {
+    public Store(@NonNull final String uuid, final String name, final double latitude, final double longitude, final String coverImageUrl, final String thumbnailUrl) {
         this.uuid = uuid;
         this.name = name;
         this.latitude = latitude;
         this.longitude = longitude;
         this.coverImageUrl = coverImageUrl;
         this.thumbnailUrl = thumbnailUrl;
-        this.fcmToken = fcmToken;
     }
 
     @Override
@@ -60,6 +57,5 @@ public class Store {
         String longitude = "longitude";
         String coverImageUrl = "cover_image_url";
         String thumbnailUrl = "thumbnail_image_url";
-        String fcmToken = "fcm_token";
     }
 }

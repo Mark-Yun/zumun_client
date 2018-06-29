@@ -35,7 +35,7 @@ class StoreMessage {
         String thumbnailImageUrl = splitContent[5];
         String fcmToken = splitContent[6];
 
-        Store store = new Store(id, name, latitude, longitude, coverImageUrl, thumbnailImageUrl, fcmToken);
+        Store store = new Store(id, name, latitude, longitude, coverImageUrl, thumbnailImageUrl);
         return new StoreMessage(store);
     }
 

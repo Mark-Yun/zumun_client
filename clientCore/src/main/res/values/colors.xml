@@ -22,7 +22,7 @@
     <color name="colorBadge">#EEF43F34</color>
     <color name="backgroundMenuTitle">#32212121</color>
 
-    <color name="order_state_payment_ready">@android:color/holo_blue_dark</color>
+    <color name="order_state_requested">@android:color/holo_blue_dark</color>
     <color name="order_state_accepted">@android:color/holo_orange_dark</color>
     <color name="order_state_complete">@android:color/holo_green_dark</color>
     <color name="order_state_rejected">@android:color/holo_red_dark</color>

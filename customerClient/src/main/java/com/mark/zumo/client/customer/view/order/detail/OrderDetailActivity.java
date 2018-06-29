@@ -95,7 +95,7 @@ public class OrderDetailActivity extends AppCompatActivity {
     private void onLoadMenuOrder(MenuOrder menuOrder) {
         totalPrice.setText(NumberFormat.getCurrencyInstance().format(menuOrder.totalPrice));
         MenuOrder.State state = MenuOrder.State.of(menuOrder.state);
-        cancelOrder.setVisibility(state == MenuOrder.State.PAYMENT_READY ? View.VISIBLE : View.GONE);
+        cancelOrder.setVisibility(state == MenuOrder.State.REQUESTED ? View.VISIBLE : View.GONE);
     }
 
     @OnClick(R.id.cancel_order)

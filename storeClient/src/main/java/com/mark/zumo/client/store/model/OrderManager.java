@@ -62,7 +62,7 @@ public enum OrderManager {
         orderRepository.getMenuOrderListByStoreUuid(storeUuid, 0, 30)
                 .map(Observable::fromIterable)
                 .doOnNext(menuOrderObservable ->
-                        menuOrderObservable.filter(menuOrder -> menuOrder.state == MenuOrder.State.PAYMENT_READY.ordinal())
+                        menuOrderObservable.filter(menuOrder -> menuOrder.state == MenuOrder.State.REQUESTED.ordinal())
                                 .toList()
                                 .doOnSuccess(requestedOrderBucket::setOrder)
                                 .subscribeOn(Schedulers.io())
