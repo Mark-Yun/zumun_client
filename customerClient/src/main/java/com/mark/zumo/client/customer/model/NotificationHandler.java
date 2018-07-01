@@ -79,7 +79,7 @@ public enum NotificationHandler {
                 .setChannelId(menuOrder.uuid)
                 .setContentText(orderStateString)
                 .setWhen(System.currentTimeMillis())
-                .setSmallIcon(R.drawable.order)
+                .setSmallIcon(R.drawable.ic_stat_order)
                 .setColor(ContextCompat.getColor(context, R.color.colorAccent))
                 .setContentIntent(activity)
                 .build();
