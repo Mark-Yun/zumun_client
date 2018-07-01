@@ -15,9 +15,11 @@ import android.support.annotation.NonNull;
 import com.mark.zumo.client.core.entity.Store;
 import com.mark.zumo.client.customer.R;
 import com.mark.zumo.client.customer.model.CustomerLocationManager;
+import com.mark.zumo.client.customer.model.SessionManager;
 import com.mark.zumo.client.customer.model.StoreManager;
 
 import java.util.List;
+import java.util.Locale;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
@@ -29,6 +31,7 @@ public class PlaceViewModel extends AndroidViewModel {
 
     private final StoreManager storeManager;
     private final CustomerLocationManager locationManager;
+    private final SessionManager sessionManager;
 
     private final CompositeDisposable disposables;
 
@@ -36,8 +39,10 @@ public class PlaceViewModel extends AndroidViewModel {
         super(application);
 
         storeManager = StoreManager.INSTANCE;
-        disposables = new CompositeDisposable();
+        sessionManager = SessionManager.INSTANCE;
         locationManager = CustomerLocationManager.INSTANCE;
+
+        disposables = new CompositeDisposable();
     }
 
     public LiveData<List<Store>> nearByStore() {
@@ -55,9 +60,11 @@ public class PlaceViewModel extends AndroidViewModel {
     public LiveData<List<Store>> latestVisitStore() {
         MutableLiveData<List<Store>> latestVisitStore = new MutableLiveData<>();
 
-        storeManager.latestVisitStore()
+        sessionManager.getSessionUser()
+                .map(guestUser -> guestUser.uuid)
+                .flatMap(userUuid -> storeManager.latestVisitStore(userUuid, 5))
                 .observeOn(AndroidSchedulers.mainThread())
-                .doOnNext(latestVisitStore::setValue)
+                .doOnSuccess(latestVisitStore::setValue)
                 .doOnSubscribe(disposables::add)
                 .subscribe();
 
@@ -67,7 +74,7 @@ public class PlaceViewModel extends AndroidViewModel {
     public LiveData<String> distanceFrom(double latitude, double longitude) {
         MutableLiveData<String> liveData = new MutableLiveData<>();
         locationManager.distanceFrom(latitude, longitude)
-                .map(this::convertKm)
+                .map(this::convertDistance)
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnNext(liveData::setValue)
                 .doOnSubscribe(disposables::add)
@@ -76,11 +83,12 @@ public class PlaceViewModel extends AndroidViewModel {
         return liveData;
     }
 
-    private String convertKm(float distance) {
+    private String convertDistance(float distance) {
         if (distance < 1000) {
-            return getApplication().getString(R.string.distance_format_meter, String.valueOf(distance));
+            String distMeter = String.format(Locale.getDefault(), "%.2f", distance);
+            return getApplication().getString(R.string.distance_format_meter, distMeter);
         } else {
-            String distKm = String.format("%.2f", distance / 1000);
+            String distKm = String.format(Locale.getDefault(), "%.2f", distance / 1000);
             return getApplication().getString(R.string.distance_format_kilo_meter, distKm);
         }
     }

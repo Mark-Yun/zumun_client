@@ -15,8 +15,10 @@ import android.transition.AutoTransition;
 import android.view.Window;
 
 import com.mark.zumo.client.core.app.BaseActivity;
+import com.mark.zumo.client.core.util.DebugUtil;
 import com.mark.zumo.client.core.view.Navigator;
 import com.mark.zumo.client.customer.R;
+import com.mark.zumo.client.customer.model.NotificationHandler;
 import com.wonderkiln.blurkit.BlurLayout;
 
 import butterknife.BindView;
@@ -43,6 +45,8 @@ public class MainActivity extends BaseActivity {
         inflateMenuFragment();
 
         Navigator.addBlurFilter(blurFilter);
+
+        NotificationHandler.INSTANCE.requestOrderProgressNotification(DebugUtil.menuOrder());
     }
 
     private void inflateMenuFragment() {

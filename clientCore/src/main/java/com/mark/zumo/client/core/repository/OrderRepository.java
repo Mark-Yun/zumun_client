@@ -65,7 +65,7 @@ public enum OrderRepository {
 
     public Maybe<MenuOrder> getMenuOrderFromApi(String orderUuid) {
         return networkRepository.getMenuOrder(orderUuid)
-                .doOnSuccess(menuOrder -> diskRepository.insertMenuOrder(menuOrder))
+                .doOnSuccess(diskRepository::insertMenuOrder)
                 .subscribeOn(Schedulers.io());
     }
 
@@ -91,6 +91,11 @@ public enum OrderRepository {
         return Maybe.merge(menuOrderListDB, menuOrderListApi)
                 .toObservable()
                 .distinctUntilChanged(new ListComparator<>());
+    }
+
+    public Maybe<List<MenuOrder>> getMenuOrderListByCustomerUuidFromDisk(String customerUuid, int offset, int limit) {
+        return diskRepository.getMenuOrderByCustomerUuid(customerUuid, offset, limit)
+                .doOnError(throwable -> Log.e(TAG, "getMenuOrderListByCustomerUuid: ", throwable));
     }
 
     public Observable<List<MenuOrder>> getMenuOrderListByStoreUuid(String storeUuid, int offset, int limit) {

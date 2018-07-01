@@ -10,6 +10,7 @@ import android.util.Log;
 
 import com.mark.zumo.client.core.entity.Store;
 import com.mark.zumo.client.core.provider.AppLocationProvider;
+import com.mark.zumo.client.core.repository.OrderRepository;
 import com.mark.zumo.client.core.repository.StoreRepository;
 
 import java.util.List;
@@ -27,12 +28,16 @@ public enum StoreManager {
     INSTANCE;
 
     private static final String TAG = "StoreManager";
+
     private final StoreRepository storeRepository;
+    private final OrderRepository orderRepository;
+
     private final AppLocationProvider locationProvider;
 
     StoreManager() {
         storeRepository = StoreRepository.INSTANCE;
         locationProvider = AppLocationProvider.INSTANCE;
+        orderRepository = OrderRepository.INSTANCE;
     }
 
     public Observable<List<Store>> nearByStore() {
@@ -43,10 +48,15 @@ public enum StoreManager {
                 .doOnNext(stores -> Log.d(TAG, "nearByStore: " + stores.size()));
     }
 
-    public Observable<List<Store>> latestVisitStore() {
-        return storeRepository.latestVisitStore()
-                .subscribeOn(Schedulers.io())
-                .doOnNext(stores -> Log.d(TAG, "latestVisitStore: " + stores.size()));
+    public Maybe<List<Store>> latestVisitStore(String customerUuid, int limit) {
+        return orderRepository.getMenuOrderListByCustomerUuidFromDisk(customerUuid, 0, 10)
+                .flatMapObservable(Observable::fromIterable)
+                .map(menuOrder -> menuOrder.storeUuid)
+                .distinct().take(limit)
+                .flatMapMaybe(storeRepository::getStoreFromApi)
+                .toList()
+                .toMaybe()
+                .subscribeOn(Schedulers.io());
     }
 
     public Observable<Store> getStore(String storeUuid) {
