@@ -9,8 +9,8 @@
     <color name="colorTextDisable">#FF757575</color>
 
     <color name="colorPrimary">#FFFFFF</color>
-    <color name="colorPrimaryLight">#212121</color>
-    <color name="colorPrimaryDark">#FFFFFF</color>
+    <color name="colorPrimaryDark">#212121</color>
+    <color name="colorPrimaryLight">#FFFFFF</color>
     <color name="colorTextDark">#DEFFFFFF</color>
     <color name="colorTextLight">#DE000000</color>
     <color name="colorSecondaryTextLight">#55000000</color>
