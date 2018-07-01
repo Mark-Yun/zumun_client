@@ -6,8 +6,6 @@
 
 package com.mark.zumo.client.store.model;
 
-import android.util.Log;
-
 import com.mark.zumo.client.core.entity.SnsToken;
 import com.mark.zumo.client.core.entity.Store;
 import com.mark.zumo.client.core.repository.SessionRepository;
@@ -40,7 +38,6 @@ public enum SessionManager {
     public Maybe<Store> getSessionStore() {
         return sessionRepository.getStoreFromCache()
                 .flatMap(storeRepository::getStoreFromApi)
-                .doOnError(throwable -> Log.e(TAG, "getSessionStore: ", throwable))
                 .subscribeOn(Schedulers.io());
     }
 

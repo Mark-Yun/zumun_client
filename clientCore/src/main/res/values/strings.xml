@@ -13,4 +13,8 @@
     <string name="order_state_complete">Complete</string>
     <string name="order_state_rejected">Rejected</string>
     <string name="order_state_canceled">Canceled</string>
+
+    <string name="error_message_on_io_exception">Cannot update. Please retry later.</string>
+    <string name="error_message_on_http_exception">Cannot update</string>
+    <string name="error_message_on_unknown_host_exception">Cannot connect server</string>
 </resources>

@@ -6,8 +6,6 @@
 
 package com.mark.zumo.client.core.repository;
 
-import android.util.Log;
-
 import com.mark.zumo.client.core.appserver.AppServerServiceProvider;
 import com.mark.zumo.client.core.appserver.NetworkRepository;
 import com.mark.zumo.client.core.dao.AppDatabaseProvider;
@@ -53,13 +51,11 @@ public enum OrderRepository {
                     return arrayList;
                 })
                 .flatMapMaybe(networkRepository::createOrder)
-                .doOnError(throwable -> Log.e(TAG, "createMenuOrder: ", throwable))
                 .doOnNext(diskRepository::insertMenuOrder);
     }
 
     public Maybe<MenuOrder> getMenuOrderFromDisk(String orderUuid) {
         return diskRepository.getMenuOrder(orderUuid)
-                .doOnError(throwable -> Log.e(TAG, "getMenuOrderFromDisk: ", throwable))
                 .subscribeOn(Schedulers.io());
     }
 
@@ -70,10 +66,8 @@ public enum OrderRepository {
     }
 
     public Observable<List<OrderDetail>> getOrderDetailListByOrderUuid(String orderUuid) {
-        Maybe<List<OrderDetail>> orderDetailListDB = diskRepository.getOrderDetailListByMenuOrderUuid(orderUuid)
-                .doOnError(throwable -> Log.e(TAG, "getOrderDetailListByOrderUuid: ", throwable));
+        Maybe<List<OrderDetail>> orderDetailListDB = diskRepository.getOrderDetailListByMenuOrderUuid(orderUuid);
         Maybe<List<OrderDetail>> orderDetailListApi = networkRepository.getOrderDetailList(orderUuid)
-                .doOnError(throwable -> Log.e(TAG, "getOrderDetailListByOrderUuid: ", throwable))
                 .doOnSuccess(diskRepository::insertOrderDetailList);
 
         return Maybe.merge(orderDetailListDB, orderDetailListApi)
@@ -82,10 +76,8 @@ public enum OrderRepository {
     }
 
     public Observable<List<MenuOrder>> getMenuOrderListByCustomerUuid(String customerUuid, int offset, int limit) {
-        Maybe<List<MenuOrder>> menuOrderListDB = diskRepository.getMenuOrderByCustomerUuid(customerUuid, offset, limit)
-                .doOnError(throwable -> Log.e(TAG, "getMenuOrderListByCustomerUuid: ", throwable));
+        Maybe<List<MenuOrder>> menuOrderListDB = diskRepository.getMenuOrderByCustomerUuid(customerUuid, offset, limit);
         Maybe<List<MenuOrder>> menuOrderListApi = networkRepository.getMenuOrderListByCustomerUuid(customerUuid, offset, limit)
-                .doOnError(throwable -> Log.e(TAG, "getMenuOrderListByCustomerUuid: ", throwable))
                 .doOnSuccess(diskRepository::insertMenuOrderList);
 
         return Maybe.merge(menuOrderListDB, menuOrderListApi)
@@ -94,8 +86,7 @@ public enum OrderRepository {
     }
 
     public Maybe<List<MenuOrder>> getMenuOrderListByCustomerUuidFromDisk(String customerUuid, int offset, int limit) {
-        return diskRepository.getMenuOrderByCustomerUuid(customerUuid, offset, limit)
-                .doOnError(throwable -> Log.e(TAG, "getMenuOrderListByCustomerUuid: ", throwable));
+        return diskRepository.getMenuOrderByCustomerUuid(customerUuid, offset, limit);
     }
 
     public Observable<List<MenuOrder>> getMenuOrderListByStoreUuid(String storeUuid, int offset, int limit) {
@@ -110,7 +101,6 @@ public enum OrderRepository {
 
     public Maybe<MenuOrder> updateMenuOrderState(String menuOrderUuid, int state) {
         return networkRepository.updateMenuOrderState(menuOrderUuid, state)
-                .doOnError(throwable -> Log.e(TAG, "updateMenuOrderState: ", throwable))
                 .doOnSuccess(diskRepository::insertMenuOrder);
     }
 

@@ -6,8 +6,6 @@
 
 package com.mark.zumo.client.core.repository;
 
-import android.util.Log;
-
 import com.mark.zumo.client.core.appserver.AppServerServiceProvider;
 import com.mark.zumo.client.core.appserver.NetworkRepository;
 import com.mark.zumo.client.core.dao.AppDatabaseProvider;
@@ -41,10 +39,6 @@ public enum MenuRepository {
         networkRepository = AppServerServiceProvider.INSTANCE.networkRepository;
     }
 
-    private void onErrorOccurred(Throwable throwable) {
-        Log.e(TAG, "onErrorOccurred: ", throwable);
-    }
-
     public Observable<List<Menu>> getMenuItemsOfStore(String storeUuid) {
         Maybe<List<Menu>> menuListDB = diskRepository.getMenuList(storeUuid);
         Maybe<List<Menu>> menuListApi = networkRepository.getMenuList(storeUuid)
@@ -52,7 +46,6 @@ public enum MenuRepository {
 
         return Maybe.merge(menuListDB, menuListApi)
                 .toObservable()
-                .doOnError(this::onErrorOccurred)
                 .distinctUntilChanged(new ListComparator<>());
     }
 
@@ -63,7 +56,6 @@ public enum MenuRepository {
 
         return Maybe.merge(menuOptionListDB, menuOptionListApi)
                 .toObservable()
-                .doOnError(this::onErrorOccurred)
                 .distinctUntilChanged(new ListComparator<>());
     }
 

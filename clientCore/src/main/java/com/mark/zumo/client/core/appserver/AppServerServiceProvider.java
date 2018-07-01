@@ -38,7 +38,7 @@ public enum AppServerServiceProvider {
 
     private static final String TAG = "AppServerServiceProvider";
 
-    private static final int MAX_CACHE_SIZE = 20 * 1024 * 1024;
+    private static final int MAX_CACHE_SIZE = 5 * 1024 * 1024;
 
     public NetworkRepository networkRepository;
     public PaymentService paymentService;
@@ -68,6 +68,7 @@ public enum AppServerServiceProvider {
                 .addInterceptor(logger())
                 .connectTimeout(20, TimeUnit.SECONDS)
                 .readTimeout(20, TimeUnit.SECONDS)
+                .writeTimeout(20, TimeUnit.SECONDS)
                 .build();
     }
 
@@ -83,11 +84,6 @@ public enum AppServerServiceProvider {
     }
 
     private static Interceptor interceptor(@NonNull Bundle bundle) {
-        return getInterceptor(bundle);
-    }
-
-    @NonNull
-    private static Interceptor getInterceptor(final @NonNull Bundle bundle) {
         return chain -> {
             Request original = chain.request();
             Request.Builder builder = original.newBuilder();

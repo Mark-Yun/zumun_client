@@ -110,7 +110,6 @@ public enum P2pClient {
     public Maybe<String> findStore(Activity activity, String customerUuid) {
         return startDiscovery(activity, customerUuid)
                 .map(endPointMap::get)
-                .doOnError(throwable -> Log.e(TAG, "findStore: ", throwable))
                 .subscribeOn(Schedulers.io());
     }
 

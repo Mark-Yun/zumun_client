@@ -7,7 +7,6 @@
 package com.mark.zumo.client.core.repository;
 
 import android.location.Location;
-import android.util.Log;
 
 import com.mark.zumo.client.core.appserver.AppServerServiceProvider;
 import com.mark.zumo.client.core.appserver.NetworkRepository;
@@ -60,23 +59,16 @@ public enum StoreRepository {
 
         return Maybe.merge(storeDB, storeApi)
                 .toObservable()
-                .doOnError(this::onErrorOccurred)
                 .subscribeOn(Schedulers.io())
                 .distinctUntilChanged(new EntityComparator<>());
     }
 
     public Maybe<Store> getStoreFromDisk(String storeUuid) {
-        return diskRepository.getStore(storeUuid)
-                .doOnError(this::onErrorOccurred);
+        return diskRepository.getStore(storeUuid);
     }
 
     public Maybe<Store> getStoreFromApi(String storeUuid) {
         return networkRepository.getStore(storeUuid)
-                .doOnSuccess(diskRepository::insertStore)
-                .doOnError(this::onErrorOccurred);
-    }
-
-    private void onErrorOccurred(Throwable throwable) {
-        Log.e(TAG, "onErrorOccurred: ", throwable);
+                .doOnSuccess(diskRepository::insertStore);
     }
 }

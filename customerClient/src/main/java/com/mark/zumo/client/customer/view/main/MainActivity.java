@@ -7,18 +7,13 @@
 package com.mark.zumo.client.customer.view.main;
 
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.transition.AutoTransition;
-import android.view.Window;
 
 import com.mark.zumo.client.core.app.BaseActivity;
-import com.mark.zumo.client.core.util.DebugUtil;
 import com.mark.zumo.client.core.view.Navigator;
 import com.mark.zumo.client.customer.R;
-import com.mark.zumo.client.customer.model.NotificationHandler;
 import com.wonderkiln.blurkit.BlurLayout;
 
 import butterknife.BindView;
@@ -35,18 +30,11 @@ public class MainActivity extends BaseActivity {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            getWindow().requestFeature(Window.FEATURE_CONTENT_TRANSITIONS);
-            getWindow().setExitTransition(new AutoTransition());
-        }
-
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
         inflateMenuFragment();
 
         Navigator.addBlurFilter(blurFilter);
-
-        NotificationHandler.INSTANCE.requestOrderProgressNotification(DebugUtil.menuOrder());
     }
 
     private void inflateMenuFragment() {

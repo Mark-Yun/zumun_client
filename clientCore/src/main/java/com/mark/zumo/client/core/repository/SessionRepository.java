@@ -70,14 +70,12 @@ public enum SessionRepository {
 
     public Maybe<GuestUser> createGuestUser() {
         return networkRepository.createGuestUser()
-                .doOnError(throwable -> Log.e(TAG, "createGuestUser: ", throwable))
                 .retryWhen(errors -> errors.flatMap(error -> Flowable.timer(3, TimeUnit.SECONDS)))
                 .retry(2);
     }
 
     public Maybe<SnsToken> createToken(SnsToken snsToken) {
         return networkRepository.createSnsToken(snsToken)
-                .doOnError(throwable -> Log.e(TAG, "createToken: ", throwable))
                 .subscribeOn(Schedulers.io());
     }
 

@@ -11,8 +11,6 @@
  */
 package com.mark.zumo.client.core.payment.kakao;
 
-import android.util.Log;
-
 import com.mark.zumo.client.core.appserver.AppServerServiceProvider;
 import com.mark.zumo.client.core.appserver.PaymentService;
 import com.mark.zumo.client.core.entity.MenuOrder;
@@ -51,7 +49,6 @@ public enum KakaoPayAdapter {
 
     public Maybe<PaymentToken> createPaymentToken(PaymentToken paymentToken) {
         return paymentService.createPaymentToken(paymentToken)
-                .doOnError(throwable -> Log.e(TAG, "createPaymentToken: ", throwable))
                 .retryWhen(flowable -> flowable.flatMap(error -> Flowable.timer(3, TimeUnit.SECONDS)))
                 .retry(3);
     }
