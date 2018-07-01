@@ -11,7 +11,7 @@
         <item name="android:windowActivityTransitions" tools:targetApi="lollipop">true</item>
         <item name="android:colorControlHighlight" tools:targetApi="lollipop">@color/colorDivider
         </item>
-        <item name="colorPrimary">@color/colorPrimaryDark</item>
+        <item name="colorPrimary">@color/colorPrimary</item>
         <item name="android:colorPrimaryDark" tools:targetApi="m">@color/colorPrimaryDark</item>
         <item name="android:windowBackground">@color/colorPrimary</item>
         <item name="android:textColorHighlight">@color/colorAccent</item>
