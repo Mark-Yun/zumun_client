@@ -29,20 +29,15 @@
 
         <activity android:name="com.mark.zumo.client.store.view.signup.SignUpActivity" />
 
-        <activity android:name="com.mark.zumo.client.store.view.acceptedorder.AcceptedOrderActivity">
+        <activity android:name=".view.setting.SettingActivity" />
+
+        <activity android:name="com.tangxiaolv.telegramgallery.GalleryActivity" />
+        <activity android:name=".view.main.MainActivity">
             <intent-filter>
                 <category android:name="android.intent.category.LAUNCHER" />
                 <action android:name="android.intent.action.MAIN" />
             </intent-filter>
         </activity>
-
-        <activity
-            android:name="com.mark.zumo.client.store.view.requestedorder.RequestedOrderActivity"
-            android:theme="@style/AppTheme.NoActionBar.Translucent" />
-
-        <activity android:name=".view.setting.SettingActivity" />
-
-        <activity android:name="com.tangxiaolv.telegramgallery.GalleryActivity" />
     </application>
 
 </manifest>

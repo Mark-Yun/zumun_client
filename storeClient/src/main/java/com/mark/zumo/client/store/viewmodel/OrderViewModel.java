@@ -75,6 +75,16 @@ public class OrderViewModel extends AndroidViewModel {
         return liveData;
     }
 
+    public LiveData<MenuOrder> getMenuOrderFromDisk(String menuOrderUuid) {
+        MutableLiveData<MenuOrder> liveData = new MutableLiveData<>();
+        orderManager.getMenuOrderFromDisk(menuOrderUuid)
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnSuccess(liveData::setValue)
+                .doOnSubscribe(compositeDisposable::add)
+                .subscribe();
+        return liveData;
+    }
+
     public LiveData<List<OrderDetail>> orderDetailList(String orderUuid) {
         MutableLiveData<List<OrderDetail>> liveData = new MutableLiveData<>();
         orderManager.getOrderDetailList(orderUuid)

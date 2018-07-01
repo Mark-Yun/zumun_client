@@ -125,6 +125,11 @@ public enum OrderManager {
                 .subscribeOn(Schedulers.io());
     }
 
+    public Maybe<MenuOrder> getMenuOrderFromDisk(String orderUuid) {
+        return orderRepository.getMenuOrderFromDisk(orderUuid)
+                .subscribeOn(Schedulers.io());
+    }
+
     private Maybe<MenuOrder> updateOrderState(MenuOrder menuOrder, MenuOrder.State menuOrderState) {
         String menuOrderUuid = menuOrder.uuid;
         int state = menuOrderState.ordinal();

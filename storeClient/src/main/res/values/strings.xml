@@ -60,4 +60,15 @@
 
     <string name="menu_category_setting_update_category_dialog_title">Update category</string>
     <string name="menu_category_setting_update_category_dialog_message">Insert new category name</string>
+
+    <string name="content_desc_navigation_drawer_open">Open navigation drawer</string>
+    <string name="content_desc_navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="menu_title_order">Order</string>
+
+    <string name="requested_order_indicator_title">Requested</string>
+    <string name="accepted_order_indicator_title">Accepted</string>
+    <string name="complete_order_indicator_title">Complete</string>
+
+    <string name="order_total_amount_description">Total Amount:&#160;</string>
 </resources>

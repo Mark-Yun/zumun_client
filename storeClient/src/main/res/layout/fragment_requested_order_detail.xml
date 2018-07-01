@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (c) 2018. Mark Soft - All Rights Reserved
+  ~ Unauthorized copying of this file, via any medium is strictly prohibited
+  ~ Proprietary and confidential
+  -->
+
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="@dimen/big_margin">
+
+    <android.support.v7.widget.AppCompatTextView
+        android:id="@+id/order_number_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/big_margin"
+        android:text="@string/order_title_description"
+        app:layout_constraintEnd_toStartOf="@+id/order_number"
+        app:layout_constraintHorizontal_chainStyle="packed"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <android.support.v7.widget.AppCompatTextView
+        android:id="@+id/order_number"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="@+id/order_number_title"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/order_number_title" />
+
+    <View
+        android:id="@+id/order_name_divider"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="@dimen/big_margin"
+        android:background="@color/divider"
+        app:layout_constraintTop_toBottomOf="@+id/order_number" />
+
+    <android.support.v7.widget.AppCompatTextView
+        android:id="@+id/order_date_description"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/medium_margin"
+        android:layout_marginTop="@dimen/medium_margin"
+        android:text="@string/order_date_description"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/order_name_divider" />
+
+    <android.support.v7.widget.AppCompatTextView
+        android:id="@+id/order_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="@+id/order_date_description"
+        app:layout_constraintStart_toEndOf="@+id/order_date_description" />
+
+    <android.support.v7.widget.AppCompatTextView
+        android:id="@+id/order_time_description"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/medium_margin"
+        android:layout_marginTop="@dimen/medium_margin"
+        android:text="@string/order_time_description"
+        app:layout_constraintBottom_toBottomOf="@+id/order_date"
+        app:layout_constraintStart_toEndOf="@+id/order_date"
+        app:layout_goneMarginStart="@dimen/big_margin" />
+
+    <android.support.v7.widget.AppCompatTextView
+        android:id="@+id/order_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="@+id/order_time_description"
+        app:layout_constraintStart_toEndOf="@+id/order_time_description" />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginBottom="@dimen/big_margin"
+        android:layout_marginTop="@dimen/big_margin"
+        app:layout_constraintBottom_toTopOf="@+id/reject"
+        app:layout_constraintTop_toBottomOf="@+id/order_date_description" />
+
+    <android.support.v7.widget.AppCompatButton
+        android:id="@+id/reject"
+        style="@style/ButtonTextDark"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="@color/colorTextDisable"
+        android:padding="@dimen/big_margin"
+        android:text="@string/requested_order_reject_button_text"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/accept"
+        app:layout_constraintHorizontal_weight="2"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <android.support.v7.widget.AppCompatButton
+        android:id="@+id/accept"
+        style="@style/ButtonTextDark"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/medium_margin"
+        android:background="@color/colorAccent"
+        android:padding="@dimen/big_margin"
+        android:text="@string/requested_order_accept_button_text"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_weight="5"
+        app:layout_constraintStart_toEndOf="@+id/reject" />
+
+</android.support.constraint.ConstraintLayout>
