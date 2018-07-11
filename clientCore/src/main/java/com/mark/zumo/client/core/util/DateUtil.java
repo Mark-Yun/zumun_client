@@ -34,4 +34,11 @@ public final class DateUtil {
         SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss", Locale.getDefault());
         return dateFormat.format(localDate);
     }
+
+    public static String getLocalForattedTime(long utcTimeInMills) {
+        long localTimeMills = getLocalTimeMills(utcTimeInMills);
+        Date localDate = new Date(localTimeMills);
+        SimpleDateFormat dateFormat = new SimpleDateFormat("YYYY-MM-dd a hh:mm", Locale.getDefault());
+        return dateFormat.format(localDate);
+    }
 }

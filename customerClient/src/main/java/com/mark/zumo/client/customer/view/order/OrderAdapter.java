@@ -17,6 +17,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.mark.zumo.client.core.entity.MenuOrder;
+import com.mark.zumo.client.core.util.DateUtil;
 import com.mark.zumo.client.core.util.glide.GlideApp;
 import com.mark.zumo.client.core.util.glide.GlideUtils;
 import com.mark.zumo.client.core.view.TouchResponse;
@@ -65,7 +66,7 @@ class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.ViewHolder> {
         MenuOrder menuOrder = orderList.get(position);
 
         holder.orderNumber.setText(menuOrder.orderNumber);
-        holder.orderTime.setText(menuOrder.createdDate);
+        holder.orderTime.setText(DateUtil.getLocalForattedTime(menuOrder.createdDate));
 
         MenuOrder.State state = MenuOrder.State.of(menuOrder.state);
         holder.orderState.setText(state.stringRes);
