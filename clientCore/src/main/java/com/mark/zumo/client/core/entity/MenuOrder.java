@@ -38,7 +38,7 @@ public class MenuOrder implements Serializable {
     @ColumnInfo(name = Schema.orderNumber) @SerializedName(Schema.orderNumber)
     public final String orderNumber;
     @ColumnInfo(name = Schema.createdDate) @SerializedName(Schema.createdDate)
-    public final String createdDate;
+    public final long createdDate;
     @ColumnInfo(name = Schema.totalQuantity) @SerializedName(Schema.totalQuantity)
     public final int totalQuantity;
     @ColumnInfo(name = Schema.totalPrice) @SerializedName(Schema.totalPrice)
@@ -46,7 +46,7 @@ public class MenuOrder implements Serializable {
     @ColumnInfo(name = Schema.state) @SerializedName(Schema.state)
     public final int state;
 
-    public MenuOrder(@NonNull final String uuid, final String orderName, final String customerUuid, final String storeUuid, final String orderNumber, final String createdDate, final int totalQuantity, final int totalPrice, final int state) {
+    public MenuOrder(@NonNull final String uuid, final String orderName, final String customerUuid, final String storeUuid, final String orderNumber, final long createdDate, final int totalQuantity, final int totalPrice, final int state) {
         this.uuid = uuid;
         this.orderName = orderName;
         this.customerUuid = customerUuid;

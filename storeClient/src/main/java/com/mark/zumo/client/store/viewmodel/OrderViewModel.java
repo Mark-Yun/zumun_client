@@ -62,6 +62,19 @@ public class OrderViewModel extends AndroidViewModel {
         return liveData;
     }
 
+    public LiveData<List<MenuOrder>> completeMenuOrderList() {
+        MutableLiveData<List<MenuOrder>> liveData = new MutableLiveData<>();
+        sessionManager.getSessionStore()
+                .map(store -> store.uuid)
+                .flatMapObservable(orderManager::completeOrderBucket)
+                .map(OrderBucket::getOrderList)
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnNext(liveData::setValue)
+                .doOnSubscribe(compositeDisposable::add)
+                .subscribe();
+        return liveData;
+    }
+
     public LiveData<List<MenuOrder>> requestedMenuOrderList() {
         MutableLiveData<List<MenuOrder>> liveData = new MutableLiveData<>();
         sessionManager.getSessionStore()

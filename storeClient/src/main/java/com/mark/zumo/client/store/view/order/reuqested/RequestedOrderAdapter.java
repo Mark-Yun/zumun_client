@@ -19,6 +19,7 @@ import android.view.ViewGroup;
 import android.widget.Chronometer;
 
 import com.mark.zumo.client.core.entity.MenuOrder;
+import com.mark.zumo.client.core.util.DateUtil;
 import com.mark.zumo.client.store.R;
 import com.mark.zumo.client.store.view.order.detail.OrderDetailFragment;
 
@@ -63,6 +64,7 @@ class RequestedOrderAdapter extends RecyclerView.Adapter<RequestedOrderAdapter.V
         holder.orderNumber.setText(menuOrder.orderNumber);
         int stateColor = ContextCompat.getColor(holder.itemView.getContext(), MenuOrder.State.of(menuOrder.state).colorRes);
         holder.orderNumber.setBackgroundColor(stateColor);
+        holder.chronometer.setBase(DateUtil.getLocalTimeMills(menuOrder.createdDate));
         holder.chronometer.start();
 
         holder.itemView.setOnClickListener(v -> {
@@ -74,6 +76,10 @@ class RequestedOrderAdapter extends RecyclerView.Adapter<RequestedOrderAdapter.V
                     .replace(R.id.requested_order_detail_fragment, fragment)
                     .commit();
         });
+
+        if (position == 0) {
+            holder.itemView.performClick();
+        }
     }
 
     @Override

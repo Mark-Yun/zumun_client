@@ -25,6 +25,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.mark.zumo.client.core.entity.MenuOrder;
+import com.mark.zumo.client.core.util.DateUtil;
 import com.mark.zumo.client.store.R;
 import com.mark.zumo.client.store.viewmodel.OrderViewModel;
 
@@ -74,15 +75,17 @@ public class OrderDetailFragment extends Fragment {
         recyclerView.setHasFixedSize(true);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(layoutManager);
-//
-//        OrderDetailAdapter adapter = new OrderDetailAdapter();
-//        recyclerView.setAdapter(adapter);
-//
-//        orderViewModel.orderDetailList(orderUuid).observe(this, adapter::setOrderDetailList);
+
+        OrderDetailAdapter adapter = new OrderDetailAdapter();
+        recyclerView.setAdapter(adapter);
+
+        orderViewModel.orderDetailList(orderUuid).observe(this, adapter::setOrderDetailList);
     }
 
     private void onLoadMenuOrder(MenuOrder menuOrder) {
         orderNumber.setText(menuOrder.orderNumber);
+        orderDate.setText(DateUtil.getLocalDate(menuOrder.createdDate));
+        orderTime.setText(DateUtil.getLocalTime(menuOrder.createdDate));
     }
 
     @OnClick(R.id.reject)

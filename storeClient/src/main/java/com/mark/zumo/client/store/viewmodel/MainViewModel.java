@@ -21,15 +21,15 @@ import io.reactivex.disposables.CompositeDisposable;
 /**
  * Created by mark on 18. 6. 9.
  */
-public class AcceptedOrderViewModel extends AndroidViewModel {
+public class MainViewModel extends AndroidViewModel {
 
-    private static final String TAG = "AcceptedOrderViewModel";
+    private static final String TAG = "MainViewModel";
 
     private final SessionManager sessionManager;
 
     private final CompositeDisposable compositeDisposable;
 
-    public AcceptedOrderViewModel(@NonNull final Application application) {
+    public MainViewModel(@NonNull final Application application) {
         super(application);
 
         sessionManager = SessionManager.INSTANCE;

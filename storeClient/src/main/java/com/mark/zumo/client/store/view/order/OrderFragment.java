@@ -10,6 +10,7 @@ import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.AppCompatTextView;
 import android.view.LayoutInflater;
@@ -35,6 +36,7 @@ public class OrderFragment extends Fragment {
     @BindView(R.id.requested_order_indicator_count) AppCompatTextView requestedOrderCount;
     @BindView(R.id.accepted_order_indicator_count) AppCompatTextView acceptedOrderCount;
     @BindView(R.id.complete_order_indicator_count) AppCompatTextView completeOrderCount;
+    @BindView(R.id.requested_order_indicator) ConstraintLayout requestedOrderIndicator;
 
     private OrderViewModel orderViewModel;
 
@@ -55,10 +57,22 @@ public class OrderFragment extends Fragment {
 
     private void inflateIndicators() {
         orderViewModel.requestedMenuOrderList().observe(this, this::onLoadRequestedOrder);
+        orderViewModel.acceptedMenuOrderList().observe(this, this::onLoadAcceptedOrder);
+        orderViewModel.completeMenuOrderList().observe(this, this::onLoadCompleteOrder);
+
+        requestedOrderIndicator.performClick();
     }
 
     private void onLoadRequestedOrder(List<MenuOrder> requestedOrderList) {
         requestedOrderCount.setText(String.valueOf(requestedOrderList.size()));
+    }
+
+    private void onLoadAcceptedOrder(List<MenuOrder> acceptedOrder) {
+        acceptedOrderCount.setText(String.valueOf(acceptedOrder.size()));
+    }
+
+    private void onLoadCompleteOrder(List<MenuOrder> completeOrder) {
+        completeOrderCount.setText(String.valueOf(completeOrder.size()));
     }
 
     @OnClick({R.id.requested_order_indicator, R.id.accepted_order_indicator, R.id.complete_order_indicator})

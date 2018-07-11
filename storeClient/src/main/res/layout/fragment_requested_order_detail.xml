@@ -16,7 +16,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/big_margin"
         android:text="@string/order_title_description"
-        app:layout_constraintEnd_toStartOf="@+id/order_number"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_chainStyle="packed"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -26,7 +26,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="@+id/order_number_title"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/order_number_title" />
 
     <View
@@ -61,9 +60,10 @@
         android:layout_marginStart="@dimen/medium_margin"
         android:layout_marginTop="@dimen/medium_margin"
         android:text="@string/order_time_description"
-        app:layout_constraintBottom_toBottomOf="@+id/order_date"
-        app:layout_constraintStart_toEndOf="@+id/order_date"
-        app:layout_goneMarginStart="@dimen/big_margin" />
+        app:layout_constraintBottom_toBottomOf="@+id/order_date_description"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <android.support.v7.widget.AppCompatTextView
         android:id="@+id/order_time"

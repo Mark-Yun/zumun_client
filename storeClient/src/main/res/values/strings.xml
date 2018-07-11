@@ -64,7 +64,11 @@
     <string name="content_desc_navigation_drawer_open">Open navigation drawer</string>
     <string name="content_desc_navigation_drawer_close">Close navigation drawer</string>
 
-    <string name="menu_title_order">Order</string>
+    <string name="title_order">Order</string>
+    <string name="title_menu">Menu</string>
+    <string name="title_amount">Amount</string>
+    <string name="title_total">Total</string>
+    <string name="title_price">Price</string>
 
     <string name="requested_order_indicator_title">Requested</string>
     <string name="accepted_order_indicator_title">Accepted</string>
