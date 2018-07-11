@@ -27,6 +27,7 @@ public class MainViewModel extends AndroidViewModel {
 
     private final SessionManager sessionManager;
 
+    private P2pServer p2pServer;
     private final CompositeDisposable compositeDisposable;
 
     public MainViewModel(@NonNull final Application application) {
@@ -39,7 +40,7 @@ public class MainViewModel extends AndroidViewModel {
 
     public void findCustomer(Activity activity) {
         sessionManager.getSessionStore()
-                .map(store -> new P2pServer(activity, store))
+                .map(store -> p2pServer = new P2pServer(activity, store))
                 .flatMapObservable(P2pServer::findCustomer)
                 .doOnSubscribe(compositeDisposable::add)
                 .doOnNext(customerUuid -> Log.d(TAG, "findCustomer: " + customerUuid))
@@ -49,5 +50,8 @@ public class MainViewModel extends AndroidViewModel {
     @Override
     protected void onCleared() {
         compositeDisposable.clear();
+        if (p2pServer != null) {
+            p2pServer.stopAdvertising();
+        }
     }
 }
