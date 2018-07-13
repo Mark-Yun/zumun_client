@@ -21,6 +21,7 @@ import android.view.MenuItem;
 
 import com.mark.zumo.client.store.R;
 import com.mark.zumo.client.store.view.order.OrderFragment;
+import com.mark.zumo.client.store.view.setting.fragment.SettingMainFragment;
 import com.mark.zumo.client.store.viewmodel.MainViewModel;
 
 import butterknife.BindView;
@@ -80,7 +81,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         } else if (id == R.id.nav_slideshow) {
 
         } else if (id == R.id.nav_manage) {
-
+            Fragment fragment = Fragment.instantiate(this, SettingMainFragment.class.getName());
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.main_fragment, fragment)
+                    .commit();
         } else if (id == R.id.nav_share) {
 
         } else if (id == R.id.nav_send) {

@@ -90,9 +90,11 @@ public class OrderDetailFragment extends Fragment {
 
     @OnClick(R.id.reject)
     public void onRejectClicked() {
+        orderViewModel.rejectOrder(orderUuid);
     }
 
     @OnClick(R.id.accept)
     public void onAcceptClicked() {
+        orderViewModel.acceptOrder(orderUuid);
     }
 }

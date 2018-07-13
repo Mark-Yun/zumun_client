@@ -18,26 +18,23 @@ public final class DateUtil {
     public static long getLocalTimeMills(long utcTimeInMills) {
         TimeZone currentTimeZone = TimeZone.getDefault();
         int offset = currentTimeZone.getRawOffset();
-        return offset + utcTimeInMills;
+        return utcTimeInMills - offset;
     }
 
     public static String getLocalDate(long utcTimeInMills) {
-        long localTimeMills = getLocalTimeMills(utcTimeInMills);
-        Date localDate = new Date(localTimeMills);
+        Date localDate = new Date(utcTimeInMills);
         SimpleDateFormat dateFormat = new SimpleDateFormat("MM-dd (EEE)", Locale.getDefault());
         return dateFormat.format(localDate);
     }
 
     public static String getLocalTime(long utcTimeInMills) {
-        long localTimeMills = getLocalTimeMills(utcTimeInMills);
-        Date localDate = new Date(localTimeMills);
+        Date localDate = new Date(utcTimeInMills);
         SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss", Locale.getDefault());
         return dateFormat.format(localDate);
     }
 
-    public static String getLocalForattedTime(long utcTimeInMills) {
-        long localTimeMills = getLocalTimeMills(utcTimeInMills);
-        Date localDate = new Date(localTimeMills);
+    public static String getLocalFormattedTime(long utcTimeInMills) {
+        Date localDate = new Date(utcTimeInMills);
         SimpleDateFormat dateFormat = new SimpleDateFormat("YYYY-MM-dd a hh:mm", Locale.getDefault());
         return dateFormat.format(localDate);
     }

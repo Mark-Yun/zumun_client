@@ -37,6 +37,7 @@ import butterknife.ButterKnife;
 class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.ViewHolder> {
 
     private static final String TAG = "OrderAdapter";
+
     private final LifecycleOwner lifecycleOwner;
     private final OrderViewModel orderViewModel;
 
@@ -66,7 +67,7 @@ class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.ViewHolder> {
         MenuOrder menuOrder = orderList.get(position);
 
         holder.orderNumber.setText(menuOrder.orderNumber);
-        holder.orderTime.setText(DateUtil.getLocalForattedTime(menuOrder.createdDate));
+        holder.orderTime.setText(DateUtil.getLocalFormattedTime(menuOrder.createdDate));
 
         MenuOrder.State state = MenuOrder.State.of(menuOrder.state);
         holder.orderState.setText(state.stringRes);

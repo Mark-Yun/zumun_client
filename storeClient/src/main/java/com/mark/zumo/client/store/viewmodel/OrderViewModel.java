@@ -118,9 +118,10 @@ public class OrderViewModel extends AndroidViewModel {
         return liveData;
     }
 
-    public LiveData<MenuOrder> acceptOrder(MenuOrder menuOrder) {
+    public LiveData<MenuOrder> acceptOrder(String orderUuid) {
         MutableLiveData<MenuOrder> liveData = new MutableLiveData<>();
-        orderManager.acceptOrder(menuOrder)
+        orderManager.getMenuOrderFromDisk(orderUuid)
+                .flatMap(orderManager::acceptOrder)
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSuccess(liveData::setValue)
                 .doOnSuccess(order -> showToast("accepted " + order.orderName))
@@ -140,8 +141,14 @@ public class OrderViewModel extends AndroidViewModel {
                 .subscribe();
     }
 
-    public void rejectOrder(MenuOrder menuOrder) {
-        showToast("rejectOrder");
+    public LiveData<MenuOrder> rejectOrder(String orderUuid) {
+        MutableLiveData<MenuOrder> liveData = new MutableLiveData<>();
+        orderManager.rejectOrder(orderUuid)
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnSuccess(liveData::setValue)
+                .doOnSuccess(order -> showToast("rejected " + order.orderName))
+                .subscribe();
+        return liveData;
     }
 
     public void completeOrder(MenuOrder menuOrder) {

@@ -29,9 +29,8 @@
 
         <activity android:name="com.mark.zumo.client.store.view.signup.SignUpActivity" />
 
-        <activity android:name=".view.setting.SettingActivity" />
-
         <activity android:name="com.tangxiaolv.telegramgallery.GalleryActivity" />
+
         <activity android:name=".view.main.MainActivity">
             <intent-filter>
                 <category android:name="android.intent.category.LAUNCHER" />

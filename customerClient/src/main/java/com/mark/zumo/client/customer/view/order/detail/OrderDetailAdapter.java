@@ -84,7 +84,7 @@ class OrderDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 }
                 viewHolder.orderName.setText(menuOrder.orderName);
                 viewHolder.orderNumber.setText(menuOrder.orderNumber);
-                viewHolder.orderTime.setText(DateUtil.getLocalForattedTime(menuOrder.createdDate));
+                viewHolder.orderTime.setText(DateUtil.getLocalFormattedTime(menuOrder.createdDate));
                 viewHolder.orderPrice.setText(NumberFormat.getCurrencyInstance().format(menuOrder.totalPrice));
             });
         } else if (holder instanceof BodyViewHolder) {

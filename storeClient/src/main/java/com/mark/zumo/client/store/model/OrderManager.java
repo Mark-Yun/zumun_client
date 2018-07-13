@@ -118,6 +118,15 @@ public enum OrderManager {
                 .subscribeOn(Schedulers.io());
     }
 
+    public Maybe<MenuOrder> rejectOrder(String orderUuid) {
+        return orderRepository.updateMenuOrderState(orderUuid, MenuOrder.State.REJECTED.ordinal())
+                .map(menuOrder -> menuOrder.uuid)
+                .map(requestedOrderBucket::removeOrder)
+                .flatMap(menuOrder -> updateOrderState(menuOrder, MenuOrder.State.ACCEPTED))
+                .doOnSuccess(acceptedOrderBucket::addOrder)
+                .subscribeOn(Schedulers.io());
+    }
+
     public Maybe<MenuOrder> getMenuOrderFromDisk(String orderUuid) {
         return orderRepository.getMenuOrderFromDisk(orderUuid)
                 .subscribeOn(Schedulers.io());

@@ -8,6 +8,7 @@
     <string name="nearby_api_key" translatable="false">AIzaSyBG1TvGy6sHkwhQewFnWIXbDzjXwnrp310</string>
     <string name="google_map_api_key" translatable="false">AIzaSyAsCmj5l5QuuakQfv9BmNSPmDPUA5smq2s</string>
 
+    <string name="order_state_created">Created</string>
     <string name="order_state_requested">Requested</string>
     <string name="order_state_accepted">Accepted</string>
     <string name="order_state_complete">Complete</string>
