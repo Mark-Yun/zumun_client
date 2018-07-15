@@ -56,7 +56,10 @@ import butterknife.OnClick;
  */
 public class StoreProfileSettingFragment extends Fragment {
 
-    public static final int REQUEST_CODE_PLACE_ACTIVITY = 15;
+    public static final int REQUEST_CODE_PLACE_PICKER = 15;
+    public static final int REQUEST_CODE_PLACE_ACTIVITY = REQUEST_CODE_PLACE_PICKER;
+    public static final int REQUEST_CODE_COVER_IMAGE_PICKER = 11;
+    public static final int REQUEST_CODE_THUMBNAIL_IMAGE_PICKER = 12;
     @BindView(R.id.cover_image) AppCompatImageView coverImage;
     @BindView(R.id.thumbnail_image) AppCompatImageView thumbnailImage;
     @BindView(R.id.store_name) AppCompatTextView storeName;
@@ -159,7 +162,7 @@ public class StoreProfileSettingFragment extends Fragment {
                 .title(store.name);
 
         googleMap.addMarker(markerOptions).showInfoWindow();
-        CameraUpdate locationUpdate = CameraUpdateFactory.newLatLngZoom(selectedLatLng, 15);
+        CameraUpdate locationUpdate = CameraUpdateFactory.newLatLngZoom(selectedLatLng, REQUEST_CODE_PLACE_PICKER);
 
         googleMap.setBuildingsEnabled(true);
         googleMap.moveCamera(locationUpdate);
@@ -178,7 +181,7 @@ public class StoreProfileSettingFragment extends Fragment {
 
         try {
             Intent pickerIntent = builder.build(Objects.requireNonNull(getActivity()));
-            startActivityForResult(pickerIntent, 15);
+            startActivityForResult(pickerIntent, REQUEST_CODE_PLACE_PICKER);
         } catch (GooglePlayServicesRepairableException | GooglePlayServicesNotAvailableException ignored) {
         }
     }
@@ -200,12 +203,12 @@ public class StoreProfileSettingFragment extends Fragment {
 
     @OnClick(R.id.cover_image)
     void onClickCoverImage() {
-        ImagePickerUtils.showImagePickerStoreThumbnail(getActivity(), 11);
+        ImagePickerUtils.showImagePickerStoreCoverImage(getActivity(), REQUEST_CODE_COVER_IMAGE_PICKER);
     }
 
 
     @OnClick(R.id.thumbnail_image)
     void onClickThumbnailImage() {
-        ImagePickerUtils.showImagePickerStoreThumbnail(getActivity(), 12);
+        ImagePickerUtils.showImagePickerStoreThumbnail(getActivity(), REQUEST_CODE_THUMBNAIL_IMAGE_PICKER);
     }
 }

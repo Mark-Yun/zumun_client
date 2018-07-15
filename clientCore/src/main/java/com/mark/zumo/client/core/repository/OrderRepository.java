@@ -100,7 +100,9 @@ public enum OrderRepository {
     }
 
     public Maybe<MenuOrder> updateMenuOrderState(String menuOrderUuid, int state) {
-        return networkRepository.updateMenuOrderState(menuOrderUuid, state)
+        return getMenuOrderFromDisk(menuOrderUuid)
+                .map(menuOrder -> menuOrder.updateState(state))
+                .flatMap(menuOrder -> networkRepository.updateMenuOrderState(menuOrder.uuid, menuOrder))
                 .doOnSuccess(diskRepository::insertMenuOrder);
     }
 

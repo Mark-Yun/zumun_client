@@ -83,9 +83,9 @@ public interface NetworkRepository {
                                                        @Query("offset") int offset,
                                                        @Query("limit") int limit);
 
-    @PUT("order/{menu_order_uuid}/state")
-    Maybe<MenuOrder> updateMenuOrderState(@Path("menu_order_uuid") String menuOrderUuid,
-                                          @Body int state);
+    @PUT("order/{" + MenuOrder.Schema.uuid + "}/state")
+    Maybe<MenuOrder> updateMenuOrderState(@Path(MenuOrder.Schema.uuid) String uuid,
+                                          @Body MenuOrder menuOrder);
 
 
     @POST("token")

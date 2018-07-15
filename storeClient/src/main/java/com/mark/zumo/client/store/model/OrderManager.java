@@ -123,7 +123,6 @@ public enum OrderManager {
                 .map(menuOrder -> menuOrder.uuid)
                 .map(requestedOrderBucket::removeOrder)
                 .flatMap(menuOrder -> updateOrderState(menuOrder, MenuOrder.State.ACCEPTED))
-                .doOnSuccess(acceptedOrderBucket::addOrder)
                 .subscribeOn(Schedulers.io());
     }
 

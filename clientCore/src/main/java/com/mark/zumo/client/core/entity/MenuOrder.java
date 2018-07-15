@@ -58,6 +58,18 @@ public class MenuOrder implements Serializable {
         this.state = state;
     }
 
+    public MenuOrder updateState(int state) {
+        return new MenuOrder(this.uuid,
+                this.orderName,
+                this.customerUuid,
+                this.storeUuid,
+                this.orderNumber,
+                this.createdDate,
+                this.totalQuantity,
+                this.totalPrice,
+                state);
+    }
+
     @Override
     public String toString() {
         return EntityHelper.toString(this, this.getClass());
