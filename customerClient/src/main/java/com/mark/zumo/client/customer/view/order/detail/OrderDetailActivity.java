@@ -84,7 +84,8 @@ public class OrderDetailActivity extends AppCompatActivity {
         GlideApp.with(this)
                 .load(store.coverImageUrl)
                 .apply(GlideUtils.storeCoverImageOptions())
-                .transition(GlideUtils.storeCoverTransitionOptions());
+                .transition(GlideUtils.storeCoverTransitionOptions())
+                .into(storeCoverImage);
     }
 
     private void inflateOrderInfo() {
