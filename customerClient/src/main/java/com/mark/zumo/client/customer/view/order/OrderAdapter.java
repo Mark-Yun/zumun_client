@@ -82,9 +82,7 @@ class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.ViewHolder> {
             holder.title.setText(store.name);
 
             GlideApp.with(holder.image)
-                    //TODO REMOVETEST DATA
-//                    .load(store.thumbnailUrl)
-                    .load(R.drawable.data_5_ice)
+                    .load(store.thumbnailUrl)
                     .apply(GlideUtils.storeCoverImageOptions())
                     .transition(GlideUtils.storeTransitionOptions())
                     .into(holder.image);

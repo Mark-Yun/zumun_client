@@ -138,9 +138,7 @@ public enum KakaoPayServiceProvider {
     }
 
     private interface Authorization {
-        //TODO: replace to token
         String KEY = "Authorization";
-        String AK_VALUE = "KakaoAK d17ffca1e2c89e95fcb9de08a41eee12";
         String TOKEN_VALUE = "Bearer ";
     }
 

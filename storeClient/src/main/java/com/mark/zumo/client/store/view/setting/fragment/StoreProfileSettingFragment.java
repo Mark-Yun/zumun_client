@@ -12,6 +12,7 @@ import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.location.Address;
 import android.location.Geocoder;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -21,6 +22,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatEditText;
 import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.AppCompatTextView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,10 +41,14 @@ import com.mark.zumo.client.core.entity.Store;
 import com.mark.zumo.client.core.util.glide.GlideApp;
 import com.mark.zumo.client.core.util.glide.GlideUtils;
 import com.mark.zumo.client.store.R;
-import com.mark.zumo.client.store.view.ImagePickerUtils;
+import com.mark.zumo.client.store.view.util.ImageCropperUtils;
+import com.mark.zumo.client.store.view.util.ImagePickerUtils;
 import com.mark.zumo.client.store.viewmodel.StoreSettingViewModel;
+import com.tangxiaolv.telegramgallery.GalleryActivity;
+import com.theartofdev.edmodo.cropper.CropImage;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
@@ -56,17 +62,19 @@ import butterknife.OnClick;
  */
 public class StoreProfileSettingFragment extends Fragment {
 
-    public static final int REQUEST_CODE_PLACE_PICKER = 15;
-    public static final int REQUEST_CODE_PLACE_ACTIVITY = REQUEST_CODE_PLACE_PICKER;
-    public static final int REQUEST_CODE_COVER_IMAGE_PICKER = 11;
-    public static final int REQUEST_CODE_THUMBNAIL_IMAGE_PICKER = 12;
+    public static final String TAG = "StoreProfileSettingFragment";
+    private static final int REQUEST_CODE_PLACE_PICKER = 15;
+    private static final int REQUEST_CODE_COVER_IMAGE_PICKER = 11;
+    private static final int REQUEST_CODE_THUMBNAIL_IMAGE_PICKER = 12;
     @BindView(R.id.cover_image) AppCompatImageView coverImage;
     @BindView(R.id.thumbnail_image) AppCompatImageView thumbnailImage;
     @BindView(R.id.store_name) AppCompatTextView storeName;
     @BindView(R.id.address) AppCompatTextView address;
+
     private SupportMapFragment mapFragment;
     private StoreSettingViewModel storeSettingViewModel;
     private Store store;
+    private int requestCode;
 
     @Override
     public void onCreate(@Nullable final Bundle savedInstanceState) {
@@ -93,13 +101,12 @@ public class StoreProfileSettingFragment extends Fragment {
     private void onLoadStore(Store store) {
         this.store = store;
 
-        //TODO remove test data
         GlideApp.with(this)
-                .load(R.drawable.data_1_hot)
+                .load(store.coverImageUrl)
                 .into(coverImage);
 
         GlideApp.with(this)
-                .load(R.drawable.data_1_hot)
+                .load(store.thumbnailUrl)
                 .apply(GlideUtils.storeImageOptions())
                 .into(thumbnailImage);
 
@@ -190,13 +197,26 @@ public class StoreProfileSettingFragment extends Fragment {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
+        if (resultCode != AppCompatActivity.RESULT_OK) {
+            return;
+        }
+
         switch (requestCode) {
-            case REQUEST_CODE_PLACE_ACTIVITY:
-                if (resultCode != AppCompatActivity.RESULT_OK) {
-                    return;
-                }
+            case REQUEST_CODE_PLACE_PICKER:
                 Place place = PlacePicker.getPlace(Objects.requireNonNull(getActivity()), data);
                 storeSettingViewModel.updateStoreLocation(place.getLatLng()).observe(this, this::onLoadStore);
+                break;
+
+            case REQUEST_CODE_COVER_IMAGE_PICKER:
+                onImagePicked(data, requestCode);
+                break;
+
+            case REQUEST_CODE_THUMBNAIL_IMAGE_PICKER:
+                onImagePicked(data, requestCode);
+                break;
+
+            case CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE:
+                onImageCopped(resultCode, data);
                 break;
         }
     }
@@ -206,9 +226,47 @@ public class StoreProfileSettingFragment extends Fragment {
         ImagePickerUtils.showImagePickerStoreCoverImage(getActivity(), REQUEST_CODE_COVER_IMAGE_PICKER);
     }
 
-
     @OnClick(R.id.thumbnail_image)
     void onClickThumbnailImage() {
         ImagePickerUtils.showImagePickerStoreThumbnail(getActivity(), REQUEST_CODE_THUMBNAIL_IMAGE_PICKER);
+    }
+
+    @SuppressWarnings("unchecked")
+    private void onImagePicked(Intent data, int requestCode) {
+        Serializable serializableExtra = data.getSerializableExtra(GalleryActivity.PHOTOS);
+        List<String> photoList = (List<String>) serializableExtra;
+        Log.d("fuck", "onImagePicked: " + photoList.size());
+        if (photoList == null || photoList.size() == 0) {
+            return;
+        }
+
+        String selectedPath = photoList.get(0);
+        this.requestCode = requestCode;
+
+        if (requestCode == REQUEST_CODE_COVER_IMAGE_PICKER) {
+            ImageCropperUtils.showCoverImageCropper(getActivity(), this, selectedPath);
+        } else if (requestCode == REQUEST_CODE_THUMBNAIL_IMAGE_PICKER) {
+            ImageCropperUtils.showThumbnailImageCropper(getActivity(), this, selectedPath);
+        }
+    }
+
+    private void onImageCopped(int resultCode, Intent data) {
+        CropImage.ActivityResult result = CropImage.getActivityResult(data);
+
+        if (resultCode != AppCompatActivity.RESULT_OK) {
+            Exception error = result.getError();
+            Log.e(TAG, "onImageCopped: ", error);
+            return;
+        }
+
+        Uri resultUri = result.getUri();
+        if (this.requestCode == REQUEST_CODE_THUMBNAIL_IMAGE_PICKER) {
+            storeSettingViewModel.uploadThumbnailImage(getActivity(), resultUri)
+                    .observe(this, this::onLoadStore);
+        } else if (this.requestCode == REQUEST_CODE_COVER_IMAGE_PICKER) {
+            storeSettingViewModel.uploadCoverImage(getActivity(), resultUri)
+                    .observe(this, this::onLoadStore);
+        }
+
     }
 }

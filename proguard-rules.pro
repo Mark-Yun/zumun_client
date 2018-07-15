@@ -61,3 +61,5 @@
   native *** rsn*(...);
   native *** n*(...);
 }
+
+-keep class android.support.v7.widget.** { *; }

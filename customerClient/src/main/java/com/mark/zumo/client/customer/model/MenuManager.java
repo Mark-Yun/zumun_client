@@ -8,16 +8,13 @@ package com.mark.zumo.client.customer.model;
 
 import com.mark.zumo.client.core.entity.Menu;
 import com.mark.zumo.client.core.entity.MenuOption;
-import com.mark.zumo.client.core.entity.Store;
 import com.mark.zumo.client.core.p2p.P2pClient;
 import com.mark.zumo.client.core.repository.MenuRepository;
-import com.mark.zumo.client.core.util.DebugUtil;
 
 import java.util.List;
 
 import io.reactivex.Maybe;
 import io.reactivex.Observable;
-import io.reactivex.Single;
 import io.reactivex.observables.GroupedObservable;
 import io.reactivex.schedulers.Schedulers;
 
@@ -44,11 +41,6 @@ public enum MenuManager {
     public Maybe<Menu> getMenuFromDisk(String uuid) {
         return menuRepository.getMenuFromDisk(uuid)
                 .subscribeOn(Schedulers.io());
-    }
-
-    private Single<Store> currentStore() {
-        //TODO: impl
-        return Single.fromCallable(DebugUtil::store);
     }
 
     public void clearClient() {

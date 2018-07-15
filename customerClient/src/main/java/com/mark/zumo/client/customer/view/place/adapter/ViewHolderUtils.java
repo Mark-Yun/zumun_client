@@ -69,9 +69,8 @@ final class ViewHolderUtils {
         placeViewModel.distanceFrom(store.latitude, store.longitude)
                 .observe(lifecycleOwner, storeViewHolder.distance::setText);
 
-        //TODO REMOVE TEST DATA
         GlideApp.with(storeViewHolder.itemView.getContext())
-                .load(R.drawable.data_3_hot)
+                .load(store.thumbnailUrl)
                 .transition(GlideUtils.storeTransitionOptions())
                 .into(storeViewHolder.image);
 

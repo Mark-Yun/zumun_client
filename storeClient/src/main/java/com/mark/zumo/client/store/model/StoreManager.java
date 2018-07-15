@@ -38,4 +38,17 @@ public enum StoreManager {
         return storeRepository.updateStore(newStore)
                 .subscribeOn(Schedulers.io());
     }
+
+    public Maybe<Store> updateStoreCoverImageUrl(Store store, String coverImageUrl) {
+        Store newStore = new Store(store.uuid, store.name, store.latitude, store.longitude, coverImageUrl, store.thumbnailUrl);
+        return storeRepository.updateStore(newStore)
+                .subscribeOn(Schedulers.io());
+
+    }
+
+    public Maybe<Store> updateStoreThumbnailImageUrl(Store store, String thumbnailImageUrl) {
+        Store newStore = new Store(store.uuid, store.name, store.latitude, store.longitude, store.coverImageUrl, thumbnailImageUrl);
+        return storeRepository.updateStore(newStore)
+                .subscribeOn(Schedulers.io());
+    }
 }
