@@ -10,10 +10,12 @@ import android.arch.lifecycle.LifecycleOwner;
 import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
+import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -68,11 +70,14 @@ class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.ViewHolder> {
         viewHolder.name.setText(menu.name);
         viewHolder.price.setText(NumberFormat.getCurrencyInstance().format(menu.price));
 
-        GlideApp.with(viewHolder.itemView.getContext())
-                .load(menu.imageUrl)
-                .apply(GlideUtils.menuImageOptions())
-                .transition(GlideUtils.menuTransitionOptions())
-                .into(viewHolder.image);
+        if (!TextUtils.isEmpty(menu.imageUrl)) {
+            viewHolder.image.setVisibility(View.VISIBLE);
+            GlideApp.with(viewHolder.itemView.getContext())
+                    .load(menu.imageUrl)
+                    .apply(GlideUtils.menuImageOptions())
+                    .transition(GlideUtils.menuTransitionOptions())
+                    .into(viewHolder.image);
+        }
 
         viewHolder.itemView.setOnClickListener(v -> onClickMenu(v, menu));
         viewHolder.itemView.setOnLongClickListener(v -> onLongClickMenu(v, menu));
@@ -109,6 +114,7 @@ class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.ViewHolder> {
     // Complex data items may need more than one view per item, and
     // you provide access to all the views for a data item in a view holder
     static class ViewHolder extends RecyclerView.ViewHolder {
+        @BindView(R.id.menu_container) ConstraintLayout container;
         @BindView(R.id.name) TextView name;
         @BindView(R.id.price) TextView price;
         @BindView(R.id.image) AppCompatImageView image;
