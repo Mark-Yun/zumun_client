@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (c) 2018. Mark Soft - All Rights Reserved
+  ~ Unauthorized copying of this file, via any medium is strictly prohibited
+  ~ Proprietary and confidential
+  -->
+
+<!--
+  ~ Copyright (c) 2018. Mark Soft - All Rights Reserved
+  ~ Unauthorized copying of this file, via any medium is strictly prohibited
+  ~ Proprietary and confidential
+  -->
+
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory android:title="@string/preference_category_menu_detail_menu">
+        <EditTextPreference
+            android:key="@string/preference_key_menu_detail_menu_name"
+            android:title="@string/preference_title_menu_detail_menu_name" />
+
+        <EditTextPreference
+            android:key="@string/preference_key_menu_detail_menu_price"
+            android:title="@string/preference_title_menu_detail_menu_price" />
+    </PreferenceCategory>
+</PreferenceScreen>

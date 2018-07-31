@@ -108,4 +108,9 @@ public enum MenuRepository {
         return networkRepository.updateMenuCategory(menuCategory.uuid, menuCategory)
                 .doOnSuccess(diskRepository::insertMenuCategory);
     }
+
+    public Maybe<Menu> updateMenu(final Menu menu) {
+        return networkRepository.updateMenu(menu.uuid, menu)
+                .doOnSuccess(diskRepository::insertMenu);
+    }
 }

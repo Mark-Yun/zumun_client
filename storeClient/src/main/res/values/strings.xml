@@ -47,6 +47,14 @@
     <string name="preference_title_menu_category_management">Menu Category Management</string>
     <string name="preference_summary_menu_category_management">Manage category of your menus</string>
 
+    <string name="preference_category_menu_detail_menu">Menu Information</string>
+
+    <string name="preference_title_menu_detail_menu_name">Menu Name</string>
+    <string name="preference_key_menu_detail_menu_name">menu_detail_menu_name</string>
+
+    <string name="preference_title_menu_detail_menu_price">Menu Price</string>
+    <string name="preference_key_menu_detail_menu_price">menu_detail_menu_price</string>
+
     <string name="store_profile_name_editor_title">Store Name</string>
     <string name="store_profile_name_editor_message">Insert new store name</string>
 

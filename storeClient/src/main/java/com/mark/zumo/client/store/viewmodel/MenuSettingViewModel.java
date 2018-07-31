@@ -55,6 +55,42 @@ public class MenuSettingViewModel extends AndroidViewModel {
         return liveData;
     }
 
+    public LiveData<Menu> menuFromDisk(String menuUuid) {
+        MutableLiveData<Menu> liveData = new MutableLiveData<>();
+
+        menuManager.getMenuFromDisk(menuUuid)
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnSubscribe(compositeDisposable::add)
+                .doOnSuccess(liveData::setValue)
+                .subscribe();
+
+        return liveData;
+    }
+
+    public LiveData<Menu> updateMenuName(String menuUuid, String menuName) {
+        MutableLiveData<Menu> liveData = new MutableLiveData<>();
+
+        menuManager.updateMenuName(menuUuid, menuName)
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnSubscribe(compositeDisposable::add)
+                .doOnSuccess(liveData::setValue)
+                .subscribe();
+
+        return liveData;
+    }
+
+    public LiveData<Menu> updateMenuPrice(String menuUuid, int menuPrice) {
+        MutableLiveData<Menu> liveData = new MutableLiveData<>();
+
+        menuManager.updateMenuPrice(menuUuid, menuPrice)
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnSubscribe(compositeDisposable::add)
+                .doOnSuccess(liveData::setValue)
+                .subscribe();
+
+        return liveData;
+    }
+
     public LiveData<List<MenuCategory>> categoryList() {
         MutableLiveData<List<MenuCategory>> liveData = new MutableLiveData<>();
         sessionManager.getSessionStore()

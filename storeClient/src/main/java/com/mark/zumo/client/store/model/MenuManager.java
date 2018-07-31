@@ -46,6 +46,25 @@ public enum MenuManager {
                 .subscribeOn(Schedulers.io());
     }
 
+    public Maybe<Menu> getMenuFromDisk(String menuUuid) {
+        return menuRepository.getMenuFromDisk(menuUuid)
+                .subscribeOn(Schedulers.io());
+    }
+
+    public Maybe<Menu> updateMenuName(final String menuUuid, final String menuName) {
+        return menuRepository.getMenuFromDisk(menuUuid)
+                .doOnSuccess(menu -> menu.name = menuName)
+                .flatMap(menuRepository::updateMenu)
+                .subscribeOn(Schedulers.io());
+    }
+
+    public Maybe<Menu> updateMenuPrice(final String menuUuid, final int price) {
+        return menuRepository.getMenuFromDisk(menuUuid)
+                .doOnSuccess(menu -> menu.price = price)
+                .flatMap(menuRepository::updateMenu)
+                .subscribeOn(Schedulers.io());
+    }
+
     public Maybe<MenuCategory> createMenuCategory(String name, String storeUuid, int seqNum) {
         return Maybe.fromCallable(() -> new MenuCategory(null, name, storeUuid, seqNum))
                 .flatMap(menuRepository::createMenuCategory)

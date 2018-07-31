@@ -40,12 +40,17 @@ public interface NetworkRepository {
     @PUT("store/{" + Store.Schema.uuid + "}")
     Maybe<Store> updateStore(@Path(Store.Schema.uuid) String storeUuid,
                              @Body Store store);
+
     @GET("store/{" + Store.Schema.uuid + "}")
     Maybe<Store> getStore(@Path(Store.Schema.uuid) String storeUuid);
+
 
     @GET("menu")
     Maybe<List<Menu>> getMenuList(@Query(Menu.Schema.storeUuid) String storeUuid);
 
+    @PUT("menu/{" + Menu.Schema.uuid + "}")
+    Maybe<Menu> updateMenu(@Path(Menu.Schema.uuid) String menuUuid,
+                           @Body Menu menu);
 
     @GET("menu/option/{" + MenuOption.Schema.uuid + "}")
     Maybe<MenuOption> getMenuOptionList(@Path(MenuOption.Schema.uuid) String menuOptionUuid);

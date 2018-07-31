@@ -6,8 +6,10 @@
 
 package com.mark.zumo.client.store.view.setting.fragment.menu;
 
-import android.arch.lifecycle.LifecycleOwner;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -20,7 +22,7 @@ import com.mark.zumo.client.core.util.glide.GlideApp;
 import com.mark.zumo.client.core.util.glide.GlideUtils;
 import com.mark.zumo.client.core.view.TouchResponse;
 import com.mark.zumo.client.store.R;
-import com.mark.zumo.client.store.viewmodel.MenuSettingViewModel;
+import com.mark.zumo.client.store.view.setting.fragment.menu.detail.MenuDetailSettingFragment;
 
 import java.text.NumberFormat;
 import java.util.ArrayList;
@@ -34,15 +36,13 @@ import butterknife.ButterKnife;
  */
 class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.ViewHolder> {
 
-    private final LifecycleOwner lifecycleOwner;
-    private final MenuSettingViewModel menuViewModel;
+    private final FragmentManager fragmentManager;
 
     private List<Menu> menuList;
 
-    MenuAdapter(LifecycleOwner lifecycleOwner, MenuSettingViewModel menuViewModel) {
+    MenuAdapter(final FragmentManager fragmentManager) {
+        this.fragmentManager = fragmentManager;
         menuList = new ArrayList<>();
-        this.lifecycleOwner = lifecycleOwner;
-        this.menuViewModel = menuViewModel;
     }
 
     public void setMenuList(final List<Menu> menuList) {
@@ -74,7 +74,16 @@ class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.ViewHolder> {
 
     private void onClickMenu(final View itemView, final Menu menu) {
         TouchResponse.big();
-        //TODO impl
+
+        Bundle bundle = new Bundle();
+        bundle.putString(MenuDetailSettingFragment.KEY_MENU_UUID, menu.uuid);
+
+        Fragment fragment = Fragment.instantiate(itemView.getContext(), MenuDetailSettingFragment.class.getName(), bundle);
+
+        fragmentManager.beginTransaction()
+                .replace(R.id.setting_main_fragment, fragment)
+                .addToBackStack("")
+                .commit();
     }
 
     @Override

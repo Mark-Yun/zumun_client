@@ -13,9 +13,12 @@ import com.mark.zumo.client.core.entity.util.EntityHelper;
  * Created by mark on 18. 6. 15.
  */
 public class SnsToken {
-    @SerializedName(Schema.uuid) public final String uuid;
-    @SerializedName(Schema.tokenType) public final String tokenType;
-    @SerializedName(Schema.tokenValue) public final String tokenValue;
+    @SerializedName(Schema.uuid)
+    public final String uuid;
+    @SerializedName(Schema.tokenType)
+    public final String tokenType;
+    @SerializedName(Schema.tokenValue)
+    public final String tokenValue;
 
     public SnsToken(final String uuid, final String tokenType, final String tokenValue) {
         this.uuid = uuid;

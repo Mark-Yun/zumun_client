@@ -25,17 +25,17 @@ public class Menu implements Serializable {
     public static final String MENU_TABLE = "menu";
 
     @PrimaryKey @NonNull @SerializedName(Schema.uuid) @ColumnInfo(name = Schema.uuid)
-    public final String uuid;
+    public String uuid;
     @SerializedName(Schema.name) @ColumnInfo(name = Schema.name)
-    public final String name;
+    public String name;
     @SerializedName(Schema.categoryName) @ColumnInfo(name = Schema.categoryName)
-    public final String categoryName;
+    public String categoryName;
     @SerializedName(Schema.storeUuid) @ColumnInfo(name = Schema.storeUuid)
-    public final String storeUuid;
+    public String storeUuid;
     @SerializedName(Schema.price) @ColumnInfo(name = Schema.price)
-    public final int price;
+    public int price;
     @SerializedName(Schema.imageUrl) @ColumnInfo(name = Schema.imageUrl)
-    public final String imageUrl;
+    public String imageUrl;
 
     public Menu(@NonNull final String uuid, final String name, final String categoryName,
                 final String storeUuid, final int price, final String imageUrl) {
