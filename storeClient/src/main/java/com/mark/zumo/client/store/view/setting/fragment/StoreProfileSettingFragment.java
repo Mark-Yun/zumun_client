@@ -66,6 +66,7 @@ public class StoreProfileSettingFragment extends Fragment {
     private static final int REQUEST_CODE_PLACE_PICKER = 15;
     private static final int REQUEST_CODE_COVER_IMAGE_PICKER = 11;
     private static final int REQUEST_CODE_THUMBNAIL_IMAGE_PICKER = 12;
+
     @BindView(R.id.cover_image) AppCompatImageView coverImage;
     @BindView(R.id.thumbnail_image) AppCompatImageView thumbnailImage;
     @BindView(R.id.store_name) AppCompatTextView storeName;
@@ -235,7 +236,6 @@ public class StoreProfileSettingFragment extends Fragment {
     private void onImagePicked(Intent data, int requestCode) {
         Serializable serializableExtra = data.getSerializableExtra(GalleryActivity.PHOTOS);
         List<String> photoList = (List<String>) serializableExtra;
-        Log.d("fuck", "onImagePicked: " + photoList.size());
         if (photoList == null || photoList.size() == 0) {
             return;
         }

@@ -39,8 +39,8 @@ public enum StoreRepository {
         diskRepository = AppDatabaseProvider.INSTANCE.diskRepository;
     }
 
-    public Observable<List<Store>> nearByStore(Location location) {
-        return Observable.create(e -> e.onNext(DebugUtil.storeList()));
+    public Maybe<List<Store>> nearByStore(Location location) {
+        return networkRepository.getNearByStore(location.getLongitude(), location.getLatitude(), 3);
     }
 
     public Observable<List<Store>> latestVisitStore() {

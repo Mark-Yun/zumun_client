@@ -13,6 +13,7 @@ import android.arch.lifecycle.MutableLiveData;
 import android.support.annotation.NonNull;
 
 import com.mark.zumo.client.core.entity.Store;
+import com.mark.zumo.client.core.provider.AppLocationProvider;
 import com.mark.zumo.client.customer.R;
 import com.mark.zumo.client.customer.model.CustomerLocationManager;
 import com.mark.zumo.client.customer.model.SessionManager;
@@ -32,6 +33,7 @@ public class PlaceViewModel extends AndroidViewModel {
     private final StoreManager storeManager;
     private final CustomerLocationManager locationManager;
     private final SessionManager sessionManager;
+    private final AppLocationProvider locationProvider;
 
     private final CompositeDisposable disposables;
 
@@ -41,6 +43,7 @@ public class PlaceViewModel extends AndroidViewModel {
         storeManager = StoreManager.INSTANCE;
         sessionManager = SessionManager.INSTANCE;
         locationManager = CustomerLocationManager.INSTANCE;
+        locationProvider = AppLocationProvider.INSTANCE;
 
         disposables = new CompositeDisposable();
     }
@@ -48,10 +51,13 @@ public class PlaceViewModel extends AndroidViewModel {
     public LiveData<List<Store>> nearByStore() {
         MutableLiveData<List<Store>> nearByStore = new MutableLiveData<>();
 
-        storeManager.nearByStore()
-                .observeOn(AndroidSchedulers.mainThread())
-                .doOnNext(nearByStore::setValue)
-                .doOnSubscribe(disposables::add)
+        locationProvider.currentLocationObservable
+                .subscribeOn(AndroidSchedulers.mainThread())
+                .doOnNext(location -> storeManager.nearByStore(location)
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .doOnSuccess(nearByStore::setValue)
+                        .doOnSubscribe(disposables::add)
+                        .subscribe()).doOnSubscribe(disposables::add)
                 .subscribe();
 
         return nearByStore;

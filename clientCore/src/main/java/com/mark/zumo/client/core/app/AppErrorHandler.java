@@ -48,7 +48,9 @@ public class AppErrorHandler {
             }
 
             Log.e(TAG, "an error caught.");
-            Log.e(TAG, e.getMessage());
+            if (e != null && e.getMessage() != null) {
+                Log.e(TAG, e.getMessage());
+            }
             if (e instanceof HttpException) {
                 // We had non-2XX http error
                 showToast(R.string.error_message_on_http_exception);

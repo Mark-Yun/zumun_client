@@ -12,7 +12,6 @@ import com.mark.zumo.client.core.provider.AppLocationProvider;
 
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.schedulers.Schedulers;
 
 /**
  * Created by mark on 18. 6. 24.
@@ -29,9 +28,8 @@ public enum CustomerLocationManager {
     public Observable<Float> distanceFrom(double latitude, double longitude) {
         Location location = from(latitude, longitude);
         return locationProvider.currentLocationObservable
-                .subscribeOn(AndroidSchedulers.mainThread())
                 .map(location1 -> location1.distanceTo(location))
-                .subscribeOn(Schedulers.io());
+                .subscribeOn(AndroidSchedulers.mainThread());
     }
 
     private Location from(double latitude, double longitude) {

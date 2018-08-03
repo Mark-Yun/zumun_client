@@ -143,4 +143,8 @@ public enum S3TransferManager {
     public String getCoverImageDirPath(String sessionId) {
         return "public/store/" + sessionId + "/cover_image/" + UUID.randomUUID() + ".jpg";
     }
+
+    public String getMenuImageDirPath(String sessionId) {
+        return "public/store/" + sessionId + "/menu_image/" + UUID.randomUUID() + ".jpg";
+    }
 }

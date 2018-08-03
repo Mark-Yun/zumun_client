@@ -23,6 +23,7 @@ import android.util.Log;
 import com.mark.zumo.client.core.util.context.ContextHolder;
 
 import io.reactivex.Observable;
+import io.reactivex.ObservableEmitter;
 
 /**
  * Created by mark on 18. 5. 20.
@@ -45,7 +46,7 @@ public enum AppLocationProvider {
     }
 
     private Observable<Location> currentLocation() {
-        return Observable.create(e -> {
+        return Observable.create((ObservableEmitter<Location> e) -> {
             boolean isGPSEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
             boolean isNetworkEnabled = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
 

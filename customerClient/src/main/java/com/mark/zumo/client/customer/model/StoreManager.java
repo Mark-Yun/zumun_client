@@ -6,10 +6,10 @@
 
 package com.mark.zumo.client.customer.model;
 
+import android.location.Location;
 import android.util.Log;
 
 import com.mark.zumo.client.core.entity.Store;
-import com.mark.zumo.client.core.provider.AppLocationProvider;
 import com.mark.zumo.client.core.repository.OrderRepository;
 import com.mark.zumo.client.core.repository.StoreRepository;
 
@@ -17,7 +17,6 @@ import java.util.List;
 
 import io.reactivex.Maybe;
 import io.reactivex.Observable;
-import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 
 /**
@@ -32,25 +31,19 @@ public enum StoreManager {
     private final StoreRepository storeRepository;
     private final OrderRepository orderRepository;
 
-    private final AppLocationProvider locationProvider;
-
     StoreManager() {
         storeRepository = StoreRepository.INSTANCE;
-        locationProvider = AppLocationProvider.INSTANCE;
         orderRepository = OrderRepository.INSTANCE;
     }
 
-    public Observable<List<Store>> nearByStore() {
-        return locationProvider.currentLocationObservable
-                .subscribeOn(AndroidSchedulers.mainThread())
-                .flatMap(storeRepository::nearByStore)
-                .subscribeOn(Schedulers.newThread())
-                .doOnNext(stores -> Log.d(TAG, "nearByStore: " + stores.size()));
+    public Maybe<List<Store>> nearByStore(Location location) {
+        return storeRepository.nearByStore(location)
+                .subscribeOn(Schedulers.io());
     }
 
     public Maybe<List<Store>> latestVisitStore(String customerUuid, int limit) {
-        return orderRepository.getMenuOrderListByCustomerUuidFromDisk(customerUuid, 0, 10)
-                .flatMapObservable(Observable::fromIterable)
+        return orderRepository.getMenuOrderListByCustomerUuid(customerUuid, 0, 10)
+                .flatMap(Observable::fromIterable)
                 .map(menuOrder -> menuOrder.storeUuid)
                 .distinct().take(limit)
                 .flatMapMaybe(storeRepository::getStoreFromApi)

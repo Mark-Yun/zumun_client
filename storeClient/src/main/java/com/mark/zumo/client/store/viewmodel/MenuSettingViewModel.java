@@ -6,19 +6,23 @@
 
 package com.mark.zumo.client.store.viewmodel;
 
+import android.app.Activity;
 import android.app.Application;
 import android.arch.lifecycle.AndroidViewModel;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
+import android.net.Uri;
 import android.support.annotation.NonNull;
 
 import com.mark.zumo.client.core.entity.Menu;
 import com.mark.zumo.client.core.entity.MenuCategory;
 import com.mark.zumo.client.store.model.MenuManager;
+import com.mark.zumo.client.store.model.S3TransferManager;
 import com.mark.zumo.client.store.model.SessionManager;
 
 import java.util.List;
 
+import io.reactivex.Maybe;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 
@@ -29,6 +33,7 @@ public class MenuSettingViewModel extends AndroidViewModel {
 
     private final SessionManager sessionManager;
     private final MenuManager menuManager;
+    private final S3TransferManager s3TransferManager;
 
     private final CompositeDisposable compositeDisposable;
 
@@ -37,6 +42,7 @@ public class MenuSettingViewModel extends AndroidViewModel {
 
         sessionManager = SessionManager.INSTANCE;
         menuManager = MenuManager.INSTANCE;
+        s3TransferManager = S3TransferManager.INSTANCE;
 
         compositeDisposable = new CompositeDisposable();
     }
@@ -117,7 +123,7 @@ public class MenuSettingViewModel extends AndroidViewModel {
 
     public LiveData<List<MenuCategory>> updateCategorySeqNum(List<MenuCategory> menuCategoryList) {
         MutableLiveData<List<MenuCategory>> liveData = new MutableLiveData<>();
-        menuManager.updateMenuCateogryList(menuCategoryList)
+        menuManager.updateMenuCategoryList(menuCategoryList)
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSubscribe(compositeDisposable::add)
                 .doOnSuccess(liveData::setValue)
@@ -127,13 +133,28 @@ public class MenuSettingViewModel extends AndroidViewModel {
 
     public LiveData<MenuCategory> updateCategoryName(MenuCategory menuCategory, String newName) {
         MutableLiveData<MenuCategory> liveData = new MutableLiveData<>();
-        menuManager.updateMenuCateogryName(menuCategory, newName)
+        menuManager.updateMenuCategoryName(menuCategory, newName)
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSubscribe(compositeDisposable::add)
                 .doOnSuccess(liveData::setValue)
                 .subscribe();
         return liveData;
     }
+
+    public LiveData<Menu> uploadMenuImage(Activity activity, String menuUuid, Uri uri) {
+        MutableLiveData<Menu> liveData = new MutableLiveData<>();
+
+        Maybe.fromCallable(() -> s3TransferManager.getMenuImageDirPath(menuUuid))
+                .flatMap(s3Path -> s3TransferManager.uploadFile(activity, s3Path, uri))
+                .flatMap(url -> menuManager.updateMenuImageUrl(menuUuid, url))
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnSuccess(liveData::setValue)
+                .doOnSubscribe(compositeDisposable::add)
+                .subscribe();
+
+        return liveData;
+    }
+
 
     @Override
     protected void onCleared() {
