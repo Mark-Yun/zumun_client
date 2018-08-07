@@ -118,8 +118,11 @@ class MenuCategoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                         .setCancelable(true)
                         .setNegativeButton(R.string.button_text_cancel, (dialog, which) -> dialog.dismiss())
                         .setPositiveButton(R.string.button_text_apply, (dialog, which) -> {
-                            int seqNum = menuCategoryList.size();
-                            menuSettingViewModel.createCategory(editText.getText().toString(), seqNum)
+                            int seqNum = -1;
+                            for (MenuCategory menuCategory : menuCategoryList) {
+                                seqNum = Math.max(seqNum, menuCategory.seqNum);
+                            }
+                            menuSettingViewModel.createCategory(editText.getText().toString(), seqNum + 1)
                                     .observe(lifecycleOwner, this::onCreateMenuCategory);
                             dialog.dismiss();
                         })

@@ -14,6 +14,7 @@ import android.arch.persistence.room.Query;
 
 import com.mark.zumo.client.core.entity.Menu;
 import com.mark.zumo.client.core.entity.MenuCategory;
+import com.mark.zumo.client.core.entity.MenuDetail;
 import com.mark.zumo.client.core.entity.MenuOption;
 import com.mark.zumo.client.core.entity.MenuOrder;
 import com.mark.zumo.client.core.entity.OrderDetail;
@@ -140,4 +141,13 @@ public interface DiskRepository {
     @Delete
     void removePaymentToken(PaymentToken paymentToken);
 
+
+    @Query("SELECT * FROM " + MenuDetail.Schema.TABLE + " WHERE store_uuid LIKE :storeUuid")
+    Maybe<List<MenuDetail>> getMenuDetailByStoreUuid(String storeUuid);
+
+    @Query("SELECT * FROM " + MenuDetail.Schema.TABLE + " WHERE menu_uuid LIKE :menuUuid")
+    Maybe<List<MenuDetail>> getMenuDetailByStringMenuUuidFromDisk(String menuUuid);
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    void insertMenuDetailList(List<MenuDetail> menuDetailList);
 }

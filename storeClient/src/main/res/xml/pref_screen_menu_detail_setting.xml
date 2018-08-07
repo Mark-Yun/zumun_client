@@ -14,10 +14,19 @@
     <PreferenceCategory android:title="@string/preference_category_menu_detail_menu">
         <EditTextPreference
             android:key="@string/preference_key_menu_detail_menu_name"
+            android:persistent="false"
             android:title="@string/preference_title_menu_detail_menu_name" />
 
+        <MultiSelectListPreference
+            android:key="@string/preference_key_menu_detail_menu_category"
+            android:persistent="false"
+            android:title="@string/preference_title_menu_detail_menu_category" />
+
         <EditTextPreference
+            android:digits="0123456789"
             android:key="@string/preference_key_menu_detail_menu_price"
+            android:inputType="number"
+            android:persistent="false"
             android:title="@string/preference_title_menu_detail_menu_price" />
     </PreferenceCategory>
 </PreferenceScreen>

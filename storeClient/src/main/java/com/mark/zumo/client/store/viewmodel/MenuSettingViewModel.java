@@ -97,6 +97,18 @@ public class MenuSettingViewModel extends AndroidViewModel {
         return liveData;
     }
 
+    public LiveData<Menu> updateMenuCategory(String menuUuid, String categoryUuid) {
+        MutableLiveData<Menu> liveData = new MutableLiveData<>();
+
+        menuManager.updateMenuCategory(menuUuid, categoryUuid)
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnSubscribe(compositeDisposable::add)
+                .doOnSuccess(liveData::setValue)
+                .subscribe();
+
+        return liveData;
+    }
+
     public LiveData<List<MenuCategory>> categoryList() {
         MutableLiveData<List<MenuCategory>> liveData = new MutableLiveData<>();
         sessionManager.getSessionStore()

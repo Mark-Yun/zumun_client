@@ -55,6 +55,9 @@
     <string name="preference_title_menu_detail_menu_price">Menu Price</string>
     <string name="preference_key_menu_detail_menu_price">menu_detail_menu_price</string>
 
+    <string name="preference_title_menu_detail_menu_category">Menu Category</string>
+    <string name="preference_key_menu_detail_menu_category">menu_detail_menu_category</string>
+
     <string name="store_profile_name_editor_title">Store Name</string>
     <string name="store_profile_name_editor_message">Insert new store name</string>
 
@@ -83,4 +86,6 @@
     <string name="complete_order_indicator_title">Complete</string>
 
     <string name="order_total_amount_description">Total Amount:&#160;</string>
+
+    <string name="error_message_insert_as_number">Insert as number</string>
 </resources>

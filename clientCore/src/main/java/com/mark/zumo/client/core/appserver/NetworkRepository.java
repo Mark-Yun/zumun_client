@@ -8,6 +8,7 @@ package com.mark.zumo.client.core.appserver;
 
 import com.mark.zumo.client.core.entity.Menu;
 import com.mark.zumo.client.core.entity.MenuCategory;
+import com.mark.zumo.client.core.entity.MenuDetail;
 import com.mark.zumo.client.core.entity.MenuOption;
 import com.mark.zumo.client.core.entity.MenuOrder;
 import com.mark.zumo.client.core.entity.OrderDetail;
@@ -63,6 +64,10 @@ public interface NetworkRepository {
     @GET("menu/option")
     Maybe<List<MenuOption>> getMenuOptionListByMenuUuid(@Query(MenuOption.Schema.menuUuid) String menuUuid);
 
+    @PUT("menu/{" + Menu.Schema.uuid + "}/category")
+    Maybe<Menu> updateCategoryInMenu(@Path(Menu.Schema.uuid) String menuUuid,
+                                     @Body MenuCategory menuCategory);
+
 
     @GET("category")
     Maybe<List<MenuCategory>> getMenuCategoryListByStoreUuid(@Query(MenuCategory.Schema.storeUuid) String storeUuid);
@@ -70,6 +75,10 @@ public interface NetworkRepository {
     @PUT("category/{" + MenuCategory.Schema.uuid + "}")
     Maybe<MenuCategory> updateMenuCategory(@Path(MenuCategory.Schema.uuid) final String menuCategoryUuid,
                                            @Body final MenuCategory menuCategory);
+
+    @GET("category/{" + MenuCategory.Schema.uuid + "}")
+    Maybe<MenuCategory> getMenuCategory(@Path(MenuCategory.Schema.uuid) final String menuCategoryUuid);
+
 
     @POST("category")
     Maybe<MenuCategory> createMenuCategory(@Body MenuCategory menuCategory);
@@ -102,4 +111,6 @@ public interface NetworkRepository {
     Maybe<SnsToken> createSnsToken(@Body SnsToken snsToken);
 
 
+    @GET("menu/detail")
+    Maybe<List<MenuDetail>> getMenuDetailByStoreUuid(@Query(MenuDetail.Schema.storeUuid) String storeUuid);
 }

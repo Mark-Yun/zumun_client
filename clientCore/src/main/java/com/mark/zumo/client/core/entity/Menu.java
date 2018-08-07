@@ -28,27 +28,21 @@ public class Menu implements Serializable {
     public String uuid;
     @SerializedName(Schema.name) @ColumnInfo(name = Schema.name)
     public String name;
-    @SerializedName(Schema.categoryName) @ColumnInfo(name = Schema.categoryName)
-    public String categoryName;
     @SerializedName(Schema.storeUuid) @ColumnInfo(name = Schema.storeUuid)
     public String storeUuid;
     @SerializedName(Schema.price) @ColumnInfo(name = Schema.price)
     public int price;
     @SerializedName(Schema.imageUrl) @ColumnInfo(name = Schema.imageUrl)
     public String imageUrl;
-    @SerializedName(Schema.seqNumber) @ColumnInfo(name = Schema.seqNumber)
-    public int seqNumber;
 
-    public Menu(@NonNull final String uuid, final String name, final String categoryName,
-                final String storeUuid, final int price, final String imageUrl, final int seqNumber) {
+    public Menu(@NonNull final String uuid, final String name,
+                final String storeUuid, final int price, final String imageUrl) {
 
         this.uuid = uuid;
         this.name = name;
-        this.categoryName = categoryName;
         this.storeUuid = storeUuid;
         this.price = price;
         this.imageUrl = imageUrl;
-        this.seqNumber = seqNumber;
     }
 
     @Override
@@ -62,7 +56,5 @@ public class Menu implements Serializable {
         String storeUuid = "store_uuid";
         String price = "menu_price";
         String imageUrl = "image_url";
-        String categoryName = "menu_category_name";
-        String seqNumber = "menu_seq_num";
     }
 }

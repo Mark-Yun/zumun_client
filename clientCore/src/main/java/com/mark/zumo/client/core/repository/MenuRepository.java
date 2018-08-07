@@ -89,28 +89,13 @@ public enum MenuRepository {
                 .distinctUntilChanged(new ListComparator<>());
     }
 
-    public Observable<List<MenuCategory>> getMenuCategoryList(final String storeUuid) {
-        Maybe<List<MenuCategory>> menuCategoryListDB = diskRepository.getMenuCategoryList(storeUuid);
-        Maybe<List<MenuCategory>> menuCategoryListApi = networkRepository.getMenuCategoryListByStoreUuid(storeUuid)
-                .doOnSuccess(diskRepository::insertMenuCategoryList);
-
-        return Maybe.merge(menuCategoryListDB, menuCategoryListApi)
-                .toObservable()
-                .distinctUntilChanged(new ListComparator<>());
-    }
-
-    public Maybe<MenuCategory> createMenuCategory(final MenuCategory menuCategory) {
-        return networkRepository.createMenuCategory(menuCategory)
-                .doOnSuccess(diskRepository::insertMenuCategory);
-    }
-
-    public Maybe<MenuCategory> updateMenuCategory(final MenuCategory menuCategory) {
-        return networkRepository.updateMenuCategory(menuCategory.uuid, menuCategory)
-                .doOnSuccess(diskRepository::insertMenuCategory);
-    }
-
     public Maybe<Menu> updateMenu(final Menu menu) {
         return networkRepository.updateMenu(menu.uuid, menu)
+                .doOnSuccess(diskRepository::insertMenu);
+    }
+
+    public Maybe<Menu> updateCategoryInMenu(final String menuUuid, final MenuCategory menuCategory) {
+        return networkRepository.updateCategoryInMenu(menuUuid, menuCategory)
                 .doOnSuccess(diskRepository::insertMenu);
     }
 }

@@ -9,6 +9,7 @@ package com.mark.zumo.client.store.model;
 import com.mark.zumo.client.core.entity.Menu;
 import com.mark.zumo.client.core.entity.MenuCategory;
 import com.mark.zumo.client.core.entity.MenuOption;
+import com.mark.zumo.client.core.repository.CategoryRepository;
 import com.mark.zumo.client.core.repository.MenuRepository;
 
 import java.util.List;
@@ -25,9 +26,11 @@ public enum MenuManager {
     INSTANCE;
 
     private final MenuRepository menuRepository;
+    private final CategoryRepository categoryRepository;
 
     MenuManager() {
         menuRepository = MenuRepository.INSTANCE;
+        categoryRepository = CategoryRepository.INSTANCE;
     }
 
     public Observable<List<MenuOption>> getMenuOptionList(List<String> menuOptionUuidList) {
@@ -42,7 +45,7 @@ public enum MenuManager {
     }
 
     public Observable<List<MenuCategory>> getMenuCategoryList(String storeUuid) {
-        return menuRepository.getMenuCategoryList(storeUuid)
+        return categoryRepository.getMenuCategoryList(storeUuid)
                 .subscribeOn(Schedulers.io());
     }
 
@@ -65,6 +68,12 @@ public enum MenuManager {
                 .subscribeOn(Schedulers.io());
     }
 
+    public Maybe<Menu> updateMenuCategory(final String menuUuid, final String categoryUuid) {
+        return categoryRepository.getMenuCategoryFromApi(categoryUuid)
+                .flatMap(menuCategory -> menuRepository.updateCategoryInMenu(menuUuid, menuCategory))
+                .subscribeOn(Schedulers.io());
+    }
+
     public Maybe<Menu> updateMenuImageUrl(final String menuUuid, final String imageUrl) {
         return menuRepository.getMenuFromDisk(menuUuid)
                 .doOnSuccess(menu -> menu.imageUrl = imageUrl)
@@ -72,22 +81,22 @@ public enum MenuManager {
                 .subscribeOn(Schedulers.io());
     }
 
-    public Maybe<MenuCategory> createMenuCategory(String name, String storeUuid, int seqNum) {
+    public Maybe<MenuCategory> createMenuCategory(final String name, final String storeUuid, final int seqNum) {
         return Maybe.fromCallable(() -> new MenuCategory(null, name, storeUuid, seqNum))
-                .flatMap(menuRepository::createMenuCategory)
+                .flatMap(categoryRepository::createMenuCategory)
                 .subscribeOn(Schedulers.io());
     }
 
-    public Maybe<List<MenuCategory>> updateMenuCategoryList(List<MenuCategory> menuCategoryList) {
+    public Maybe<List<MenuCategory>> updateMenuCategoryList(final List<MenuCategory> menuCategoryList) {
         return Observable.fromIterable(menuCategoryList)
-                .flatMapMaybe(menuRepository::updateMenuCategory)
+                .flatMapMaybe(categoryRepository::updateMenuCategory)
                 .toList().toMaybe()
                 .subscribeOn(Schedulers.io());
     }
 
-    public Maybe<MenuCategory> updateMenuCategoryName(MenuCategory menuCategory, String name) {
+    public Maybe<MenuCategory> updateMenuCategoryName(final MenuCategory menuCategory, final String name) {
         MenuCategory newCategory = new MenuCategory(menuCategory.uuid, name, menuCategory.storeUuid, menuCategory.seqNum);
-        return menuRepository.updateMenuCategory(newCategory)
+        return categoryRepository.updateMenuCategory(newCategory)
                 .subscribeOn(Schedulers.io());
     }
 }
