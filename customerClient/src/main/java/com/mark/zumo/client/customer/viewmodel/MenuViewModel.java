@@ -13,6 +13,7 @@ import android.arch.lifecycle.MutableLiveData;
 import android.support.annotation.NonNull;
 
 import com.mark.zumo.client.core.entity.Menu;
+import com.mark.zumo.client.core.entity.MenuCategory;
 import com.mark.zumo.client.core.entity.OrderDetail;
 import com.mark.zumo.client.core.entity.Store;
 import com.mark.zumo.client.customer.model.CartManager;
@@ -20,7 +21,9 @@ import com.mark.zumo.client.customer.model.MenuManager;
 import com.mark.zumo.client.customer.model.StoreManager;
 import com.mark.zumo.client.customer.model.entity.Cart;
 
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
@@ -48,17 +51,6 @@ public class MenuViewModel extends AndroidViewModel {
         disposables = new CompositeDisposable();
     }
 
-    public LiveData<List<Menu>> getMenuItemList(String storeUuid) {
-        MutableLiveData<List<Menu>> listMutableLiveData = new MutableLiveData<>();
-        menuManager.acquireMenuItem(storeUuid)
-                .observeOn(AndroidSchedulers.mainThread())
-                .doOnNext(listMutableLiveData::setValue)
-                .doOnSubscribe(disposables::add)
-                .subscribe();
-
-        return listMutableLiveData;
-    }
-
     @Override
     protected void onCleared() {
         disposables.clear();
@@ -77,6 +69,46 @@ public class MenuViewModel extends AndroidViewModel {
                 .subscribe();
 
         return cartLiveData;
+    }
+
+    public MutableLiveData<Map<String, List<Menu>>> loadMenuByCategory(String storeUuid) {
+        MutableLiveData<Map<String, List<Menu>>> liveData = new MutableLiveData<>();
+        Map<String, List<Menu>> menuMap = new LinkedHashMap<>();
+
+        menuManager.getMenuListByCategory(storeUuid)
+                .flatMapSingle(groupedObservable ->
+                        groupedObservable.sorted((d1, d2) -> d1.menuSeqNum - d2.menuSeqNum)
+                                .map(menuDetail -> menuDetail.menuUuid)
+                                .flatMapMaybe(menuManager::getMenuFromDisk)
+                                .toList()
+                                .doOnSuccess(menuList -> menuMap.put(groupedObservable.getKey(), menuList))
+                ).observeOn(AndroidSchedulers.mainThread())
+                .doOnSubscribe(disposables::add)
+                .doOnComplete(() -> liveData.setValue(menuMap)).subscribe();
+
+        return liveData;
+    }
+
+    public MutableLiveData<List<Menu>> loadUnCategorizedMenu(String storeUuid) {
+        MutableLiveData<List<Menu>> liveData = new MutableLiveData<>();
+        menuManager.unCategorizedMenu(storeUuid)
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnSuccess(liveData::setValue)
+                .doOnSubscribe(disposables::add)
+                .subscribe();
+        return liveData;
+    }
+
+    public MutableLiveData<List<MenuCategory>> loadMenuCategoryList(String storeUuid) {
+        MutableLiveData<List<MenuCategory>> liveData = new MutableLiveData<>();
+
+        menuManager.getMenuCategoryList(storeUuid)
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnNext(liveData::setValue)
+                .doOnSubscribe(disposables::add)
+                .subscribe();
+
+        return liveData;
     }
 
     public void addMenuToCart(Menu menu) {

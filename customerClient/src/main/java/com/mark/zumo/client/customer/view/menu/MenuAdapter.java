@@ -55,6 +55,7 @@ class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.ViewHolder> {
 
     public void setMenuList(final List<Menu> menuList) {
         this.menuList = menuList;
+        notifyDataSetChanged();
     }
 
     @NonNull

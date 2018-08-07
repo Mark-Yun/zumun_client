@@ -11,6 +11,7 @@ import com.mark.zumo.client.core.appserver.NetworkRepository;
 import com.mark.zumo.client.core.dao.AppDatabaseProvider;
 import com.mark.zumo.client.core.dao.DiskRepository;
 import com.mark.zumo.client.core.entity.MenuCategory;
+import com.mark.zumo.client.core.entity.MenuDetail;
 import com.mark.zumo.client.core.entity.util.ListComparator;
 
 import java.util.List;
@@ -43,6 +44,10 @@ public enum CategoryRepository {
         return Maybe.merge(menuCategoryListDB, menuCategoryListApi)
                 .toObservable()
                 .distinctUntilChanged(new ListComparator<>());
+    }
+
+    public Maybe<List<MenuDetail>> getMenuDetailListFromDisk(final String storeUuid) {
+        return diskRepository.getMenuDetailByStoreUuid(storeUuid);
     }
 
     public Maybe<MenuCategory> createMenuCategory(final MenuCategory menuCategory) {

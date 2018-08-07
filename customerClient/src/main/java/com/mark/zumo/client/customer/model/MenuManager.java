@@ -7,8 +7,11 @@
 package com.mark.zumo.client.customer.model;
 
 import com.mark.zumo.client.core.entity.Menu;
+import com.mark.zumo.client.core.entity.MenuCategory;
+import com.mark.zumo.client.core.entity.MenuDetail;
 import com.mark.zumo.client.core.entity.MenuOption;
 import com.mark.zumo.client.core.p2p.P2pClient;
+import com.mark.zumo.client.core.repository.CategoryRepository;
 import com.mark.zumo.client.core.repository.MenuRepository;
 
 import java.util.List;
@@ -26,16 +29,28 @@ public enum MenuManager {
     INSTANCE;
 
     private final MenuRepository menuRepository;
+    private final CategoryRepository categoryRepository;
 
     private P2pClient p2pClient;
 
     MenuManager() {
         menuRepository = MenuRepository.INSTANCE;
+        categoryRepository = CategoryRepository.INSTANCE;
     }
 
-    public Observable<List<Menu>> acquireMenuItem(String storeUuid) {
-        return menuRepository.getMenuItemsOfStore(storeUuid)
-                .subscribeOn(Schedulers.io());
+    public Maybe<List<Menu>> unCategorizedMenu(String storeUuid) {
+        return categoryRepository.getMenuDetailListFromDisk(storeUuid)
+                .flatMapObservable(Observable::fromIterable)
+                .map(menuDetail -> menuDetail.menuUuid)
+                .distinct()
+                .toList()
+                .flatMapMaybe(menuUuidList ->
+                        menuRepository.getMenuItemsOfStoreFromDisk(storeUuid)
+                                .flatMapObservable(Observable::fromIterable)
+                                .filter(menu -> menuUuidList.contains(menu.uuid))
+                                .toList()
+                                .toMaybe()
+                ).subscribeOn(Schedulers.io());
     }
 
     public Maybe<Menu> getMenuFromDisk(String uuid) {
@@ -57,6 +72,12 @@ public enum MenuManager {
                 .subscribeOn(Schedulers.computation());
     }
 
+    public Observable<GroupedObservable<String, MenuDetail>> getMenuListByCategory(String storeUuid) {
+        return menuRepository.getMenuItemsOfStore(storeUuid)
+                .concatMap(unused -> menuRepository.getMenuUuidListOfStore(storeUuid))
+                .subscribeOn(Schedulers.computation());
+    }
+
     public Maybe<MenuOption> getMenuOptionFromDisk(String menuOptionUuid) {
         return menuRepository.getMenuOptionFromDisk(menuOptionUuid)
                 .subscribeOn(Schedulers.io());
@@ -65,5 +86,14 @@ public enum MenuManager {
     public Observable<List<MenuOption>> getMenuOptionList(List<String> menuOptionUuidList) {
         return menuRepository.getMenuOptionList(menuOptionUuidList)
                 .subscribeOn(Schedulers.io());
+    }
+
+    public Observable<List<MenuCategory>> getMenuCategoryList(String storeUuid) {
+        return categoryRepository.getMenuCategoryList(storeUuid)
+                .flatMapSingle(menuCategories ->
+                        Observable.fromIterable(menuCategories)
+                                .sorted((c1, c2) -> c2.seqNum - c1.seqNum)
+                                .toList()
+                ).subscribeOn(Schedulers.io());
     }
 }

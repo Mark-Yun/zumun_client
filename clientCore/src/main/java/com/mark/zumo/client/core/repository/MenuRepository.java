@@ -12,6 +12,7 @@ import com.mark.zumo.client.core.dao.AppDatabaseProvider;
 import com.mark.zumo.client.core.dao.DiskRepository;
 import com.mark.zumo.client.core.entity.Menu;
 import com.mark.zumo.client.core.entity.MenuCategory;
+import com.mark.zumo.client.core.entity.MenuDetail;
 import com.mark.zumo.client.core.entity.MenuOption;
 import com.mark.zumo.client.core.entity.util.ListComparator;
 
@@ -49,6 +50,10 @@ public enum MenuRepository {
                 .distinctUntilChanged(new ListComparator<>());
     }
 
+    public Maybe<List<Menu>> getMenuItemsOfStoreFromDisk(String storeUuid) {
+        return diskRepository.getMenuList(storeUuid);
+    }
+
     private Observable<List<MenuOption>> getMenuOptionsOfMenu(String menuUuid) {
         Maybe<List<MenuOption>> menuOptionListDB = diskRepository.getMenuOptionListByMenuUuid(menuUuid);
         Maybe<List<MenuOption>> menuOptionListApi = networkRepository.getMenuOptionListByMenuUuid(menuUuid)
@@ -63,6 +68,18 @@ public enum MenuRepository {
         return getMenuOptionsOfMenu(menuUuid)
                 .flatMap(Observable::fromIterable)
                 .groupBy(menuOption -> menuOption.name);
+    }
+
+    public Observable<GroupedObservable<String, MenuDetail>> getMenuUuidListOfStore(String storeUuid) {
+        Maybe<List<MenuDetail>> menuListDB = diskRepository.getMenuDetailByStoreUuid(storeUuid);
+        Maybe<List<MenuDetail>> menuListApi = networkRepository.getMenuDetailByStoreUuid(storeUuid)
+                .doOnSuccess(diskRepository::insertMenuDetailList);
+
+        return Maybe.merge(menuListDB, menuListApi)
+                .toObservable()
+                .distinctUntilChanged(new ListComparator<>())
+                .flatMap(Observable::fromIterable)
+                .groupBy(menuDetail -> menuDetail.menuCategoryUuid);
     }
 
     public Maybe<Menu> getMenuFromDisk(final String uuid) {
