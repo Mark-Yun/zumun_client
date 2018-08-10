@@ -34,7 +34,7 @@ public enum OrderManager {
     private final OrderRepository orderRepository;
     private final KakaoPayAdapter kakaoPayAdapter;
 
-    private OrderBucket acceptedOrderBucket;
+    private OrderBucket canceledOrderBucket;
     private OrderBucket requestedOrderBucket;
     private OrderBucket completeOrderBucket;
 
@@ -57,11 +57,11 @@ public enum OrderManager {
                 .subscribe();
     }
 
-    private void loadOrderBucket(String storeUuid, OrderBucket orderBucket, MenuOrder.State state) {
+    private void loadOrderBucket(String storeUuid, OrderBucket orderBucket, MenuOrder.State... states) {
         orderRepository.getMenuOrderListByStoreUuid(storeUuid, 0, 30)
                 .map(Observable::fromIterable)
                 .doOnNext(menuOrderObservable ->
-                        menuOrderObservable.filter(menuOrder -> menuOrder.state == state.ordinal())
+                        menuOrderObservable.filter(menuOrder -> stateAnyMatch(MenuOrder.State.of(menuOrder.state), states))
                                 .toList()
                                 .doOnSuccess(orderBucket::setOrder)
                                 .subscribeOn(Schedulers.io())
@@ -70,10 +70,21 @@ public enum OrderManager {
                 .subscribe();
     }
 
+    private boolean stateAnyMatch(MenuOrder.State targetState, MenuOrder.State[] states) {
+        for (MenuOrder.State state : states) {
+            if (targetState == state) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public Observable<OrderBucket> requestedOrderBucket(String storeUuid) {
         if (requestedOrderBucket == null) {
             requestedOrderBucket = new OrderBucket();
-            loadOrderBucket(storeUuid, requestedOrderBucket, MenuOrder.State.REQUESTED);
+            loadOrderBucket(storeUuid, requestedOrderBucket,
+                    MenuOrder.State.REQUESTED,
+                    MenuOrder.State.ACCEPTED);
         }
 
         return Observable.create(
@@ -81,14 +92,14 @@ public enum OrderManager {
         ).subscribeOn(Schedulers.computation());
     }
 
-    public Observable<OrderBucket> acceptedOrderBucket(String storeUuid) {
-        if (acceptedOrderBucket == null) {
-            acceptedOrderBucket = new OrderBucket();
-            loadOrderBucket(storeUuid, acceptedOrderBucket, MenuOrder.State.ACCEPTED);
+    public Observable<OrderBucket> canceledOrderBucket(String storeUuid) {
+        if (canceledOrderBucket == null) {
+            canceledOrderBucket = new OrderBucket();
+            loadOrderBucket(storeUuid, canceledOrderBucket, MenuOrder.State.CANCELED, MenuOrder.State.REJECTED);
         }
 
         return Observable.create(
-                (ObservableOnSubscribe<OrderBucket>) e -> e.onNext(acceptedOrderBucket.addEmitter(e))
+                (ObservableOnSubscribe<OrderBucket>) e -> e.onNext(canceledOrderBucket.addEmitter(e))
         ).subscribeOn(Schedulers.computation());
     }
 
@@ -114,7 +125,7 @@ public enum OrderManager {
                 .map(paymentApprovalResponse -> paymentApprovalResponse.partnerOrderId)
                 .map(menuOrderUuid -> requestedOrderBucket.removeOrder(menuOrderUuid))
                 .flatMap(menuOrder1 -> updateOrderState(menuOrder1, MenuOrder.State.ACCEPTED))
-                .doOnSuccess(acceptedOrderBucket::addOrder)
+                .doOnSuccess(canceledOrderBucket::addOrder)
                 .subscribeOn(Schedulers.io());
     }
 
@@ -139,7 +150,7 @@ public enum OrderManager {
     }
 
     public Maybe<Long> acceptAllOrder() {
-        return Observable.fromIterable(acceptedOrderBucket.getOrderList())
+        return Observable.fromIterable(canceledOrderBucket.getOrderList())
                 .flatMapMaybe(this::acceptOrder)
                 .count().toMaybe();
     }

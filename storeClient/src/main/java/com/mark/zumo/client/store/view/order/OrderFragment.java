@@ -34,8 +34,9 @@ import butterknife.OnClick;
 public class OrderFragment extends Fragment {
 
     @BindView(R.id.requested_order_indicator_count) AppCompatTextView requestedOrderCount;
-    @BindView(R.id.accepted_order_indicator_count) AppCompatTextView acceptedOrderCount;
+    @BindView(R.id.canceled_order_order_indicator_count) AppCompatTextView canceledOrderCount;
     @BindView(R.id.complete_order_indicator_count) AppCompatTextView completeOrderCount;
+
     @BindView(R.id.requested_order_indicator) ConstraintLayout requestedOrderIndicator;
 
     private OrderViewModel orderViewModel;
@@ -57,32 +58,35 @@ public class OrderFragment extends Fragment {
 
     private void inflateIndicators() {
         orderViewModel.requestedMenuOrderList().observe(this, this::onLoadRequestedOrder);
-        orderViewModel.acceptedMenuOrderList().observe(this, this::onLoadAcceptedOrder);
+        orderViewModel.canceledMenuOrderList().observe(this, this::onLoadCanceledOrder);
         orderViewModel.completeMenuOrderList().observe(this, this::onLoadCompleteOrder);
 
         requestedOrderIndicator.performClick();
     }
 
     private void onLoadRequestedOrder(List<MenuOrder> requestedOrderList) {
-        requestedOrderCount.setText(String.valueOf(requestedOrderList.size()));
+        String text = getString(R.string.number_of_orders, String.valueOf(requestedOrderList.size()));
+        requestedOrderCount.setText(text);
     }
 
-    private void onLoadAcceptedOrder(List<MenuOrder> acceptedOrder) {
-        acceptedOrderCount.setText(String.valueOf(acceptedOrder.size()));
+    private void onLoadCanceledOrder(List<MenuOrder> acceptedOrder) {
+        String text = getString(R.string.number_of_orders, String.valueOf(acceptedOrder.size()));
+        canceledOrderCount.setText(text);
     }
 
     private void onLoadCompleteOrder(List<MenuOrder> completeOrder) {
-        completeOrderCount.setText(String.valueOf(completeOrder.size()));
+        String text = getString(R.string.number_of_orders, String.valueOf(completeOrder.size()));
+        completeOrderCount.setText(text);
     }
 
-    @OnClick({R.id.requested_order_indicator, R.id.accepted_order_indicator, R.id.complete_order_indicator})
+    @OnClick({R.id.requested_order_indicator, R.id.canceled_order_indicator, R.id.complete_order_indicator})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.requested_order_indicator:
                 Fragment fragment = Fragment.instantiate(getContext(), RequestedOrderFragment.class.getName());
                 replaceContentFragment(fragment);
                 break;
-            case R.id.accepted_order_indicator:
+            case R.id.canceled_order_indicator:
                 break;
             case R.id.complete_order_indicator:
                 break;

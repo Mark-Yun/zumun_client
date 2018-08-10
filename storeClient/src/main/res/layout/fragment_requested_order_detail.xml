@@ -7,8 +7,7 @@
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:padding="@dimen/big_margin">
+    android:layout_height="match_parent">
 
     <android.support.v7.widget.AppCompatTextView
         android:id="@+id/order_number_title"
@@ -86,12 +85,13 @@
         style="@style/ButtonTextDark"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:paddingBottom="@dimen/big_margin"
+        android:paddingTop="@dimen/big_margin"
         android:background="@color/colorTextDisable"
-        android:padding="@dimen/big_margin"
         android:text="@string/requested_order_reject_button_text"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/accept"
-        app:layout_constraintHorizontal_weight="2"
+        app:layout_constraintHorizontal_weight="1"
         app:layout_constraintStart_toStartOf="parent" />
 
     <android.support.v7.widget.AppCompatButton
@@ -99,13 +99,13 @@
         style="@style/ButtonTextDark"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/medium_margin"
         android:background="@color/colorAccent"
-        android:padding="@dimen/big_margin"
+        android:paddingBottom="@dimen/big_margin"
+        android:paddingTop="@dimen/big_margin"
         android:text="@string/requested_order_accept_button_text"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_weight="5"
+        app:layout_constraintHorizontal_weight="1"
         app:layout_constraintStart_toEndOf="@+id/reject" />
 
 </android.support.constraint.ConstraintLayout>

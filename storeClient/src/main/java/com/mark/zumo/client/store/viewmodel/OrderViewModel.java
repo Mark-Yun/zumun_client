@@ -49,11 +49,11 @@ public class OrderViewModel extends AndroidViewModel {
         compositeDisposable = new CompositeDisposable();
     }
 
-    public LiveData<List<MenuOrder>> acceptedMenuOrderList() {
+    public LiveData<List<MenuOrder>> canceledMenuOrderList() {
         MutableLiveData<List<MenuOrder>> liveData = new MutableLiveData<>();
         sessionManager.getSessionStore()
                 .map(store -> store.uuid)
-                .flatMapObservable(orderManager::acceptedOrderBucket)
+                .flatMapObservable(orderManager::canceledOrderBucket)
                 .map(OrderBucket::getOrderList)
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnNext(liveData::setValue)

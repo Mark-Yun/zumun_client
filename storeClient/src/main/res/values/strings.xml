@@ -82,10 +82,11 @@
     <string name="title_price">Price</string>
 
     <string name="requested_order_indicator_title">Requested</string>
-    <string name="accepted_order_indicator_title">Accepted</string>
+    <string name="canceled_order_indicator_title">Canceled</string>
     <string name="complete_order_indicator_title">Complete</string>
 
     <string name="order_total_amount_description">Total Amount:&#160;</string>
 
     <string name="error_message_insert_as_number">Insert as number</string>
+    <string name="number_of_orders">(%s)</string>
 </resources>
