@@ -12,6 +12,7 @@ import com.mark.zumo.client.core.entity.MenuDetail;
 import com.mark.zumo.client.core.entity.MenuOption;
 import com.mark.zumo.client.core.p2p.P2pClient;
 import com.mark.zumo.client.core.repository.CategoryRepository;
+import com.mark.zumo.client.core.repository.MenuDetailRepository;
 import com.mark.zumo.client.core.repository.MenuRepository;
 
 import java.util.List;
@@ -29,6 +30,7 @@ public enum MenuManager {
     INSTANCE;
 
     private final MenuRepository menuRepository;
+    private final MenuDetailRepository menuDetailRepository;
     private final CategoryRepository categoryRepository;
 
     private P2pClient p2pClient;
@@ -36,10 +38,11 @@ public enum MenuManager {
     MenuManager() {
         menuRepository = MenuRepository.INSTANCE;
         categoryRepository = CategoryRepository.INSTANCE;
+        menuDetailRepository = MenuDetailRepository.INSTANCE;
     }
 
     public Maybe<List<Menu>> unCategorizedMenu(String storeUuid) {
-        return categoryRepository.getMenuDetailListFromDisk(storeUuid)
+        return menuDetailRepository.getMenuDetailListFromDisk(storeUuid)
                 .flatMapObservable(Observable::fromIterable)
                 .map(menuDetail -> menuDetail.menuUuid)
                 .distinct()
@@ -73,8 +76,8 @@ public enum MenuManager {
     }
 
     public Observable<GroupedObservable<String, MenuDetail>> getMenuListByCategory(String storeUuid) {
-        return menuRepository.getMenuDetailListOfStore(storeUuid)
-                .concatMap(unused -> menuRepository.getMenuUuidListOfStore(storeUuid))
+        return menuRepository.getMenuListOfStore(storeUuid)
+                .concatMap(unused -> menuDetailRepository.getMenuDetailListOfStore(storeUuid))
                 .subscribeOn(Schedulers.computation());
     }
 

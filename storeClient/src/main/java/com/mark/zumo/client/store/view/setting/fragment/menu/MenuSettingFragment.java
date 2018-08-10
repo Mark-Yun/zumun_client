@@ -17,8 +17,8 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -56,20 +56,16 @@ public class MenuSettingFragment extends Fragment {
     }
 
     private void inflateRecyclerView() {
-        // use a linear layout manager
-        RecyclerView.LayoutManager layoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(layoutManager);
-
-        // use this setting to improve performance if you know that changes
-        // in content do not change the layout size of the RecyclerView
         recyclerView.setHasFixedSize(true);
         recyclerView.setNestedScrollingEnabled(false);
 
-        // specify an menuAdapter (see also next example)
-        MenuAdapter menuAdapter = new MenuAdapter(getFragmentManager());
-        recyclerView.setAdapter(menuAdapter);
+        CategoryAdapter categoryAdapter = new CategoryAdapter(this, menuSettingViewModel, getFragmentManager());
+        recyclerView.setAdapter(categoryAdapter);
 
-        menuSettingViewModel.menuList().observe(this, menuAdapter::setMenuList);
+        menuSettingViewModel.loadMenuCategoryList().observe(this, categoryAdapter::setCategoryList);
+        menuSettingViewModel.loadMenuByCategory().observe(this, categoryAdapter::setMenuListMap);
     }
 
     @OnClick(R.id.add_menu)

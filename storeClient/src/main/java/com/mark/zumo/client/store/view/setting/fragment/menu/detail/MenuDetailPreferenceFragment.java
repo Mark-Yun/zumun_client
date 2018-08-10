@@ -77,10 +77,13 @@ public class MenuDetailPreferenceFragment extends PreferenceFragmentCompat {
         MultiSelectListPreference menuCategory = (MultiSelectListPreference) findPreference(getString(R.string.preference_key_menu_detail_menu_category));
 
         Set<String> valueSet = new HashSet<>();
+        String summary = "";
         for (MenuCategory category : categoryList) {
             valueSet.add(category.uuid);
+            summary += category.name + " ";
         }
         menuCategory.setValues(valueSet);
+        menuCategory.setSummary(summary);
 //        menuCategory.setOnPreferenceChangeListener(this::onMenuCategoryChanged);
     }
 

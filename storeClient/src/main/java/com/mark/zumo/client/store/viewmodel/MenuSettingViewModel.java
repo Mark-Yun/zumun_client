@@ -20,7 +20,9 @@ import com.mark.zumo.client.store.model.MenuManager;
 import com.mark.zumo.client.store.model.S3TransferManager;
 import com.mark.zumo.client.store.model.SessionManager;
 
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import io.reactivex.Maybe;
 import io.reactivex.Observable;
@@ -36,7 +38,7 @@ public class MenuSettingViewModel extends AndroidViewModel {
     private final MenuManager menuManager;
     private final S3TransferManager s3TransferManager;
 
-    private final CompositeDisposable compositeDisposable;
+    private final CompositeDisposable disposables;
 
     public MenuSettingViewModel(@NonNull final Application application) {
         super(application);
@@ -45,7 +47,7 @@ public class MenuSettingViewModel extends AndroidViewModel {
         menuManager = MenuManager.INSTANCE;
         s3TransferManager = S3TransferManager.INSTANCE;
 
-        compositeDisposable = new CompositeDisposable();
+        disposables = new CompositeDisposable();
     }
 
     public LiveData<List<Menu>> menuList() {
@@ -55,7 +57,7 @@ public class MenuSettingViewModel extends AndroidViewModel {
                 .map(store -> store.uuid)
                 .flatMapObservable(menuManager::getMenuList)
                 .observeOn(AndroidSchedulers.mainThread())
-                .doOnSubscribe(compositeDisposable::add)
+                .doOnSubscribe(disposables::add)
                 .doOnNext(liveData::setValue)
                 .subscribe();
 
@@ -67,7 +69,7 @@ public class MenuSettingViewModel extends AndroidViewModel {
 
         menuManager.getMenuFromDisk(menuUuid)
                 .observeOn(AndroidSchedulers.mainThread())
-                .doOnSubscribe(compositeDisposable::add)
+                .doOnSubscribe(disposables::add)
                 .doOnSuccess(liveData::setValue)
                 .subscribe();
 
@@ -79,7 +81,7 @@ public class MenuSettingViewModel extends AndroidViewModel {
 
         menuManager.updateMenuName(menuUuid, menuName)
                 .observeOn(AndroidSchedulers.mainThread())
-                .doOnSubscribe(compositeDisposable::add)
+                .doOnSubscribe(disposables::add)
                 .doOnSuccess(liveData::setValue)
                 .subscribe();
 
@@ -91,7 +93,7 @@ public class MenuSettingViewModel extends AndroidViewModel {
 
         menuManager.updateMenuPrice(menuUuid, menuPrice)
                 .observeOn(AndroidSchedulers.mainThread())
-                .doOnSubscribe(compositeDisposable::add)
+                .doOnSubscribe(disposables::add)
                 .doOnSuccess(liveData::setValue)
                 .subscribe();
 
@@ -103,7 +105,7 @@ public class MenuSettingViewModel extends AndroidViewModel {
 
         menuManager.updateMenuCategory(menuUuid, categoryUuid)
                 .observeOn(AndroidSchedulers.mainThread())
-                .doOnSubscribe(compositeDisposable::add)
+                .doOnSubscribe(disposables::add)
                 .doOnSuccess(liveData::setValue)
                 .subscribe();
 
@@ -116,9 +118,54 @@ public class MenuSettingViewModel extends AndroidViewModel {
                 .map(store -> store.uuid)
                 .flatMapObservable(menuManager::getMenuCategoryList)
                 .observeOn(AndroidSchedulers.mainThread())
-                .doOnSubscribe(compositeDisposable::add)
+                .doOnSubscribe(disposables::add)
                 .doOnNext(liveData::setValue)
                 .subscribe();
+        return liveData;
+    }
+
+    public MutableLiveData<List<Menu>> loadUnCategorizedMenu() {
+        MutableLiveData<List<Menu>> liveData = new MutableLiveData<>();
+        sessionManager.getSessionStore()
+                .map(store -> store.uuid)
+                .flatMap(menuManager::unCategorizedMenu)
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnSuccess(liveData::setValue)
+                .doOnSubscribe(disposables::add)
+                .subscribe();
+        return liveData;
+    }
+
+    public MutableLiveData<List<MenuCategory>> loadMenuCategoryList() {
+        MutableLiveData<List<MenuCategory>> liveData = new MutableLiveData<>();
+
+        sessionManager.getSessionStore()
+                .map(store -> store.uuid)
+                .flatMapObservable(menuManager::getMenuCategoryList)
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnNext(liveData::setValue)
+                .doOnSubscribe(disposables::add)
+                .subscribe();
+
+        return liveData;
+    }
+
+    public MutableLiveData<Map<String, List<Menu>>> loadMenuByCategory() {
+        MutableLiveData<Map<String, List<Menu>>> liveData = new MutableLiveData<>();
+        Map<String, List<Menu>> menuMap = new LinkedHashMap<>();
+        sessionManager.getSessionStore()
+                .map(store -> store.uuid)
+                .flatMapObservable(menuManager::getMenuListByCategory)
+                .flatMapSingle(groupedObservable ->
+                        groupedObservable.sorted((d1, d2) -> d1.menuSeqNum - d2.menuSeqNum)
+                                .map(menuDetail -> menuDetail.menuUuid)
+                                .flatMapMaybe(menuManager::getMenuFromDisk)
+                                .toList()
+                                .doOnSuccess(menuList -> menuMap.put(groupedObservable.getKey(), menuList))
+                ).observeOn(AndroidSchedulers.mainThread())
+                .doOnSubscribe(disposables::add)
+                .doOnComplete(() -> liveData.setValue(menuMap)).subscribe();
+
         return liveData;
     }
 
@@ -132,7 +179,7 @@ public class MenuSettingViewModel extends AndroidViewModel {
                 .flatMapMaybe(menuManager::getMenuCategoryFromDisk)
                 .toList().toMaybe()
                 .observeOn(AndroidSchedulers.mainThread())
-                .doOnSubscribe(compositeDisposable::add)
+                .doOnSubscribe(disposables::add)
                 .doOnSuccess(liveData::setValue)
                 .subscribe();
         return liveData;
@@ -144,7 +191,7 @@ public class MenuSettingViewModel extends AndroidViewModel {
                 .map(store -> store.uuid)
                 .flatMap(storeUuid -> menuManager.createMenuCategory(categoryName, storeUuid, seqNum))
                 .observeOn(AndroidSchedulers.mainThread())
-                .doOnSubscribe(compositeDisposable::add)
+                .doOnSubscribe(disposables::add)
                 .doOnSuccess(liveData::setValue)
                 .subscribe();
         return liveData;
@@ -154,7 +201,7 @@ public class MenuSettingViewModel extends AndroidViewModel {
         MutableLiveData<List<MenuCategory>> liveData = new MutableLiveData<>();
         menuManager.updateMenuCategoryList(menuCategoryList)
                 .observeOn(AndroidSchedulers.mainThread())
-                .doOnSubscribe(compositeDisposable::add)
+                .doOnSubscribe(disposables::add)
                 .doOnSuccess(liveData::setValue)
                 .subscribe();
         return liveData;
@@ -164,7 +211,7 @@ public class MenuSettingViewModel extends AndroidViewModel {
         MutableLiveData<MenuCategory> liveData = new MutableLiveData<>();
         menuManager.updateMenuCategoryName(menuCategory, newName)
                 .observeOn(AndroidSchedulers.mainThread())
-                .doOnSubscribe(compositeDisposable::add)
+                .doOnSubscribe(disposables::add)
                 .doOnSuccess(liveData::setValue)
                 .subscribe();
         return liveData;
@@ -178,7 +225,7 @@ public class MenuSettingViewModel extends AndroidViewModel {
                 .flatMap(url -> menuManager.updateMenuImageUrl(menuUuid, url))
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSuccess(liveData::setValue)
-                .doOnSubscribe(compositeDisposable::add)
+                .doOnSubscribe(disposables::add)
                 .subscribe();
 
         return liveData;
@@ -187,6 +234,6 @@ public class MenuSettingViewModel extends AndroidViewModel {
 
     @Override
     protected void onCleared() {
-        compositeDisposable.clear();
+        disposables.clear();
     }
 }
