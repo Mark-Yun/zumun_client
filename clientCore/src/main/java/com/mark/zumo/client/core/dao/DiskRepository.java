@@ -122,6 +122,9 @@ public interface DiskRepository {
     @Query("SELECT * FROM " + MenuCategory.Schema.table + " WHERE store_uuid LIKE :storeUuid")
     Maybe<List<MenuCategory>> getMenuCategoryList(String storeUuid);
 
+    @Query("SELECT * FROM " + MenuCategory.Schema.table + " WHERE menu_category_uuid LIKE :menu_category_uuid LIMIT 1")
+    Maybe<MenuCategory> getMenuCategory(String menu_category_uuid);
+
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertVisitStore(VisitStore visitStore);
@@ -145,8 +148,10 @@ public interface DiskRepository {
     @Query("SELECT * FROM " + MenuDetail.Schema.TABLE + " WHERE store_uuid LIKE :storeUuid")
     Maybe<List<MenuDetail>> getMenuDetailByStoreUuid(String storeUuid);
 
-    @Query("SELECT * FROM " + MenuDetail.Schema.TABLE + " WHERE menu_uuid LIKE :menuUuid")
-    Maybe<List<MenuDetail>> getMenuDetailByStringMenuUuidFromDisk(String menuUuid);
+    @Query("SELECT * FROM " + MenuDetail.Schema.TABLE +
+            " WHERE store_uuid LIKE :storeUuid" +
+            " AND menu_uuid LIKE :menuUuid")
+    Maybe<List<MenuDetail>> getMenuDetailByStringMenuUuidFromDisk(String storeUuid, String menuUuid);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertMenuDetailList(List<MenuDetail> menuDetailList);

@@ -40,7 +40,7 @@ public enum MenuRepository {
         networkRepository = AppServerServiceProvider.INSTANCE.networkRepository;
     }
 
-    public Observable<List<Menu>> getMenuItemsOfStore(String storeUuid) {
+    public Observable<List<Menu>> getMenuDetailListOfStore(String storeUuid) {
         Maybe<List<Menu>> menuListDB = diskRepository.getMenuList(storeUuid);
         Maybe<List<Menu>> menuListApi = networkRepository.getMenuList(storeUuid)
                 .doOnSuccess(diskRepository::insertMenuList);

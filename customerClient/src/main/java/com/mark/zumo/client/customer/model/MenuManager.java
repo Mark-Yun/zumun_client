@@ -73,7 +73,7 @@ public enum MenuManager {
     }
 
     public Observable<GroupedObservable<String, MenuDetail>> getMenuListByCategory(String storeUuid) {
-        return menuRepository.getMenuItemsOfStore(storeUuid)
+        return menuRepository.getMenuDetailListOfStore(storeUuid)
                 .concatMap(unused -> menuRepository.getMenuUuidListOfStore(storeUuid))
                 .subscribeOn(Schedulers.computation());
     }

@@ -8,6 +8,7 @@ package com.mark.zumo.client.store.model;
 
 import com.mark.zumo.client.core.entity.Menu;
 import com.mark.zumo.client.core.entity.MenuCategory;
+import com.mark.zumo.client.core.entity.MenuDetail;
 import com.mark.zumo.client.core.entity.MenuOption;
 import com.mark.zumo.client.core.repository.CategoryRepository;
 import com.mark.zumo.client.core.repository.MenuRepository;
@@ -40,7 +41,7 @@ public enum MenuManager {
 
 
     public Observable<List<Menu>> getMenuList(String storeUuid) {
-        return menuRepository.getMenuItemsOfStore(storeUuid)
+        return menuRepository.getMenuDetailListOfStore(storeUuid)
                 .subscribeOn(Schedulers.io());
     }
 
@@ -52,6 +53,15 @@ public enum MenuManager {
     public Maybe<Menu> getMenuFromDisk(String menuUuid) {
         return menuRepository.getMenuFromDisk(menuUuid)
                 .subscribeOn(Schedulers.io());
+    }
+
+    public Maybe<List<MenuDetail>> getMenuDetailListFromDisk(String storeUuid, String menuUuid) {
+        return categoryRepository.getMenuDetailListFromDiskByMenuUuid(storeUuid, menuUuid)
+                .subscribeOn(Schedulers.io());
+    }
+
+    public Maybe<MenuCategory> getMenuCategoryFromDisk(String categoryUuid) {
+        return categoryRepository.getMenuCategoryFromDisk(categoryUuid);
     }
 
     public Maybe<Menu> updateMenuName(final String menuUuid, final String menuName) {

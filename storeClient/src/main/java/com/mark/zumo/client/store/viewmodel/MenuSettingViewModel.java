@@ -23,6 +23,7 @@ import com.mark.zumo.client.store.model.SessionManager;
 import java.util.List;
 
 import io.reactivex.Maybe;
+import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 
@@ -117,6 +118,22 @@ public class MenuSettingViewModel extends AndroidViewModel {
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSubscribe(compositeDisposable::add)
                 .doOnNext(liveData::setValue)
+                .subscribe();
+        return liveData;
+    }
+
+    public LiveData<List<MenuCategory>> categoryListByMenuUuid(String menuUuid) {
+        MutableLiveData<List<MenuCategory>> liveData = new MutableLiveData<>();
+        sessionManager.getSessionStore()
+                .map(store -> store.uuid)
+                .flatMap(storeUuid -> menuManager.getMenuDetailListFromDisk(storeUuid, menuUuid))
+                .flatMapObservable(Observable::fromIterable)
+                .map(menuDetail -> menuDetail.menuCategoryUuid)
+                .flatMapMaybe(menuManager::getMenuCategoryFromDisk)
+                .toList().toMaybe()
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnSubscribe(compositeDisposable::add)
+                .doOnSuccess(liveData::setValue)
                 .subscribe();
         return liveData;
     }

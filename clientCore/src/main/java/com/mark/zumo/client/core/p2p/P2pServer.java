@@ -160,7 +160,7 @@ public class P2pServer {
 
     private Maybe<String> sendMenuItems(String endPointId) {
         Log.d(TAG, "sendMenuItems: endPointId=" + endPointId);
-        return MenuRepository.INSTANCE.getMenuItemsOfStore(store.uuid)
+        return MenuRepository.INSTANCE.getMenuDetailListOfStore(store.uuid)
                 .firstElement()
                 .map(Packet::new)
                 .flatMap(packet -> sendPayload(endPointId, packet))

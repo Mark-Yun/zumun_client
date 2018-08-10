@@ -14,8 +14,8 @@ import com.mark.zumo.client.core.entity.MenuDetail;
 
 import java.util.List;
 
-import io.reactivex.Flowable;
 import io.reactivex.Maybe;
+import io.reactivex.Observable;
 
 /**
  * Created by mark on 18. 8. 5.
@@ -31,10 +31,11 @@ public enum MenuDetailRepository {
         diskRepository = AppDatabaseProvider.INSTANCE.diskRepository;
     }
 
-    public Flowable<List<MenuDetail>> getMenuDetailByStoreUuid(String storeUuid) {
+    public Observable<List<MenuDetail>> getMenuDetailByStoreUuid(String storeUuid) {
         Maybe<List<MenuDetail>> menuDetailListDB = diskRepository.getMenuDetailByStoreUuid(storeUuid);
         Maybe<List<MenuDetail>> menuDetailListApi = networkRepository.getMenuDetailByStoreUuid(storeUuid)
                 .doOnSuccess(diskRepository::insertMenuDetailList);
-        return Maybe.merge(menuDetailListDB, menuDetailListApi);
+        return Maybe.merge(menuDetailListDB, menuDetailListApi)
+                .toObservable();
     }
 }

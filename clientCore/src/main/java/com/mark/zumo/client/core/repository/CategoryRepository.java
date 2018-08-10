@@ -50,6 +50,10 @@ public enum CategoryRepository {
         return diskRepository.getMenuDetailByStoreUuid(storeUuid);
     }
 
+    public Maybe<List<MenuDetail>> getMenuDetailListFromDiskByMenuUuid(final String storeUuid, final String menuUuid) {
+        return diskRepository.getMenuDetailByStringMenuUuidFromDisk(storeUuid, menuUuid);
+    }
+
     public Maybe<MenuCategory> createMenuCategory(final MenuCategory menuCategory) {
         return networkRepository.createMenuCategory(menuCategory)
                 .doOnSuccess(diskRepository::insertMenuCategory);
@@ -63,5 +67,9 @@ public enum CategoryRepository {
     public Maybe<MenuCategory> getMenuCategoryFromApi(final String categoryUuid) {
         return networkRepository.getMenuCategory(categoryUuid)
                 .doOnSuccess(diskRepository::insertMenuCategory);
+    }
+
+    public Maybe<MenuCategory> getMenuCategoryFromDisk(final String categoryUuid) {
+        return diskRepository.getMenuCategory(categoryUuid);
     }
 }

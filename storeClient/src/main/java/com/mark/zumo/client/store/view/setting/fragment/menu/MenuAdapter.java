@@ -81,8 +81,7 @@ class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.ViewHolder> {
         Fragment fragment = Fragment.instantiate(itemView.getContext(), MenuDetailSettingFragment.class.getName(), bundle);
 
         fragmentManager.beginTransaction()
-                .replace(R.id.setting_main_fragment, fragment)
-                .addToBackStack("")
+                .replace(R.id.menu_detail_fragment, fragment)
                 .commit();
     }
 

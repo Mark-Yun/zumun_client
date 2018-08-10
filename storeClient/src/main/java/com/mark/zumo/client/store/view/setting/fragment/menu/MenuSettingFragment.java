@@ -57,7 +57,7 @@ public class MenuSettingFragment extends Fragment {
 
     private void inflateRecyclerView() {
         // use a linear layout manager
-        RecyclerView.LayoutManager layoutManager = new StaggeredGridLayoutManager(3, StaggeredGridLayoutManager.VERTICAL);
+        RecyclerView.LayoutManager layoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(layoutManager);
 
         // use this setting to improve performance if you know that changes

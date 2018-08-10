@@ -22,7 +22,9 @@ import com.mark.zumo.client.core.entity.MenuCategory;
 import com.mark.zumo.client.store.R;
 import com.mark.zumo.client.store.viewmodel.MenuSettingViewModel;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -57,21 +59,29 @@ public class MenuDetailPreferenceFragment extends PreferenceFragmentCompat {
     private void inflateMenuInformation() {
         menuSettingViewModel.menuFromDisk(menuUuid).observe(this, this::onLoadMenu);
         menuSettingViewModel.categoryList().observe(this, this::onLoadCategory);
+        menuSettingViewModel.categoryListByMenuUuid(menuUuid).observe(this, this::onLoadMenuCategory);
     }
 
     private void onLoadMenu(Menu menu) {
         EditTextPreference menuName = (EditTextPreference) findPreference(getString(R.string.preference_key_menu_detail_menu_name));
-        MultiSelectListPreference menuCategory = (MultiSelectListPreference) findPreference(getString(R.string.preference_key_menu_detail_menu_category));
         EditTextPreference menuPrice = (EditTextPreference) findPreference(getString(R.string.preference_key_menu_detail_menu_price));
 
         menuName.setSummary(menu.name);
         menuName.setOnPreferenceChangeListener(this::onMenuNameChanged);
 
-//        menuCategory.setSummary(menu.categoryName);
-//        menuCategory.setOnPreferenceChangeListener(this::onMenuCategoryChanged);
-
         menuPrice.setSummary(String.valueOf(menu.price));
         menuPrice.setOnPreferenceChangeListener(this::onMenuPriceChanged);
+    }
+
+    private void onLoadMenuCategory(List<MenuCategory> categoryList) {
+        MultiSelectListPreference menuCategory = (MultiSelectListPreference) findPreference(getString(R.string.preference_key_menu_detail_menu_category));
+
+        Set<String> valueSet = new HashSet<>();
+        for (MenuCategory category : categoryList) {
+            valueSet.add(category.uuid);
+        }
+        menuCategory.setValues(valueSet);
+//        menuCategory.setOnPreferenceChangeListener(this::onMenuCategoryChanged);
     }
 
     private void onLoadCategory(List<MenuCategory> categoryList) {
