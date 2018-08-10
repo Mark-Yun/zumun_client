@@ -6,6 +6,7 @@
 
 package com.mark.zumo.client.core.appserver;
 
+import com.mark.zumo.client.core.appserver.request.MenuCategoryUpdateRequest;
 import com.mark.zumo.client.core.entity.Menu;
 import com.mark.zumo.client.core.entity.MenuCategory;
 import com.mark.zumo.client.core.entity.MenuDetail;
@@ -67,6 +68,10 @@ public interface NetworkRepository {
     @PUT("menu/{" + Menu.Schema.uuid + "}/category")
     Maybe<Menu> updateCategoryInMenu(@Path(Menu.Schema.uuid) String menuUuid,
                                      @Body MenuCategory menuCategory);
+
+    @PUT("menu/{" + MenuCategoryUpdateRequest.Schema.menuUuid + "}/category")
+    Maybe<List<MenuDetail>> updateMenuCategory(@Path(MenuCategoryUpdateRequest.Schema.menuUuid) String menuUuid,
+                                               @Body MenuCategoryUpdateRequest menuCategoryUpdateRequest);
 
 
     @GET("category")

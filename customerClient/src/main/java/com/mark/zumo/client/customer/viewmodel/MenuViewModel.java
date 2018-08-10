@@ -89,16 +89,6 @@ public class MenuViewModel extends AndroidViewModel {
         return liveData;
     }
 
-    public MutableLiveData<List<Menu>> loadUnCategorizedMenu(String storeUuid) {
-        MutableLiveData<List<Menu>> liveData = new MutableLiveData<>();
-        menuManager.unCategorizedMenu(storeUuid)
-                .observeOn(AndroidSchedulers.mainThread())
-                .doOnSuccess(liveData::setValue)
-                .doOnSubscribe(disposables::add)
-                .subscribe();
-        return liveData;
-    }
-
     public MutableLiveData<List<MenuCategory>> loadMenuCategoryList(String storeUuid) {
         MutableLiveData<List<MenuCategory>> liveData = new MutableLiveData<>();
 
@@ -115,15 +105,6 @@ public class MenuViewModel extends AndroidViewModel {
         cartManager.getCart(currentStoreUuid)
                 .firstElement()
                 .doOnSuccess(cart -> cart.addCartItem(OrderDetail.fromMenu(menu)))
-                .doOnSubscribe(disposables::add)
-                .subscribe();
-    }
-
-    public void removeLatestMenuFromCart() {
-        cartManager.getCart(currentStoreUuid)
-                .firstElement()
-                .observeOn(AndroidSchedulers.mainThread())
-                .doOnSuccess(Cart::removeLatestCartItem)
                 .doOnSubscribe(disposables::add)
                 .subscribe();
     }

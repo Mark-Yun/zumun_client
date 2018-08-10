@@ -84,7 +84,7 @@ public class MenuDetailPreferenceFragment extends PreferenceFragmentCompat {
         }
         menuCategory.setValues(valueSet);
         menuCategory.setSummary(summary);
-//        menuCategory.setOnPreferenceChangeListener(this::onMenuCategoryChanged);
+        menuCategory.setOnPreferenceChangeListener(this::onMenuCategoryChanged);
     }
 
     private void onLoadCategory(List<MenuCategory> categoryList) {
@@ -125,7 +125,7 @@ public class MenuDetailPreferenceFragment extends PreferenceFragmentCompat {
     }
 
     private boolean onMenuCategoryChanged(final Preference preference, final Object newValue) {
-        menuSettingViewModel.updateMenuCategory(menuUuid, (String) newValue).observe(this, this::onLoadMenu);
+        menuSettingViewModel.updateMenuCategory(menuUuid, (Set<String>) newValue).observe(this, this::onLoadMenuCategory);
         return true;
     }
 }

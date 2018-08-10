@@ -23,6 +23,7 @@ import com.mark.zumo.client.store.model.SessionManager;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import io.reactivex.Maybe;
 import io.reactivex.Observable;
@@ -100,18 +101,6 @@ public class MenuSettingViewModel extends AndroidViewModel {
         return liveData;
     }
 
-    public LiveData<Menu> updateMenuCategory(String menuUuid, String categoryUuid) {
-        MutableLiveData<Menu> liveData = new MutableLiveData<>();
-
-        menuManager.updateMenuCategory(menuUuid, categoryUuid)
-                .observeOn(AndroidSchedulers.mainThread())
-                .doOnSubscribe(disposables::add)
-                .doOnSuccess(liveData::setValue)
-                .subscribe();
-
-        return liveData;
-    }
-
     public LiveData<List<MenuCategory>> categoryList() {
         MutableLiveData<List<MenuCategory>> liveData = new MutableLiveData<>();
         sessionManager.getSessionStore()
@@ -133,6 +122,22 @@ public class MenuSettingViewModel extends AndroidViewModel {
                 .doOnSuccess(liveData::setValue)
                 .doOnSubscribe(disposables::add)
                 .subscribe();
+        return liveData;
+    }
+
+    public MutableLiveData<List<MenuCategory>> updateMenuCategory(final String menuUuid,
+                                                                  final Set<String> categoryUuidSet) {
+
+        MutableLiveData<List<MenuCategory>> liveData = new MutableLiveData<>();
+
+        sessionManager.getSessionStore()
+                .map(store -> store.uuid)
+                .flatMap(storeUuid -> menuManager.updateMenuCategory(menuUuid, storeUuid, categoryUuidSet))
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnSuccess(liveData::setValue)
+                .doOnSubscribe(disposables::add)
+                .subscribe();
+
         return liveData;
     }
 

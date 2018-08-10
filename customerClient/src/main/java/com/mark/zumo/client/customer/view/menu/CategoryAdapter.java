@@ -39,12 +39,10 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHo
 
     private LifecycleOwner lifecycleOwner;
     private MenuViewModel menuViewModel;
-    private String storeUuid;
 
-    CategoryAdapter(final LifecycleOwner lifecycleOwner, final MenuViewModel menuViewModel, final String storeUuid) {
+    CategoryAdapter(final LifecycleOwner lifecycleOwner, final MenuViewModel menuViewModel) {
         this.lifecycleOwner = lifecycleOwner;
         this.menuViewModel = menuViewModel;
-        this.storeUuid = storeUuid;
 
         categoryList = new ArrayList<>();
         menuListMap = new LinkedHashMap<>();
@@ -93,7 +91,7 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHo
         recyclerView.setHasFixedSize(true);
         recyclerView.setNestedScrollingEnabled(false);
 
-        if (!isNoneCategory && !menuListMap.containsKey(categoryUuid)) {
+        if (!menuListMap.containsKey(categoryUuid)) {
             holder.categoryName.setVisibility(View.GONE);
             return;
         }
@@ -101,17 +99,12 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHo
         List<Menu> menuList = menuListMap.get(categoryUuid);
         MenuAdapter menuAdapter = new MenuAdapter(lifecycleOwner, menuViewModel);
         recyclerView.setAdapter(menuAdapter);
-        if (isNoneCategory) {
-            menuViewModel.loadUnCategorizedMenu(storeUuid).observe(lifecycleOwner, menuAdapter::setMenuList);
-        } else {
-            menuAdapter.setMenuList(menuList);
-        }
+        menuAdapter.setMenuList(menuList);
     }
 
     @Override
     public int getItemCount() {
-        int size = categoryList.size();
-        return size > 0 ? size + 1 : 0;
+        return categoryList.size();
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder {

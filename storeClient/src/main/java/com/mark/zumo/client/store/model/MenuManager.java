@@ -17,6 +17,7 @@ import com.mark.zumo.client.core.repository.MenuDetailRepository;
 import com.mark.zumo.client.core.repository.MenuRepository;
 
 import java.util.List;
+import java.util.Set;
 
 import io.reactivex.Maybe;
 import io.reactivex.Observable;
@@ -73,7 +74,7 @@ public enum MenuManager {
                 .flatMapMaybe(menuUuidList ->
                         menuRepository.getMenuItemsOfStoreFromDisk(storeUuid)
                                 .flatMapObservable(Observable::fromIterable)
-                                .filter(menu -> menuUuidList.contains(menu.uuid))
+                                .filter(menu -> !menuUuidList.contains(menu.uuid))
                                 .toList()
                                 .toMaybe()
                 ).subscribeOn(Schedulers.io());
@@ -109,12 +110,6 @@ public enum MenuManager {
                 .subscribeOn(Schedulers.io());
     }
 
-    public Maybe<Menu> updateMenuCategory(final String menuUuid, final String categoryUuid) {
-        return categoryRepository.getMenuCategoryFromApi(categoryUuid)
-                .flatMap(menuCategory -> menuRepository.updateCategoryInMenu(menuUuid, menuCategory))
-                .subscribeOn(Schedulers.io());
-    }
-
     public Maybe<Menu> updateMenuImageUrl(final String menuUuid, final String imageUrl) {
         return menuRepository.getMenuFromDisk(menuUuid)
                 .doOnSuccess(menu -> menu.imageUrl = imageUrl)
@@ -139,5 +134,15 @@ public enum MenuManager {
         MenuCategory newCategory = new MenuCategory(menuCategory.uuid, name, menuCategory.storeUuid, menuCategory.seqNum);
         return categoryRepository.updateMenuCategory(newCategory)
                 .subscribeOn(Schedulers.io());
+    }
+
+    public Maybe<List<MenuCategory>> updateMenuCategory(final String menuUuid,
+                                                        final String storeUuid,
+                                                        final Set<String> categoryUuidSet) {
+        return menuDetailRepository.updateMenuCategory(menuUuid, storeUuid, categoryUuidSet)
+                .flatMapObservable(Observable::fromIterable)
+                .map(menuDetail -> menuDetail.menuCategoryUuid)
+                .flatMapMaybe(categoryRepository::getMenuCategoryFromDisk)
+                .toList().toMaybe();
     }
 }

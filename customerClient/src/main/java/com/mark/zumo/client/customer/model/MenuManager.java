@@ -41,21 +41,6 @@ public enum MenuManager {
         menuDetailRepository = MenuDetailRepository.INSTANCE;
     }
 
-    public Maybe<List<Menu>> unCategorizedMenu(String storeUuid) {
-        return menuDetailRepository.getMenuDetailListFromDisk(storeUuid)
-                .flatMapObservable(Observable::fromIterable)
-                .map(menuDetail -> menuDetail.menuUuid)
-                .distinct()
-                .toList()
-                .flatMapMaybe(menuUuidList ->
-                        menuRepository.getMenuItemsOfStoreFromDisk(storeUuid)
-                                .flatMapObservable(Observable::fromIterable)
-                                .filter(menu -> menuUuidList.contains(menu.uuid))
-                                .toList()
-                                .toMaybe()
-                ).subscribeOn(Schedulers.io());
-    }
-
     public Maybe<Menu> getMenuFromDisk(String uuid) {
         return menuRepository.getMenuFromDisk(uuid)
                 .subscribeOn(Schedulers.io());

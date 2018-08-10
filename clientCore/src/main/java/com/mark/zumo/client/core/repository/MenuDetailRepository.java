@@ -8,12 +8,14 @@ package com.mark.zumo.client.core.repository;
 
 import com.mark.zumo.client.core.appserver.AppServerServiceProvider;
 import com.mark.zumo.client.core.appserver.NetworkRepository;
+import com.mark.zumo.client.core.appserver.request.MenuCategoryUpdateRequest;
 import com.mark.zumo.client.core.dao.AppDatabaseProvider;
 import com.mark.zumo.client.core.dao.DiskRepository;
 import com.mark.zumo.client.core.entity.MenuDetail;
 import com.mark.zumo.client.core.entity.util.ListComparator;
 
 import java.util.List;
+import java.util.Set;
 
 import io.reactivex.Maybe;
 import io.reactivex.Observable;
@@ -53,5 +55,12 @@ public enum MenuDetailRepository {
 
     public Maybe<List<MenuDetail>> getMenuDetailListFromDiskByMenuUuid(final String storeUuid, final String menuUuid) {
         return diskRepository.getMenuDetailByStringMenuUuidFromDisk(storeUuid, menuUuid);
+    }
+
+    public Maybe<List<MenuDetail>> updateMenuCategory(final String menuUuid,
+                                                      final String storeUuid,
+                                                      final Set<String> categoryUuidList) {
+        MenuCategoryUpdateRequest menuCategoryUpdateRequest = new MenuCategoryUpdateRequest(storeUuid, categoryUuidList);
+        return networkRepository.updateMenuCategory(menuUuid, menuCategoryUpdateRequest);
     }
 }

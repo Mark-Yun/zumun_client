@@ -87,7 +87,7 @@ public class MenuFragment extends Fragment {
         recyclerView.setHasFixedSize(true);
         recyclerView.setNestedScrollingEnabled(false);
 
-        CategoryAdapter categoryAdapter = new CategoryAdapter(this, menuViewModel, storeUuid);
+        CategoryAdapter categoryAdapter = new CategoryAdapter(this, menuViewModel);
         recyclerView.setAdapter(categoryAdapter);
 
         menuViewModel.loadMenuCategoryList(storeUuid).observe(this, categoryAdapter::setCategoryList);
