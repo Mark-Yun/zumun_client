@@ -16,6 +16,7 @@ import com.mark.zumo.client.core.repository.CategoryRepository;
 import com.mark.zumo.client.core.repository.MenuDetailRepository;
 import com.mark.zumo.client.core.repository.MenuRepository;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
@@ -56,6 +57,7 @@ public enum MenuManager {
 
     public Observable<List<MenuCategory>> getMenuCategoryList(String storeUuid) {
         return categoryRepository.getMenuCategoryList(storeUuid)
+                .doOnNext(categoryList -> Collections.sort(categoryList, (c1, c2) -> c2.seqNum - c1.seqNum))
                 .subscribeOn(Schedulers.io());
     }
 

@@ -53,20 +53,16 @@ public enum MenuRepository {
         return diskRepository.getMenuList(storeUuid);
     }
 
-    private Observable<List<MenuOption>> getMenuOptionsOfMenu(String menuUuid) {
+    public Observable<GroupedObservable<String, MenuOption>> getMenuOptionGroupByMenu(String menuUuid) {
         Maybe<List<MenuOption>> menuOptionListDB = diskRepository.getMenuOptionListByMenuUuid(menuUuid);
         Maybe<List<MenuOption>> menuOptionListApi = networkRepository.getMenuOptionListByMenuUuid(menuUuid)
                 .doOnSuccess(diskRepository::insertMenuOptionList);
 
-        return Maybe.merge(menuOptionListDB, menuOptionListApi)
-                .toObservable()
-                .distinctUntilChanged(new ListComparator<>());
-    }
-
-    public Observable<GroupedObservable<String, MenuOption>> getMenuOptionGroupByMenu(String menuUuid) {
-        return getMenuOptionsOfMenu(menuUuid)
-                .flatMap(Observable::fromIterable)
-                .groupBy(menuOption -> menuOption.name);
+        return Observable.merge(
+                menuOptionListDB.flatMapObservable(Observable::fromIterable)
+                        .groupBy(menuOption -> menuOption.name),
+                menuOptionListApi.flatMapObservable(Observable::fromIterable)
+                        .groupBy(menuOption -> menuOption.name));
     }
 
     public Maybe<Menu> getMenuFromDisk(final String uuid) {

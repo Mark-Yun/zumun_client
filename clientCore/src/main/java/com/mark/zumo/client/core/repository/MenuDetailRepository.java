@@ -12,7 +12,6 @@ import com.mark.zumo.client.core.appserver.request.MenuCategoryUpdateRequest;
 import com.mark.zumo.client.core.dao.AppDatabaseProvider;
 import com.mark.zumo.client.core.dao.DiskRepository;
 import com.mark.zumo.client.core.entity.MenuDetail;
-import com.mark.zumo.client.core.entity.util.ListComparator;
 
 import java.util.List;
 import java.util.Set;
@@ -42,11 +41,11 @@ public enum MenuDetailRepository {
         Maybe<List<MenuDetail>> menuListApi = networkRepository.getMenuDetailByStoreUuid(storeUuid)
                 .doOnSuccess(diskRepository::insertMenuDetailList);
 
-        return Maybe.merge(menuListDB, menuListApi)
-                .toObservable()
-                .distinctUntilChanged(new ListComparator<>())
-                .flatMap(Observable::fromIterable)
-                .groupBy(menuDetail -> menuDetail.menuCategoryUuid);
+        return Observable.merge(
+                menuListDB.flatMapObservable(Observable::fromIterable)
+                        .groupBy(menuDetail -> menuDetail.menuCategoryUuid),
+                menuListApi.flatMapObservable(Observable::fromIterable)
+                        .groupBy(menuDetail -> menuDetail.menuCategoryUuid));
     }
 
     public Maybe<List<MenuDetail>> getMenuDetailListFromDisk(final String storeUuid) {
@@ -61,6 +60,13 @@ public enum MenuDetailRepository {
                                                       final String storeUuid,
                                                       final Set<String> categoryUuidList) {
         MenuCategoryUpdateRequest menuCategoryUpdateRequest = new MenuCategoryUpdateRequest(storeUuid, categoryUuidList);
-        return networkRepository.updateMenuCategory(menuUuid, menuCategoryUpdateRequest);
+        return networkRepository.updateMenuCategory(menuUuid, menuCategoryUpdateRequest)
+                .doOnSuccess(menuDetailList -> {
+                    if (menuDetailList.size() > 0) {
+                        MenuDetail menuDetail = menuDetailList.get(0);
+                        diskRepository.deleteMenuDetailListByMenuUuid(menuDetail.menuUuid);
+                    }
+                })
+                .doOnSuccess(diskRepository::insertMenuDetailList);
     }
 }

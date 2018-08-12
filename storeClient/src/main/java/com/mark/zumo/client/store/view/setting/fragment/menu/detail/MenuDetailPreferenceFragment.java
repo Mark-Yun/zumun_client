@@ -12,6 +12,7 @@ import android.support.v14.preference.MultiSelectListPreference;
 import android.support.v7.preference.EditTextPreference;
 import android.support.v7.preference.Preference;
 import android.support.v7.preference.PreferenceFragmentCompat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,6 +36,8 @@ import io.reactivex.schedulers.Schedulers;
  */
 public class MenuDetailPreferenceFragment extends PreferenceFragmentCompat {
 
+    private final static String TAG = "MenuDetailPreferenceFragment";
+
     private MenuSettingViewModel menuSettingViewModel;
     private String menuUuid;
 
@@ -47,7 +50,7 @@ public class MenuDetailPreferenceFragment extends PreferenceFragmentCompat {
     public void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         menuUuid = getArguments().getString(MenuDetailSettingFragment.KEY_MENU_UUID);
-        menuSettingViewModel = ViewModelProviders.of(this).get(MenuSettingViewModel.class);
+        menuSettingViewModel = ViewModelProviders.of(getActivity()).get(MenuSettingViewModel.class);
     }
 
     @Override
@@ -125,7 +128,15 @@ public class MenuDetailPreferenceFragment extends PreferenceFragmentCompat {
     }
 
     private boolean onMenuCategoryChanged(final Preference preference, final Object newValue) {
-        menuSettingViewModel.updateMenuCategory(menuUuid, (Set<String>) newValue).observe(this, this::onLoadMenuCategory);
+        Set<String> newCategorySet = (Set<String>) newValue;
+        Log.d(TAG, "onMenuCategoryChanged: " + newCategorySet);
+        menuSettingViewModel.updateMenuCategory(menuUuid, newCategorySet).observe(this, this::onLoadMenuCategoryUpdated);
         return true;
+    }
+
+
+    private void onLoadMenuCategoryUpdated(List<MenuCategory> categoryList) {
+        onLoadMenuCategory(categoryList);
+        menuSettingViewModel.getMenuListByCategory();
     }
 }

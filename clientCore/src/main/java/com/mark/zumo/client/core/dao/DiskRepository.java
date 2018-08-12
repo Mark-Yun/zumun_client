@@ -153,6 +153,9 @@ public interface DiskRepository {
             " AND menu_uuid LIKE :menuUuid")
     Maybe<List<MenuDetail>> getMenuDetailByStringMenuUuidFromDisk(String storeUuid, String menuUuid);
 
+    @Query("DELETE FROM " + MenuDetail.Schema.TABLE + " WHERE menu_uuid LIKE :menuUuid")
+    void deleteMenuDetailListByMenuUuid(String menuUuid);
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertMenuDetailList(List<MenuDetail> menuDetailList);
 }

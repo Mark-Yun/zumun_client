@@ -41,6 +41,9 @@ import butterknife.ButterKnife;
  */
 public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHolder> {
 
+    private final static int CATEGORY = 0;
+    private final static int NONE_CATEGORY = 1;
+
     private FragmentManager fragmentManager;
     private MenuSettingViewModel menuSettingViewModel;
     private LifecycleOwner lifecycleOwner;
@@ -89,33 +92,45 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHo
 
     @Override
     public void onBindViewHolder(@NonNull final ViewHolder holder, final int position) {
-        boolean isNoneCategory = (position == categoryList.size());
+        int viewType = getItemViewType(position);
+        if (viewType == CATEGORY) {
+            MenuCategory menuCategory = categoryList.get(position);
+            String categoryName = menuCategory.name;
+            String categoryUuid = menuCategory.uuid;
 
-        MenuCategory menuCategory = isNoneCategory ? null : categoryList.get(position);
-        String categoryName = isNoneCategory ? "None" : menuCategory.name;
-        String categoryUuid = isNoneCategory ? "none" : menuCategory.uuid;
+            holder.categoryName.setText(categoryName);
 
-        holder.categoryName.setText(categoryName);
+            boolean isEmptyCategory = !menuListMap.containsKey(categoryUuid);
+            holder.categoryName.setVisibility(isEmptyCategory ? View.GONE : View.VISIBLE);
+            MenuAdapter menuAdapter = getMenuAdapter(holder);
+            List<Menu> menuList = isEmptyCategory ? new ArrayList<>() : menuListMap.get(categoryUuid);
+            menuAdapter.setMenuList(menuList);
+        } else if (viewType == NONE_CATEGORY) {
+            String categoryName = "None";
+            holder.categoryName.setText(categoryName);
 
+            MenuAdapter menuAdapter = getMenuAdapter(holder);
+            menuSettingViewModel.loadUnCategorizedMenu().observe(lifecycleOwner, menuAdapter::setMenuList);
+        }
+    }
+
+    @NonNull
+    private MenuAdapter getMenuAdapter(final @NonNull ViewHolder holder) {
         RecyclerView recyclerView = holder.menuRecyclerView;
         RecyclerView.LayoutManager layoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setHasFixedSize(true);
         recyclerView.setNestedScrollingEnabled(false);
 
-        if (!isNoneCategory && !menuListMap.containsKey(categoryUuid)) {
-            holder.categoryName.setVisibility(View.GONE);
-            return;
-        }
-
-        List<Menu> menuList = menuListMap.get(categoryUuid);
         MenuAdapter menuAdapter = new MenuAdapter(fragmentManager);
         recyclerView.setAdapter(menuAdapter);
-        if (isNoneCategory) {
-            menuSettingViewModel.loadUnCategorizedMenu().observe(lifecycleOwner, menuAdapter::setMenuList);
-        } else {
-            menuAdapter.setMenuList(menuList);
-        }
+        return menuAdapter;
+    }
+
+    @Override
+    public int getItemViewType(final int position) {
+        boolean isLastCategory = position == categoryList.size();
+        return isLastCategory ? NONE_CATEGORY : CATEGORY;
     }
 
     @Override

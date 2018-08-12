@@ -42,7 +42,7 @@ public class MenuSettingFragment extends Fragment {
     @Override
     public void onCreate(@Nullable final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        menuSettingViewModel = ViewModelProviders.of(this).get(MenuSettingViewModel.class);
+        menuSettingViewModel = ViewModelProviders.of(getActivity()).get(MenuSettingViewModel.class);
     }
 
     @Nullable
@@ -65,7 +65,7 @@ public class MenuSettingFragment extends Fragment {
         recyclerView.setAdapter(categoryAdapter);
 
         menuSettingViewModel.loadMenuCategoryList().observe(this, categoryAdapter::setCategoryList);
-        menuSettingViewModel.loadMenuByCategory().observe(this, categoryAdapter::setMenuListMap);
+        menuSettingViewModel.getMenuListByCategory().observe(this, categoryAdapter::setMenuListMap);
     }
 
     @OnClick(R.id.add_menu)
