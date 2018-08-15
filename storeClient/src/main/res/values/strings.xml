@@ -17,7 +17,7 @@
     <string name="order_title_description">Order number</string>
     <string name="order_date_description">Date:&#160;</string>
     <string name="order_time_description">Time:&#160;</string>
-    <string name="order_item_name_description">ITEM NAME</string>
+    <string name="order_item_name_description">Item Name:</string>
     <string name="order_quantity_description">QTY</string>
     <string name="order_price_description">PRICE</string>
     <string name="order_total_price_description">Total</string>
@@ -31,32 +31,32 @@
     <string name="preference_title_menu_category">Menu Settings</string>
     <string name="preference_title_store_category">Store Settings</string>
 
-    <string name="preference_key_store_profile">store_profile</string>
+    <string name="preference_key_store_profile" translatable="false">store_profile</string>
     <string name="preference_title_store_profile">Store Profile Management</string>
     <string name="preference_summary_store_profile">Edit information about my store</string>
 
-    <string name="preference_key_menu_management">menu_management</string>
+    <string name="preference_key_menu_management" translatable="false">menu_management</string>
     <string name="preference_title_menu_management">Menu Management</string>
     <string name="preference_summary_menu_management">Manage whole of menus of my store</string>
 
-    <string name="preference_key_menu_option_management">menu_option_management</string>
+    <string name="preference_key_menu_option_management" translatable="false">menu_option_management</string>
     <string name="preference_title_menu_option_management">Menu Option Management</string>
     <string name="preference_summary_menu_option_management">Manage options of your menus</string>
 
-    <string name="preference_key_menu_category_management">menu_category_management</string>
+    <string name="preference_key_menu_category_management" translatable="false">menu_category_management</string>
     <string name="preference_title_menu_category_management">Menu Category Management</string>
     <string name="preference_summary_menu_category_management">Manage category of your menus</string>
 
     <string name="preference_category_menu_detail_menu">Menu Information</string>
 
     <string name="preference_title_menu_detail_menu_name">Menu Name</string>
-    <string name="preference_key_menu_detail_menu_name">menu_detail_menu_name</string>
+    <string name="preference_key_menu_detail_menu_name" translatable="false">menu_detail_menu_name</string>
 
     <string name="preference_title_menu_detail_menu_price">Menu Price</string>
-    <string name="preference_key_menu_detail_menu_price">menu_detail_menu_price</string>
+    <string name="preference_key_menu_detail_menu_price" translatable="false">menu_detail_menu_price</string>
 
     <string name="preference_title_menu_detail_menu_category">Menu Category</string>
-    <string name="preference_key_menu_detail_menu_category">menu_detail_menu_category</string>
+    <string name="preference_key_menu_detail_menu_category" translatable="false">menu_detail_menu_category</string>
 
     <string name="store_profile_name_editor_title">Store Name</string>
     <string name="store_profile_name_editor_message">Insert new store name</string>

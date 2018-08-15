@@ -23,27 +23,34 @@ public enum SessionManager {
 
     private static final String TAG = "SessionManager";
 
+    private static final Object sessionHeaderLock = new Object();
+
     private final SessionRepository sessionRepository;
+    private boolean isBuiltSessionHeader;
 
     SessionManager() {
         sessionRepository = SessionRepository.INSTANCE;
-        getSessionUser()
-                .doOnSuccess(this::buildSessionHeader)
-                .subscribe();
     }
 
     public Maybe<GuestUser> getSessionUser() {
-        //TODO: fix issue
         return Maybe.fromCallable(sessionRepository::getGuestUserFromCache)
                 .switchIfEmpty(sessionRepository.createGuestUser()
                         .map(sessionRepository::saveGuestUser)
-                ).subscribeOn(Schedulers.io());
+                ).doOnSuccess(this::buildSessionHeader)
+                .subscribeOn(Schedulers.io());
     }
 
     private void buildSessionHeader(GuestUser guestUser) {
-        new SessionRepository.SessionBuilder()
-                .put(SessionRepository.KEY_CUSTOMER_UUID, guestUser.uuid)
-                .build();
+        if (!isBuiltSessionHeader) {
+            synchronized (sessionHeaderLock) {
+                if (!isBuiltSessionHeader) {
+                    new SessionRepository.SessionBuilder()
+                            .put(SessionRepository.KEY_CUSTOMER_UUID, guestUser.uuid)
+                            .build();
+                    isBuiltSessionHeader = true;
+                }
+            }
+        }
     }
 
     public Maybe<SnsToken> registerToken(GuestUser guestUser, String token) {

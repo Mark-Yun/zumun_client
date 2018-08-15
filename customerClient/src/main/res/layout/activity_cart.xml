@@ -16,7 +16,7 @@
         android:layout_height="0dp"
         android:background="@color/colorPrimary"
         android:elevation="3dp"
-        app:layout_constraintBottom_toTopOf="@+id/cart_item_recycler_view"
+        app:layout_constraintBottom_toTopOf="@+id/order_detail_recycler_view"
         app:layout_constraintDimensionRatio="H, 14:3"
         app:layout_constraintTop_toTopOf="parent" />
 

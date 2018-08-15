@@ -5,7 +5,6 @@
   -->
 
 <resources>
-    <string name="kakao_app_key" translatable="false">265e130b23d5b75316022561ec01ea5e</string>
     <string name="app_name">Zumun</string>
 
     <string name="place_latest_visit_store_header_text">Latest Visit Stores</string>
@@ -29,7 +28,6 @@
     <string name="tab_title_orders">Orders</string>
 
     <string name="theres_no_item_in_cart">Nothing in Cart</string>
-    <string name="press_again_to_exit">Press again to exit</string>
 
     <string name="menu_order_name_and">And, %s etc.</string>
 

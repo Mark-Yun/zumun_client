@@ -83,6 +83,7 @@ configure(applications) {
     dependencies {
         implementation project(":clientCore")
 
+        implementation "com.android.support:appcompat-v7:$support"
         implementation "com.android.support:design:$support"
         implementation "com.android.support:cardview-v7:$support"
         implementation "com.android.support:recyclerview-v7:$support"
@@ -132,7 +133,7 @@ configure(libraries) {
         }
     }
     dependencies {
-        api "com.android.support:appcompat-v7:$support"
+        implementation "com.android.support:appcompat-v7:$support"
 
         implementation "com.squareup.retrofit2:retrofit:$retrofit"
         implementation "com.squareup.retrofit2:adapter-rxjava2:$retrofit"

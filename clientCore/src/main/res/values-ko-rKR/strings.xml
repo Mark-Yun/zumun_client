@@ -5,10 +5,13 @@
   -->
 
 <resources>
-    <string name="nearby_api_key">AIzaSyBG1TvGy6sHkwhQewFnWIXbDzjXwnrp310</string>
-    <string name="order_state_requested">주문됨</string>
     <string name="order_state_accepted">접수됨</string>
     <string name="order_state_complete">완료</string>
     <string name="order_state_rejected">거절됨</string>
     <string name="order_state_canceled">취소됨</string>
+    <string name="order_state_created">생성됨</string>
+    <string name="order_state_requested">주문됨</string>
+    <string name="error_message_on_io_exception">서버에 접속할 수 없습니다. 잠시 후 다시 시도해주세요.</string>
+    <string name="error_message_on_http_exception">서버에 접속할 수 없습니다.</string>
+    <string name="error_message_on_unknown_host_exception">지금은 서비스를 사용할 수 없습니다.</string>
 </resources>

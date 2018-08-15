@@ -9,7 +9,14 @@ android {
 
     signingConfigs {
         debug {
-            storeFile file('../keystore/debug.keystore')
+            storeFile file('../keystore/zumun_debug.keystore')
+        }
+
+        release {
+            storeFile file("../keystore/zumun_customer_release.jks")
+            storePassword "alsgur891121"
+            keyAlias "zumun_customer_release"
+            keyPassword "alsgur891121"
         }
     }
 
@@ -29,17 +36,18 @@ android {
 
     buildTypes {
         release {
+            signingConfig signingConfigs.release
             minifyEnabled true
             shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), '../proguard-rules.pro'
         }
         debug {
+            signingConfig signingConfigs.debug
             versionNameSuffix 'd'
         }
     }
 }
 
 dependencies {
-    implementation files('libs/samsungpay_2.3.00.jar')
     implementation "com.kakao.sdk:usermgmt:1.7.1"
 }

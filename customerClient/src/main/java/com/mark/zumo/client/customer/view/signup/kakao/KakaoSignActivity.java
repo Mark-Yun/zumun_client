@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 
 import com.kakao.auth.ISessionCallback;
 import com.kakao.auth.Session;
@@ -24,6 +25,8 @@ public class KakaoSignActivity extends AppCompatActivity {
 
     public static final int RESULT_CODE_SESSION_OPENED = 1;
     public static final int RESULT_CODE_SESSION_FAILED = -1;
+
+    private static final String TAG = "KakaoSignActivity";
 
     private ISessionCallback sessionCallback;
 
@@ -42,12 +45,14 @@ public class KakaoSignActivity extends AppCompatActivity {
         return new ISessionCallback() {
             @Override
             public void onSessionOpened() {
+                Log.d(TAG, "onSessionOpened");
                 setResult(RESULT_CODE_SESSION_OPENED);
                 finish();
             }
 
             @Override
             public void onSessionOpenFailed(final KakaoException exception) {
+                Log.e(TAG, "onSessionOpenFailed", exception);
                 finish();
             }
         };

@@ -43,7 +43,10 @@ public enum Rebound {
             @Override
             public boolean onTouch(final View v, final MotionEvent motionEvent) {
                 if (mScaleSpring == null) {
-                    mScaleSpring = mSpringMap.computeIfAbsent(v, unused -> mSpringSystem.createSpring().setSpringConfig(CONFIG));
+                    if (!mSpringMap.containsKey(v)) {
+                        mSpringMap.put(v, mSpringSystem.createSpring().setSpringConfig(CONFIG));
+                    }
+                    mScaleSpring = mSpringMap.get(v);
                     mSpringListener = new ScaleSpringListener(v);
 
                     lifecycleOwner.getLifecycle().addObserver((GenericLifecycleObserver) (source, event) -> {
