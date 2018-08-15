@@ -43,11 +43,12 @@ public enum OrderManager {
                 .map(orderDetail -> {
                     orderDetail.menuOrderName = orderName;
                     return orderDetail;
-                }).toList().flatMapMaybe(orderRepository::createMenuOrder)
+                }).toList().toMaybe()
+                .flatMap(orderRepository::createMenuOrder)
                 .subscribeOn(Schedulers.io());
     }
 
-    public Observable<MenuOrder> createMenuOrder(OrderDetail orderDetail) {
+    public Maybe<MenuOrder> createMenuOrder(OrderDetail orderDetail) {
         return orderRepository.createMenuOrder(orderDetail)
                 .subscribeOn(Schedulers.io());
     }

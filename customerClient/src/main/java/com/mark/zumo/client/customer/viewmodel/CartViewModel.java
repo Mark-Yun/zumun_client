@@ -20,6 +20,7 @@ import com.mark.zumo.client.core.entity.Store;
 import com.mark.zumo.client.customer.model.CartManager;
 import com.mark.zumo.client.customer.model.MenuManager;
 import com.mark.zumo.client.customer.model.OrderManager;
+import com.mark.zumo.client.customer.model.SessionManager;
 import com.mark.zumo.client.customer.model.StoreManager;
 import com.mark.zumo.client.customer.model.entity.Cart;
 
@@ -43,6 +44,7 @@ public class CartViewModel extends AndroidViewModel {
     private final StoreManager storeManager;
     private final MenuManager menuManager;
     private final OrderManager orderManager;
+    private final SessionManager sessionManager;
 
     private final CompositeDisposable disposables;
 
@@ -53,6 +55,7 @@ public class CartViewModel extends AndroidViewModel {
         storeManager = StoreManager.INSTANCE;
         menuManager = MenuManager.INSTANCE;
         orderManager = OrderManager.INSTANCE;
+        sessionManager = SessionManager.INSTANCE;
 
         disposables = new CompositeDisposable();
     }
@@ -192,7 +195,8 @@ public class CartViewModel extends AndroidViewModel {
     public LiveData<MenuOrder> placeOrder(String storeUuid) {
         MutableLiveData<MenuOrder> liveData = new MutableLiveData<>();
 
-        cartManager.getCart(storeUuid)
+        sessionManager.getSessionUser()
+                .flatMapObservable(ignored -> cartManager.getCart(storeUuid))
                 .firstElement()
                 .map(Cart::getOrderDetailList)
                 .flatMap(orderManager::createMenuOrder)

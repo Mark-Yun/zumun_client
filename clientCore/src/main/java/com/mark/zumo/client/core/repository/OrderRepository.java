@@ -31,27 +31,26 @@ public enum OrderRepository {
 
     private static final String TAG = "OrderRepository";
 
-    private final NetworkRepository networkRepository;
     private final DiskRepository diskRepository;
 
     OrderRepository() {
-        networkRepository = AppServerServiceProvider.INSTANCE.networkRepository;
         diskRepository = AppDatabaseProvider.INSTANCE.diskRepository;
     }
 
+    private NetworkRepository networkRepository() {
+        return AppServerServiceProvider.INSTANCE.networkRepository;
+    }
+
     public Maybe<MenuOrder> createMenuOrder(List<OrderDetail> orderDetailCollection) {
-        return networkRepository.createOrder(orderDetailCollection)
+        return networkRepository().createOrder(orderDetailCollection)
                 .doOnSuccess(diskRepository::insertMenuOrder);
     }
 
-    public Observable<MenuOrder> createMenuOrder(OrderDetail orderDetail) {
-        return Observable.just(new ArrayList<OrderDetail>())
-                .map(arrayList -> {
-                    arrayList.add(orderDetail);
-                    return arrayList;
-                })
-                .flatMapMaybe(networkRepository::createOrder)
-                .doOnNext(diskRepository::insertMenuOrder);
+    public Maybe<MenuOrder> createMenuOrder(OrderDetail orderDetail) {
+        return Maybe.just(new ArrayList<OrderDetail>())
+                .doOnSuccess(arrayList -> arrayList.add(orderDetail))
+                .flatMap(networkRepository()::createOrder)
+                .doOnSuccess(diskRepository::insertMenuOrder);
     }
 
     public Maybe<MenuOrder> getMenuOrderFromDisk(String orderUuid) {
@@ -60,14 +59,14 @@ public enum OrderRepository {
     }
 
     public Maybe<MenuOrder> getMenuOrderFromApi(String orderUuid) {
-        return networkRepository.getMenuOrder(orderUuid)
+        return networkRepository().getMenuOrder(orderUuid)
                 .doOnSuccess(diskRepository::insertMenuOrder)
                 .subscribeOn(Schedulers.io());
     }
 
     public Observable<List<OrderDetail>> getOrderDetailListByOrderUuid(String orderUuid) {
         Maybe<List<OrderDetail>> orderDetailListDB = diskRepository.getOrderDetailListByMenuOrderUuid(orderUuid);
-        Maybe<List<OrderDetail>> orderDetailListApi = networkRepository.getOrderDetailList(orderUuid)
+        Maybe<List<OrderDetail>> orderDetailListApi = networkRepository().getOrderDetailList(orderUuid)
                 .doOnSuccess(diskRepository::insertOrderDetailList);
 
         return Maybe.merge(orderDetailListDB, orderDetailListApi)
@@ -77,7 +76,7 @@ public enum OrderRepository {
 
     public Observable<List<MenuOrder>> getMenuOrderListByCustomerUuid(String customerUuid, int offset, int limit) {
         Maybe<List<MenuOrder>> menuOrderListDB = diskRepository.getMenuOrderByCustomerUuid(customerUuid, offset, limit);
-        Maybe<List<MenuOrder>> menuOrderListApi = networkRepository.getMenuOrderListByCustomerUuid(customerUuid, offset, limit)
+        Maybe<List<MenuOrder>> menuOrderListApi = networkRepository().getMenuOrderListByCustomerUuid(customerUuid, offset, limit)
                 .doOnSuccess(diskRepository::insertMenuOrderList);
 
         return Maybe.merge(menuOrderListDB, menuOrderListApi)
@@ -91,7 +90,7 @@ public enum OrderRepository {
 
     public Observable<List<MenuOrder>> getMenuOrderListByStoreUuid(String storeUuid, int offset, int limit) {
         Maybe<List<MenuOrder>> menuOrderListDB = diskRepository.getMenuOrderByStoreUuid(storeUuid, offset, limit);
-        Maybe<List<MenuOrder>> menuOrderListApi = networkRepository.getMenuOrderListByStoreUuid(storeUuid, offset, limit)
+        Maybe<List<MenuOrder>> menuOrderListApi = networkRepository().getMenuOrderListByStoreUuid(storeUuid, offset, limit)
                 .doOnSuccess(diskRepository::insertMenuOrderList);
 
         return Maybe.merge(menuOrderListDB, menuOrderListApi)
@@ -102,7 +101,7 @@ public enum OrderRepository {
     public Maybe<MenuOrder> updateMenuOrderState(String menuOrderUuid, int state) {
         return getMenuOrderFromDisk(menuOrderUuid)
                 .map(menuOrder -> menuOrder.updateState(state))
-                .flatMap(menuOrder -> networkRepository.updateMenuOrderState(menuOrder.uuid, menuOrder))
+                .flatMap(menuOrder -> networkRepository().updateMenuOrderState(menuOrder.uuid, menuOrder))
                 .doOnSuccess(diskRepository::insertMenuOrder);
     }
 

@@ -23,6 +23,7 @@ import com.mark.zumo.client.customer.R;
 import com.mark.zumo.client.customer.model.CartManager;
 import com.mark.zumo.client.customer.model.MenuManager;
 import com.mark.zumo.client.customer.model.OrderManager;
+import com.mark.zumo.client.customer.model.SessionManager;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -44,6 +45,7 @@ public class MenuDetailViewModel extends AndroidViewModel {
     private final MenuManager menuManager;
     private final CartManager cartManager;
     private final OrderManager orderManager;
+    private final SessionManager sessionManager;
 
     private final Map<String, List<MenuOption>> menuOptionMap;
     private final Map<String, MenuOption> selectedOptionMap;
@@ -58,6 +60,7 @@ public class MenuDetailViewModel extends AndroidViewModel {
         menuManager = MenuManager.INSTANCE;
         cartManager = CartManager.INSTANCE;
         orderManager = OrderManager.INSTANCE;
+        sessionManager = SessionManager.INSTANCE;
 
         menuOptionMap = new LinkedHashMap<>();
         selectedOptionMap = new HashMap<>();
@@ -73,7 +76,7 @@ public class MenuDetailViewModel extends AndroidViewModel {
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSuccess(liveData::setValue)
                 .doOnSubscribe(disposables::add)
-                .subscribe();        
+                .subscribe();
 
         return liveData;
     }
@@ -94,7 +97,7 @@ public class MenuDetailViewModel extends AndroidViewModel {
                 .doOnNext(menuOptions -> menuOptionMap.put(menuOptions.get(0).name, menuOptions))
                 .doOnComplete(() -> liveData.postValue(menuOptionMap))
                 .doOnSubscribe(disposables::add)
-                .subscribe();        
+                .subscribe();
     }
 
     public String getMenuAmount() {
@@ -165,11 +168,12 @@ public class MenuDetailViewModel extends AndroidViewModel {
 
         OrderDetail orderDetail = new OrderDetail("", storeUuid, menu.uuid, menu.name, "", menuOptionUuidList, amount, price);
         orderDetail.menuOrderName = menu.name;
-        orderManager.createMenuOrder(orderDetail)
+        sessionManager.getSessionUser()
+                .flatMap(ignored -> orderManager.createMenuOrder(orderDetail))
                 .observeOn(AndroidSchedulers.mainThread())
-                .doOnNext(unused -> selectedOptionMap.clear())
-                .doOnNext(unused -> selectedOptionLiveDataMap.clear())
-                .doOnNext(liveData::setValue)
+                .doOnSuccess(unused -> selectedOptionMap.clear())
+                .doOnSuccess(unused -> selectedOptionLiveDataMap.clear())
+                .doOnSuccess(liveData::setValue)
                 .doOnSubscribe(disposables::add)
                 .subscribe();
 

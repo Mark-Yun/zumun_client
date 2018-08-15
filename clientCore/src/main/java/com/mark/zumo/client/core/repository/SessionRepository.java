@@ -38,12 +38,16 @@ public enum SessionRepository {
     private final SecurePreferences securePreferences;
     private final NetworkRepository networkRepository;
 
+    private static final Object sessionHeaderLock = new Object();
+
+    private boolean isBuiltSessionHeader;
+
     SessionRepository() {
         securePreferences = SecuredRepository.INSTANCE.securePreferences();
         networkRepository = AppServerServiceProvider.INSTANCE.networkRepository;
     }
 
-    public GuestUser saveGuestUser(final GuestUser guestUser) {
+    private GuestUser saveGuestUser(final GuestUser guestUser) {
         securePreferences.put(SessionRepository.KEY_CUSTOMER_UUID, guestUser.uuid);
         return guestUser;
     }
@@ -62,6 +66,12 @@ public enum SessionRepository {
         }
     }
 
+    public Maybe<GuestUser> getSessionUser() {
+        return Maybe.fromCallable(this::getGuestUserFromCache)
+                .switchIfEmpty(createGuestUser())
+                .doOnSuccess(this::buildGuestUserSessionHeader);
+    }
+
     public Maybe<String> getStoreFromCache() {
         //TODO: remove test data
         return Maybe.fromCallable(DebugUtil::store)
@@ -70,8 +80,22 @@ public enum SessionRepository {
 
     public Maybe<GuestUser> createGuestUser() {
         return networkRepository.createGuestUser()
+                .doOnSuccess(this::saveGuestUser)
                 .retryWhen(errors -> errors.flatMap(error -> Flowable.timer(3, TimeUnit.SECONDS)))
                 .retry(2);
+    }
+
+    private void buildGuestUserSessionHeader(GuestUser guestUser) {
+        if (!isBuiltSessionHeader) {
+            synchronized (sessionHeaderLock) {
+                if (!isBuiltSessionHeader) {
+                    new SessionBuilder()
+                            .put(SessionRepository.KEY_CUSTOMER_UUID, guestUser.uuid)
+                            .build();
+                    isBuiltSessionHeader = true;
+                }
+            }
+        }
     }
 
     public Maybe<SnsToken> createToken(SnsToken snsToken) {
@@ -79,10 +103,10 @@ public enum SessionRepository {
                 .subscribeOn(Schedulers.io());
     }
 
-    public static class SessionBuilder {
+    private static class SessionBuilder {
         private final Bundle bundle;
 
-        public SessionBuilder() {
+        private SessionBuilder() {
             bundle = new Bundle();
         }
 

@@ -28,16 +28,18 @@ public enum CategoryRepository {
     private static final String TAG = "CategoryRepository";
 
     private final DiskRepository diskRepository;
-    private final NetworkRepository networkRepository;
 
     CategoryRepository() {
         diskRepository = AppDatabaseProvider.INSTANCE.diskRepository;
-        networkRepository = AppServerServiceProvider.INSTANCE.networkRepository;
+    }
+
+    private NetworkRepository networkRepository() {
+        return AppServerServiceProvider.INSTANCE.networkRepository;
     }
 
     public Observable<List<MenuCategory>> getMenuCategoryList(final String storeUuid) {
         Maybe<List<MenuCategory>> menuCategoryListDB = diskRepository.getMenuCategoryList(storeUuid);
-        Maybe<List<MenuCategory>> menuCategoryListApi = networkRepository.getMenuCategoryListByStoreUuid(storeUuid)
+        Maybe<List<MenuCategory>> menuCategoryListApi = networkRepository().getMenuCategoryListByStoreUuid(storeUuid)
                 .doOnSuccess(diskRepository::insertMenuCategoryList);
 
         return Maybe.merge(menuCategoryListDB, menuCategoryListApi)
@@ -46,17 +48,17 @@ public enum CategoryRepository {
     }
 
     public Maybe<MenuCategory> createMenuCategory(final MenuCategory menuCategory) {
-        return networkRepository.createMenuCategory(menuCategory)
+        return networkRepository().createMenuCategory(menuCategory)
                 .doOnSuccess(diskRepository::insertMenuCategory);
     }
 
     public Maybe<MenuCategory> updateMenuCategory(final MenuCategory menuCategory) {
-        return networkRepository.updateMenuCategory(menuCategory.uuid, menuCategory)
+        return networkRepository().updateMenuCategory(menuCategory.uuid, menuCategory)
                 .doOnSuccess(diskRepository::insertMenuCategory);
     }
 
     public Maybe<MenuCategory> getMenuCategoryFromApi(final String categoryUuid) {
-        return networkRepository.getMenuCategory(categoryUuid)
+        return networkRepository().getMenuCategory(categoryUuid)
                 .doOnSuccess(diskRepository::insertMenuCategory);
     }
 

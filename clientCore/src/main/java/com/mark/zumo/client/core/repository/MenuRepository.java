@@ -32,16 +32,18 @@ public enum MenuRepository {
     private static final String TAG = "MenuRepository";
 
     private final DiskRepository diskRepository;
-    private final NetworkRepository networkRepository;
 
     MenuRepository() {
         diskRepository = AppDatabaseProvider.INSTANCE.diskRepository;
-        networkRepository = AppServerServiceProvider.INSTANCE.networkRepository;
+    }
+
+    private NetworkRepository networkRepository() {
+        return AppServerServiceProvider.INSTANCE.networkRepository;
     }
 
     public Observable<List<Menu>> getMenuListOfStore(String storeUuid) {
         Maybe<List<Menu>> menuListDB = diskRepository.getMenuList(storeUuid);
-        Maybe<List<Menu>> menuListApi = networkRepository.getMenuList(storeUuid)
+        Maybe<List<Menu>> menuListApi = networkRepository().getMenuList(storeUuid)
                 .doOnSuccess(diskRepository::insertMenuList);
 
         return Maybe.merge(menuListDB, menuListApi)
@@ -55,7 +57,7 @@ public enum MenuRepository {
 
     public Observable<GroupedObservable<String, MenuOption>> getMenuOptionGroupByMenu(String menuUuid) {
         Maybe<List<MenuOption>> menuOptionListDB = diskRepository.getMenuOptionListByMenuUuid(menuUuid);
-        Maybe<List<MenuOption>> menuOptionListApi = networkRepository.getMenuOptionListByMenuUuid(menuUuid)
+        Maybe<List<MenuOption>> menuOptionListApi = networkRepository().getMenuOptionListByMenuUuid(menuUuid)
                 .doOnSuccess(diskRepository::insertMenuOptionList);
 
         return Observable.merge(
@@ -79,7 +81,7 @@ public enum MenuRepository {
                 .toList().toMaybe();
 
         Maybe<List<MenuOption>> menuOptionListApi = Observable.fromIterable(menuOptionUuidList)
-                .flatMapMaybe(networkRepository::getMenuOptionList)
+                .flatMapMaybe(networkRepository()::getMenuOptionList)
                 .toList()
                 .doOnSuccess(diskRepository::insertMenuOptionList)
                 .toMaybe();
@@ -90,12 +92,12 @@ public enum MenuRepository {
     }
 
     public Maybe<Menu> updateMenu(final Menu menu) {
-        return networkRepository.updateMenu(menu.uuid, menu)
+        return networkRepository().updateMenu(menu.uuid, menu)
                 .doOnSuccess(diskRepository::insertMenu);
     }
 
     public Maybe<Menu> updateCategoryInMenu(final String menuUuid, final MenuCategory menuCategory) {
-        return networkRepository.updateCategoryInMenu(menuUuid, menuCategory)
+        return networkRepository().updateCategoryInMenu(menuUuid, menuCategory)
                 .doOnSuccess(diskRepository::insertMenu);
     }
 }

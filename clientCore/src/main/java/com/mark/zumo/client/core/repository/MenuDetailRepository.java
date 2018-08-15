@@ -28,17 +28,19 @@ public enum MenuDetailRepository {
 
     private final static String TAG = "MenuDetailRepository";
 
-    private NetworkRepository networkRepository;
     private DiskRepository diskRepository;
 
     MenuDetailRepository() {
-        networkRepository = AppServerServiceProvider.INSTANCE.networkRepository;
         diskRepository = AppDatabaseProvider.INSTANCE.diskRepository;
+    }
+
+    private NetworkRepository networkRepository() {
+        return AppServerServiceProvider.INSTANCE.networkRepository;
     }
 
     public Observable<GroupedObservable<String, MenuDetail>> getMenuDetailListOfStore(String storeUuid) {
         Maybe<List<MenuDetail>> menuListDB = diskRepository.getMenuDetailByStoreUuid(storeUuid);
-        Maybe<List<MenuDetail>> menuListApi = networkRepository.getMenuDetailByStoreUuid(storeUuid)
+        Maybe<List<MenuDetail>> menuListApi = networkRepository().getMenuDetailByStoreUuid(storeUuid)
                 .doOnSuccess(diskRepository::insertMenuDetailList);
 
         return Observable.merge(
@@ -60,7 +62,7 @@ public enum MenuDetailRepository {
                                                       final String storeUuid,
                                                       final Set<String> categoryUuidList) {
         MenuCategoryUpdateRequest menuCategoryUpdateRequest = new MenuCategoryUpdateRequest(storeUuid, categoryUuidList);
-        return networkRepository.updateMenuCategory(menuUuid, menuCategoryUpdateRequest)
+        return networkRepository().updateMenuCategory(menuUuid, menuCategoryUpdateRequest)
                 .doOnSuccess(menuDetailList -> {
                     if (menuDetailList.size() > 0) {
                         MenuDetail menuDetail = menuDetailList.get(0);

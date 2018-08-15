@@ -31,16 +31,18 @@ public enum StoreRepository {
 
     private static final String TAG = "StoreRepository";
 
-    private final NetworkRepository networkRepository;
     private final DiskRepository diskRepository;
 
     StoreRepository() {
-        networkRepository = AppServerServiceProvider.INSTANCE.networkRepository;
         diskRepository = AppDatabaseProvider.INSTANCE.diskRepository;
     }
 
+    private NetworkRepository networkRepository() {
+        return AppServerServiceProvider.INSTANCE.networkRepository;
+    }
+
     public Maybe<List<Store>> nearByStore(Location location) {
-        return networkRepository.getNearByStore(location.getLongitude(), location.getLatitude(), 3);
+        return networkRepository().getNearByStore(location.getLongitude(), location.getLatitude(), 3);
     }
 
     public Observable<List<Store>> latestVisitStore() {
@@ -48,13 +50,13 @@ public enum StoreRepository {
     }
 
     public Maybe<Store> updateStore(Store store) {
-        return networkRepository.updateStore(store.uuid, store)
+        return networkRepository().updateStore(store.uuid, store)
                 .doOnSuccess(diskRepository::insertStore);
     }
 
     public Observable<Store> getStore(String storeUuid) {
         Maybe<Store> storeDB = diskRepository.getStore(storeUuid);
-        Maybe<Store> storeApi = networkRepository.getStore(storeUuid)
+        Maybe<Store> storeApi = networkRepository().getStore(storeUuid)
                 .doOnSuccess(diskRepository::insertStore);
 
         return Maybe.merge(storeDB, storeApi)
@@ -68,7 +70,7 @@ public enum StoreRepository {
     }
 
     public Maybe<Store> getStoreFromApi(String storeUuid) {
-        return networkRepository.getStore(storeUuid)
+        return networkRepository().getStore(storeUuid)
                 .doOnSuccess(diskRepository::insertStore);
     }
 }
