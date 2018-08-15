@@ -35,7 +35,7 @@ import butterknife.ButterKnife;
  */
 public class MenuCategorySettingFragment extends Fragment implements OnStartDragListener {
 
-    @BindView(R.id.recycler_view) RecyclerView recyclerView;
+    @BindView(R.id.category_recycler_view) RecyclerView recyclerView;
 
     private MenuSettingViewModel menuSettingViewModel;
     private ItemTouchHelper itemTouchHelper;
@@ -62,13 +62,17 @@ public class MenuCategorySettingFragment extends Fragment implements OnStartDrag
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(layoutManager);
 
-        MenuCategoryAdapter adapter = new MenuCategoryAdapter(menuSettingViewModel, this, this);
+        MenuCategoryAdapter adapter = new MenuCategoryAdapter(this::onSelectCategory, menuSettingViewModel, this, this);
         recyclerView.setAdapter(adapter);
 
         ItemTouchHelper.Callback callback = new CategorySettingTouchHelperCallback(adapter);
         itemTouchHelper = new ItemTouchHelper(callback);
         itemTouchHelper.attachToRecyclerView(recyclerView);
         menuSettingViewModel.categoryList().observe(this, adapter::setMenuCategoryList);
+    }
+
+    private void onSelectCategory(String categoryUuid) {
+
     }
 
     @Override

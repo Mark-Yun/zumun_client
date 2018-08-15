@@ -24,6 +24,7 @@ import com.mark.zumo.client.core.entity.MenuCategory;
 import com.mark.zumo.client.store.R;
 import com.mark.zumo.client.store.viewmodel.MenuSettingViewModel;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -37,15 +38,19 @@ import butterknife.ButterKnife;
  */
 class MenuCategoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements ItemTouchHelperAdapter {
 
+    private final WeakReference<OnSelectCategoryListener> onSelectCategoryListener;
     private final MenuSettingViewModel menuSettingViewModel;
     private final LifecycleOwner lifecycleOwner;
     private final OnStartDragListener dragStartListener;
 
     private List<MenuCategory> menuCategoryList;
 
-    MenuCategoryAdapter(final MenuSettingViewModel menuSettingViewModel,
-                        final LifecycleOwner lifecycleOwner, final OnStartDragListener dragStartListener) {
+    MenuCategoryAdapter(final OnSelectCategoryListener onSelectCategoryListener,
+                        final MenuSettingViewModel menuSettingViewModel,
+                        final LifecycleOwner lifecycleOwner,
+                        final OnStartDragListener dragStartListener) {
 
+        this.onSelectCategoryListener = new WeakReference<>(onSelectCategoryListener);
         this.menuSettingViewModel = menuSettingViewModel;
         this.lifecycleOwner = lifecycleOwner;
         this.dragStartListener = dragStartListener;
@@ -61,11 +66,12 @@ class MenuCategoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull final ViewGroup parent, final int viewType) {
+        LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
         if (viewType == 0) {
-            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_view_menu_category_setting_header, parent, false);
+            View view = layoutInflater.inflate(R.layout.card_view_menu_category_setting_header, parent, false);
             return new HeaderViewHolder(view);
         } else {
-            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_view_menu_category_setting, parent, false);
+            View view = layoutInflater.inflate(R.layout.card_view_menu_category_setting, parent, false);
             return new BodyViewHolder(view);
         }
     }
@@ -74,8 +80,9 @@ class MenuCategoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     @Override
     public void onBindViewHolder(@NonNull final RecyclerView.ViewHolder holder, final int position) {
         if (holder instanceof BodyViewHolder) {
-            BodyViewHolder viewHolder = (BodyViewHolder) holder;
-            MenuCategory menuCategory = menuCategoryList.get(position - 1);
+            final BodyViewHolder viewHolder = (BodyViewHolder) holder;
+            final MenuCategory menuCategory = menuCategoryList.get(position - 1);
+
             viewHolder.name.setText(menuCategory.name);
             viewHolder.reorder.setOnTouchListener((v, event) -> {
                 int action = event.getAction();
@@ -87,9 +94,9 @@ class MenuCategoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                 return false;
             });
 
-            viewHolder.itemView.setOnClickListener(v -> {
-                Context context = viewHolder.itemView.getContext();
-                AppCompatEditText editText = new AppCompatEditText(context);
+            viewHolder.name.setOnClickListener(v -> {
+                final Context context = viewHolder.itemView.getContext();
+                final AppCompatEditText editText = new AppCompatEditText(context);
                 new AlertDialog.Builder(context)
                         .setTitle(R.string.menu_category_setting_update_category_dialog_title)
                         .setMessage(R.string.menu_category_setting_update_category_dialog_message)
@@ -104,9 +111,11 @@ class MenuCategoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                         .create()
                         .show();
             });
+
+            viewHolder.itemView.setOnClickListener(v -> onSelectCategory(menuCategory));
         } else if (holder instanceof HeaderViewHolder) {
-            HeaderViewHolder viewHolder = (HeaderViewHolder) holder;
-            Context context = viewHolder.itemView.getContext();
+            final HeaderViewHolder viewHolder = (HeaderViewHolder) holder;
+            final Context context = viewHolder.itemView.getContext();
 
             viewHolder.itemView.setOnClickListener(v -> {
                 AppCompatEditText editText = new AppCompatEditText(context);
@@ -130,6 +139,15 @@ class MenuCategoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                         .show();
             });
         }
+    }
+
+    private void onSelectCategory(MenuCategory menuCategory) {
+        OnSelectCategoryListener onSelectCategoryListener = this.onSelectCategoryListener.get();
+        if (onSelectCategoryListener == null) {
+            return;
+        }
+
+        onSelectCategoryListener.onSelectCategory(menuCategory.uuid);
     }
 
     @Override
@@ -174,6 +192,10 @@ class MenuCategoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     @Override
     public int getItemCount() {
         return menuCategoryList.size() + 1;
+    }
+
+    interface OnSelectCategoryListener {
+        void onSelectCategory(String categoryUuid);
     }
 
     static class BodyViewHolder extends RecyclerView.ViewHolder {
