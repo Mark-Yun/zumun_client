@@ -3,7 +3,6 @@
  * Unauthorized copying of this file, via any medium is strictly prohibited
  * Proprietary and confidential
  */
-
 package com.mark.zumo.client.customer.app.fcm;
 
 import android.text.TextUtils;
