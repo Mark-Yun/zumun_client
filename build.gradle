@@ -112,6 +112,7 @@ configure(applications) {
         implementation "com.google.android.gms:play-services-places:$playService"
 
         implementation 'com.crashlytics.sdk.android:crashlytics:2.9.4'
+        implementation "com.kakao.sdk:usermgmt:1.7.1"
     }
 }
 

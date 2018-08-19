@@ -29,22 +29,12 @@ public enum SessionManager {
     SessionManager() {
         sessionRepository = SessionRepository.INSTANCE;
         storeRepository = StoreRepository.INSTANCE;
-
-        getSessionStore()
-                .doOnSuccess(this::buildSessionHeader)
-                .subscribe();
     }
 
     public Maybe<Store> getSessionStore() {
         return sessionRepository.getStoreFromCache()
                 .flatMap(storeRepository::getStoreFromApi)
                 .subscribeOn(Schedulers.io());
-    }
-
-    private void buildSessionHeader(Store store) {
-        new SessionRepository.SessionBuilder()
-                .put(SessionRepository.KEY_STORE_UUID, store.uuid)
-                .build();
     }
 
     public Maybe<SnsToken> registerToken(Store store, String token) {

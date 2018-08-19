@@ -20,18 +20,31 @@ android {
         }
     }
 
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    def versionPropsFile = file('version.properties')
+    if (!versionPropsFile.canRead()) {
+        throw new GradleException("Could not read version.properties!")
+    }
+
+    Properties versionProps = new Properties()
+    versionProps.load(new FileInputStream(versionPropsFile))
+
+    def versionMajor = versionProps['VERSION_MAJOR'].toString()
+    def versionMinor = versionProps['VERSION_MINOR'].toString()
+    def versionPatch = versionProps['VERSION_PATCH'].toString()
+
+    def finalVersionCode = generateVersionCode(rootProject.ext.minSdk, versionMajor, versionMinor, versionPatch)
+
     defaultConfig {
         applicationId "com.mark.zumo.client.customer"
         minSdkVersion rootProject.ext.minSdk
         targetSdkVersion rootProject.ext.targetSdk
-        versionCode 1
-        versionName "1.0"
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-    }
-
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        versionCode finalVersionCode
+        versionName "${versionMajor}.${versionMinor}.${versionPatch}"
     }
 
     buildTypes {
@@ -46,8 +59,16 @@ android {
             versionNameSuffix 'd'
         }
     }
+
+    applicationVariants.all { variant ->
+        variant.outputs.all { output ->
+            outputFileName = new File(
+                    outputFileName.replace(".apk", "-${finalVersionCode}.apk")
+            )
+        }
+    }
 }
 
-dependencies {
-    implementation "com.kakao.sdk:usermgmt:1.7.1"
+private static Integer generateVersionCode(minimumSdk, major, minor, patch) {
+    return minimumSdk.toInteger() * 10000000 + major.toInteger() * 10000 + minor.toInteger() * 100 + patch.toInteger()
 }
