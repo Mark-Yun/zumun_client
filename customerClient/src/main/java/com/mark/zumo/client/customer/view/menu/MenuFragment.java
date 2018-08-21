@@ -46,8 +46,6 @@ public class MenuFragment extends Fragment {
 
     public static final String KEY_STORE_UUID = "store_uuid";
 
-    private static final String TAG = "MenuFragment";
-
     @BindView(R.id.store_cover_image) ImageView storeCoverImage;
     @BindView(R.id.store_cover_title) TextView storeCoverTitle;
 
