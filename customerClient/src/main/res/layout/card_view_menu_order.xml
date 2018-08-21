@@ -20,76 +20,58 @@
 
     <android.support.v7.widget.AppCompatImageView
         android:id="@+id/image"
-        android:layout_width="@dimen/card_view_place_image_width"
+        android:layout_width="@dimen/card_view_place_image_height"
         android:layout_height="@dimen/card_view_place_image_height"
-        android:layout_marginBottom="@dimen/medium_margin"
-        android:layout_marginTop="@dimen/medium_margin"
+        android:layout_marginStart="@dimen/card_view_3_line_item_title_start_margin"
         android:scaleType="centerCrop"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <android.support.constraint.Guideline
-        android:id="@+id/title_base_line"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_begin="@dimen/card_view_3_line_item_title_base_line_top_margin" />
-
     <android.support.v7.widget.AppCompatTextView
         android:id="@+id/title"
+        style="@style/SubtitleTextLight"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/card_view_3_line_item_title_start_margin"
-        style="@style/SubtitleTextLight"
-        app:layout_constraintBottom_toBottomOf="@+id/title_base_line"
-        app:layout_constraintStart_toEndOf="@+id/image" />
-
-    <android.support.constraint.Guideline
-        android:id="@+id/secondary_text_base_line"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_begin="@dimen/card_view_3_line_item_secondary_text_top_margin" />
+        app:layout_constraintBottom_toTopOf="@+id/order_number_description"
+        app:layout_constraintStart_toEndOf="@+id/image"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_chainStyle="packed" />
 
     <android.support.v7.widget.AppCompatTextView
         android:id="@+id/order_number_description"
+        style="@style/SecondaryLineValueTextLight"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/order_number_description"
-        style="@style/SecondaryLineValueTextLight"
-        app:layout_constraintBottom_toBottomOf="@+id/secondary_text_base_line"
-        app:layout_constraintStart_toStartOf="@+id/title" />
+        app:layout_constraintBottom_toTopOf="@+id/order_time_description"
+        app:layout_constraintStart_toStartOf="@+id/title"
+        app:layout_constraintTop_toBottomOf="@+id/title" />
 
     <android.support.v7.widget.AppCompatTextView
         android:id="@+id/order_number"
+        style="@style/SecondaryLineValueTextLight"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        style="@style/SecondaryLineValueTextLight"
         app:layout_constraintBottom_toBottomOf="@+id/order_number_description"
         app:layout_constraintStart_toEndOf="@+id/order_number_description" />
 
-    <android.support.constraint.Guideline
-        android:id="@+id/third_text_base_line"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_begin="@dimen/card_view_3_line_item_third_text_top_margin" />
-
     <android.support.v7.widget.AppCompatTextView
         android:id="@+id/order_time_description"
+        style="@style/SecondaryLineValueTextLight"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/order_time_description"
-        style="@style/SecondaryLineValueTextLight"
-        app:layout_constraintBottom_toBottomOf="@+id/third_text_base_line"
-        app:layout_constraintStart_toStartOf="@+id/title" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/title"
+        app:layout_constraintTop_toBottomOf="@+id/order_number_description" />
 
     <android.support.v7.widget.AppCompatTextView
         android:id="@+id/order_time"
+        style="@style/SecondaryLineValueTextLight"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        style="@style/SecondaryLineValueTextLight"
         app:layout_constraintBottom_toBottomOf="@+id/order_time_description"
         app:layout_constraintStart_toEndOf="@+id/order_time_description" />
 
@@ -106,13 +88,13 @@
 
     <android.support.v7.widget.AppCompatTextView
         android:id="@+id/order_state"
+        style="@style/SubheadLineTextDark"
         android:layout_width="wrap_content"
         android:layout_height="0dp"
         android:layout_marginEnd="@dimen/small_margin"
         android:gravity="center_vertical|center_horizontal"
         android:paddingEnd="@dimen/small_margin"
         android:paddingStart="@dimen/small_margin"
-        style="@style/SubheadLineTextDark"
         app:layout_constraintBottom_toBottomOf="@+id/right_arrow_image_view"
         app:layout_constraintEnd_toStartOf="@+id/right_arrow_image_view"
         app:layout_constraintTop_toTopOf="@+id/right_arrow_image_view" />

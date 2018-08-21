@@ -11,14 +11,18 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.mark.zumo.client.core.entity.MenuOrder;
 import com.mark.zumo.client.customer.R;
 import com.mark.zumo.client.customer.viewmodel.OrderViewModel;
+
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -29,8 +33,10 @@ import butterknife.ButterKnife;
 public class OrderFragment extends Fragment {
 
     @BindView(R.id.order_recycler_view) RecyclerView recyclerView;
+    @BindView(R.id.swipe_refresh_layout) SwipeRefreshLayout swipeRefreshLayout;
 
     private OrderViewModel orderViewModel;
+    private OrderAdapter adapter;
 
     @Override
     public void onCreate(@Nullable final Bundle savedInstanceState) {
@@ -45,7 +51,12 @@ public class OrderFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_order, container, false);
         ButterKnife.bind(this, view);
         inflateRecyclerView();
+        inflateSwipeRefreshLayout();
         return view;
+    }
+
+    private void inflateSwipeRefreshLayout() {
+        swipeRefreshLayout.setOnRefreshListener(this::refreshOrderList);
     }
 
     private void inflateRecyclerView() {
@@ -53,9 +64,23 @@ public class OrderFragment extends Fragment {
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(layoutManager);
 
-        OrderAdapter adapter = new OrderAdapter(this, orderViewModel);
+        adapter = new OrderAdapter(this, orderViewModel);
         recyclerView.setAdapter(adapter);
 
         orderViewModel.getMenuOrderList().observe(this, adapter::setOrderList);
+    }
+
+    private void refreshOrderList() {
+        orderViewModel.getMenuOrderList().observe(this, this::onRefreshComplete);
+    }
+
+    private void onRefreshComplete(final List<MenuOrder> orderList) {
+        if (adapter != null) {
+            adapter.setOrderList(orderList);
+        }
+
+        if (swipeRefreshLayout != null) {
+            swipeRefreshLayout.setRefreshing(false);
+        }
     }
 }

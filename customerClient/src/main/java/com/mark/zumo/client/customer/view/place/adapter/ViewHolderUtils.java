@@ -71,6 +71,7 @@ final class ViewHolderUtils {
 
         GlideApp.with(storeViewHolder.itemView.getContext())
                 .load(store.thumbnailUrl)
+                .apply(GlideUtils.storeImageOptions())
                 .transition(GlideUtils.storeTransitionOptions())
                 .into(storeViewHolder.image);
 

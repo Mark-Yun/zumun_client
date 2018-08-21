@@ -83,7 +83,7 @@ class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.ViewHolder> {
 
             GlideApp.with(holder.image)
                     .load(store.thumbnailUrl)
-                    .apply(GlideUtils.storeCoverImageOptions())
+                    .apply(GlideUtils.storeImageOptions())
                     .transition(GlideUtils.storeTransitionOptions())
                     .into(holder.image);
         });

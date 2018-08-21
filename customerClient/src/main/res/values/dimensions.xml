@@ -6,10 +6,10 @@
   -->
 
 <resources>
-    <dimen name="card_view_2_line_item_height">72dp</dimen>
+    <dimen name="card_view_2_line_item_height">88dp</dimen>
     <dimen name="card_view_3_line_item_height">88dp</dimen>
     <dimen name="card_view_place_image_width">100dp</dimen>
-    <dimen name="card_view_place_image_height">56dp</dimen>
+    <dimen name="card_view_place_image_height">72dp</dimen>
     <dimen name="card_view_menu_padding">7dp</dimen>
 
     <dimen name="tab_height">48dp</dimen>

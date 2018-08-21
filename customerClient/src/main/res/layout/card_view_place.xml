@@ -23,37 +23,25 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <android.support.constraint.Guideline
-        android:id="@+id/title_base_line"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_begin="@dimen/card_view_2_line_item_title_base_line_top_margin" />
-
     <android.support.v7.widget.AppCompatTextView
         android:id="@+id/title"
+        style="@style/SubtitleTextLight"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/medium_margin"
-        style="@style/SubtitleTextLight"
-        app:layout_constraintBottom_toBottomOf="@+id/title_base_line"
+        app:layout_constraintBottom_toTopOf="@+id/distance"
         app:layout_constraintStart_toEndOf="@+id/image"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_chainStyle="packed" />
-
-    <android.support.constraint.Guideline
-        android:id="@+id/secondary_text_base_line"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_begin="@dimen/card_view_2_line_item_secondary_text_base_line_top_margin" />
 
     <android.support.v7.widget.AppCompatTextView
         android:id="@+id/distance"
+        style="@style/SecondaryLineTextLight"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        style="@style/SecondaryLineTextLight"
-        app:layout_constraintBottom_toBottomOf="@+id/secondary_text_base_line"
-        app:layout_constraintStart_toStartOf="@+id/title" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/title"
+        app:layout_constraintTop_toBottomOf="@+id/title" />
 
     <android.support.v7.widget.AppCompatImageView
         android:layout_width="@dimen/icon_size_small"
