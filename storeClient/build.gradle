@@ -13,19 +13,52 @@ android {
         }
     }
 
-    defaultConfig {
-        applicationId "com.mark.zumo.client.store"
-        minSdkVersion rootProject.ext.minSdk
-        targetSdkVersion rootProject.ext.targetSdk
-        versionCode 1
-        versionName "1.0"
-
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-    }
-
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
+    }
+    def versionPropsFile = file('version.properties')
+    if (!versionPropsFile.canRead()) {
+        throw new GradleException("Could not read version.properties!")
+    }
+
+    Properties versionProps = new Properties()
+    versionProps.load(new FileInputStream(versionPropsFile))
+
+    def minSdk = versionProps['MIN_SDK'].toString()
+    def versionMajor = versionProps['VERSION_MAJOR'].toString()
+    def versionMinor = versionProps['VERSION_MINOR'].toString()
+    def versionPatch = versionProps['VERSION_PATCH'].toString()
+
+    def finalVersionCode = generateVersionCode(rootProject.ext.minSdk, versionMajor, versionMinor, versionPatch)
+
+    defaultConfig {
+        applicationId "com.mark.zumo.client.store"
+        minSdkVersion minSdk
+        targetSdkVersion rootProject.ext.targetSdk
+        versionCode finalVersionCode
+        versionName "${versionMajor}.${versionMinor}.${versionPatch}"
+    }
+
+    buildTypes {
+        release {
+            signingConfig signingConfigs.debug
+            minifyEnabled true
+            shrinkResources true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), '../proguard-rules.pro'
+        }
+        debug {
+            signingConfig signingConfigs.debug
+            versionNameSuffix 'd'
+        }
+    }
+
+    applicationVariants.all { variant ->
+        variant.outputs.all { output ->
+            outputFileName = new File(
+                    outputFileName.replace(".apk", "-${finalVersionCode}.apk")
+            )
+        }
     }
 
     buildTypes {
@@ -42,6 +75,10 @@ android {
 
 }
 
+private static Integer generateVersionCode(minimumSdk, major, minor, patch) {
+    return minimumSdk.toInteger() * 10000000 + major.toInteger() * 10000 + minor.toInteger() * 100 + patch.toInteger()
+}
+
 dependencies {
     ext {
         recycler_view_pager = 'v1.1.2@aar'
@@ -54,7 +91,7 @@ dependencies {
 
     implementation "com.amazonaws:aws-android-sdk-s3:$aws_android_sdk"
     implementation "com.amazonaws:aws-android-sdk-cognito:$aws_android_sdk"
-    implementation ('com.amazonaws:aws-android-sdk-mobile-client:2.6.+@aar') { transitive = true }
+    implementation('com.amazonaws:aws-android-sdk-mobile-client:2.6.+@aar') { transitive = true }
 
     implementation 'com.library.tangxiaolv:telegramgallery:1.0.5'
     implementation 'com.theartofdev.edmodo:android-image-cropper:2.6.0'
