@@ -101,6 +101,7 @@ public class MenuFragment extends Fragment {
         menuViewModel.getStore(storeUuid).observe(this, this::onLoadStore);
     }
 
+
     private void onLoadStore(Store store) {
         GlideApp.with(this)
                 .load(store.coverImageUrl)
