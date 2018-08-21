@@ -6,11 +6,6 @@
   -->
 
 <resources>
-    <dimen name="toolbar_title_size">20sp</dimen>
-    <dimen name="menu_name_text_size">15sp</dimen>
-    <dimen name="menu_price_text_size">10sp</dimen>
-    <dimen name="store_cover_title_text_size">25sp</dimen>
-
     <dimen name="card_view_2_line_item_height">72dp</dimen>
     <dimen name="card_view_3_line_item_height">88dp</dimen>
     <dimen name="card_view_place_image_width">100dp</dimen>
