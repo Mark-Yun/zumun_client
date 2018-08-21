@@ -15,6 +15,7 @@ import android.support.annotation.NonNull;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.mark.zumo.client.core.app.BuildConfig;
 import com.mark.zumo.client.core.util.context.ContextHolder;
 
 import java.io.File;
@@ -61,6 +62,17 @@ public enum AppServerServiceProvider {
                 .create();
     }
 
+    private static HttpLoggingInterceptor.Level loggerLevel() {
+        switch (BuildConfig.BUILD_TYPE) {
+            case RELEASE:
+                return HttpLoggingInterceptor.Level.NONE;
+            case DEBUG:
+                return HttpLoggingInterceptor.Level.BODY;
+            default:
+                throw new UnsupportedOperationException();
+        }
+    }
+
     private static OkHttpClient okHttpClient(final Interceptor interceptor) {
         return new OkHttpClient.Builder()
                 .cache(cache())
@@ -74,7 +86,7 @@ public enum AppServerServiceProvider {
 
     @NonNull
     private static HttpLoggingInterceptor logger() {
-        return new HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY);
+        return new HttpLoggingInterceptor().setLevel(loggerLevel());
     }
 
     @NonNull
@@ -90,7 +102,9 @@ public enum AppServerServiceProvider {
 
             for (String key : bundle.keySet()) {
                 String value = bundle.getString(key);
-                if (value == null) continue;
+                if (value == null) {
+                    continue;
+                }
 
                 builder.header(key, value);
             }

@@ -3,20 +3,12 @@
  * Unauthorized copying of this file, via any medium is strictly prohibited
  * Proprietary and confidential
  */
-
 android {
     compileSdkVersion rootProject.ext.compileSdk
 
     signingConfigs {
         debug {
             storeFile file('../keystore/zumun_debug.keystore')
-        }
-
-        release {
-            storeFile file("../keystore/zumun_customer_release.jks")
-            storePassword "alsgur891121"
-            keyAlias "zumun_customer_release"
-            keyPassword "alsgur891121"
         }
     }
 
@@ -33,6 +25,7 @@ android {
     Properties versionProps = new Properties()
     versionProps.load(new FileInputStream(versionPropsFile))
 
+    def minSdk = versionProps['MIN_SDK'].toString()
     def versionMajor = versionProps['VERSION_MAJOR'].toString()
     def versionMinor = versionProps['VERSION_MINOR'].toString()
     def versionPatch = versionProps['VERSION_PATCH'].toString()
@@ -41,7 +34,7 @@ android {
 
     defaultConfig {
         applicationId "com.mark.zumo.client.customer"
-        minSdkVersion rootProject.ext.minSdk
+        minSdkVersion minSdk
         targetSdkVersion rootProject.ext.targetSdk
         versionCode finalVersionCode
         versionName "${versionMajor}.${versionMinor}.${versionPatch}"
@@ -49,7 +42,7 @@ android {
 
     buildTypes {
         release {
-            signingConfig signingConfigs.release
+            signingConfig signingConfigs.debug
             minifyEnabled true
             shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), '../proguard-rules.pro'
