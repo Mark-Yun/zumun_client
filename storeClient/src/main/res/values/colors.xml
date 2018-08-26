@@ -6,4 +6,14 @@
   -->
 
 <resources>
+    <color name="color_50">#e6ECEFF1</color>
+    <color name="color_100">#e6CFD8DC</color>
+    <color name="color_200">#e6B0BEC5</color>
+    <color name="color_300">#e690A4AE</color>
+    <color name="color_400">#e678909C</color>
+    <color name="color_500">#e6607D8B</color>
+    <color name="color_600">#e6546E7A</color>
+    <color name="color_700">#e6455A64</color>
+    <color name="color_800">#e637474F</color>
+    <color name="color_900">#e6263238</color>
 </resources>

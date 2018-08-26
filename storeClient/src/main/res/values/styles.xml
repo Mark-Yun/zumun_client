@@ -7,48 +7,29 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
 
     <!-- Base application theme. -->
-    <style name="AppTheme.NoActionBar" parent="Theme.AppCompat.NoActionBar">
-        <item name="android:windowActivityTransitions" tools:targetApi="lollipop">true</item>
-        <item name="android:colorControlHighlight" tools:targetApi="lollipop">@color/colorDivider
-        </item>
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="android:colorPrimaryDark" tools:targetApi="m">@color/colorPrimaryDark</item>
-        <item name="android:windowBackground">@color/colorPrimary</item>
-        <item name="android:textColorHighlight">@color/colorAccent</item>
-        <item name="android:colorAccent" tools:targetApi="lollipop">@color/colorAccent</item>
-        <item name="android:textColor">@color/colorTextLight</item>
-        <item name="android:textColorPrimary">@color/colorTextLight</item>
-        <item name="android:textColorPrimaryInverse">@color/colorTextDark</item>
-        <item name="android:textColorSecondary">@color/colorSecondaryTextLight</item>
-        <item name="android:textColorSecondaryInverse">@color/colorSecondaryTextDark</item>
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="android:borderlessButtonStyle">
-            @style/AppTheme.NoActionBar.ButtonStyle.Borderless
+            @style/AppTheme.ButtonStyle.Borderless
         </item>
-        <item name="android:tabWidgetStyle">@style/AppTheme.NoActionBar.TabStyle</item>
-        <item name="android:actionButtonStyle">@style/AppTheme.NoActionBar.ActionButtonStyle</item>
+        <item name="colorPrimary">@color/color_900</item>
+        <item name="colorPrimaryDark">@color/color_900</item>
+        <item name="android:textColorPrimary">@color/colorTextLight</item>
+        <item name="android:actionButtonStyle">@style/AppTheme.ActionButtonStyle</item>
         <item name="preferenceTheme">@style/PreferenceThemeOverlay</item>
-        <item name="colorAccent">@color/colorAccent</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
     </style>
 
-    <style name="AppTheme.NoActionBar.ButtonStyle.Borderless" parent="Widget.AppCompat.Button.Borderless.Colored">
+    <style name="AppTheme.ButtonStyle.Borderless" parent="Widget.AppCompat.Button.Borderless.Colored">
         <item name="android:textColor">@color/colorTextDark</item>
     </style>
 
-    <style name="AppTheme.NoActionBar.ButtonStyle" parent="Widget.AppCompat.Button.Colored"></style>
+    <style name="AppTheme.ButtonStyle" parent="Widget.AppCompat.Button.Colored"></style>
 
-    <style name="AppTheme.NoActionBar.ActionButtonStyle" parent="Widget.Design.FloatingActionButton">
+    <style name="AppTheme.ActionButtonStyle" parent="Widget.Design.FloatingActionButton">
         <item name="background">@color/colorAccent</item>
         <item name="android:backgroundTint" tools:targetApi="lollipop">@color/colorAccent</item>
     </style>
 
-    <style name="AppTheme.NoActionBar.TabStyle" parent="Widget.Design.TabLayout">
-        <item name="tabIndicatorColor">@color/colorAccent</item>
-        <item name="tabSelectedTextColor">@color/colorTextLight</item>
-        <item name="tabTextColor">@color/colorSecondaryTextLight</item>
-    </style>
-
-    <style name="AppTheme.NoActionBar.Translucent" parent="AppTheme.NoActionBar">
+    <style name="AppTheme.Translucent" parent="AppTheme">
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowBackground">@android:color/transparent</item>
         <item name="android:colorBackgroundCacheHint">@null</item>
@@ -56,7 +37,18 @@
         <item name="android:windowAnimationStyle">@android:style/Animation</item>
     </style>
 
-    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
+        <item name="android:background">@color/color_900</item>
+        <item name="colorPrimary">@color/color_900</item>
+    </style>
 
-    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light">
+        <item name="android:background">@color/color_900</item>
+        <item name="colorPrimary">@color/color_900</item>
+    </style>
+
+    <style name="AppTheme.ActionBar.TitleTextStyle" parent="@android:style/TextAppearance.StatusBar.Title">
+        <item name="android:textColor">@color/color_50</item>
+    </style>
+
 </resources>

@@ -10,13 +10,17 @@
     android:layout_height="80dp"
     android:clickable="true"
     android:focusable="true"
+    android:layout_marginEnd="@dimen/small_margin"
+    android:layout_marginTop="@dimen/small_margin"
+    android:background="@color/color_50"
+    android:elevation="1dp"
     android:foreground="?android:attr/selectableItemBackground">
 
     <android.support.v7.widget.AppCompatTextView
         android:id="@+id/order_number"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/big_margin"
+        android:layout_marginStart="@dimen/medium_margin"
         android:textAlignment="center"
         android:textColor="@color/colorTextLight"
         android:textSize="40dp"
@@ -28,38 +32,10 @@
         android:id="@+id/order_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/big_margin"
+        android:layout_marginStart="@dimen/medium_margin"
         android:textColor="@color/colorTextLight"
         android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/amount_description"
         app:layout_constraintStart_toEndOf="@+id/order_number"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_chainStyle="packed" />
-
-    <android.support.v7.widget.AppCompatTextView
-        android:id="@+id/amount_description"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/order_total_amount_description"
-        android:textColor="@color/colorSecondaryTextLight"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="@+id/order_name"
-        app:layout_constraintTop_toBottomOf="@+id/order_name" />
-
-    <android.support.v7.widget.AppCompatTextView
-        android:id="@+id/amount"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textColor="@color/colorSecondaryTextLight"
-        app:layout_constraintBottom_toBottomOf="@+id/amount_description"
-        app:layout_constraintStart_toEndOf="@+id/amount_description" />
-
-    <View
-        android:layout_width="0dp"
-        android:layout_height="1dp"
-        android:background="@color/divider"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_weight="1"
-        app:layout_constraintStart_toStartOf="parent" />
 </android.support.constraint.ConstraintLayout>

@@ -10,7 +10,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.AppCompatTextView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -57,11 +56,8 @@ class RequestedOrderAdapter extends RecyclerView.Adapter<RequestedOrderAdapter.V
     public void onBindViewHolder(@NonNull final RequestedOrderAdapter.ViewHolder holder, final int position) {
         MenuOrder menuOrder = menuOrderList.get(position);
 
-        holder.amount.setText(String.valueOf(menuOrder.totalQuantity));
         holder.orderName.setText(menuOrder.orderName);
         holder.orderNumber.setText(menuOrder.orderNumber);
-        int stateColor = ContextCompat.getColor(holder.itemView.getContext(), MenuOrder.State.of(menuOrder.state).colorRes);
-        holder.orderNumber.setBackgroundColor(stateColor);
 
         holder.itemView.setOnClickListener(v -> {
             Bundle bundle = new Bundle();
@@ -86,7 +82,6 @@ class RequestedOrderAdapter extends RecyclerView.Adapter<RequestedOrderAdapter.V
     static class ViewHolder extends RecyclerView.ViewHolder {
         @BindView(R.id.order_number) AppCompatTextView orderNumber;
         @BindView(R.id.order_name) AppCompatTextView orderName;
-        @BindView(R.id.amount) AppCompatTextView amount;
 
         private ViewHolder(final View itemView) {
             super(itemView);
