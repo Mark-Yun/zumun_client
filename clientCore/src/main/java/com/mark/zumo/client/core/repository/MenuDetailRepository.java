@@ -41,6 +41,7 @@ public enum MenuDetailRepository {
     public Observable<GroupedObservable<String, MenuDetail>> getMenuDetailListOfStore(String storeUuid) {
         Maybe<List<MenuDetail>> menuListDB = diskRepository.getMenuDetailByStoreUuid(storeUuid);
         Maybe<List<MenuDetail>> menuListApi = networkRepository().getMenuDetailByStoreUuid(storeUuid)
+                .doOnSuccess(unused -> diskRepository.deleteMenuDetailListByStoreUuid(storeUuid))
                 .doOnSuccess(diskRepository::insertMenuDetailList);
 
         return Observable.merge(

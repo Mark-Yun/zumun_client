@@ -21,7 +21,6 @@ import com.mark.zumo.client.customer.model.MenuManager;
 import com.mark.zumo.client.customer.model.StoreManager;
 import com.mark.zumo.client.customer.model.entity.Cart;
 
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -73,18 +72,12 @@ public class MenuViewModel extends AndroidViewModel {
 
     public MutableLiveData<Map<String, List<Menu>>> loadMenuByCategory(String storeUuid) {
         MutableLiveData<Map<String, List<Menu>>> liveData = new MutableLiveData<>();
-        Map<String, List<Menu>> menuMap = new LinkedHashMap<>();
 
         menuManager.getMenuListByCategory(storeUuid)
-                .flatMapSingle(groupedObservable ->
-                        groupedObservable.sorted((d1, d2) -> d1.menuSeqNum - d2.menuSeqNum)
-                                .map(menuDetail -> menuDetail.menuUuid)
-                                .flatMapMaybe(menuManager::getMenuFromDisk)
-                                .toList()
-                                .doOnSuccess(menuList -> menuMap.put(groupedObservable.getKey(), menuList))
-                ).observeOn(AndroidSchedulers.mainThread())
+                .observeOn(AndroidSchedulers.mainThread())
                 .doOnSubscribe(disposables::add)
-                .doOnComplete(() -> liveData.setValue(menuMap)).subscribe();
+                .doOnSuccess(liveData::setValue)
+                .subscribe();
 
         return liveData;
     }

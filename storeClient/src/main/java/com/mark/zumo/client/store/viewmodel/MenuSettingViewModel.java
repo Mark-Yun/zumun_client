@@ -20,7 +20,6 @@ import com.mark.zumo.client.store.model.MenuManager;
 import com.mark.zumo.client.store.model.S3TransferManager;
 import com.mark.zumo.client.store.model.SessionManager;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -152,20 +151,13 @@ public class MenuSettingViewModel extends AndroidViewModel {
     }
 
     private void loadMenuListByCategory(final MutableLiveData<Map<String, List<Menu>>> liveData) {
-        Map<String, List<Menu>> menuMap = new HashMap<>();
-
         sessionManager.getSessionStore()
                 .map(store -> store.uuid)
-                .flatMapObservable(menuManager::getMenuListByCategory)
-                .flatMapSingle(groupedObservable ->
-                        groupedObservable.sorted((d1, d2) -> d2.menuSeqNum - d1.menuSeqNum)
-                                .map(menuDetail -> menuDetail.menuUuid)
-                                .flatMapMaybe(menuManager::getMenuFromDisk)
-                                .toList()
-                                .doOnSuccess(menuList -> menuMap.put(groupedObservable.getKey(), menuList))
-                ).observeOn(AndroidSchedulers.mainThread())
+                .flatMap(menuManager::getMenuListByCategory)
+                .observeOn(AndroidSchedulers.mainThread())
                 .doOnSubscribe(disposables::add)
-                .doOnComplete(() -> liveData.setValue(menuMap)).subscribe();
+                .doOnSuccess(liveData::setValue)
+                .subscribe();
     }
 
     public LiveData<List<MenuCategory>> categoryListByMenuUuid(String menuUuid) {

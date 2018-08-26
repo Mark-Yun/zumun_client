@@ -77,24 +77,24 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHo
 
     @Override
     public void onBindViewHolder(@NonNull final ViewHolder holder, final int position) {
-        boolean isNoneCategory = (position == categoryList.size());
-
-        MenuCategory menuCategory = isNoneCategory ? null : categoryList.get(position);
-        String categoryName = isNoneCategory ? "None" : menuCategory.name;
-        String categoryUuid = isNoneCategory ? "none" : menuCategory.uuid;
+        MenuCategory menuCategory = categoryList.get(position);
+        String categoryName = menuCategory.name;
+        String categoryUuid = menuCategory.uuid;
 
         holder.categoryName.setText(categoryName);
+
+        boolean hasMenuItems = menuListMap.containsKey(categoryUuid);
+        holder.categoryName.setVisibility(hasMenuItems ? View.VISIBLE : View.GONE);
+        holder.menuRecyclerView.setVisibility(hasMenuItems ? View.VISIBLE : View.GONE);
+        if (!hasMenuItems) {
+            return;
+        }
 
         RecyclerView recyclerView = holder.menuRecyclerView;
         RecyclerView.LayoutManager layoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setHasFixedSize(true);
         recyclerView.setNestedScrollingEnabled(false);
-
-        if (!menuListMap.containsKey(categoryUuid)) {
-            holder.categoryName.setVisibility(View.GONE);
-            return;
-        }
 
         List<Menu> menuList = menuListMap.get(categoryUuid);
         MenuAdapter menuAdapter = new MenuAdapter(lifecycleOwner, menuViewModel);

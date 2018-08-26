@@ -12,17 +12,19 @@ import com.mark.zumo.client.core.entity.Menu;
 import com.mark.zumo.client.core.entity.MenuCategory;
 import com.mark.zumo.client.core.entity.MenuDetail;
 import com.mark.zumo.client.core.entity.MenuOption;
+import com.mark.zumo.client.core.p2p.packet.CombinedResult;
 import com.mark.zumo.client.core.repository.CategoryRepository;
 import com.mark.zumo.client.core.repository.MenuDetailRepository;
 import com.mark.zumo.client.core.repository.MenuRepository;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import io.reactivex.Maybe;
 import io.reactivex.Observable;
-import io.reactivex.observables.GroupedObservable;
+import io.reactivex.Single;
 import io.reactivex.schedulers.Schedulers;
 
 /**
@@ -61,9 +63,23 @@ public enum MenuManager {
                 .subscribeOn(Schedulers.io());
     }
 
-    public Observable<GroupedObservable<String, MenuDetail>> getMenuListByCategory(String storeUuid) {
+
+    public Maybe<Map<String, List<Menu>>> getMenuListByCategory(String storeUuid) {
         return menuRepository.getMenuListOfStore(storeUuid)
-                .concatMap(unused -> menuDetailRepository.getMenuDetailListOfStore(storeUuid))
+                .filter(menuList -> menuList.size() > 0)
+                .map(menuList -> menuList.get(0).storeUuid)
+                .flatMap(menuDetailRepository::getMenuDetailListOfStore)
+                .flatMapSingle(groupedObservable ->
+                        Single.zip(
+                                Single.just(groupedObservable.getKey()),
+                                groupedObservable.sorted((d1, d2) -> d2.menuSeqNum - d1.menuSeqNum)
+                                        .map(menuDetail -> menuDetail.menuUuid)
+                                        .flatMapMaybe(this::getMenuFromDisk)
+                                        .toList(),
+                                CombinedResult::new
+                        )
+                ).toMap(combinedResult -> combinedResult.t, combinedResult -> combinedResult.r)
+                .toMaybe()
                 .subscribeOn(Schedulers.computation());
     }
 
@@ -126,9 +142,7 @@ public enum MenuManager {
     }
 
     public Maybe<List<MenuCategory>> updateMenuCategoryList(final List<MenuCategory> menuCategoryList) {
-        return Observable.fromIterable(menuCategoryList)
-                .flatMapMaybe(categoryRepository::updateMenuCategory)
-                .toList().toMaybe()
+        return categoryRepository.updateMenuCategory(menuCategoryList)
                 .subscribeOn(Schedulers.io());
     }
 

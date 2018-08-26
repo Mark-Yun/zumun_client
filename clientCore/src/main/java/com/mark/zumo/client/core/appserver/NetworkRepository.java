@@ -73,6 +73,9 @@ public interface NetworkRepository {
     Maybe<List<MenuDetail>> updateMenuCategory(@Path(MenuCategoryUpdateRequest.Schema.menuUuid) String menuUuid,
                                                @Body MenuCategoryUpdateRequest menuCategoryUpdateRequest);
 
+    @GET("menu/detail")
+    Maybe<List<MenuDetail>> getMenuDetailByStoreUuid(@Query(MenuDetail.Schema.storeUuid) String storeUuid);
+
 
     @GET("category")
     Maybe<List<MenuCategory>> getMenuCategoryListByStoreUuid(@Query(MenuCategory.Schema.storeUuid) String storeUuid);
@@ -80,6 +83,9 @@ public interface NetworkRepository {
     @PUT("category/{" + MenuCategory.Schema.uuid + "}")
     Maybe<MenuCategory> updateMenuCategory(@Path(MenuCategory.Schema.uuid) final String menuCategoryUuid,
                                            @Body final MenuCategory menuCategory);
+
+    @PUT("category")
+    Maybe<List<MenuCategory>> updateMenuCategoryList(@Body final List<MenuCategory> menuCategoryList);
 
     @GET("category/{" + MenuCategory.Schema.uuid + "}")
     Maybe<MenuCategory> getMenuCategory(@Path(MenuCategory.Schema.uuid) final String menuCategoryUuid);
@@ -114,8 +120,4 @@ public interface NetworkRepository {
 
     @POST("token")
     Maybe<SnsToken> createSnsToken(@Body SnsToken snsToken);
-
-
-    @GET("menu/detail")
-    Maybe<List<MenuDetail>> getMenuDetailByStoreUuid(@Query(MenuDetail.Schema.storeUuid) String storeUuid);
 }

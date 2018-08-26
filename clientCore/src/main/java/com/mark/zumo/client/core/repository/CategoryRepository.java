@@ -57,6 +57,11 @@ public enum CategoryRepository {
                 .doOnSuccess(diskRepository::insertMenuCategory);
     }
 
+    public Maybe<List<MenuCategory>> updateMenuCategory(final List<MenuCategory> menuCategoryList) {
+        return networkRepository().updateMenuCategoryList(menuCategoryList)
+                .doOnSuccess(diskRepository::insertMenuCategoryList);
+    }
+
     public Maybe<MenuCategory> getMenuCategoryFromApi(final String categoryUuid) {
         return networkRepository().getMenuCategory(categoryUuid)
                 .doOnSuccess(diskRepository::insertMenuCategory);
