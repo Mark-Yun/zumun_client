@@ -95,4 +95,5 @@ dependencies {
 
     implementation 'com.library.tangxiaolv:telegramgallery:1.0.5'
     implementation 'com.theartofdev.edmodo:android-image-cropper:2.6.0'
+    implementation 'com.github.zurche:plain-pie:v0.2.4'
 }

@@ -7,6 +7,8 @@
 package com.mark.zumo.client.store.view.order;
 
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.res.Resources;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -29,6 +31,7 @@ import com.mark.zumo.client.store.viewmodel.OrderViewModel;
 
 import java.util.List;
 
+import az.plainpie.PieView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -44,10 +47,18 @@ public class OrderFragment extends Fragment {
     @BindView(R.id.canceled_order_order_indicator_count) AppCompatTextView canceledOrderCount;
     @BindView(R.id.complete_order_indicator_count) AppCompatTextView completeOrderCount;
 
+    @BindView(R.id.pie_graph) PieView pieGraph;
+
     @BindView(R.id.requested_order_indicator) ConstraintLayout requestedOrderIndicator;
+
+    @BindView(R.id.requested_order_indicator_title) AppCompatTextView requestedOrderIndicatorTitle;
+    @BindView(R.id.complete_order_indicator_title) AppCompatTextView completeOrderIndicatorTitle;
+    @BindView(R.id.canceled_order_indicator_title) AppCompatTextView canceledOrderIndicatorTitle;
 
     private OrderViewModel orderViewModel;
     private MainViewModel mainViewModel;
+
+    private AppCompatTextView selectedIndicator;
 
     @Override
     public void onCreate(@Nullable final Bundle savedInstanceState) {
@@ -63,7 +74,22 @@ public class OrderFragment extends Fragment {
         ButterKnife.bind(this, view);
         inflateStoreInfo();
         inflateIndicators();
+        inflatePieView();
         return view;
+    }
+
+    private void inflatePieView() {
+        Resources resources = getContext().getResources();
+        if (resources == null) {
+            return;
+        }
+        pieGraph.setTextColor(resources.getColor(R.color.color_50));
+        pieGraph.setMainBackgroundColor(resources.getColor(R.color.color_500));
+        pieGraph.setPercentageBackgroundColor(resources.getColor(R.color.color_50));
+        pieGraph.setInnerBackgroundColor(resources.getColor(R.color.color_900));
+        pieGraph.setPercentageTextSize(50);
+        pieGraph.setPieInnerPadding(30);
+        pieGraph.setPercentage(0);
     }
 
     private void inflateStoreInfo() {
@@ -88,6 +114,19 @@ public class OrderFragment extends Fragment {
     private void onLoadRequestedOrder(List<MenuOrder> requestedOrderList) {
         String text = String.valueOf(requestedOrderList.size());
         requestedOrderCount.setText(text);
+        int requestedCount = 0;
+        int acceptedCount = 0;
+        for (MenuOrder menuOrder : requestedOrderList) {
+            if (menuOrder.state == MenuOrder.State.REQUESTED.ordinal()) {
+                requestedCount++;
+            } else if (menuOrder.state == MenuOrder.State.ACCEPTED.ordinal()) {
+                acceptedCount++;
+            }
+        }
+        float percentage = (requestedCount + acceptedCount) == 0
+                ? 1
+                : (float) acceptedCount / (float) (requestedCount + acceptedCount);
+        pieGraph.setPercentage(percentage * 100);
     }
 
     private void onLoadCanceledOrder(List<MenuOrder> acceptedOrder) {
@@ -102,15 +141,29 @@ public class OrderFragment extends Fragment {
 
     @OnClick({R.id.requested_order_indicator, R.id.canceled_order_indicator, R.id.complete_order_indicator})
     public void onViewClicked(View view) {
+        Fragment targetFragment = null;
+        if (selectedIndicator != null) {
+            selectedIndicator.setTextColor(getContext().getResources().getColor(R.color.color_50));
+            selectedIndicator.setTypeface(null, Typeface.NORMAL);
+        }
         switch (view.getId()) {
             case R.id.requested_order_indicator:
-                Fragment fragment = Fragment.instantiate(getContext(), RequestedOrderFragment.class.getName());
-                replaceContentFragment(fragment);
+                targetFragment = Fragment.instantiate(getContext(), RequestedOrderFragment.class.getName());
+                selectedIndicator = requestedOrderIndicatorTitle;
                 break;
             case R.id.canceled_order_indicator:
+                selectedIndicator = canceledOrderIndicatorTitle;
                 break;
             case R.id.complete_order_indicator:
+                selectedIndicator = completeOrderIndicatorTitle;
                 break;
+        }
+        if (targetFragment != null) {
+            replaceContentFragment(targetFragment);
+        }
+        if (selectedIndicator != null) {
+            selectedIndicator.setTextColor(getContext().getResources().getColor(R.color.colorAccent));
+            selectedIndicator.setTypeface(null, Typeface.BOLD);
         }
     }
 

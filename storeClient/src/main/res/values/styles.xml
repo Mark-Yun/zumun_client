@@ -11,8 +11,8 @@
         <item name="android:borderlessButtonStyle">
             @style/AppTheme.ButtonStyle.Borderless
         </item>
-        <item name="colorPrimary">@color/color_900</item>
-        <item name="colorPrimaryDark">@color/color_900</item>
+        <item name="colorPrimary">@color/color_900_90</item>
+        <item name="colorPrimaryDark">@color/color_900_90</item>
         <item name="android:textColorPrimary">@color/colorTextLight</item>
         <item name="android:actionButtonStyle">@style/AppTheme.ActionButtonStyle</item>
         <item name="preferenceTheme">@style/PreferenceThemeOverlay</item>
@@ -38,17 +38,17 @@
     </style>
 
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
-        <item name="android:background">@color/color_900</item>
-        <item name="colorPrimary">@color/color_900</item>
+        <item name="android:background">@color/color_900_90</item>
+        <item name="colorPrimary">@color/color_900_90</item>
     </style>
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light">
-        <item name="android:background">@color/color_900</item>
-        <item name="colorPrimary">@color/color_900</item>
+        <item name="android:background">@color/color_900_90</item>
+        <item name="colorPrimary">@color/color_900_90</item>
     </style>
 
     <style name="AppTheme.ActionBar.TitleTextStyle" parent="@android:style/TextAppearance.StatusBar.Title">
-        <item name="android:textColor">@color/color_50</item>
+        <item name="android:textColor">@color/color_50_90</item>
     </style>
 
 </resources>

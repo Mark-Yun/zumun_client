@@ -6,14 +6,25 @@
   -->
 
 <resources>
-    <color name="color_50">#e6ECEFF1</color>
-    <color name="color_100">#e6CFD8DC</color>
-    <color name="color_200">#e6B0BEC5</color>
-    <color name="color_300">#e690A4AE</color>
-    <color name="color_400">#e678909C</color>
-    <color name="color_500">#e6607D8B</color>
-    <color name="color_600">#e6546E7A</color>
-    <color name="color_700">#e6455A64</color>
-    <color name="color_800">#e637474F</color>
-    <color name="color_900">#e6263238</color>
+    <color name="color_50_90">#e6ECEFF1</color>
+    <color name="color_100_90">#e6CFD8DC</color>
+    <color name="color_200_90">#e6B0BEC5</color>
+    <color name="color_300_90">#e690A4AE</color>
+    <color name="color_400_90">#e678909C</color>
+    <color name="color_500_90">#e6607D8B</color>
+    <color name="color_600_90">#e6546E7A</color>
+    <color name="color_700_90">#e6455A64</color>
+    <color name="color_800_90">#e637474F</color>
+    <color name="color_900_90">#e6263238</color>
+
+    <color name="color_50">#ECEFF1</color>
+    <color name="color_100">#CFD8DC</color>
+    <color name="color_200">#B0BEC5</color>
+    <color name="color_300">#90A4AE</color>
+    <color name="color_400">#78909C</color>
+    <color name="color_500">#607D8B</color>
+    <color name="color_600">#546E7A</color>
+    <color name="color_700">#455A64</color>
+    <color name="color_800">#37474F</color>
+    <color name="color_900">#263238</color>
 </resources>
