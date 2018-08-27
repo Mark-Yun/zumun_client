@@ -10,6 +10,7 @@ import android.content.Context;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -25,6 +26,8 @@ import com.mark.zumo.client.store.view.order.detail.OrderDetailFragment;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -40,13 +43,39 @@ class RequestedOrderAdapter extends RecyclerView.Adapter<RequestedOrderAdapter.V
     private FragmentManager fragmentManager;
     private List<MenuOrder> menuOrderList;
 
+    private static final String TAG = "RequestedOrderAdapter";
+    private Map<String, Fragment> fragmentMap;
+
     RequestedOrderAdapter(final FragmentManager fragmentManager) {
         this.fragmentManager = fragmentManager;
         menuOrderList = new ArrayList<>();
+        fragmentMap = new ConcurrentHashMap<>();
+    }
+
+    private static void setSelectedText(final @Nullable AppCompatTextView textView, boolean selected) {
+        if (textView == null) {
+            return;
+        }
+        Context context = textView.getContext();
+        textView.setTextColor(context.getResources().getColor(selected ? R.color.colorAccent : R.color.colorTextLight));
+        textView.setTypeface(null, selected ? Typeface.BOLD : Typeface.NORMAL);
     }
 
     void setMenuOrderList(final List<MenuOrder> menuOrderList) {
         this.menuOrderList = menuOrderList;
+
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        for (String fragmentTag : FRAGMENT_TAGS) {
+            Fragment fragmentByTag = fragmentManager.findFragmentByTag(fragmentTag);
+            if (fragmentByTag == null) {
+                continue;
+            }
+
+            fragmentTransaction.remove(fragmentByTag);
+        }
+        fragmentTransaction.commit();
+        fragmentMap.clear();
+
         notifyDataSetChanged();
     }
 
@@ -68,40 +97,45 @@ class RequestedOrderAdapter extends RecyclerView.Adapter<RequestedOrderAdapter.V
         holder.acceptedState.setVisibility(isAccepted ? View.VISIBLE : View.GONE);
 
         holder.itemView.setOnClickListener(v -> {
+            if (fragmentMap.containsKey(menuOrder.uuid)) {
+                Fragment fragment = fragmentMap.get(menuOrder.uuid);
+                fragmentManager.beginTransaction()
+                        .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+                        .remove(fragment)
+                        .commit();
+                return;
+            }
+
+            int index = findEmptyFragment();
+            if (index < 0) {
+                return;
+            }
+
             Bundle bundle = new Bundle();
             bundle.putString(OrderDetailFragment.KEY_ORDER_UUID, menuOrder.uuid);
             Fragment fragment = Fragment.instantiate(v.getContext(), OrderDetailFragment.class.getName(), bundle);
 
-            int index = findEmptyFragment();
-            if (index > -1) {
-                fragmentManager.beginTransaction()
-                        .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
-                        .replace(FRAGMENT_IDS[index], fragment, FRAGMENT_TAGS[index])
-                        .commit();
-                Context context = holder.itemView.getContext();
-                holder.orderName.setTextColor(context.getResources().getColor(R.color.colorAccent));
-                holder.orderName.setTypeface(null, Typeface.BOLD);
-                holder.orderNumber.setTextColor(context.getResources().getColor(R.color.colorAccent));
-                holder.orderNumber.setTypeface(null, Typeface.BOLD);
-                fragmentManager.registerFragmentLifecycleCallbacks(new FragmentManager.FragmentLifecycleCallbacks() {
-                    @Override
-                    public void onFragmentDetached(final FragmentManager fm, final Fragment f) {
-                        super.onFragmentDetached(fm, f);
-                        if (f == fragment) {
-                            if (holder.orderName != null) {
-                                holder.orderName.setTextColor(context.getResources().getColor(R.color.colorTextLight));
-                                holder.orderName.setTypeface(null, Typeface.NORMAL);
-                            }
+            fragmentManager.beginTransaction()
+                    .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+                    .replace(FRAGMENT_IDS[index], fragment, FRAGMENT_TAGS[index])
+                    .runOnCommit(() -> fragmentMap.put(menuOrder.uuid, fragment))
+                    .commit();
 
-                            if (holder.orderNumber != null) {
-                                holder.orderNumber.setTextColor(context.getResources().getColor(R.color.colorTextLight));
-                                holder.orderNumber.setTypeface(null, Typeface.NORMAL);
-                            }
-                            fragmentManager.unregisterFragmentLifecycleCallbacks(this);
-                        }
+            setSelectedText(holder.orderName, true);
+            setSelectedText(holder.orderNumber, true);
+
+            fragmentManager.registerFragmentLifecycleCallbacks(new FragmentManager.FragmentLifecycleCallbacks() {
+                @Override
+                public void onFragmentViewDestroyed(final FragmentManager fm, final Fragment f) {
+                    super.onFragmentViewDestroyed(fm, f);
+                    if (f == fragment) {
+                        setSelectedText(holder.orderName, false);
+                        setSelectedText(holder.orderNumber, false);
+                        fragmentManager.unregisterFragmentLifecycleCallbacks(this);
+                        fragmentMap.remove(menuOrder.uuid);
                     }
-                }, true);
-            }
+                }
+            }, true);
         });
     }
 

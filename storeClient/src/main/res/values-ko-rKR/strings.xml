@@ -23,6 +23,8 @@
     <string name="accept_all_button_text">전체 접수</string>
     <string name="requested_order_accept_button_text">접수</string>
     <string name="requested_order_reject_button_text">거부</string>
+    <string name="requested_order_refund_button_text">환불</string>
+    <string name="requested_order_complete_button_text">완료</string>
     <string name="preference_title_menu_category">메뉴 관리</string>
     <string name="preference_title_store_category">가게 관리</string>
     <string name="preference_title_store_profile">가게 정보 관리</string>

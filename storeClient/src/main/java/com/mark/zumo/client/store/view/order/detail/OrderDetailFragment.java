@@ -18,6 +18,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.AppCompatImageButton;
 import android.support.v7.widget.AppCompatTextView;
 import android.support.v7.widget.LinearLayoutManager;
@@ -50,6 +51,11 @@ public class OrderDetailFragment extends Fragment {
     @BindView(R.id.recycler_view) RecyclerView recyclerView;
     @BindView(R.id.close_button) AppCompatImageButton closeButton;
 
+    @BindView(R.id.reject) AppCompatButton reject;
+    @BindView(R.id.accept) AppCompatButton accept;
+    @BindView(R.id.refund) AppCompatButton refund;
+    @BindView(R.id.complete) AppCompatButton complete;
+
     private OrderViewModel orderViewModel;
     private String orderUuid;
 
@@ -72,12 +78,14 @@ public class OrderDetailFragment extends Fragment {
     }
 
     private void inflateCloseButton() {
-        closeButton.setOnClickListener(v -> {
-            getFragmentManager().beginTransaction()
-                    .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
-                    .remove(this)
-                    .commit();
-        });
+        closeButton.setOnClickListener(v -> finish());
+    }
+
+    private void finish() {
+        getFragmentManager().beginTransaction()
+                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+                .remove(this)
+                .commit();
     }
 
     private void inflateOrderInformation() {
@@ -99,15 +107,35 @@ public class OrderDetailFragment extends Fragment {
         orderNumber.setText(menuOrder.orderNumber);
         orderDate.setText(DateUtil.getLocalDate(menuOrder.createdDate));
         orderTime.setText(DateUtil.getLocalTime(menuOrder.createdDate));
+
+        boolean isAccepted = MenuOrder.State.ACCEPTED.ordinal() == menuOrder.state;
+        boolean isRequested = MenuOrder.State.REQUESTED.ordinal() == menuOrder.state;
+
+        accept.setVisibility(isRequested ? View.VISIBLE : View.GONE);
+        reject.setVisibility(isRequested ? View.VISIBLE : View.GONE);
+        complete.setVisibility(isAccepted ? View.VISIBLE : View.GONE);
+        refund.setVisibility(isAccepted ? View.VISIBLE : View.GONE);
     }
 
     @OnClick(R.id.reject)
     public void onRejectClicked() {
         orderViewModel.rejectOrder(orderUuid);
+        finish();
     }
 
     @OnClick(R.id.accept)
     public void onAcceptClicked() {
         orderViewModel.acceptOrder(orderUuid);
+    }
+
+    @OnClick(R.id.refund)
+    public void onRefundClicked() {
+        orderViewModel.refundOrder(orderUuid);
+    }
+
+    @OnClick(R.id.complete)
+    public void onCompleteClicked() {
+        orderViewModel.completeOrder(orderUuid);
+        finish();
     }
 }
