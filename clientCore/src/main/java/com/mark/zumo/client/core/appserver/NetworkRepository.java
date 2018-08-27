@@ -33,7 +33,8 @@ import retrofit2.http.Query;
 
 public interface NetworkRepository {
 
-    String URL = "https://akxjj18zh8.execute-api.ap-northeast-2.amazonaws.com/api/";
+    String DEV_URL = "https://akxjj18zh8.execute-api.ap-northeast-2.amazonaws.com/api/";
+    String PROD_URL = "https://w8nvfkffv5.execute-api.ap-northeast-2.amazonaws.com/api";
 
     @POST("users/guest")
     Maybe<GuestUser> createGuestUser();

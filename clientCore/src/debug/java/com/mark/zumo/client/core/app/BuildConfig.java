@@ -15,6 +15,10 @@ public class BuildConfig {
 
     public enum BuildType {
         DEBUG,
-        RELEASE
+        RELEASE;
+
+        public boolean is(BuildType buildType) {
+            return this == buildType;
+        }
     }
 }

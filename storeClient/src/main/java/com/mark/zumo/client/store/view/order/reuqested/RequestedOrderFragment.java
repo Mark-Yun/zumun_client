@@ -52,7 +52,7 @@ public class RequestedOrderFragment extends Fragment {
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(layoutManager);
 
-        RequestedOrderAdapter adapter = new RequestedOrderAdapter(getChildFragmentManager());
+        RequestedOrderAdapter adapter = new RequestedOrderAdapter(getFragmentManager());
         recyclerView.setAdapter(adapter);
 
         orderViewModel.requestedMenuOrderList().observe(this, adapter::setMenuOrderList);

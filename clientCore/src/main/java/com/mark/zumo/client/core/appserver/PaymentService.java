@@ -16,7 +16,8 @@ import retrofit2.http.POST;
  * Created by mark on 18. 6. 9.
  */
 public interface PaymentService {
-    String URL = "https://9e9owpd0lk.execute-api.ap-northeast-2.amazonaws.com/api/";
+    String DEV_URL = "https://9e9owpd0lk.execute-api.ap-northeast-2.amazonaws.com/api/";
+    String PROD_URL = "https://nyua4vsg24.execute-api.ap-northeast-2.amazonaws.com/api/";
 
     @POST("payment/kakaopay")
     Maybe<PaymentToken> createPaymentToken(@Body PaymentToken paymentToken);

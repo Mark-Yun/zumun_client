@@ -155,7 +155,7 @@ public enum AppServerServiceProvider {
         OkHttpClient okHttpClient = okHttpClient(interceptor);
 
         return new Retrofit.Builder()
-                .baseUrl(NetworkRepository.URL)
+                .baseUrl(networkRepositoryUrl())
                 .addConverterFactory(gsonConverterFactory())
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .client(okHttpClient)
@@ -163,17 +163,49 @@ public enum AppServerServiceProvider {
                 .create(NetworkRepository.class);
     }
 
+    @NonNull
+    private String networkRepositoryUrl() {
+        String url;
+        switch (BuildConfig.BUILD_TYPE) {
+            case DEBUG:
+                url = NetworkRepository.DEV_URL;
+                break;
+            case RELEASE:
+                url = NetworkRepository.PROD_URL;
+                break;
+            default:
+                throw new UnsupportedOperationException();
+        }
+        return url;
+    }
+
     public PaymentService buildPaymentService() {
         Interceptor interceptor = interceptor(headerBundle);
         OkHttpClient okHttpClient = okHttpClient(interceptor);
 
         return paymentService = new Retrofit.Builder()
-                .baseUrl(PaymentService.URL)
+                .baseUrl(paymentServiceUrl())
                 .addConverterFactory(gsonConverterFactory())
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .client(okHttpClient)
                 .build()
                 .create(PaymentService.class);
+    }
+
+    @NonNull
+    private String paymentServiceUrl() {
+        String url;
+        switch (BuildConfig.BUILD_TYPE) {
+            case DEBUG:
+                url = PaymentService.DEV_URL;
+                break;
+            case RELEASE:
+                url = PaymentService.PROD_URL;
+                break;
+            default:
+                throw new UnsupportedOperationException();
+        }
+        return url;
     }
 
     private interface ContentType {

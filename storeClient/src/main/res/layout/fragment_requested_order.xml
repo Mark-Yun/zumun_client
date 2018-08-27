@@ -15,17 +15,14 @@
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_marginStart="@dimen/small_margin"
-        app:layout_constraintEnd_toStartOf="@+id/requested_order_detail_fragment"
+        app:layout_constraintEnd_toStartOf="@+id/requested_order_detail_fragment_1"
         app:layout_constraintHorizontal_weight="3"
         app:layout_constraintStart_toStartOf="parent" />
 
     <android.support.constraint.ConstraintLayout
-        android:id="@+id/requested_order_detail_fragment"
+        android:id="@+id/requested_order_detail_fragment_1"
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:layout_marginBottom="@dimen/small_margin"
-        android:layout_marginEnd="@dimen/small_margin"
-        android:layout_marginTop="@dimen/small_margin"
         app:layout_constraintEnd_toStartOf="@+id/requested_order_detail_fragment_2"
         app:layout_constraintHorizontal_weight="4"
         app:layout_constraintStart_toEndOf="@+id/recycler_view" />
@@ -34,11 +31,8 @@
         android:id="@+id/requested_order_detail_fragment_2"
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:layout_marginBottom="@dimen/small_margin"
-        android:layout_marginEnd="@dimen/small_margin"
-        android:layout_marginTop="@dimen/small_margin"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_weight="4"
-        app:layout_constraintStart_toEndOf="@+id/requested_order_detail_fragment" />
+        app:layout_constraintStart_toEndOf="@+id/requested_order_detail_fragment_1" />
 
 </android.support.constraint.ConstraintLayout>
