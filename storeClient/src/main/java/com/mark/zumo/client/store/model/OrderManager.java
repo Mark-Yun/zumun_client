@@ -95,7 +95,9 @@ public enum OrderManager {
     public Observable<OrderBucket> canceledOrderBucket(String storeUuid) {
         if (canceledOrderBucket == null) {
             canceledOrderBucket = new OrderBucket();
-            loadOrderBucket(storeUuid, canceledOrderBucket, MenuOrder.State.CANCELED, MenuOrder.State.REJECTED);
+            loadOrderBucket(storeUuid, canceledOrderBucket,
+                    MenuOrder.State.CANCELED,
+                    MenuOrder.State.REJECTED);
         }
 
         return Observable.create(
@@ -123,9 +125,7 @@ public enum OrderManager {
         return orderRepository.getPaymentToken(menuOrder.uuid)
                 .flatMap(paymentToken -> kakaoPayAdapter.approvalPayment(paymentToken, menuOrder))
                 .map(paymentApprovalResponse -> paymentApprovalResponse.partnerOrderId)
-                .map(menuOrderUuid -> requestedOrderBucket.removeOrder(menuOrderUuid))
-                .flatMap(menuOrder1 -> updateOrderState(menuOrder1, MenuOrder.State.ACCEPTED))
-                .doOnSuccess(canceledOrderBucket::addOrder)
+                .map(requestedOrderBucket::getOrder)
                 .subscribeOn(Schedulers.io());
     }
 
@@ -133,19 +133,12 @@ public enum OrderManager {
         return orderRepository.updateMenuOrderState(orderUuid, MenuOrder.State.REJECTED.ordinal())
                 .map(menuOrder -> menuOrder.uuid)
                 .map(requestedOrderBucket::removeOrder)
-                .flatMap(menuOrder -> updateOrderState(menuOrder, MenuOrder.State.ACCEPTED))
+                .doOnSuccess(canceledOrderBucket::addOrder)
                 .subscribeOn(Schedulers.io());
     }
 
     public Maybe<MenuOrder> getMenuOrderFromDisk(String orderUuid) {
         return orderRepository.getMenuOrderFromDisk(orderUuid)
-                .subscribeOn(Schedulers.io());
-    }
-
-    private Maybe<MenuOrder> updateOrderState(MenuOrder menuOrder, MenuOrder.State menuOrderState) {
-        String menuOrderUuid = menuOrder.uuid;
-        int state = menuOrderState.ordinal();
-        return orderRepository.updateMenuOrderState(menuOrderUuid, state)
                 .subscribeOn(Schedulers.io());
     }
 

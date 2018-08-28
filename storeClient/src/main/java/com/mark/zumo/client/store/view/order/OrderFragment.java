@@ -3,7 +3,6 @@
  * Unauthorized copying of this file, via any medium is strictly prohibited
  * Proprietary and confidential
  */
-
 package com.mark.zumo.client.store.view.order;
 
 import android.arch.lifecycle.ViewModelProviders;
@@ -25,6 +24,8 @@ import com.mark.zumo.client.core.entity.MenuOrder;
 import com.mark.zumo.client.core.entity.Store;
 import com.mark.zumo.client.core.util.glide.GlideApp;
 import com.mark.zumo.client.store.R;
+import com.mark.zumo.client.store.view.order.canceled.CanceledOrderFragment;
+import com.mark.zumo.client.store.view.order.complete.CompleteOrderFragment;
 import com.mark.zumo.client.store.view.order.reuqested.RequestedOrderFragment;
 import com.mark.zumo.client.store.viewmodel.MainViewModel;
 import com.mark.zumo.client.store.viewmodel.OrderViewModel;
@@ -41,6 +42,7 @@ import butterknife.OnClick;
  */
 public class OrderFragment extends Fragment {
 
+    public static final String TAG = "OrderFragment";
     @BindView(R.id.main_activity_background_image) AppCompatImageView backgroundImage;
 
     @BindView(R.id.requested_order_indicator_count) AppCompatTextView requestedOrderCount;
@@ -141,14 +143,14 @@ public class OrderFragment extends Fragment {
 
     @OnClick({R.id.requested_order_indicator, R.id.canceled_order_indicator, R.id.complete_order_indicator})
     public void onViewClicked(View view) {
-        Fragment targetFragment = null;
         if (selectedIndicator != null) {
             selectedIndicator.setTextColor(getContext().getResources().getColor(R.color.color_50));
             selectedIndicator.setTypeface(null, Typeface.NORMAL);
         }
-        switch (view.getId()) {
+
+        int id = view.getId();
+        switch (id) {
             case R.id.requested_order_indicator:
-                targetFragment = Fragment.instantiate(getContext(), RequestedOrderFragment.class.getName());
                 selectedIndicator = requestedOrderIndicatorTitle;
                 break;
             case R.id.canceled_order_indicator:
@@ -158,18 +160,29 @@ public class OrderFragment extends Fragment {
                 selectedIndicator = completeOrderIndicatorTitle;
                 break;
         }
-        if (targetFragment != null) {
-            replaceContentFragment(targetFragment);
-        }
+
         if (selectedIndicator != null) {
             selectedIndicator.setTextColor(getContext().getResources().getColor(R.color.colorAccent));
             selectedIndicator.setTypeface(null, Typeface.BOLD);
         }
-    }
 
-    private void replaceContentFragment(final Fragment fragment) {
-        getChildFragmentManager().beginTransaction()
-                .replace(R.id.order_content_fragment, fragment)
+        String fragmentName = null;
+        switch (id) {
+            case R.id.requested_order_indicator:
+                fragmentName = RequestedOrderFragment.class.getName();
+                break;
+            case R.id.canceled_order_indicator:
+                fragmentName = CanceledOrderFragment.class.getName();
+                break;
+            case R.id.complete_order_indicator:
+                fragmentName = CompleteOrderFragment.class.getName();
+                break;
+        }
+        Fragment targetFragment = Fragment.instantiate(getContext(), fragmentName);
+
+        getFragmentManager().beginTransaction()
+                .replace(R.id.order_content_fragment, targetFragment, String.valueOf(R.id.requested_order_indicator))
                 .commit();
+
     }
 }

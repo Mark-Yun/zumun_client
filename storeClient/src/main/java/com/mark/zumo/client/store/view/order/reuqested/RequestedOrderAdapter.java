@@ -37,19 +37,18 @@ import butterknife.ButterKnife;
  */
 class RequestedOrderAdapter extends RecyclerView.Adapter<RequestedOrderAdapter.ViewHolder> {
 
-    private static final String[] FRAGMENT_TAGS = {"ORDER_DETAIL_1", "ORDER_DETAIL_2"};
+    private static final String[] FRAGMENT_TAGS = {"order_detail_1", "order_detail_2"};
     private static final int[] FRAGMENT_IDS = {R.id.requested_order_detail_fragment_1, R.id.requested_order_detail_fragment_2};
 
+    private static final String TAG = "RequestedOrderAdapter";
+    private static Map<String, String> fragmentMap = new ConcurrentHashMap<>();
+    private static Map<Integer, String> selectedOrderMap = new ConcurrentHashMap<>();
     private FragmentManager fragmentManager;
     private List<MenuOrder> menuOrderList;
-
-    private static final String TAG = "RequestedOrderAdapter";
-    private Map<String, Fragment> fragmentMap;
 
     RequestedOrderAdapter(final FragmentManager fragmentManager) {
         this.fragmentManager = fragmentManager;
         menuOrderList = new ArrayList<>();
-        fragmentMap = new ConcurrentHashMap<>();
     }
 
     private static void setSelectedText(final @Nullable AppCompatTextView textView, boolean selected) {
@@ -61,21 +60,17 @@ class RequestedOrderAdapter extends RecyclerView.Adapter<RequestedOrderAdapter.V
         textView.setTypeface(null, selected ? Typeface.BOLD : Typeface.NORMAL);
     }
 
+    private static int getKeyFromValue(Map<Integer, String> map, String value) {
+        for (int key : map.keySet()) {
+            if (map.get(key).equals(value)) {
+                return key;
+            }
+        }
+        return -1;
+    }
+
     void setMenuOrderList(final List<MenuOrder> menuOrderList) {
         this.menuOrderList = menuOrderList;
-
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        for (String fragmentTag : FRAGMENT_TAGS) {
-            Fragment fragmentByTag = fragmentManager.findFragmentByTag(fragmentTag);
-            if (fragmentByTag == null) {
-                continue;
-            }
-
-            fragmentTransaction.remove(fragmentByTag);
-        }
-        fragmentTransaction.commit();
-        fragmentMap.clear();
-
         notifyDataSetChanged();
     }
 
@@ -96,47 +91,69 @@ class RequestedOrderAdapter extends RecyclerView.Adapter<RequestedOrderAdapter.V
         boolean isAccepted = menuOrder.state == MenuOrder.State.ACCEPTED.ordinal();
         holder.acceptedState.setVisibility(isAccepted ? View.VISIBLE : View.GONE);
 
+        int index = getKeyFromValue(selectedOrderMap, menuOrder.uuid);
+        if (index > -1) {
+            Bundle bundle = new Bundle();
+            bundle.putString(OrderDetailFragment.KEY_ORDER_UUID, menuOrder.uuid);
+            Fragment fragment = Fragment.instantiate(holder.itemView.getContext(), OrderDetailFragment.class.getName(), bundle);
+
+            fragmentManager.beginTransaction()
+                    .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+                    .replace(FRAGMENT_IDS[index], fragment, FRAGMENT_TAGS[index])
+                    .commit();
+
+            setSelectedText(holder.orderName, true);
+            setSelectedText(holder.orderNumber, true);
+        }
+
         holder.itemView.setOnClickListener(v -> {
             if (fragmentMap.containsKey(menuOrder.uuid)) {
-                Fragment fragment = fragmentMap.get(menuOrder.uuid);
+                Fragment fragment = fragmentManager.findFragmentByTag(fragmentMap.get(menuOrder.uuid));
                 fragmentManager.beginTransaction()
                         .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
                         .remove(fragment)
                         .commit();
+
+                setSelectedText(holder.orderName, false);
+                setSelectedText(holder.orderNumber, false);
+
+                fragmentMap.remove(menuOrder.uuid);
+                selectedOrderMap.remove(index);
                 return;
             }
 
-            int index = findEmptyFragment();
-            if (index < 0) {
+            final int emptyIndex = findEmptyFragment();
+            if (emptyIndex < 0) {
                 return;
             }
 
             Bundle bundle = new Bundle();
             bundle.putString(OrderDetailFragment.KEY_ORDER_UUID, menuOrder.uuid);
-            Fragment fragment = Fragment.instantiate(v.getContext(), OrderDetailFragment.class.getName(), bundle);
+            Fragment fragment = Fragment.instantiate(holder.itemView.getContext(), OrderDetailFragment.class.getName(), bundle);
 
             fragmentManager.beginTransaction()
                     .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
-                    .replace(FRAGMENT_IDS[index], fragment, FRAGMENT_TAGS[index])
-                    .runOnCommit(() -> fragmentMap.put(menuOrder.uuid, fragment))
+                    .replace(FRAGMENT_IDS[emptyIndex], fragment, FRAGMENT_TAGS[emptyIndex])
+                    .runOnCommit(() -> fragmentMap.put(menuOrder.uuid, FRAGMENT_TAGS[emptyIndex]))
+                    .runOnCommit(() -> selectedOrderMap.put(emptyIndex, menuOrder.uuid))
                     .commit();
 
             setSelectedText(holder.orderName, true);
             setSelectedText(holder.orderNumber, true);
-
-            fragmentManager.registerFragmentLifecycleCallbacks(new FragmentManager.FragmentLifecycleCallbacks() {
-                @Override
-                public void onFragmentViewDestroyed(final FragmentManager fm, final Fragment f) {
-                    super.onFragmentViewDestroyed(fm, f);
-                    if (f == fragment) {
-                        setSelectedText(holder.orderName, false);
-                        setSelectedText(holder.orderNumber, false);
-                        fragmentManager.unregisterFragmentLifecycleCallbacks(this);
-                        fragmentMap.remove(menuOrder.uuid);
-                    }
-                }
-            }, true);
         });
+    }
+
+    void clear() {
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        for (String fragmentTag : FRAGMENT_TAGS) {
+            Fragment fragmentByTag = fragmentManager.findFragmentByTag(fragmentTag);
+            if (fragmentByTag == null) {
+                continue;
+            }
+
+            fragmentTransaction.remove(fragmentByTag);
+        }
+        fragmentTransaction.commit();
     }
 
     private int findEmptyFragment() {

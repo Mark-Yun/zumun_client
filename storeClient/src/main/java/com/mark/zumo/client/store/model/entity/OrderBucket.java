@@ -70,6 +70,12 @@ public class OrderBucket {
         return remove;
     }
 
+    public MenuOrder getOrder(String uuid) {
+        MenuOrder remove = orderList.get(getMenuOrderPosition(uuid));
+        notifyOnNext();
+        return remove;
+    }
+
     public MenuOrder removeOrder(String uuid) {
         MenuOrder remove = orderList.remove(getMenuOrderPosition(uuid));
         notifyOnNext();

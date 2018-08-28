@@ -108,8 +108,9 @@ public class OrderDetailFragment extends Fragment {
         orderDate.setText(DateUtil.getLocalDate(menuOrder.createdDate));
         orderTime.setText(DateUtil.getLocalTime(menuOrder.createdDate));
 
-        boolean isAccepted = MenuOrder.State.ACCEPTED.ordinal() == menuOrder.state;
-        boolean isRequested = MenuOrder.State.REQUESTED.ordinal() == menuOrder.state;
+        MenuOrder.State state = MenuOrder.State.of(menuOrder.state);
+        boolean isAccepted = MenuOrder.State.ACCEPTED == state;
+        boolean isRequested = MenuOrder.State.REQUESTED == state;
 
         accept.setVisibility(isRequested ? View.VISIBLE : View.GONE);
         reject.setVisibility(isRequested ? View.VISIBLE : View.GONE);
