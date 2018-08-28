@@ -10,6 +10,7 @@ import com.mark.zumo.client.core.entity.MenuOrder;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 import io.reactivex.ObservableEmitter;
@@ -20,8 +21,8 @@ import io.reactivex.ObservableEmitter;
 public class OrderBucket {
 
     private static final String TAG = "OrderBucket";
-    private List<MenuOrder> orderList;
     private final Collection<ObservableEmitter<OrderBucket>> emitterCollection;
+    private List<MenuOrder> orderList;
 
     public OrderBucket() {
         orderList = new ArrayList<>();
@@ -48,7 +49,8 @@ public class OrderBucket {
         return this;
     }
 
-    private void notifyOnNext() {
+    public void notifyOnNext() {
+        Collections.sort(orderList, (o1, o2) -> (int) (o2.createdDate - o1.createdDate));
         for (ObservableEmitter<OrderBucket> emitter : emitterCollection) {
             if (emitter != null) {
                 emitter.onNext(this);

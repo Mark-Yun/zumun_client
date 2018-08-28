@@ -90,6 +90,8 @@ class RequestedOrderAdapter extends RecyclerView.Adapter<RequestedOrderAdapter.V
         holder.orderNumber.setText(menuOrder.orderNumber);
         boolean isAccepted = menuOrder.state == MenuOrder.State.ACCEPTED.ordinal();
         holder.acceptedState.setVisibility(isAccepted ? View.VISIBLE : View.GONE);
+        setSelectedText(holder.orderName, false);
+        setSelectedText(holder.orderNumber, false);
 
         int index = getKeyFromValue(selectedOrderMap, menuOrder.uuid);
         if (index > -1) {
@@ -136,6 +138,14 @@ class RequestedOrderAdapter extends RecyclerView.Adapter<RequestedOrderAdapter.V
                     .replace(FRAGMENT_IDS[emptyIndex], fragment, FRAGMENT_TAGS[emptyIndex])
                     .runOnCommit(() -> fragmentMap.put(menuOrder.uuid, FRAGMENT_TAGS[emptyIndex]))
                     .runOnCommit(() -> selectedOrderMap.put(emptyIndex, menuOrder.uuid))
+                    .runOnCommit(() -> ((OrderDetailFragment) fragment).setOrderActionListener(
+                            new OrderDetailFragment.OrderActionListener() {
+                                @Override
+                                public void onAcceptOrder(final MenuOrder order) {
+                                    boolean isAccepted = menuOrder.state == MenuOrder.State.ACCEPTED.ordinal();
+                                    holder.acceptedState.setVisibility(isAccepted ? View.VISIBLE : View.GONE);
+                                }
+                            }))
                     .commit();
 
             setSelectedText(holder.orderName, true);
@@ -144,6 +154,8 @@ class RequestedOrderAdapter extends RecyclerView.Adapter<RequestedOrderAdapter.V
     }
 
     void clear() {
+        //TODO: handle IlligalStateException
+        //
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         for (String fragmentTag : FRAGMENT_TAGS) {
             Fragment fragmentByTag = fragmentManager.findFragmentByTag(fragmentTag);

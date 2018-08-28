@@ -59,11 +59,17 @@ public class OrderDetailFragment extends Fragment {
     private OrderViewModel orderViewModel;
     private String orderUuid;
 
+    private OrderActionListener orderActionListener;
+
     @Override
     public void onCreate(@Nullable final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         orderViewModel = ViewModelProviders.of(this).get(OrderViewModel.class);
         orderUuid = Objects.requireNonNull(getArguments()).getString(KEY_ORDER_UUID);
+    }
+
+    public void setOrderActionListener(OrderActionListener orderActionListener) {
+        this.orderActionListener = orderActionListener;
     }
 
     @Nullable
@@ -79,6 +85,12 @@ public class OrderDetailFragment extends Fragment {
 
     private void inflateCloseButton() {
         closeButton.setOnClickListener(v -> finish());
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        orderActionListener = null;
     }
 
     private void finish() {
@@ -108,6 +120,10 @@ public class OrderDetailFragment extends Fragment {
         orderDate.setText(DateUtil.getLocalDate(menuOrder.createdDate));
         orderTime.setText(DateUtil.getLocalTime(menuOrder.createdDate));
 
+        updateButtonState(menuOrder);
+    }
+
+    private void updateButtonState(final MenuOrder menuOrder) {
         MenuOrder.State state = MenuOrder.State.of(menuOrder.state);
         boolean isAccepted = MenuOrder.State.ACCEPTED == state;
         boolean isRequested = MenuOrder.State.REQUESTED == state;
@@ -126,7 +142,7 @@ public class OrderDetailFragment extends Fragment {
 
     @OnClick(R.id.accept)
     public void onAcceptClicked() {
-        orderViewModel.acceptOrder(orderUuid);
+        orderViewModel.acceptOrder(orderUuid).observe(this, this::onAcceptSuccess);
     }
 
     @OnClick(R.id.refund)
@@ -138,5 +154,41 @@ public class OrderDetailFragment extends Fragment {
     public void onCompleteClicked() {
         orderViewModel.completeOrder(orderUuid);
         finish();
+    }
+
+    private void onRejectSuccess(MenuOrder menuOrder) {
+
+    }
+
+    private void onAcceptSuccess(MenuOrder menuOrder) {
+        updateButtonState(menuOrder);
+
+        if (orderActionListener == null) {
+            return;
+        }
+
+        orderActionListener.onAcceptOrder(menuOrder);
+    }
+
+    private void onRefundSuccess(MenuOrder menuOrder) {
+
+    }
+
+    private void onCompleteSuccess(MenuOrder menuOrder) {
+
+    }
+
+    public interface OrderActionListener {
+        default void onRejectOrder(MenuOrder order) {
+        }
+
+        default void onRefundOrder(MenuOrder order) {
+        }
+
+        default void onCompleteOrder(MenuOrder order) {
+        }
+
+        default void onAcceptOrder(MenuOrder order) {
+        }
     }
 }

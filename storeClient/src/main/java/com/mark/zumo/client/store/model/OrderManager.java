@@ -125,7 +125,8 @@ public enum OrderManager {
         return orderRepository.getPaymentToken(menuOrder.uuid)
                 .flatMap(paymentToken -> kakaoPayAdapter.approvalPayment(paymentToken, menuOrder))
                 .map(paymentApprovalResponse -> paymentApprovalResponse.partnerOrderId)
-                .map(requestedOrderBucket::getOrder)
+                .flatMap(orderUuid -> orderRepository.updateMenuOrderState(orderUuid, MenuOrder.State.ACCEPTED.ordinal()))
+                .doOnSuccess(x -> requestedOrderBucket.notifyOnNext())
                 .subscribeOn(Schedulers.io());
     }
 
@@ -134,6 +135,14 @@ public enum OrderManager {
                 .map(menuOrder -> menuOrder.uuid)
                 .map(requestedOrderBucket::removeOrder)
                 .doOnSuccess(canceledOrderBucket::addOrder)
+                .subscribeOn(Schedulers.io());
+    }
+
+    public Maybe<MenuOrder> completeOrder(String orderUuid) {
+        return orderRepository.updateMenuOrderState(orderUuid, MenuOrder.State.COMPLETE.ordinal())
+                .map(menuOrder -> menuOrder.uuid)
+                .map(requestedOrderBucket::removeOrder)
+                .doOnSuccess(completeOrderBucket::addOrder)
                 .subscribeOn(Schedulers.io());
     }
 

@@ -137,6 +137,11 @@ public class OrderViewModel extends AndroidViewModel {
 
     public LiveData<MenuOrder> completeOrder(String orderUuid) {
         MutableLiveData<MenuOrder> liveData = new MutableLiveData<>();
+        orderManager.completeOrder(orderUuid)
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnSuccess(liveData::setValue)
+                .doOnSuccess(order -> showToast("complete " + order.orderName))
+                .subscribe();
         return liveData;
     }
 
