@@ -110,17 +110,7 @@ class RequestedOrderAdapter extends RecyclerView.Adapter<RequestedOrderAdapter.V
 
         holder.itemView.setOnClickListener(v -> {
             if (fragmentMap.containsKey(menuOrder.uuid)) {
-                Fragment fragment = fragmentManager.findFragmentByTag(fragmentMap.get(menuOrder.uuid));
-                fragmentManager.beginTransaction()
-                        .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
-                        .remove(fragment)
-                        .commit();
-
-                setSelectedText(holder.orderName, false);
-                setSelectedText(holder.orderNumber, false);
-
-                fragmentMap.remove(menuOrder.uuid);
-                selectedOrderMap.remove(index);
+                closeOrderDetail(holder, menuOrder, index);
                 return;
             }
 
@@ -145,12 +135,31 @@ class RequestedOrderAdapter extends RecyclerView.Adapter<RequestedOrderAdapter.V
                                     boolean isAccepted = menuOrder.state == MenuOrder.State.ACCEPTED.ordinal();
                                     holder.acceptedState.setVisibility(isAccepted ? View.VISIBLE : View.GONE);
                                 }
+
+                                @Override
+                                public void onClose(final String orderUuid) {
+                                    closeOrderDetail(holder, menuOrder, index);
+                                }
                             }))
                     .commit();
 
             setSelectedText(holder.orderName, true);
             setSelectedText(holder.orderNumber, true);
         });
+    }
+
+    private void closeOrderDetail(final @NonNull ViewHolder holder, final MenuOrder menuOrder, final int index) {
+        Fragment fragment = fragmentManager.findFragmentByTag(fragmentMap.get(menuOrder.uuid));
+        fragmentManager.beginTransaction()
+                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+                .remove(fragment)
+                .commit();
+
+        setSelectedText(holder.orderName, false);
+        setSelectedText(holder.orderNumber, false);
+
+        fragmentMap.remove(menuOrder.uuid);
+        selectedOrderMap.remove(index);
     }
 
     void clear() {
