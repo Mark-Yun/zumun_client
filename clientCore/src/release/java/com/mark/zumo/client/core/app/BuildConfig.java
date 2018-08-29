@@ -17,10 +17,5 @@ package com.mark.zumo.client.core.app;
  * for debug release config
  */
 public class BuildConfig {
-    public static final BuildType BUILD_TYPE = BuildType.RELEASE;
-
-    public enum BuildType {
-        DEBUG,
-        RELEASE
-    }
+    public static final AppConfig BUILD_TYPE = AppConfig.RELEASE;
 }

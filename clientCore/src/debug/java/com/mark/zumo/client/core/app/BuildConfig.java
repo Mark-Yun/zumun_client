@@ -7,18 +7,8 @@
 package com.mark.zumo.client.core.app;
 
 /**
- * Created by mark on 18. 8. 15.
- * for debug build config
+ * Created by mark on 18. 8. 29.
  */
 public class BuildConfig {
-    public static final BuildType BUILD_TYPE = BuildType.DEBUG;
-
-    public enum BuildType {
-        DEBUG,
-        RELEASE;
-
-        public boolean is(BuildType buildType) {
-            return this == buildType;
-        }
-    }
+    public static final AppConfig BUILD_TYPE = AppConfig.DEBUG;
 }
