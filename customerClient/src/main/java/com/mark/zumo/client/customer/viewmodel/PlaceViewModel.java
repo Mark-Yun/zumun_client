@@ -13,11 +13,11 @@ import android.arch.lifecycle.MutableLiveData;
 import android.location.Location;
 import android.support.annotation.NonNull;
 
+import com.google.android.gms.maps.model.LatLng;
 import com.mark.zumo.client.core.entity.Store;
 import com.mark.zumo.client.core.provider.AppLocationProvider;
 import com.mark.zumo.client.customer.R;
 import com.mark.zumo.client.customer.model.CustomerLocationManager;
-import com.mark.zumo.client.customer.model.SessionManager;
 import com.mark.zumo.client.customer.model.StoreManager;
 
 import java.util.List;
@@ -33,7 +33,6 @@ public class PlaceViewModel extends AndroidViewModel {
 
     private final StoreManager storeManager;
     private final CustomerLocationManager locationManager;
-    private final SessionManager sessionManager;
     private final AppLocationProvider locationProvider;
 
     private final CompositeDisposable disposables;
@@ -42,11 +41,22 @@ public class PlaceViewModel extends AndroidViewModel {
         super(application);
 
         storeManager = StoreManager.INSTANCE;
-        sessionManager = SessionManager.INSTANCE;
         locationManager = CustomerLocationManager.INSTANCE;
         locationProvider = AppLocationProvider.INSTANCE;
 
         disposables = new CompositeDisposable();
+    }
+
+    public LiveData<List<Store>> nearByStore(LatLng latLng) {
+        MutableLiveData<List<Store>> nearByStore = new MutableLiveData<>();
+
+        storeManager.nearByStore(latLng)
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnSuccess(nearByStore::setValue)
+                .doOnSubscribe(disposables::add)
+                .subscribe();
+
+        return nearByStore;
     }
 
     public LiveData<List<Store>> nearByStore() {
@@ -74,20 +84,6 @@ public class PlaceViewModel extends AndroidViewModel {
                 .subscribe();
 
         return liveData;
-    }
-
-    public LiveData<List<Store>> latestVisitStore() {
-        MutableLiveData<List<Store>> latestVisitStore = new MutableLiveData<>();
-
-        sessionManager.getSessionUser()
-                .map(guestUser -> guestUser.uuid)
-                .flatMap(userUuid -> storeManager.latestVisitStore(userUuid, 5))
-                .observeOn(AndroidSchedulers.mainThread())
-                .doOnSuccess(latestVisitStore::setValue)
-                .doOnSubscribe(disposables::add)
-                .subscribe();
-
-        return latestVisitStore;
     }
 
     public LiveData<String> distanceFrom(double latitude, double longitude) {

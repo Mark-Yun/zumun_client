@@ -16,6 +16,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -24,6 +25,7 @@ import android.view.ViewGroup;
 
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
+import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlacePicker;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -54,6 +56,8 @@ public class PlaceFragment extends Fragment {
 
     private PlaceViewModel placeViewModel;
     private SupportMapFragment mapFragment;
+
+    private NearbyStoreAdapter adapter;
 
     @Override
     public void onCreate(@Nullable final Bundle savedInstanceState) {
@@ -104,7 +108,6 @@ public class PlaceFragment extends Fragment {
         googleMap.animateCamera(locationUpdate);
     }
 
-
     private void onClickMapFragment(LatLng view) {
         PlacePicker.IntentBuilder builder = new PlacePicker.IntentBuilder();
 
@@ -121,12 +124,13 @@ public class PlaceFragment extends Fragment {
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
         nearByStore.setLayoutManager(layoutManager);
 
-        NearbyStoreAdapter adapter = new NearbyStoreAdapter(placeViewModel, this);
+        adapter = new NearbyStoreAdapter(placeViewModel, this);
         nearByStore.setAdapter(adapter);
-        placeViewModel.nearByStore().observe(this, list -> onLoadNearByStoreList(adapter, list));
+
+        placeViewModel.nearByStore().observe(this, this::onLoadNearByStoreList);
     }
 
-    private void onLoadNearByStoreList(NearbyStoreAdapter adapter, List<Store> storeList) {
+    private void onLoadNearByStoreList(List<Store> storeList) {
         swipeRefreshLayout.setRefreshing(false);
         adapter.setStoreList(storeList);
         mapFragment.getMapAsync(googleMap -> {
@@ -142,5 +146,21 @@ public class PlaceFragment extends Fragment {
                 googleMap.addMarker(markerOptions).showInfoWindow();
             }
         });
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (resultCode != AppCompatActivity.RESULT_OK) {
+            return;
+        }
+
+        switch (requestCode) {
+            case REQUEST_CODE_PLACE_PICKER:
+                Place place = PlacePicker.getPlace(Objects.requireNonNull(getActivity()), data);
+                placeViewModel.nearByStore(place.getLatLng()).observe(this, this::onLoadNearByStoreList);
+                break;
+        }
     }
 }

@@ -14,7 +14,6 @@ import com.mark.zumo.client.core.dao.AppDatabaseProvider;
 import com.mark.zumo.client.core.dao.DiskRepository;
 import com.mark.zumo.client.core.entity.Store;
 import com.mark.zumo.client.core.entity.util.EntityComparator;
-import com.mark.zumo.client.core.util.DebugUtil;
 
 import java.util.List;
 
@@ -41,12 +40,12 @@ public enum StoreRepository {
         return AppServerServiceProvider.INSTANCE.networkRepository;
     }
 
-    public Maybe<List<Store>> nearByStore(Location location) {
-        return networkRepository().getNearByStore(location.getLongitude(), location.getLatitude(), 3);
+    public Maybe<List<Store>> nearByStore(Location location, int distanceKm) {
+        return nearByStore(location.getLatitude(), location.getLongitude(), distanceKm);
     }
 
-    public Observable<List<Store>> latestVisitStore() {
-        return Observable.create(e -> e.onNext(DebugUtil.storeList()));
+    public Maybe<List<Store>> nearByStore(double latitude, double longitude, int distanceKm) {
+        return networkRepository().getNearByStore(latitude, longitude, distanceKm);
     }
 
     public Maybe<Store> updateStore(Store store) {

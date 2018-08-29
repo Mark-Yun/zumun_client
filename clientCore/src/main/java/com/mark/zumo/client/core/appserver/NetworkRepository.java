@@ -48,8 +48,8 @@ public interface NetworkRepository {
     Maybe<Store> getStore(@Path(Store.Schema.uuid) String storeUuid);
 
     @GET("store")
-    Maybe<List<Store>> getNearByStore(@Query("longitude") final double longitude,
-                                      @Query("latitude") final double latitude,
+    Maybe<List<Store>> getNearByStore(@Query("latitude") final double latitude,
+                                      @Query("longitude") final double longitude,
                                       @Query("distance") final double distanceKm);
 
 
