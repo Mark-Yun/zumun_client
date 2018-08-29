@@ -7,27 +7,9 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
 
     <style name="AppTheme.NoActionBar" parent="Theme.AppCompat.Light.NoActionBar">
-        <item name="android:windowActivityTransitions" tools:targetApi="lollipop">true</item>
-        <item name="android:windowSharedElementEnterTransition" tools:targetApi="lollipop">
-            @transition/change_image_transform
-        </item>
-        <item name="android:windowSharedElementExitTransition" tools:targetApi="lollipop">
-            @transition/change_image_transform
-        </item>
-        <item name="android:colorControlHighlight" tools:targetApi="lollipop">@color/colorDivider
-        </item>
+        <item name="colorPrimaryDark" tools:targetApi="m">@color/colorPrimaryDark</item>
         <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="android:colorPrimaryDark" tools:targetApi="m">@color/colorPrimaryDark</item>
-        <item name="android:textColorHighlight">@color/colorAccent</item>
         <item name="colorAccent">@color/colorAccent</item>
-        <item name="android:textColor">@color/colorTextLight</item>
-        <item name="android:textColorSecondary">@color/colorSecondaryTextLight</item>
-        <item name="android:textColorSecondaryInverse">@color/colorSecondaryTextDark</item>
-        <item name="android:textColorPrimary">@color/colorTextLight</item>
-        <item name="android:textColorPrimaryInverse">@color/colorTextDark</item>
-        <item name="android:borderlessButtonStyle">@style/AppTheme.NoActionBar.ButtonStyle</item>
-        <item name="android:tabWidgetStyle">@style/AppTheme.NoActionBar.TabStyle</item>
-        <item name="android:actionButtonStyle">@style/AppTheme.NoActionBar.ActionButtonStyle</item>
     </style>
 
     <style name="AppTheme.NoActionBar.ButtonStyle" parent="Widget.AppCompat.Button.Borderless">
