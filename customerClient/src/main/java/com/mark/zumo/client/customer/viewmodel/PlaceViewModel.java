@@ -10,6 +10,7 @@ import android.app.Application;
 import android.arch.lifecycle.AndroidViewModel;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
+import android.location.Location;
 import android.support.annotation.NonNull;
 
 import com.mark.zumo.client.core.entity.Store;
@@ -61,6 +62,18 @@ public class PlaceViewModel extends AndroidViewModel {
                 .subscribe();
 
         return nearByStore;
+    }
+
+    public LiveData<Location> myLocation() {
+        MutableLiveData<Location> liveData = new MutableLiveData<>();
+
+        locationProvider.currentLocationObservable
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnSubscribe(disposables::add)
+                .doOnNext(liveData::setValue)
+                .subscribe();
+
+        return liveData;
     }
 
     public LiveData<List<Store>> latestVisitStore() {

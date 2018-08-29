@@ -84,7 +84,7 @@ public class OrderDetailFragment extends Fragment {
     }
 
     private void inflateCloseButton() {
-        closeButton.setOnClickListener(v -> finish());
+        closeButton.setOnClickListener(this::onCloseClicked);
     }
 
     @Override
@@ -156,6 +156,15 @@ public class OrderDetailFragment extends Fragment {
         finish();
     }
 
+    @NonNull
+    private void onCloseClicked(View v) {
+        finish();
+
+        if (orderActionListener != null) {
+            orderActionListener.onClose(orderUuid);
+        }
+    }
+
     private void onRejectSuccess(MenuOrder menuOrder) {
 
     }
@@ -163,11 +172,9 @@ public class OrderDetailFragment extends Fragment {
     private void onAcceptSuccess(MenuOrder menuOrder) {
         updateButtonState(menuOrder);
 
-        if (orderActionListener == null) {
-            return;
+        if (orderActionListener != null) {
+            orderActionListener.onAcceptOrder(menuOrder);
         }
-
-        orderActionListener.onAcceptOrder(menuOrder);
     }
 
     private void onRefundSuccess(MenuOrder menuOrder) {
@@ -189,6 +196,9 @@ public class OrderDetailFragment extends Fragment {
         }
 
         default void onAcceptOrder(MenuOrder order) {
+        }
+
+        default void onClose(String orderUuid) {
         }
     }
 }
