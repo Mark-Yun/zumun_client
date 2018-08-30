@@ -83,6 +83,7 @@
     <string name="title_total">Total</string>
     <string name="title_price">Price</string>
 
+    <string name="title_save">Save</string>
     <string name="requested_order_indicator_title">Requested</string>
     <string name="canceled_order_indicator_title">Canceled</string>
     <string name="complete_order_indicator_title">Complete</string>

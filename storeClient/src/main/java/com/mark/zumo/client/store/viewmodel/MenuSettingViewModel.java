@@ -16,6 +16,7 @@ import android.support.annotation.NonNull;
 
 import com.mark.zumo.client.core.entity.Menu;
 import com.mark.zumo.client.core.entity.MenuCategory;
+import com.mark.zumo.client.core.entity.MenuDetail;
 import com.mark.zumo.client.store.model.MenuManager;
 import com.mark.zumo.client.store.model.S3TransferManager;
 import com.mark.zumo.client.store.model.SessionManager;
@@ -93,6 +94,28 @@ public class MenuSettingViewModel extends AndroidViewModel {
         sessionManager.getSessionStore()
                 .map(store -> store.uuid)
                 .flatMapObservable(menuManager::getMenuCategoryList)
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnSubscribe(disposables::add)
+                .doOnNext(liveData::setValue)
+                .subscribe();
+        return liveData;
+    }
+
+    public LiveData<List<Menu>> menuList() {
+        MutableLiveData<List<Menu>> liveData = new MutableLiveData<>();
+        sessionManager.getSessionStore()
+                .map(store -> store.uuid)
+                .flatMapObservable(menuManager::getMenuList)
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnSubscribe(disposables::add)
+                .doOnNext(liveData::setValue)
+                .subscribe();
+        return liveData;
+    }
+
+    public LiveData<List<MenuDetail>> menuDetailList(String categoryUuid) {
+        MutableLiveData<List<MenuDetail>> liveData = new MutableLiveData<>();
+        menuManager.getMenuDetailListByCategoryUuid(categoryUuid)
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSubscribe(disposables::add)
                 .doOnNext(liveData::setValue)

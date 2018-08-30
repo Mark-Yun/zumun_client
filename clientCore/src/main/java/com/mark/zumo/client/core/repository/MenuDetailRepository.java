@@ -55,6 +55,15 @@ public enum MenuDetailRepository {
         return diskRepository.getMenuDetailByStoreUuid(storeUuid);
     }
 
+    public Observable<List<MenuDetail>> getMenuDetailListByCategoryUuid(final String categoryUuid) {
+        Maybe<List<MenuDetail>> menuDetailListDB = diskRepository.getMenuDetailByCategoryUuid(categoryUuid);
+        Maybe<List<MenuDetail>> menuDetailListApi = networkRepository().getMenuDetailByCategoryUuid(categoryUuid)
+                .doOnSuccess(x -> diskRepository.deleteMenuDetailListByCategoryUuid(categoryUuid))
+                .doOnSuccess(diskRepository::insertMenuDetailList);
+        return Maybe.merge(menuDetailListDB, menuDetailListApi)
+                .toObservable();
+    }
+
     public Maybe<List<MenuDetail>> getMenuDetailListFromDiskByMenuUuid(final String storeUuid, final String menuUuid) {
         return diskRepository.getMenuDetailByStringMenuUuidFromDisk(storeUuid, menuUuid);
     }

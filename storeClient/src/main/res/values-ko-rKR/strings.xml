@@ -55,6 +55,7 @@
     <string name="title_amount">수량</string>
     <string name="title_total">총계</string>
     <string name="title_price">가격</string>
+    <string name="title_save">저장</string>
     <string name="requested_order_indicator_title">요청됨</string>
     <string name="canceled_order_indicator_title">취소됨</string>
     <string name="complete_order_indicator_title">완료</string>

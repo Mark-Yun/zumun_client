@@ -77,6 +77,13 @@ public interface NetworkRepository {
     @GET("menu/detail")
     Maybe<List<MenuDetail>> getMenuDetailByStoreUuid(@Query(MenuDetail.Schema.storeUuid) String storeUuid);
 
+    @GET("menu/detail")
+    Maybe<List<MenuDetail>> getMenuDetailByCategoryUuid(@Query(MenuDetail.Schema.menuCategoryUuid) String menuCategoryUuid);
+
+    @PUT("menu/category/{" + MenuCategory.Schema.uuid + "}")
+    Maybe<List<MenuDetail>> updateMenuCategory(@Path(MenuCategory.Schema.uuid) String categoryUuid,
+                                               @Body List<Menu> menuList);
+
 
     @GET("category")
     Maybe<List<MenuCategory>> getMenuCategoryListByStoreUuid(@Query(MenuCategory.Schema.storeUuid) String storeUuid);

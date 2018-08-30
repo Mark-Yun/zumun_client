@@ -17,25 +17,36 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
+import com.mark.zumo.client.core.entity.Menu;
+import com.mark.zumo.client.core.entity.MenuCategory;
+import com.mark.zumo.client.core.entity.MenuDetail;
 import com.mark.zumo.client.store.R;
 import com.mark.zumo.client.store.viewmodel.MenuSettingViewModel;
 
+import java.util.List;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 /**
  * Created by mark on 18. 6. 26.
  */
 public class MenuCategorySettingFragment extends Fragment implements OnStartDragListener {
 
-    @BindView(R.id.category_recycler_view) RecyclerView recyclerView;
+    @BindView(R.id.category_recycler_view) RecyclerView categoryRecyclerView;
+    @BindView(R.id.menu_recycler_view) RecyclerView menuRecyclerView;
+    @BindView(R.id.save_button) AppCompatButton saveButton;
 
     private MenuSettingViewModel menuSettingViewModel;
     private ItemTouchHelper itemTouchHelper;
@@ -58,25 +69,56 @@ public class MenuCategorySettingFragment extends Fragment implements OnStartDrag
     }
 
     private void inflateRecyclerView() {
-        recyclerView.setHasFixedSize(true);
+        categoryRecyclerView.setHasFixedSize(true);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
-        recyclerView.setLayoutManager(layoutManager);
+        categoryRecyclerView.setLayoutManager(layoutManager);
 
         MenuCategoryAdapter adapter = new MenuCategoryAdapter(this::onSelectCategory, menuSettingViewModel, this, this);
-        recyclerView.setAdapter(adapter);
+        categoryRecyclerView.setAdapter(adapter);
 
         ItemTouchHelper.Callback callback = new CategorySettingTouchHelperCallback(adapter);
         itemTouchHelper = new ItemTouchHelper(callback);
-        itemTouchHelper.attachToRecyclerView(recyclerView);
+        itemTouchHelper.attachToRecyclerView(categoryRecyclerView);
         menuSettingViewModel.categoryList().observe(this, adapter::setMenuCategoryList);
     }
 
-    private void onSelectCategory(String categoryUuid) {
+    private void onSelectCategory(MenuCategory menuCategory) {
+        menuRecyclerView.setHasFixedSize(true);
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
+        menuRecyclerView.setLayoutManager(layoutManager);
 
+        MenuListAdapter adapter = new MenuListAdapter(this, menuCategory, menuSettingViewModel);
+        menuRecyclerView.setAdapter(adapter);
+
+        menuSettingViewModel.menuList().observe(this, menuList -> onLoadMenuList(adapter, menuList));
+//        menuSettingViewModel.menuDetailList(menuCategory.uuid).observe(this, menuDetailList -> onLoadMenuDetailList(adapter, menuDetailList));
     }
 
     @Override
     public void onStartDrag(final RecyclerView.ViewHolder viewHolder) {
         itemTouchHelper.startDrag(viewHolder);
+    }
+
+    private void onLoadMenuList(final MenuListAdapter adapter, final List<Menu> menuList) {
+        adapter.setMenuList(menuList);
+        saveButton.setVisibility(View.VISIBLE);
+        saveButton.setEnabled(false);
+    }
+
+    private void onLoadMenuDetailList(final MenuListAdapter adapter, final List<MenuDetail> menuDetailList) {
+        adapter.setMenuDetailList(menuDetailList);
+        adapter.setListChangeListener(this::onListChanged);
+    }
+
+    private void onListChanged(boolean isChanged) {
+        Log.d("MenuCategorySettingFragment", "onListChanged: " + isChanged);
+        saveButton.setEnabled(isChanged);
+        saveButton.setClickable(isChanged);
+    }
+
+    @OnClick(R.id.save_button)
+    void onSaveButtonClicked() {
+        //TODO
+        Toast.makeText(getActivity(), "clicked", Toast.LENGTH_SHORT).show();
     }
 }

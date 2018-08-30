@@ -24,7 +24,6 @@ import com.mark.zumo.client.core.entity.MenuCategory;
 import com.mark.zumo.client.store.R;
 import com.mark.zumo.client.store.viewmodel.MenuSettingViewModel;
 
-import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -38,7 +37,7 @@ import butterknife.ButterKnife;
  */
 class MenuCategoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements ItemTouchHelperAdapter {
 
-    private final WeakReference<OnSelectCategoryListener> onSelectCategoryListener;
+    private final OnSelectCategoryListener onSelectCategoryListener;
     private final MenuSettingViewModel menuSettingViewModel;
     private final LifecycleOwner lifecycleOwner;
     private final OnStartDragListener dragStartListener;
@@ -50,7 +49,7 @@ class MenuCategoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                         final LifecycleOwner lifecycleOwner,
                         final OnStartDragListener dragStartListener) {
 
-        this.onSelectCategoryListener = new WeakReference<>(onSelectCategoryListener);
+        this.onSelectCategoryListener = onSelectCategoryListener;
         this.menuSettingViewModel = menuSettingViewModel;
         this.lifecycleOwner = lifecycleOwner;
         this.dragStartListener = dragStartListener;
@@ -142,12 +141,12 @@ class MenuCategoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     }
 
     private void onSelectCategory(MenuCategory menuCategory) {
-        OnSelectCategoryListener onSelectCategoryListener = this.onSelectCategoryListener.get();
+        OnSelectCategoryListener onSelectCategoryListener = this.onSelectCategoryListener;
         if (onSelectCategoryListener == null) {
             return;
         }
 
-        onSelectCategoryListener.onSelectCategory(menuCategory.uuid);
+        onSelectCategoryListener.onSelectCategory(menuCategory);
     }
 
     @Override
@@ -195,7 +194,7 @@ class MenuCategoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     }
 
     interface OnSelectCategoryListener {
-        void onSelectCategory(String categoryUuid);
+        void onSelectCategory(MenuCategory menuCategory);
     }
 
     static class BodyViewHolder extends RecyclerView.ViewHolder {

@@ -33,7 +33,11 @@ public enum SessionManager {
 
     public Maybe<Store> getSessionStore() {
         return sessionRepository.getStoreFromCache()
-                .flatMap(storeRepository::getStoreFromApi)
+                .flatMap(storeRepository::getStoreFromDisk)
+                .switchIfEmpty(
+                        sessionRepository.getStoreFromCache()
+                                .flatMap(storeRepository::getStoreFromApi)
+                )
                 .subscribeOn(Schedulers.io());
     }
 

@@ -109,6 +109,11 @@ public enum MenuManager {
                 .subscribeOn(Schedulers.io());
     }
 
+    public Observable<List<MenuDetail>> getMenuDetailListByCategoryUuid(String categoryUuid) {
+        return menuDetailRepository.getMenuDetailListByCategoryUuid(categoryUuid)
+                .subscribeOn(Schedulers.io());
+    }
+
     public Maybe<MenuCategory> getMenuCategoryFromDisk(String categoryUuid) {
         return categoryRepository.getMenuCategoryFromDisk(categoryUuid)
                 .doOnSuccess(menuCategory -> Log.d(TAG, "getMenuCategoryFromDisk: " + menuCategory));
