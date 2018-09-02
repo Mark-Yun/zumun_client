@@ -79,9 +79,9 @@ public class OrderViewModel extends AndroidViewModel {
     public LiveData<MenuOrder> getMenuOrder(String orderUuid) {
         MutableLiveData<MenuOrder> liveData = new MutableLiveData<>();
 
-        orderManager.getMenuOrderFromDisk(orderUuid)
+        orderManager.getMenuOrder(orderUuid)
                 .observeOn(AndroidSchedulers.mainThread())
-                .doOnSuccess(liveData::setValue)
+                .doOnNext(liveData::setValue)
                 .doOnSubscribe(compositeDisposable::add)
                 .subscribe();
 

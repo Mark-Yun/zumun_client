@@ -58,6 +58,11 @@ public enum OrderManager {
                 .subscribeOn(Schedulers.io());
     }
 
+    public Observable<MenuOrder> getMenuOrder(String orderUuid) {
+        return orderRepository.getMenuOrder(orderUuid)
+                .subscribeOn(Schedulers.io());
+    }
+
     public Observable<List<MenuOrder>> getMenuOrderListByCustomerUuid(String customerUuid) {
         return orderRepository.getMenuOrderListByCustomerUuid(customerUuid, 0, 10)
                 .subscribeOn(Schedulers.io());

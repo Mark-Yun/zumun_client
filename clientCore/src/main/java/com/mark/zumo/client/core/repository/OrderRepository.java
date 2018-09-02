@@ -64,6 +64,13 @@ public enum OrderRepository {
                 .subscribeOn(Schedulers.io());
     }
 
+    public Observable<MenuOrder> getMenuOrder(String orderUuid) {
+        Maybe<MenuOrder> menuOrderDB = getMenuOrderFromDisk(orderUuid);
+        Maybe<MenuOrder> menuOrderApi = getMenuOrderFromApi(orderUuid);
+        return Maybe.merge(menuOrderDB, menuOrderApi)
+                .toObservable();
+    }
+
     public Observable<List<OrderDetail>> getOrderDetailListByOrderUuid(String orderUuid) {
         Maybe<List<OrderDetail>> orderDetailListDB = diskRepository.getOrderDetailListByMenuOrderUuid(orderUuid);
         Maybe<List<OrderDetail>> orderDetailListApi = networkRepository().getOrderDetailList(orderUuid)
