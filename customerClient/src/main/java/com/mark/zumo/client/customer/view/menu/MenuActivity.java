@@ -17,6 +17,7 @@ import com.wonderkiln.blurkit.BlurLayout;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 /**
  * Created by mark on 18. 6. 14.
@@ -53,4 +54,8 @@ public class MenuActivity extends AppCompatActivity {
         Navigator.removeBlurFilter(blurFilter);
     }
 
+    @OnClick(R.id.back_button)
+    void onClickBackButton() {
+        finish();
+    }
 }
