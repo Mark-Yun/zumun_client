@@ -24,7 +24,7 @@
     <string name="tab_title_places">가게 목록</string>
     <string name="tab_title_orders">주문 목록</string>
     <string name="theres_no_item_in_cart">카트가 비었습니다</string>
-    <string name="menu_order_name_and">외, %s.</string>
+    <string name="menu_order_name_and">외 %s</string>
     <string name="order_number_description">주문 번호:&#160;</string>
     <string name="order_time_description">주문 시간:&#160;</string>
     <string name="order_information_title">주문 정보</string>

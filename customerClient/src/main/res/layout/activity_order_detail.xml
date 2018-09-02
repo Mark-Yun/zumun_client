@@ -22,7 +22,7 @@
         android:layout_height="0dp"
         android:background="@color/colorPrimary"
         android:elevation="3dp"
-        app:layout_constraintBottom_toTopOf="@+id/order_detail_recycler_view"
+        app:layout_constraintBottom_toTopOf="@+id/order_step_view"
         app:layout_constraintDimensionRatio="H, 14:3"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -49,14 +49,39 @@
 
         <android.support.v7.widget.AppCompatTextView
             android:id="@+id/store_cover_title"
+            style="@style/HeadLineTextDark"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            style="@style/HeadLineTextDark"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
     </android.support.constraint.ConstraintLayout>
+
+    <com.shuhart.stepview.StepView
+        android:id="@+id/order_step_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/big_margin"
+        app:layout_constraintBottom_toTopOf="@+id/order_detail_recycler_view"
+        app:layout_constraintTop_toBottomOf="@+id/store_cover_image"
+        app:sv_animationType="All"
+        app:sv_doneCircleColor="@color/colorAccent"
+        app:sv_doneCircleRadius="18dp"
+        app:sv_doneStepLineColor="@color/colorAccent"
+        app:sv_doneStepMarkColor="@color/colorPrimary"
+        app:sv_doneTextColor="#AEAEAE"
+        app:sv_nextStepLineColor="#AEAEAE"
+        app:sv_nextTextColor="#AEAEAE"
+        app:sv_selectedCircleColor="@color/colorAccent"
+        app:sv_selectedCircleRadius="18dp"
+        app:sv_selectedStepNumberColor="@color/colorPrimary"
+        app:sv_selectedTextColor="@color/colorAccent"
+        app:sv_stepLineWidth="1dp"
+        app:sv_stepNumberTextSize="18sp"
+        app:sv_stepPadding="@dimen/medium_margin"
+        app:sv_stepViewStyle="@style/StepView"
+        app:sv_textPadding="@dimen/small_margin" />
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/order_detail_recycler_view"
@@ -68,7 +93,7 @@
         android:nestedScrollingEnabled="true"
         android:scrollbars="vertical"
         app:layout_constraintBottom_toTopOf="@+id/total_price_container"
-        app:layout_constraintTop_toBottomOf="@+id/store_cover_image"
+        app:layout_constraintTop_toBottomOf="@+id/order_step_view"
         app:layout_constraintVertical_weight="1" />
 
     <android.support.constraint.ConstraintLayout
@@ -81,17 +106,17 @@
 
         <TextView
             android:id="@+id/total_price_description"
+            style="@style/AccentTextLight"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/total_price"
-            style="@style/AccentTextLight"
             app:layout_constraintStart_toStartOf="parent" />
 
         <TextView
             android:id="@+id/total_price"
+            style="@style/AccentTextLight"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            style="@style/AccentTextLight"
             android:textColor="@color/colorAccent"
             app:layout_constraintEnd_toEndOf="parent" />
 
@@ -102,8 +127,8 @@
         style="@style/ButtonTextDark"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:visibility="gone"
         android:background="@android:color/holo_red_dark"
         android:text="@string/order_cancel_button_text"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent" />
 </android.support.constraint.ConstraintLayout>

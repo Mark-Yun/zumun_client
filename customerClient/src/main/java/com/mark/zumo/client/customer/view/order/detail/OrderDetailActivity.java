@@ -25,8 +25,10 @@ import com.mark.zumo.client.core.util.glide.GlideApp;
 import com.mark.zumo.client.core.util.glide.GlideUtils;
 import com.mark.zumo.client.customer.R;
 import com.mark.zumo.client.customer.viewmodel.OrderViewModel;
+import com.shuhart.stepview.StepView;
 
 import java.text.NumberFormat;
+import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -46,6 +48,7 @@ public class OrderDetailActivity extends AppCompatActivity {
     @BindView(R.id.order_detail_recycler_view) RecyclerView recyclerView;
     @BindView(R.id.total_price) TextView totalPrice;
     @BindView(R.id.cancel_order) AppCompatButton cancelOrder;
+    @BindView(R.id.order_step_view) StepView orderStepView;
 
     private OrderViewModel orderViewModel;
 
@@ -60,6 +63,21 @@ public class OrderDetailActivity extends AppCompatActivity {
         inflateStoreInfo();
         inflateOrderInfo();
         inflateOrderDetailRecyclerView();
+        inflateStepView();
+    }
+
+    private void inflateStepView() {
+        ArrayList<String> steps = new ArrayList<String>() {{
+            add(getString(MenuOrder.State.CREATED.stringRes));
+            add(getString(MenuOrder.State.REQUESTED.stringRes));
+            add(getString(MenuOrder.State.ACCEPTED.stringRes));
+            add(getString(MenuOrder.State.COMPLETE.stringRes));
+        }};
+        orderStepView.getState()
+                .animationType(StepView.ANIMATION_ALL)
+                .animationDuration(2000)
+                .steps(steps)
+                .commit();
     }
 
     private void inflateOrderDetailRecyclerView() {
@@ -97,6 +115,7 @@ public class OrderDetailActivity extends AppCompatActivity {
         totalPrice.setText(NumberFormat.getCurrencyInstance().format(menuOrder.totalPrice));
         MenuOrder.State state = MenuOrder.State.of(menuOrder.state);
         cancelOrder.setVisibility(state == MenuOrder.State.REQUESTED ? View.VISIBLE : View.GONE);
+        orderStepView.go(state.ordinal(), true);
     }
 
     @OnClick(R.id.cancel_order)

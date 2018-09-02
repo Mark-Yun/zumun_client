@@ -96,6 +96,8 @@
         style="@style/ButtonTextDark"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:paddingBottom="@dimen/medium_margin"
+        android:paddingTop="@dimen/medium_margin"
         android:background="@color/colorAccent"
         android:text="@string/button_text_send_order"
         app:layout_constraintBottom_toBottomOf="parent" />

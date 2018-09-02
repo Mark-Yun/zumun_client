@@ -29,7 +29,7 @@
 
     <string name="theres_no_item_in_cart">Nothing in Cart</string>
 
-    <string name="menu_order_name_and">And, %s etc.</string>
+    <string name="menu_order_name_and">And %s</string>
 
     <string name="order_number_description">Order Number:&#160;</string>
     <string name="order_time_description">Order Time:&#160;</string>

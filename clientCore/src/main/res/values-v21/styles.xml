@@ -125,7 +125,6 @@
 
     <style name="ButtonTextDark" parent="Widget.AppCompat.Button.Borderless">
         <item name="android:textColor">@color/colorTextDark</item>
-        <item name="android:textSize">14sp</item>
         <item name="android:textAllCaps">true</item>
         <item name="android:fontFamily">sans-serif-medium</item>
         <item name="android:letterSpacing">0.075</item>
