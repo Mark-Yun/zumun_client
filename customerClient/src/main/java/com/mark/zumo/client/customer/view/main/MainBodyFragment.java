@@ -100,7 +100,6 @@ public class MainBodyFragment extends Fragment {
                 switch (resultCode) {
                     case CartActivity.RESULT_CODE_PAYMENT_SUCCESS:
                         String orderUuid = data.getStringExtra(PaymentActivity.KEY_ORDER_UUID);
-                        onSuccessPayment(orderUuid);
                         break;
 
                     case CartActivity.RESULT_CODE_PAYMENT_FAILED:
@@ -112,7 +111,6 @@ public class MainBodyFragment extends Fragment {
                 switch (resultCode) {
                     case MenuDetailActivity.RESULT_CODE_PAYMENT_SUCCESS:
                         String orderUuid = data.getStringExtra(PaymentActivity.KEY_ORDER_UUID);
-                        onSuccessPayment(orderUuid);
                         break;
 
                     case MenuDetailActivity.RESULT_CODE_PAYMENT_FAILED:
@@ -122,16 +120,5 @@ public class MainBodyFragment extends Fragment {
         }
 
         super.onActivityResult(requestCode, resultCode, data);
-    }
-
-    private void onSuccessPayment(String orderUuid) {
-        Log.d(TAG, "onSuccessPayment: " + orderUuid);
-        mainViewModel.onSuccessPayment(orderUuid);
-
-        TabLayout.Tab tab = tabLayout.getTabAt(2);
-        if (tab == null) {
-            return;
-        }
-        tab.select();
     }
 }

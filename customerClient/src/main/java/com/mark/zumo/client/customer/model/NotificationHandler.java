@@ -30,6 +30,7 @@ import com.mark.zumo.client.core.util.context.ContextHolder;
 import com.mark.zumo.client.customer.R;
 import com.mark.zumo.client.customer.view.main.MainActivity;
 
+import java.text.NumberFormat;
 import java.util.Objects;
 
 /**
@@ -69,19 +70,28 @@ public enum NotificationHandler {
     }
 
     private Notification createOrderNotification(Store store, MenuOrder menuOrder) {
-        int orderStateRes = MenuOrder.State.of(menuOrder.state).stringRes;
-        String orderStateString = context.getString(orderStateRes);
         Intent intent = new Intent(context, MainActivity.class);
         PendingIntent activity = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
+        MenuOrder.State state = MenuOrder.State.of(menuOrder.state);
+        String stateString = context.getString(state.stringRes);
+
         return new NotificationCompat.Builder(context, menuOrder.uuid)
-                .setContentTitle(store.name + " - " + menuOrder.orderName)
+                .setContentTitle(stateString + "- [" + store.name + "] " + menuOrder.orderName)
                 .setChannelId(menuOrder.uuid)
-                .setContentText(orderStateString)
+                .setContentText(NumberFormat.getCurrencyInstance().format(menuOrder.totalPrice))
                 .setWhen(System.currentTimeMillis())
                 .setSmallIcon(R.drawable.ic_stat_order)
+                .setOngoing(true)
                 .setColor(ContextCompat.getColor(context, R.color.colorAccent))
                 .setContentIntent(activity)
                 .build();
+    }
+
+    private boolean isOngoing(MenuOrder menuOrder) {
+        MenuOrder.State state = MenuOrder.State.of(menuOrder.state);
+        return state == MenuOrder.State.COMPLETE
+                || state == MenuOrder.State.CANCELED
+                || state == MenuOrder.State.REJECTED;
     }
 }
