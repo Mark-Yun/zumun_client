@@ -40,6 +40,7 @@
                     android:id="@+id/near_by_store"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layoutAnimation="@anim/layout_animation_fall_down"
                     android:nestedScrollingEnabled="false"
                     android:paddingBottom="@dimen/small_margin"
                     android:paddingTop="@dimen/small_margin" />

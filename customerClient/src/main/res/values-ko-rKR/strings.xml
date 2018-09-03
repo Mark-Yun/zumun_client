@@ -21,7 +21,7 @@
     <string name="amount_description">수량</string>
     <string name="cart_title_text">카트(%1$d)</string>
     <string name="tab_title_is_finding_store">찾는 중…</string>
-    <string name="tab_title_places">가게 목록</string>
+    <string name="tab_title_places">근처 가게</string>
     <string name="tab_title_orders">주문 목록</string>
     <string name="theres_no_item_in_cart">카트가 비었습니다</string>
     <string name="menu_order_name_and">외 %s</string>

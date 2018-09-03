@@ -17,6 +17,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AnimationUtils;
+import android.view.animation.LayoutAnimationController;
 
 import com.mark.zumo.client.core.entity.MenuOrder;
 import com.mark.zumo.client.customer.R;
@@ -64,23 +66,27 @@ public class OrderFragment extends Fragment {
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(layoutManager);
 
+        final LayoutAnimationController controller = AnimationUtils.loadLayoutAnimation(getActivity(), R.anim.layout_animation_fall_down);
+        recyclerView.setLayoutAnimation(controller);
+
         adapter = new OrderAdapter(this, orderViewModel);
         recyclerView.setAdapter(adapter);
 
-        orderViewModel.getMenuOrderList().observe(this, adapter::setOrderList);
+        orderViewModel.getMenuOrderList().observe(this, this::onLoadMenuOrderList);
     }
 
-    private void refreshOrderList() {
-        orderViewModel.getMenuOrderList().observe(this, this::onRefreshComplete);
-    }
-
-    private void onRefreshComplete(final List<MenuOrder> orderList) {
+    private void onLoadMenuOrderList(List<MenuOrder> menuOrderList) {
         if (adapter != null) {
-            adapter.setOrderList(orderList);
+            adapter.setOrderList(menuOrderList);
         }
 
         if (swipeRefreshLayout != null) {
             swipeRefreshLayout.setRefreshing(false);
         }
+        recyclerView.scheduleLayoutAnimation();
+    }
+
+    private void refreshOrderList() {
+        orderViewModel.getMenuOrderList().observe(this, this::onLoadMenuOrderList);
     }
 }

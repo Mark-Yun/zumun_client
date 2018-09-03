@@ -22,6 +22,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AnimationUtils;
+import android.view.animation.LayoutAnimationController;
 
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
@@ -78,7 +80,11 @@ public class PlaceFragment extends Fragment {
     }
 
     private void inflateSwipeRefreshLayout() {
-        swipeRefreshLayout.setOnRefreshListener(this::inflateNearbyStoreRecyclerView);
+        swipeRefreshLayout.setOnRefreshListener(this::refreshNearByStore);
+    }
+
+    private void refreshNearByStore() {
+        placeViewModel.nearByStore().observe(this, this::onLoadNearByStoreList);
     }
 
     @SuppressLint("MissingPermission")
@@ -121,6 +127,9 @@ public class PlaceFragment extends Fragment {
     private void inflateNearbyStoreRecyclerView() {
         nearByStore.setHasFixedSize(true);
 
+        final LayoutAnimationController controller = AnimationUtils.loadLayoutAnimation(getActivity(), R.anim.layout_animation_fall_down);
+        nearByStore.setLayoutAnimation(controller);
+
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
         nearByStore.setLayoutManager(layoutManager);
 
@@ -133,6 +142,7 @@ public class PlaceFragment extends Fragment {
     private void onLoadNearByStoreList(List<Store> storeList) {
         swipeRefreshLayout.setRefreshing(false);
         adapter.setStoreList(storeList);
+        nearByStore.scheduleLayoutAnimation();
         mapFragment.getMapAsync(googleMap -> {
             googleMap.clear();
 
