@@ -12,6 +12,7 @@ import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.util.Log;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -116,6 +117,13 @@ public enum AppServerServiceProvider {
         return bundle;
     }
 
+    private static String serverVersionInfo() {
+        Log.d(TAG, "serverVersionInfo: appVersion-" + getAppVersion());
+        String[] split = getAppVersion().split("\\.");
+        int majorVersion = 100 * Integer.parseInt(split[0]) + Integer.parseInt(split[1]);
+        return "v" + String.valueOf(majorVersion) + "/";
+    }
+
     private static String getAppVersion() {
         try {
             Context context = ContextHolder.getContext();
@@ -123,7 +131,7 @@ public enum AppServerServiceProvider {
             PackageInfo pInfo = context.getPackageManager().getPackageInfo(packageName, 0);
             return pInfo.versionName;
         } catch (PackageManager.NameNotFoundException e) {
-            e.printStackTrace();
+            Log.e(TAG, "getAppVersion: ", e);
             return "None";
         }
     }
@@ -144,7 +152,7 @@ public enum AppServerServiceProvider {
         OkHttpClient okHttpClient = okHttpClient(interceptor);
 
         return new Retrofit.Builder()
-                .baseUrl(BuildConfig.BUILD_TYPE.appServerUrl)
+                .baseUrl(BuildConfig.BUILD_TYPE.appServerUrl + serverVersionInfo())
                 .addConverterFactory(gsonConverterFactory())
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .client(okHttpClient)
@@ -157,7 +165,7 @@ public enum AppServerServiceProvider {
         OkHttpClient okHttpClient = okHttpClient(interceptor);
 
         return paymentService = new Retrofit.Builder()
-                .baseUrl(BuildConfig.BUILD_TYPE.paymentServiceUrl)
+                .baseUrl(BuildConfig.BUILD_TYPE.paymentServiceUrl + serverVersionInfo())
                 .addConverterFactory(gsonConverterFactory())
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .client(okHttpClient)

@@ -9,6 +9,7 @@ package com.mark.zumo.client.core.dao;
 import android.arch.persistence.room.Room;
 import android.content.Context;
 
+import com.mark.zumo.client.core.app.BuildConfig;
 import com.mark.zumo.client.core.util.context.ContextHolder;
 
 /**
@@ -26,6 +27,13 @@ public enum AppDatabaseProvider {
     }
 
     private static AppDatabase buildDatabase(Context context) {
-        return Room.databaseBuilder(context, AppDatabase.class, DB_NAME).build();
+        switch (BuildConfig.BUILD_TYPE) {
+            case DEBUG:
+                return Room.inMemoryDatabaseBuilder(context, AppDatabase.class).build();
+            case RELEASE:
+                return Room.databaseBuilder(context, AppDatabase.class, DB_NAME).build();
+            default:
+                throw new UnsupportedOperationException();
+        }
     }
 }

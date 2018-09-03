@@ -12,11 +12,11 @@ import okhttp3.logging.HttpLoggingInterceptor;
  */
 final class ConfigConstant {
 
-    static final String APP_SERVER_DEV_URL = "https://akxjj18zh8.execute-api.ap-northeast-2.amazonaws.com/api/";
-    static final String APP_SERVER_PROD_URL = "https://w8nvfkffv5.execute-api.ap-northeast-2.amazonaws.com/api/";
+    static final String APP_SERVER_DEV_URL = "https://4w9niylxfh.execute-api.ap-northeast-2.amazonaws.com/";
+    static final String APP_SERVER_PROD_URL = "https://sknnyjso15.execute-api.ap-northeast-2.amazonaws.com/";
 
-    static final String PAYMENT_SERVICE_DEV_URL = "https://9e9owpd0lk.execute-api.ap-northeast-2.amazonaws.com/api/";
-    static final String PAYMENT_SERVICE_PROD_URL = "https://nyua4vsg24.execute-api.ap-northeast-2.amazonaws.com/api/";
+    static final String PAYMENT_SERVICE_DEV_URL = "https://tm49i5w5x2.execute-api.ap-northeast-2.amazonaws.com/";
+    static final String PAYMENT_SERVICE_PROD_URL = "https://zv89o9ydrj.execute-api.ap-northeast-2.amazonaws.com/";
 
     static final String KAKAO_PAY_TEST_CID = "TC0ONETIME";
 
