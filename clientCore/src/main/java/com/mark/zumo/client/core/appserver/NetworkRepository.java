@@ -6,7 +6,8 @@
 
 package com.mark.zumo.client.core.appserver;
 
-import com.mark.zumo.client.core.appserver.request.MenuCategoryUpdateRequest;
+import com.mark.zumo.client.core.appserver.request.RequestUpdateCategoriesOfMenu;
+import com.mark.zumo.client.core.appserver.request.RequestUpdateMenusOfCategory;
 import com.mark.zumo.client.core.entity.Menu;
 import com.mark.zumo.client.core.entity.MenuCategory;
 import com.mark.zumo.client.core.entity.MenuDetail;
@@ -70,9 +71,9 @@ public interface NetworkRepository {
     Maybe<Menu> updateCategoryInMenu(@Path(Menu.Schema.uuid) String menuUuid,
                                      @Body MenuCategory menuCategory);
 
-    @PUT("menu/{" + MenuCategoryUpdateRequest.Schema.menuUuid + "}/category")
-    Maybe<List<MenuDetail>> updateMenuCategory(@Path(MenuCategoryUpdateRequest.Schema.menuUuid) String menuUuid,
-                                               @Body MenuCategoryUpdateRequest menuCategoryUpdateRequest);
+    @PUT("menu/{" + RequestUpdateCategoriesOfMenu.Schema.menuUuid + "}/category")
+    Maybe<List<MenuDetail>> updateCategoriesOfMenu(@Path(RequestUpdateCategoriesOfMenu.Schema.menuUuid) String menuUuid,
+                                                   @Body RequestUpdateCategoriesOfMenu requestUpdateCategoriesOfMenu);
 
     @GET("menu/detail")
     Maybe<List<MenuDetail>> getMenuDetailByStoreUuid(@Query(MenuDetail.Schema.storeUuid) String storeUuid);
@@ -80,23 +81,22 @@ public interface NetworkRepository {
     @GET("menu/detail")
     Maybe<List<MenuDetail>> getMenuDetailByCategoryUuid(@Query(MenuDetail.Schema.menuCategoryUuid) String menuCategoryUuid);
 
-    @PUT("menu/category/{" + MenuCategory.Schema.uuid + "}")
-    Maybe<List<MenuDetail>> updateMenuCategory(@Path(MenuCategory.Schema.uuid) String categoryUuid,
-                                               @Body List<Menu> menuList);
-
-
     @GET("category")
     Maybe<List<MenuCategory>> getMenuCategoryListByStoreUuid(@Query(MenuCategory.Schema.storeUuid) String storeUuid);
 
     @PUT("category/{" + MenuCategory.Schema.uuid + "}")
-    Maybe<MenuCategory> updateMenuCategory(@Path(MenuCategory.Schema.uuid) final String menuCategoryUuid,
-                                           @Body final MenuCategory menuCategory);
+    Maybe<MenuCategory> updateCategoriesOfMenu(@Path(MenuCategory.Schema.uuid) final String menuCategoryUuid,
+                                               @Body final MenuCategory menuCategory);
 
     @PUT("category")
     Maybe<List<MenuCategory>> updateMenuCategoryList(@Body final List<MenuCategory> menuCategoryList);
 
     @GET("category/{" + MenuCategory.Schema.uuid + "}")
     Maybe<MenuCategory> getMenuCategory(@Path(MenuCategory.Schema.uuid) final String menuCategoryUuid);
+
+    @PUT("category/{" + MenuCategory.Schema.uuid + "}/menu_list")
+    Maybe<List<MenuDetail>> updateMenusOfCategory(@Path(MenuCategory.Schema.uuid) String categoryUuid,
+                                                  @Body RequestUpdateMenusOfCategory request);
 
 
     @POST("category")

@@ -53,7 +53,7 @@ public enum CategoryRepository {
     }
 
     public Maybe<MenuCategory> updateMenuCategory(final MenuCategory menuCategory) {
-        return networkRepository().updateMenuCategory(menuCategory.uuid, menuCategory)
+        return networkRepository().updateCategoriesOfMenu(menuCategory.uuid, menuCategory)
                 .doOnSuccess(diskRepository::insertMenuCategory);
     }
 

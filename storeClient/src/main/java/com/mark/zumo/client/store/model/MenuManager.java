@@ -8,6 +8,8 @@ package com.mark.zumo.client.store.model;
 
 import android.util.Log;
 
+import com.mark.zumo.client.core.appserver.request.RequestUpdateCategoriesOfMenu;
+import com.mark.zumo.client.core.appserver.request.RequestUpdateMenusOfCategory;
 import com.mark.zumo.client.core.entity.Menu;
 import com.mark.zumo.client.core.entity.MenuCategory;
 import com.mark.zumo.client.core.entity.MenuDetail;
@@ -157,13 +159,22 @@ public enum MenuManager {
                 .subscribeOn(Schedulers.io());
     }
 
-    public Maybe<List<MenuCategory>> updateMenuCategory(final String menuUuid,
-                                                        final String storeUuid,
-                                                        final Set<String> categoryUuidSet) {
-        return menuDetailRepository.updateMenuCategory(menuUuid, storeUuid, categoryUuidSet)
+    public Maybe<List<MenuCategory>> updateCategoriesOfMenu(final String storeUuid,
+                                                            final String menuUuid,
+                                                            final Set<String> categoryUuidSet) {
+        RequestUpdateCategoriesOfMenu requestUpdateCategoriesOfMenu = new RequestUpdateCategoriesOfMenu(storeUuid, categoryUuidSet);
+        return menuDetailRepository.updateCategoriesOfMenu(menuUuid, requestUpdateCategoriesOfMenu)
                 .flatMapObservable(Observable::fromIterable)
                 .map(menuDetail -> menuDetail.menuCategoryUuid)
                 .flatMapMaybe(categoryRepository::getMenuCategoryFromDisk)
                 .toList().toMaybe();
+    }
+
+    public Maybe<List<MenuDetail>> updateMenusOfCategory(final String storeUuid,
+                                                         final String categoryUuid,
+                                                         final List<String> menuUuidList) {
+        RequestUpdateMenusOfCategory request = new RequestUpdateMenusOfCategory(storeUuid, menuUuidList);
+        return menuDetailRepository.updateMenusOfCategory(categoryUuid, request)
+                .subscribeOn(Schedulers.io());
     }
 }

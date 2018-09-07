@@ -8,13 +8,13 @@ package com.mark.zumo.client.core.repository;
 
 import com.mark.zumo.client.core.appserver.AppServerServiceProvider;
 import com.mark.zumo.client.core.appserver.NetworkRepository;
-import com.mark.zumo.client.core.appserver.request.MenuCategoryUpdateRequest;
+import com.mark.zumo.client.core.appserver.request.RequestUpdateCategoriesOfMenu;
+import com.mark.zumo.client.core.appserver.request.RequestUpdateMenusOfCategory;
 import com.mark.zumo.client.core.dao.AppDatabaseProvider;
 import com.mark.zumo.client.core.dao.DiskRepository;
 import com.mark.zumo.client.core.entity.MenuDetail;
 
 import java.util.List;
-import java.util.Set;
 
 import io.reactivex.Maybe;
 import io.reactivex.Observable;
@@ -68,17 +68,17 @@ public enum MenuDetailRepository {
         return diskRepository.getMenuDetailByStringMenuUuidFromDisk(storeUuid, menuUuid);
     }
 
-    public Maybe<List<MenuDetail>> updateMenuCategory(final String menuUuid,
-                                                      final String storeUuid,
-                                                      final Set<String> categoryUuidList) {
-        MenuCategoryUpdateRequest menuCategoryUpdateRequest = new MenuCategoryUpdateRequest(storeUuid, categoryUuidList);
-        return networkRepository().updateMenuCategory(menuUuid, menuCategoryUpdateRequest)
-                .doOnSuccess(menuDetailList -> {
-                    if (menuDetailList.size() > 0) {
-                        MenuDetail menuDetail = menuDetailList.get(0);
-                        diskRepository.deleteMenuDetailListByMenuUuid(menuDetail.menuUuid);
-                    }
-                })
+    public Maybe<List<MenuDetail>> updateCategoriesOfMenu(final String menuUuid,
+                                                          final RequestUpdateCategoriesOfMenu request) {
+        return networkRepository().updateCategoriesOfMenu(menuUuid, request)
+                .doOnSuccess(menuDetailList -> diskRepository.deleteMenuDetailListByMenuUuid(menuUuid))
+                .doOnSuccess(diskRepository::insertMenuDetailList);
+    }
+
+    public Maybe<List<MenuDetail>> updateMenusOfCategory(final String categoryUuid,
+                                                         final RequestUpdateMenusOfCategory request) {
+        return networkRepository().updateMenusOfCategory(categoryUuid, request)
+                .doOnSuccess(menuDetailList -> diskRepository.deleteMenuDetailListByCategoryUuid(categoryUuid))
                 .doOnSuccess(diskRepository::insertMenuDetailList);
     }
 }

@@ -130,7 +130,7 @@ public class MenuDetailPreferenceFragment extends PreferenceFragmentCompat {
     private boolean onMenuCategoryChanged(final Preference preference, final Object newValue) {
         Set<String> newCategorySet = (Set<String>) newValue;
         Log.d(TAG, "onMenuCategoryChanged: " + newCategorySet);
-        menuSettingViewModel.updateMenuCategory(menuUuid, newCategorySet).observe(this, this::onLoadMenuCategoryUpdated);
+        menuSettingViewModel.updateMenuCategoriesOfMenu(menuUuid, newCategorySet).observe(this, this::onLoadMenuCategoryUpdated);
         return true;
     }
 

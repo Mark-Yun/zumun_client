@@ -42,7 +42,7 @@ public class MenuListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
     private List<Menu> menuList;
     private Map<String, MenuDetail> menuDetailMap;
-    private List<Menu> checkedMenuList;
+    private Set<String> checkedMenuList;
     private OnCheckedItemListChangeListener listChangeListener;
 
     MenuListAdapter(final LifecycleOwner lifecycleOwner,
@@ -55,7 +55,20 @@ public class MenuListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
         menuList = new ArrayList<>();
         menuDetailMap = new HashMap<>();
-        checkedMenuList = new ArrayList<>();
+        checkedMenuList = new HashSet<>();
+    }
+
+    List<String> getSelectedMenuUuidList() {
+        List<String> list = new ArrayList<>();
+        for (Menu menu : menuList) {
+            list.add(menu.uuid);
+        }
+
+        return list;
+    }
+
+    String getCategoryUuid() {
+        return menuCategory.uuid;
     }
 
     void setMenuList(List<Menu> menuList) {
@@ -82,8 +95,8 @@ public class MenuListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             menuUuidSet.add(menuDetail.menuUuid);
         }
 
-        for (Menu menu : checkedMenuList) {
-            if (!menuUuidSet.remove(menu.uuid)) {
+        for (String menuUuid : checkedMenuList) {
+            if (!menuUuidSet.remove(menuUuid)) {
                 return true;
             }
         }
@@ -114,13 +127,17 @@ public class MenuListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             AppCompatTextView checkedTextView = viewHolder.menuName;
             checkedTextView.setText(menu.name);
             AppCompatCheckBox checkBox = viewHolder.checkBox;
-            checkBox.setChecked(menuDetailMap.containsKey(menu.uuid));
-            viewHolder.itemView.setOnClickListener(v -> {
-                checkBox.setChecked(!checkBox.isChecked());
-                if (checkBox.isChecked()) {
-                    checkedMenuList.add(menu);
+            boolean checked = menuDetailMap.containsKey(menu.uuid);
+            checkBox.setChecked(checked);
+            if (checked) {
+                checkedMenuList.add(menu.uuid);
+            }
+            viewHolder.itemView.setOnClickListener(v -> checkBox.setChecked(!checkBox.isChecked()));
+            checkBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
+                if (isChecked) {
+                    checkedMenuList.add(menu.uuid);
                 } else {
-                    checkedMenuList.remove(menu);
+                    checkedMenuList.remove(menu.uuid);
                 }
                 if (listChangeListener != null) {
                     listChangeListener.onCheckedItemListChanged(isListChanged());

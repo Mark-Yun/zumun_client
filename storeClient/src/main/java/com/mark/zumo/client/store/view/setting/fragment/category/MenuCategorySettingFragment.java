@@ -25,7 +25,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.mark.zumo.client.core.entity.Menu;
 import com.mark.zumo.client.core.entity.MenuCategory;
@@ -37,7 +36,6 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 
 /**
  * Created by mark on 18. 6. 26.
@@ -91,7 +89,16 @@ public class MenuCategorySettingFragment extends Fragment implements OnStartDrag
         menuRecyclerView.setAdapter(adapter);
 
         menuSettingViewModel.menuList().observe(this, menuList -> onLoadMenuList(adapter, menuList));
-//        menuSettingViewModel.menuDetailList(menuCategory.uuid).observe(this, menuDetailList -> onLoadMenuDetailList(adapter, menuDetailList));
+        menuSettingViewModel.menuDetailList(menuCategory.uuid).observe(this, menuDetailList -> onLoadMenuDetailList(adapter, menuDetailList));
+
+        saveButton.setOnClickListener(v ->
+                menuSettingViewModel.updateMenusOfCategory(adapter.getCategoryUuid(), adapter.getSelectedMenuUuidList())
+                        .observe(this, adapter::setMenuDetailList)
+        );
+    }
+
+    private void onUpdateMenusOfCategorySuccess(MenuListAdapter adapter, List<MenuDetail> menuDetailList) {
+        adapter.setMenuDetailList(menuDetailList);
     }
 
     @Override
@@ -114,11 +121,5 @@ public class MenuCategorySettingFragment extends Fragment implements OnStartDrag
         Log.d("MenuCategorySettingFragment", "onListChanged: " + isChanged);
         saveButton.setEnabled(isChanged);
         saveButton.setClickable(isChanged);
-    }
-
-    @OnClick(R.id.save_button)
-    void onSaveButtonClicked() {
-        //TODO
-        Toast.makeText(getActivity(), "clicked", Toast.LENGTH_SHORT).show();
     }
 }

@@ -8,19 +8,19 @@ package com.mark.zumo.client.core.appserver.request;
 
 import com.google.gson.annotations.SerializedName;
 
-import java.util.List;
+import java.util.Set;
 
 /**
- * Created by mark on 18. 8. 12.
+ * Created by mark on 18. 8. 10.
  */
-public class CategoryOrderRequest {
+public class RequestUpdateCategoriesOfMenu {
 
-    @SerializedName(RequestUpdateCategoriesOfMenu.Schema.storeUuid)
+    @SerializedName(Schema.storeUuid)
     public String storeUuid;
-    @SerializedName(RequestUpdateCategoriesOfMenu.Schema.menuCategoryUuidList)
-    public List<String> menuCategoryUuidList;
+    @SerializedName(Schema.menuCategoryUuidList)
+    public Set<String> menuCategoryUuidList;
 
-    public CategoryOrderRequest(final String storeUuid, final List<String> menuCategoryUuidList) {
+    public RequestUpdateCategoriesOfMenu(final String storeUuid, final Set<String> menuCategoryUuidList) {
         this.storeUuid = storeUuid;
         this.menuCategoryUuidList = menuCategoryUuidList;
     }
