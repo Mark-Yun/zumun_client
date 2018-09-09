@@ -41,6 +41,11 @@ public class AppErrorHandler {
         new Handler(Looper.getMainLooper()).post(() -> Toast.makeText(context, stringResId, Toast.LENGTH_SHORT).show());
     }
 
+    private static void showDebugToast(String string) {
+        Context context = ContextHolder.getContext();
+        new Handler(Looper.getMainLooper()).post(() -> Toast.makeText(context, string, Toast.LENGTH_LONG).show());
+    }
+
     public static void setup() {
         RxJavaPlugins.setErrorHandler(e -> {
             if (e instanceof UndeliverableException || e instanceof OnErrorNotImplementedException) {
@@ -52,7 +57,10 @@ public class AppErrorHandler {
                 Log.e(TAG, e.getMessage());
             }
             if (e instanceof HttpException) {
-                // We had non-2XX http error
+                if (BuildConfig.BUILD_TYPE == AppConfig.DEBUG) {
+                    showDebugToast(((HttpException) e).response().errorBody().string());
+                    return;
+                }
                 showToast(R.string.error_message_on_http_exception);
                 return;
             } else if (e instanceof UnknownHostException) {
