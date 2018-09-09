@@ -11,6 +11,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.AppCompatTextView;
 import android.support.v7.widget.LinearLayoutManager;
@@ -45,6 +46,7 @@ public class CartActivity extends AppCompatActivity {
     @BindView(R.id.store_cover_title) AppCompatTextView storeTitle;
     @BindView(R.id.order_detail_recycler_view) RecyclerView cartItemRecyclerView;
     @BindView(R.id.total_price) AppCompatTextView totalPrice;
+    @BindView(R.id.place_order) AppCompatButton placeOrder;
 
     private String storeUuid;
     private CartViewModel cartViewModel;
@@ -94,10 +96,12 @@ public class CartActivity extends AppCompatActivity {
     @OnClick(R.id.place_order)
     void onClickPlaceOrder() {
         TouchResponse.medium();
+        placeOrder.setEnabled(false);
         cartViewModel.placeOrder(storeUuid).observe(this, this::onSuccessCreateOrder);
     }
 
     private void onSuccessCreateOrder(MenuOrder menuOrder) {
+        placeOrder.setEnabled(true);
         Intent intent = new Intent(this, PaymentActivity.class);
         intent.putExtra(PaymentActivity.KEY_ORDER_UUID, menuOrder.uuid);
         startActivityForResult(intent, PaymentActivity.REQ_CODE_PAYMENT);

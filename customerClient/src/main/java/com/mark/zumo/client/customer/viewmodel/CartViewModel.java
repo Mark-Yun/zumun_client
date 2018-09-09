@@ -198,6 +198,7 @@ public class CartViewModel extends AndroidViewModel {
         sessionManager.getSessionUser()
                 .flatMapObservable(ignored -> cartManager.getCart(storeUuid))
                 .firstElement()
+                .filter(cart -> cart.getTotalAmount() > 0)
                 .map(Cart::getOrderDetailList)
                 .flatMap(orderManager::createMenuOrder)
                 .observeOn(AndroidSchedulers.mainThread())
