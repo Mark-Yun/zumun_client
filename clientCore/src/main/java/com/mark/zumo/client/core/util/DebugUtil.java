@@ -12,8 +12,6 @@ import com.mark.zumo.client.core.entity.MenuOrder;
 import com.mark.zumo.client.core.entity.Store;
 import com.mark.zumo.client.core.entity.user.GuestUser;
 
-import java.util.Arrays;
-import java.util.List;
 import java.util.UUID;
 
 /**
@@ -29,7 +27,7 @@ public class DebugUtil {
     }
 
     public static Store store() {
-        return new Store(TEST_STORE_UUID, Build.MODEL, 37.2624914, 127.0446137, "TEST", "TEST");
+        return new Store(TEST_STORE_UUID, Build.MODEL, 37.2624914, 127.0446137, "TEST", "TEST", "", "", "");
     }
 
     public static MenuOrder menuOrder() {
@@ -38,27 +36,6 @@ public class DebugUtil {
                 TEST_STORE_UUID,
                 TEST_STORE_UUID,
                 "24", System.currentTimeMillis(), 5, 25500, 0);
-    }
-
-    public static List<Store> storeList() {
-        Store[] stores = {
-                new Store(TEST_STORE_UUID, "test1", 15, 15, null, null),
-                new Store(TEST_STORE_UUID, "testStore2", 15, 15, null, null),
-                new Store(TEST_STORE_UUID, "testTestStore3", 15, 15, null, null),
-                new Store(TEST_STORE_UUID, "COCOCOCOCOCOCO_@#!@$*I@", 15, 15, null, null),
-                new Store(TEST_STORE_UUID, "LAIIEJ!F#IFJASDJFP(!O@$I!P(", 15, 15, null, null),
-                new Store(TEST_STORE_UUID, "test1", 15, 15, null, null),
-                new Store(TEST_STORE_UUID, "testStore2", 15, 15, null, null),
-                new Store(TEST_STORE_UUID, "testTestStore3", 15, 15, null, null),
-                new Store(TEST_STORE_UUID, "COCOCOCOCOCOCO_@#!@$*I@", 15, 15, null, null),
-                new Store(TEST_STORE_UUID, "LAIIEJ!F#IFJASDJFP(!O@$I!P(", 15, 15, null, null),
-                new Store(TEST_STORE_UUID, "test1", 15, 15, null, null),
-                new Store(TEST_STORE_UUID, "testStore2", 15, 15, null, null),
-                new Store(TEST_STORE_UUID, "testTestStore3", 15, 15, null, null),
-                new Store(TEST_STORE_UUID, "COCOCOCOCOCOCO_@#!@$*I@", 15, 15, null, null),
-                new Store(TEST_STORE_UUID, "LAIIEJ!F#IFJASDJFP(!O@$I!P(", 15, 15, null, null)
-        };
-        return Arrays.asList(stores);
     }
 
 }

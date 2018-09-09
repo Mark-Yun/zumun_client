@@ -28,27 +28,28 @@ public enum StoreManager {
     }
 
     public Maybe<Store> updateStoreName(Store store, String newName) {
-        Store newStore = new Store(store.uuid, newName, store.latitude, store.longitude, store.coverImageUrl, store.thumbnailUrl);
-        return storeRepository.updateStore(newStore)
+        store.name = newName;
+        return storeRepository.updateStore(store)
                 .subscribeOn(Schedulers.io());
     }
 
     public Maybe<Store> updateStoreLocation(Store store, LatLng latLng) {
-        Store newStore = new Store(store.uuid, store.name, latLng.latitude, latLng.longitude, store.coverImageUrl, store.thumbnailUrl);
-        return storeRepository.updateStore(newStore)
+        store.latitude = latLng.latitude;
+        store.longitude = latLng.longitude;
+        return storeRepository.updateStore(store)
                 .subscribeOn(Schedulers.io());
     }
 
     public Maybe<Store> updateStoreCoverImageUrl(Store store, String coverImageUrl) {
-        Store newStore = new Store(store.uuid, store.name, store.latitude, store.longitude, coverImageUrl, store.thumbnailUrl);
-        return storeRepository.updateStore(newStore)
+        store.coverImageUrl = coverImageUrl;
+        return storeRepository.updateStore(store)
                 .subscribeOn(Schedulers.io());
 
     }
 
     public Maybe<Store> updateStoreThumbnailImageUrl(Store store, String thumbnailImageUrl) {
-        Store newStore = new Store(store.uuid, store.name, store.latitude, store.longitude, store.coverImageUrl, thumbnailImageUrl);
-        return storeRepository.updateStore(newStore)
+        store.thumbnailUrl = thumbnailImageUrl;
+        return storeRepository.updateStore(store)
                 .subscribeOn(Schedulers.io());
     }
 }

@@ -26,23 +26,32 @@ public class Store {
     @PrimaryKey @NonNull @SerializedName(Schema.uuid) @ColumnInfo(name = Schema.uuid)
     public final String uuid;
     @SerializedName(Schema.name) @ColumnInfo(name = Schema.name)
-    public final String name;
+    public String name;
     @SerializedName(Schema.latitude) @ColumnInfo(name = Schema.latitude)
-    public final double latitude;
+    public double latitude;
     @SerializedName(Schema.longitude) @ColumnInfo(name = Schema.longitude)
-    public final double longitude;
+    public double longitude;
     @SerializedName(Schema.coverImageUrl) @ColumnInfo(name = Schema.coverImageUrl)
-    public final String coverImageUrl;
+    public String coverImageUrl;
     @SerializedName(Schema.thumbnailUrl) @ColumnInfo(name = Schema.thumbnailUrl)
-    public final String thumbnailUrl;
+    public String thumbnailUrl;
+    @SerializedName(Schema.phoneNumber) @ColumnInfo(name = Schema.phoneNumber)
+    public String phoneNumber;
+    @SerializedName(Schema.storeType) @ColumnInfo(name = Schema.storeType)
+    public String storeType;
+    @SerializedName(Schema.address) @ColumnInfo(name = Schema.address)
+    public String address;
 
-    public Store(@NonNull final String uuid, final String name, final double latitude, final double longitude, final String coverImageUrl, final String thumbnailUrl) {
+    public Store(@NonNull final String uuid, final String name, final double latitude, final double longitude, final String coverImageUrl, final String thumbnailUrl, final String phoneNumber, final String storeType, final String address) {
         this.uuid = uuid;
         this.name = name;
         this.latitude = latitude;
         this.longitude = longitude;
         this.coverImageUrl = coverImageUrl;
         this.thumbnailUrl = thumbnailUrl;
+        this.phoneNumber = phoneNumber;
+        this.storeType = storeType;
+        this.address = address;
     }
 
     @Override
@@ -51,11 +60,14 @@ public class Store {
     }
 
     public interface Schema {
-        String uuid = TABLE + "_uuid";
-        String name = TABLE + "_name";
+        String uuid = "store_uuid";
+        String name = "store_name";
         String latitude = "latitude";
         String longitude = "longitude";
         String coverImageUrl = "cover_image_url";
         String thumbnailUrl = "thumbnail_image_url";
+        String phoneNumber = "store_phone_number";
+        String storeType = "store_type";
+        String address = "address";
     }
 }

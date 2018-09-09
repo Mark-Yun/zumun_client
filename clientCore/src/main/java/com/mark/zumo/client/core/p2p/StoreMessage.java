@@ -22,23 +22,6 @@ class StoreMessage {
         this.store = store;
     }
 
-    static StoreMessage from(Message message) {
-        byte[] content = message.getContent();
-        String rawMessage = new String(content);
-        String[] splitContent = rawMessage.split(SPLIT);
-
-        String id = splitContent[0];
-        String name = splitContent[1];
-        long latitude = Long.parseLong(splitContent[2]);
-        long longitude = Long.parseLong(splitContent[3]);
-        String coverImageUrl = splitContent[4];
-        String thumbnailImageUrl = splitContent[5];
-        String fcmToken = splitContent[6];
-
-        Store store = new Store(id, name, latitude, longitude, coverImageUrl, thumbnailImageUrl);
-        return new StoreMessage(store);
-    }
-
     Message toMessage() {
         String rawMessage = store.uuid + SPLIT
                 + store.name + SPLIT

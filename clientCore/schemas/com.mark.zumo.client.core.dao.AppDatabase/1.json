@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "9ddf3939b12aa4f741141535755d08e0",
+    "identityHash": "ee9a8330cd5034ff1c1834eabdc23825",
     "entities": [
       {
         "tableName": "menu",
@@ -118,7 +118,7 @@
       },
       {
         "tableName": "store",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`store_uuid` TEXT NOT NULL, `store_name` TEXT, `latitude` REAL NOT NULL, `longitude` REAL NOT NULL, `cover_image_url` TEXT, `thumbnail_image_url` TEXT, PRIMARY KEY(`store_uuid`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`store_uuid` TEXT NOT NULL, `store_name` TEXT, `latitude` REAL NOT NULL, `longitude` REAL NOT NULL, `cover_image_url` TEXT, `thumbnail_image_url` TEXT, `store_phone_number` TEXT, `store_type` TEXT, `address` TEXT, PRIMARY KEY(`store_uuid`))",
         "fields": [
           {
             "fieldPath": "uuid",
@@ -153,6 +153,24 @@
           {
             "fieldPath": "thumbnailUrl",
             "columnName": "thumbnail_image_url",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "phoneNumber",
+            "columnName": "store_phone_number",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "storeType",
+            "columnName": "store_type",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "address",
+            "columnName": "address",
             "affinity": "TEXT",
             "notNull": false
           }
@@ -448,7 +466,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"9ddf3939b12aa4f741141535755d08e0\")"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"ee9a8330cd5034ff1c1834eabdc23825\")"
     ]
   }
 }
