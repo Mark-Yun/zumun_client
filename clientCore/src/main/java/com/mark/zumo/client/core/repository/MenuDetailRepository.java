@@ -8,8 +8,6 @@ package com.mark.zumo.client.core.repository;
 
 import com.mark.zumo.client.core.appserver.AppServerServiceProvider;
 import com.mark.zumo.client.core.appserver.NetworkRepository;
-import com.mark.zumo.client.core.appserver.request.RequestUpdateCategoriesOfMenu;
-import com.mark.zumo.client.core.appserver.request.RequestUpdateMenusOfCategory;
 import com.mark.zumo.client.core.dao.AppDatabaseProvider;
 import com.mark.zumo.client.core.dao.DiskRepository;
 import com.mark.zumo.client.core.entity.MenuDetail;
@@ -69,16 +67,16 @@ public enum MenuDetailRepository {
     }
 
     public Maybe<List<MenuDetail>> updateCategoriesOfMenu(final String menuUuid,
-                                                          final RequestUpdateCategoriesOfMenu request) {
-        return networkRepository().updateCategoriesOfMenu(menuUuid, request)
-                .doOnSuccess(menuDetailList -> diskRepository.deleteMenuDetailListByMenuUuid(menuUuid))
+                                                          final List<MenuDetail> menuDetailList) {
+        return networkRepository().updateCategoriesOfMenu(menuUuid, menuDetailList)
+                .doOnSuccess(result -> diskRepository.deleteMenuDetailListByMenuUuid(menuUuid))
                 .doOnSuccess(diskRepository::insertMenuDetailList);
     }
 
     public Maybe<List<MenuDetail>> updateMenusOfCategory(final String categoryUuid,
-                                                         final RequestUpdateMenusOfCategory request) {
-        return networkRepository().updateMenusOfCategory(categoryUuid, request)
-                .doOnSuccess(menuDetailList -> diskRepository.deleteMenuDetailListByCategoryUuid(categoryUuid))
+                                                         final List<MenuDetail> menuDetailList) {
+        return networkRepository().updateMenusOfCategory(categoryUuid, menuDetailList)
+                .doOnSuccess(result -> diskRepository.deleteMenuDetailListByCategoryUuid(categoryUuid))
                 .doOnSuccess(diskRepository::insertMenuDetailList);
     }
 }

@@ -41,6 +41,43 @@ public class MenuDetail implements Serializable {
         this.storeUuid = storeUuid;
     }
 
+    public static class Builder {
+        private long id;
+        private String menuUuid;
+        private String menuCategoryUuid;
+        private int menuSeqNum;
+        private String storeUuid;
+
+        public Builder setId(final long id) {
+            this.id = id;
+            return this;
+        }
+
+        public Builder setMenuUuid(final String menuUuid) {
+            this.menuUuid = menuUuid;
+            return this;
+        }
+
+        public Builder setMenuCategoryUuid(final String menuCategoryUuid) {
+            this.menuCategoryUuid = menuCategoryUuid;
+            return this;
+        }
+
+        public Builder setMenuSeqNum(final int menuSeqNum) {
+            this.menuSeqNum = menuSeqNum;
+            return this;
+        }
+
+        public Builder setStoreUuid(final String storeUuid) {
+            this.storeUuid = storeUuid;
+            return this;
+        }
+
+        public MenuDetail build() {
+            return new MenuDetail(id, menuUuid, menuCategoryUuid, menuSeqNum, storeUuid);
+        }
+    }
+
     @Override
     public String toString() {
         return EntityHelper.toString(this, this.getClass());

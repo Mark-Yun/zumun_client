@@ -8,8 +8,6 @@ package com.mark.zumo.client.store.model;
 
 import android.util.Log;
 
-import com.mark.zumo.client.core.appserver.request.RequestUpdateCategoriesOfMenu;
-import com.mark.zumo.client.core.appserver.request.RequestUpdateMenusOfCategory;
 import com.mark.zumo.client.core.entity.Menu;
 import com.mark.zumo.client.core.entity.MenuCategory;
 import com.mark.zumo.client.core.entity.MenuDetail;
@@ -162,19 +160,31 @@ public enum MenuManager {
     public Maybe<List<MenuCategory>> updateCategoriesOfMenu(final String storeUuid,
                                                             final String menuUuid,
                                                             final Set<String> categoryUuidSet) {
-        RequestUpdateCategoriesOfMenu requestUpdateCategoriesOfMenu = new RequestUpdateCategoriesOfMenu(storeUuid, categoryUuidSet);
-        return menuDetailRepository.updateCategoriesOfMenu(menuUuid, requestUpdateCategoriesOfMenu)
+        return Observable.fromIterable(categoryUuidSet)
+                .map(categoryUuid -> new MenuDetail.Builder()
+                        .setMenuCategoryUuid(categoryUuid)
+                        .setMenuUuid(menuUuid)
+                        .setStoreUuid(storeUuid)
+                        .build()).toList().toMaybe()
+                .flatMap(menuDetailList -> menuDetailRepository.updateCategoriesOfMenu(menuUuid, menuDetailList))
                 .flatMapObservable(Observable::fromIterable)
                 .map(menuDetail -> menuDetail.menuCategoryUuid)
                 .flatMapMaybe(categoryRepository::getMenuCategoryFromDisk)
-                .toList().toMaybe();
+                .toList().toMaybe()
+                .subscribeOn(Schedulers.io());
     }
 
     public Maybe<List<MenuDetail>> updateMenusOfCategory(final String storeUuid,
                                                          final String categoryUuid,
                                                          final List<String> menuUuidList) {
-        RequestUpdateMenusOfCategory request = new RequestUpdateMenusOfCategory(storeUuid, menuUuidList);
-        return menuDetailRepository.updateMenusOfCategory(categoryUuid, request)
+        return Observable.fromIterable(menuUuidList)
+                .map(menuUuid -> new MenuDetail.Builder()
+                        .setMenuUuid(menuUuid)
+                        .setStoreUuid(storeUuid)
+                        .setMenuCategoryUuid(categoryUuid)
+                        .setMenuSeqNum(menuUuidList.indexOf(menuUuid))
+                        .build()).toList().toMaybe()
+                .flatMap(menuDetailList -> menuDetailRepository.updateMenusOfCategory(categoryUuid, menuDetailList))
                 .subscribeOn(Schedulers.io());
     }
 }

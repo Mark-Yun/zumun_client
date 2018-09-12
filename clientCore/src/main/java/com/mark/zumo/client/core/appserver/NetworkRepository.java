@@ -7,7 +7,6 @@
 package com.mark.zumo.client.core.appserver;
 
 import com.mark.zumo.client.core.appserver.request.RequestUpdateCategoriesOfMenu;
-import com.mark.zumo.client.core.appserver.request.RequestUpdateMenusOfCategory;
 import com.mark.zumo.client.core.entity.Menu;
 import com.mark.zumo.client.core.entity.MenuCategory;
 import com.mark.zumo.client.core.entity.MenuDetail;
@@ -71,10 +70,6 @@ public interface NetworkRepository {
     Maybe<Menu> updateCategoryInMenu(@Path(Menu.Schema.uuid) String menuUuid,
                                      @Body MenuCategory menuCategory);
 
-    @PUT("menu/{" + RequestUpdateCategoriesOfMenu.Schema.menuUuid + "}/category")
-    Maybe<List<MenuDetail>> updateCategoriesOfMenu(@Path(RequestUpdateCategoriesOfMenu.Schema.menuUuid) String menuUuid,
-                                                   @Body RequestUpdateCategoriesOfMenu requestUpdateCategoriesOfMenu);
-
     @GET("menu/detail")
     Maybe<List<MenuDetail>> getMenuDetailByStoreUuid(@Query(MenuDetail.Schema.storeUuid) String storeUuid);
 
@@ -94,9 +89,13 @@ public interface NetworkRepository {
     @GET("category/{" + MenuCategory.Schema.uuid + "}")
     Maybe<MenuCategory> getMenuCategory(@Path(MenuCategory.Schema.uuid) final String menuCategoryUuid);
 
-    @PUT("category/{" + MenuCategory.Schema.uuid + "}/menu_list")
-    Maybe<List<MenuDetail>> updateMenusOfCategory(@Path(MenuCategory.Schema.uuid) String categoryUuid,
-                                                  @Body RequestUpdateMenusOfCategory request);
+    @PUT("menu/detail/")
+    Maybe<List<MenuDetail>> updateCategoriesOfMenu(@Query(RequestUpdateCategoriesOfMenu.Schema.menuUuid) String menuUuid,
+                                                   @Body List<MenuDetail> menuDetailList);
+
+    @PUT("menu/detail")
+    Maybe<List<MenuDetail>> updateMenusOfCategory(@Query(MenuCategory.Schema.uuid) String categoryUuid,
+                                                  @Body List<MenuDetail> menuDetailList);
 
 
     @POST("category")
