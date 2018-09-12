@@ -62,7 +62,6 @@ public class OrderDetailFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_order_detail, container, false);
         ButterKnife.bind(this, view);
 
-        inflateStoreInfo();
         inflateOrderInfo();
         inflateOrderDetailRecyclerView();
         inflateStepView();
@@ -85,8 +84,7 @@ public class OrderDetailFragment extends Fragment {
         orderViewModel.getMenuOrderDetail(orderUuid).observe(this, adapter::setOrderDetailList);
     }
 
-    private void inflateStoreInfo() {
-        String storeUuid = getArguments().getString(OrderDetailActivity.KEY_STORE_UUID);
+    private void inflateStoreInfo(String storeUuid) {
         orderViewModel.getStoreData(storeUuid).observe(this, this::onLoadStore);
     }
 
@@ -101,7 +99,6 @@ public class OrderDetailFragment extends Fragment {
 
     private void inflateOrderInfo() {
         String orderUuid = getArguments().getString(OrderDetailActivity.KEY_ORDER_UUID);
-
 
         ArrayList<String> steps = new ArrayList<String>() {{
             add(getString(MenuOrder.State.CREATED.stringRes));
@@ -123,6 +120,8 @@ public class OrderDetailFragment extends Fragment {
         MenuOrder.State state = MenuOrder.State.of(menuOrder.state);
         cancelOrder.setVisibility(state == MenuOrder.State.REQUESTED ? View.VISIBLE : View.GONE);
         orderStepView.go(state.ordinal(), true);
+
+        inflateStoreInfo(menuOrder.storeUuid);
     }
 
     @OnClick(R.id.cancel_order)

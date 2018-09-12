@@ -92,7 +92,6 @@ class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.ViewHolder> {
             TouchResponse.small();
             Intent intent = new Intent(v.getContext(), OrderDetailActivity.class);
             intent.putExtra(OrderDetailActivity.KEY_ORDER_UUID, menuOrder.uuid);
-            intent.putExtra(OrderDetailActivity.KEY_STORE_UUID, menuOrder.storeUuid);
             v.getContext().startActivity(intent);
         });
     }

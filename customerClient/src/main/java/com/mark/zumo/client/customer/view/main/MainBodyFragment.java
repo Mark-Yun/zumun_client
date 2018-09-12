@@ -23,6 +23,7 @@ import com.mark.zumo.client.core.entity.Store;
 import com.mark.zumo.client.customer.R;
 import com.mark.zumo.client.customer.view.cart.CartActivity;
 import com.mark.zumo.client.customer.view.menu.detail.MenuDetailActivity;
+import com.mark.zumo.client.customer.view.order.detail.OrderDetailActivity;
 import com.mark.zumo.client.customer.view.payment.PaymentActivity;
 import com.mark.zumo.client.customer.viewmodel.MainViewModel;
 
@@ -100,6 +101,7 @@ public class MainBodyFragment extends Fragment {
                 switch (resultCode) {
                     case CartActivity.RESULT_CODE_PAYMENT_SUCCESS:
                         String orderUuid = data.getStringExtra(PaymentActivity.KEY_ORDER_UUID);
+                        onSuccessPayment(orderUuid);
                         break;
 
                     case CartActivity.RESULT_CODE_PAYMENT_FAILED:
@@ -111,6 +113,7 @@ public class MainBodyFragment extends Fragment {
                 switch (resultCode) {
                     case MenuDetailActivity.RESULT_CODE_PAYMENT_SUCCESS:
                         String orderUuid = data.getStringExtra(PaymentActivity.KEY_ORDER_UUID);
+                        onSuccessPayment(orderUuid);
                         break;
 
                     case MenuDetailActivity.RESULT_CODE_PAYMENT_FAILED:
@@ -120,5 +123,12 @@ public class MainBodyFragment extends Fragment {
         }
 
         super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    private void onSuccessPayment(@NonNull String orderUuid) {
+        Intent intent = new Intent();
+        intent.setClass(getContext(), OrderDetailActivity.class);
+        intent.putExtra(OrderDetailActivity.KEY_ORDER_UUID, orderUuid);
+        startActivity(intent);
     }
 }

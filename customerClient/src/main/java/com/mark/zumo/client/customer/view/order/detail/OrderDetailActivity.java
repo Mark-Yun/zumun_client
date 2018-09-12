@@ -19,7 +19,6 @@ import com.mark.zumo.client.customer.R;
 public class OrderDetailActivity extends AppCompatActivity {
 
     public final static String KEY_ORDER_UUID = "menu_order_uuid";
-    public final static String KEY_STORE_UUID = "store_uuid";
 
     @Override
     protected void onCreate(@Nullable final Bundle savedInstanceState) {
