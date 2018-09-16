@@ -22,7 +22,6 @@ import java.util.List;
 import io.reactivex.Maybe;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
-import retrofit2.http.Header;
 import retrofit2.http.POST;
 
 /**
@@ -53,8 +52,7 @@ public interface KakaoPayService {
 
     @FormUrlEncoded
     @POST("/v1/payment/approve")
-    Maybe<PaymentApprovalResponse> approvalPayment(@Header("Authorization") String token,
-                                                   @Field("cid") String cId,
+    Maybe<PaymentApprovalResponse> approvalPayment(@Field("cid") String cId,
                                                    @Field("tid") String tId,
                                                    @Field("partner_order_id") String partnerOrderId,
                                                    @Field("partner_user_id") String partnerUserId,

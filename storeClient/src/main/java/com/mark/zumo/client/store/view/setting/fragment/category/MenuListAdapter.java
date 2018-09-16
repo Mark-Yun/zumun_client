@@ -59,12 +59,7 @@ public class MenuListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     }
 
     List<String> getSelectedMenuUuidList() {
-        List<String> list = new ArrayList<>();
-        for (String menuUuid : checkedMenuList) {
-            list.add(menuUuid);
-        }
-
-        return list;
+        return new ArrayList<>(checkedMenuList);
     }
 
     String getCategoryUuid() {

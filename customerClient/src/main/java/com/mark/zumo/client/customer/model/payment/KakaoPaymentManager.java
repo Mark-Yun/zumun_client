@@ -6,13 +6,11 @@
 
 package com.mark.zumo.client.customer.model.payment;
 
-import android.util.Log;
-
 import com.mark.zumo.client.core.entity.MenuOrder;
 import com.mark.zumo.client.core.payment.kakao.KakaoPayAdapter;
+import com.mark.zumo.client.core.payment.kakao.entity.PaymentApprovalResponse;
 import com.mark.zumo.client.core.payment.kakao.entity.PaymentReadyRequest;
 import com.mark.zumo.client.core.payment.kakao.entity.PaymentReadyResponse;
-import com.mark.zumo.client.core.payment.kakao.entity.PaymentToken;
 import com.mark.zumo.client.core.payment.kakao.server.KakaoPayService;
 
 import io.reactivex.Maybe;
@@ -31,13 +29,6 @@ public enum KakaoPaymentManager {
 
     KakaoPaymentManager() {
         kakaoPayAdapter = KakaoPayAdapter.INSTANCE;
-    }
-
-    public Maybe<PaymentToken> createPaymentToken(String menuOrderUuid, String tid, String pgToken) {
-        PaymentToken paymentToken = new PaymentToken(menuOrderUuid, tid, pgToken, accessToken);
-        Log.d(TAG, "createPaymentToken: " + paymentToken);
-        return kakaoPayAdapter.createPaymentToken(paymentToken)
-                .subscribeOn(Schedulers.io());
     }
 
     public void setAccessToken(String accessToken) {
@@ -61,5 +52,10 @@ public enum KakaoPaymentManager {
 
         return kakaoPayAdapter.preparePayment(paymentReadyRequest)
                 .subscribeOn(Schedulers.io());
+    }
+
+    public Maybe<PaymentApprovalResponse> approvalPayment(final MenuOrder menuOrder, final String pgToken, final String tId) {
+        return kakaoPayAdapter.approvalPayment(menuOrder, pgToken, tId);
+        //TODO: send Sns Notification to Store app
     }
 }

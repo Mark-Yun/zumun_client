@@ -12,6 +12,7 @@ import com.mark.zumo.client.core.dao.AppDatabaseProvider;
 import com.mark.zumo.client.core.dao.DiskRepository;
 import com.mark.zumo.client.core.entity.MenuOrder;
 import com.mark.zumo.client.core.entity.OrderDetail;
+import com.mark.zumo.client.core.entity.util.EntityComparator;
 import com.mark.zumo.client.core.entity.util.ListComparator;
 import com.mark.zumo.client.core.payment.kakao.entity.PaymentToken;
 
@@ -68,6 +69,7 @@ public enum OrderRepository {
         Maybe<MenuOrder> menuOrderDB = getMenuOrderFromDisk(orderUuid);
         Maybe<MenuOrder> menuOrderApi = getMenuOrderFromApi(orderUuid);
         return Maybe.merge(menuOrderDB, menuOrderApi)
+                .distinctUntilChanged(new EntityComparator<>())
                 .toObservable();
     }
 

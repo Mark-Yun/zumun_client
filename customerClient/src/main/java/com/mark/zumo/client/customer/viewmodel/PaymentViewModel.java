@@ -12,7 +12,7 @@ import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.support.annotation.NonNull;
 
-import com.mark.zumo.client.core.payment.kakao.entity.PaymentToken;
+import com.mark.zumo.client.customer.model.OrderManager;
 import com.mark.zumo.client.customer.model.payment.KakaoPaymentManager;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -22,18 +22,22 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
  */
 public class PaymentViewModel extends AndroidViewModel {
     private final KakaoPaymentManager kakaoPaymentManager;
+    private final OrderManager orderManager;
 
     public PaymentViewModel(@NonNull final Application application) {
         super(application);
         kakaoPaymentManager = KakaoPaymentManager.INSTANCE;
+        orderManager = OrderManager.INSTANCE;
     }
 
-    public LiveData<PaymentToken> postKakaoTokenInfo(String menuOrderUuid, String tid, String pgToken) {
-        MutableLiveData<PaymentToken> liveData = new MutableLiveData<>();
+    public LiveData<String> approvePayment(String menuOrderUuid, String tid, String pgToken) {
+        MutableLiveData<String> liveData = new MutableLiveData<>();
 
-        kakaoPaymentManager.createPaymentToken(menuOrderUuid, tid, pgToken)
+        orderManager.getMenuOrderFromDisk(menuOrderUuid)
+                .flatMap(order -> kakaoPaymentManager.approvalPayment(order, pgToken, tid))
+                .map(paymentApprovalResponse -> paymentApprovalResponse.partnerOrderId)
                 .observeOn(AndroidSchedulers.mainThread())
-                .doOnSuccess(liveData::setValue)
+                .doOnSuccess(x -> liveData.setValue(menuOrderUuid))
                 .subscribe();
 
         return liveData;

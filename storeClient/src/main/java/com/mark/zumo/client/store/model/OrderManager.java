@@ -10,8 +10,6 @@ import android.util.Log;
 
 import com.mark.zumo.client.core.entity.MenuOrder;
 import com.mark.zumo.client.core.entity.OrderDetail;
-import com.mark.zumo.client.core.payment.kakao.KakaoPayAdapter;
-import com.mark.zumo.client.core.payment.kakao.entity.PaymentToken;
 import com.mark.zumo.client.core.repository.OrderRepository;
 import com.mark.zumo.client.store.model.entity.OrderBucket;
 
@@ -31,8 +29,8 @@ public enum OrderManager {
     INSTANCE;
 
     private static final String TAG = "OrderManager";
+
     private final OrderRepository orderRepository;
-    private final KakaoPayAdapter kakaoPayAdapter;
 
     private OrderBucket canceledOrderBucket;
     private OrderBucket requestedOrderBucket;
@@ -40,18 +38,16 @@ public enum OrderManager {
 
     OrderManager() {
         orderRepository = OrderRepository.INSTANCE;
-        kakaoPayAdapter = KakaoPayAdapter.INSTANCE;
     }
 
-    public void putRequestedOrderBucket(PaymentToken paymentToken) {
-        orderRepository.savePaymentToken(paymentToken);
-        Log.d(TAG, "putRequestedOrderBucket: " + paymentToken);
+    public void putRequestedOrderBucket(String menuOrderUuid) {
+        Log.d(TAG, "putRequestedOrderBucket: " + menuOrderUuid);
 
         if (requestedOrderBucket == null) {
             return;
         }
 
-        orderRepository.getMenuOrderFromApi(paymentToken.menuOrderUuid)
+        orderRepository.getMenuOrderFromApi(menuOrderUuid)
                 .subscribeOn(Schedulers.io())
                 .doOnSuccess(requestedOrderBucket::addOrder)
                 .subscribe();
@@ -122,10 +118,7 @@ public enum OrderManager {
     }
 
     public Maybe<MenuOrder> acceptOrder(MenuOrder menuOrder) {
-        return orderRepository.getPaymentToken(menuOrder.uuid)
-                .flatMap(paymentToken -> kakaoPayAdapter.approvalPayment(paymentToken, menuOrder))
-                .map(paymentApprovalResponse -> paymentApprovalResponse.partnerOrderId)
-                .flatMap(orderUuid -> orderRepository.updateMenuOrderState(orderUuid, MenuOrder.State.ACCEPTED.ordinal()))
+        return orderRepository.updateMenuOrderState(menuOrder.uuid, MenuOrder.State.ACCEPTED.ordinal())
                 .doOnSuccess(x -> requestedOrderBucket.notifyOnNext())
                 .subscribeOn(Schedulers.io());
     }

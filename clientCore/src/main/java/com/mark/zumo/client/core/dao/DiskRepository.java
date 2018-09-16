@@ -19,7 +19,6 @@ import com.mark.zumo.client.core.entity.MenuOption;
 import com.mark.zumo.client.core.entity.MenuOrder;
 import com.mark.zumo.client.core.entity.OrderDetail;
 import com.mark.zumo.client.core.entity.Store;
-import com.mark.zumo.client.core.entity.VisitStore;
 import com.mark.zumo.client.core.entity.user.GuestUser;
 import com.mark.zumo.client.core.payment.kakao.entity.PaymentToken;
 
@@ -124,16 +123,6 @@ public interface DiskRepository {
 
     @Query("SELECT * FROM " + MenuCategory.Schema.table + " WHERE menu_category_uuid LIKE :menu_category_uuid LIMIT 1")
     Maybe<MenuCategory> getMenuCategory(String menu_category_uuid);
-
-
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    void insertVisitStore(VisitStore visitStore);
-
-    @Query("SELECT store_uuid, visit_date FROM" +
-            "(SELECT * FROM " + VisitStore.TABLE + ")" +
-            "GROUP BY store_uuid ORDER BY visit_date DESC LIMIT :limit")
-    Maybe<List<VisitStore>> getLatestVisitStore(int limit);
-
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertPaymentToken(PaymentToken paymentToken);

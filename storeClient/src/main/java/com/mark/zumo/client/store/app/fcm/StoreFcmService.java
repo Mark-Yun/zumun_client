@@ -10,8 +10,6 @@ import android.util.Log;
 
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
-import com.mark.zumo.client.core.payment.kakao.entity.PaymentToken;
-import com.mark.zumo.client.store.model.OrderManager;
 
 import java.util.Map;
 
@@ -21,17 +19,12 @@ import java.util.Map;
 public class StoreFcmService extends FirebaseMessagingService {
     private final static String TAG = "StoreFcmService";
 
-    private final static String KEY_ORDER_UUID = "menu_order_uuid";
-    private final static String KEY_TID = "tid";
-    private final static String KEY_KAKAO_ACCESS_TOKEN = "access_token";
-    private final static String KEY_PG_TOKEN = "pg_token";
-
-    private OrderManager orderManager;
+    private StoreMessageHandler storeMessageHandler;
 
     @Override
     public void onCreate() {
         super.onCreate();
-        orderManager = OrderManager.INSTANCE;
+        storeMessageHandler = StoreMessageHandler.INSTANCE;
     }
 
     @Override
@@ -44,15 +37,7 @@ public class StoreFcmService extends FirebaseMessagingService {
         Map<String, String> data = remoteMessage.getData();
         if (data.size() > 0) {
             Log.d(TAG, "Message data payload: " + data);
-
-            String menuOrderUuid = data.get(KEY_ORDER_UUID);
-            String tid = data.get(KEY_TID);
-            String accessToken = data.get(KEY_KAKAO_ACCESS_TOKEN);
-            String pgToken = data.get(KEY_PG_TOKEN);
-
-            PaymentToken paymentToken = new PaymentToken(menuOrderUuid, tid, pgToken, accessToken);
-
-            orderManager.putRequestedOrderBucket(paymentToken);
+            storeMessageHandler.handleMessage(data);
         }
 
         // Check if message contains a notification payload.

@@ -35,21 +35,20 @@ public enum KakaoPayAdapter {
     INSTANCE;
 
     private static final String TAG = "KakaoPayAdapter";
-
-    private KakaoPayService kakaoPayService;
     private final PaymentService paymentService;
+    private KakaoPayService kakaoPayService;
 
     KakaoPayAdapter() {
         paymentService = AppServerServiceProvider.INSTANCE.buildPaymentService();
     }
 
-    public void buildService(String accessToken) {
-        kakaoPayService = KakaoPayServiceProvider.INSTANCE.buildService(accessToken);
+    public KakaoPayService buildService(String accessToken) {
+        return kakaoPayService = KakaoPayServiceProvider.INSTANCE.buildService(accessToken);
     }
 
     public Maybe<PaymentToken> createPaymentToken(PaymentToken paymentToken) {
         return paymentService.createPaymentToken(paymentToken)
-                .retryWhen(flowable -> flowable.flatMap(error -> Flowable.timer(3, TimeUnit.SECONDS)))
+                .retryWhen(flowable -> flowable.flatMap(error -> Flowable.timer(1, TimeUnit.SECONDS)))
                 .retry(3);
     }
 
@@ -74,26 +73,17 @@ public enum KakaoPayAdapter {
                 .subscribeOn(Schedulers.io());
     }
 
-    public Maybe<PaymentApprovalResponse> approvalPayment(final PaymentToken paymentToken,
-                                                          final MenuOrder menuOrder) {
-
-        String accessToken = paymentToken.kakaoAccessToken;
-        String pgToken = paymentToken.pgToken;
-        String tid = paymentToken.tid;
-
+    public Maybe<PaymentApprovalResponse> approvalPayment(final MenuOrder menuOrder, final String pgToken, final String tId) {
         PaymentApprovalRequest paymentApprovalRequest = new PaymentApprovalRequest.Builder()
                 .setcId(KakaoPayService.CID)
                 .setPartnerOrderId(menuOrder.uuid)
                 .setPartnerUserId(menuOrder.customerUuid)
                 .setPgToken(pgToken)
-                .settId(tid)
+                .settId(tId)
                 .setTotalAmount(menuOrder.totalPrice)
                 .build();
 
-        buildService(accessToken);
-
-        return kakaoPayService.approvalPayment(accessToken,
-                paymentApprovalRequest.cId,
+        return kakaoPayService.approvalPayment(paymentApprovalRequest.cId,
                 paymentApprovalRequest.tId,
                 paymentApprovalRequest.partnerOrderId,
                 paymentApprovalRequest.partnerUserId,
