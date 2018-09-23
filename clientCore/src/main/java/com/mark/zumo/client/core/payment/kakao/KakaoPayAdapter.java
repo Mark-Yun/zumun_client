@@ -11,20 +11,14 @@
  */
 package com.mark.zumo.client.core.payment.kakao;
 
-import com.mark.zumo.client.core.appserver.AppServerServiceProvider;
-import com.mark.zumo.client.core.appserver.PaymentService;
 import com.mark.zumo.client.core.entity.MenuOrder;
 import com.mark.zumo.client.core.payment.kakao.entity.PaymentApprovalRequest;
 import com.mark.zumo.client.core.payment.kakao.entity.PaymentApprovalResponse;
 import com.mark.zumo.client.core.payment.kakao.entity.PaymentReadyRequest;
 import com.mark.zumo.client.core.payment.kakao.entity.PaymentReadyResponse;
-import com.mark.zumo.client.core.payment.kakao.entity.PaymentToken;
 import com.mark.zumo.client.core.payment.kakao.server.KakaoPayService;
 import com.mark.zumo.client.core.payment.kakao.server.KakaoPayServiceProvider;
 
-import java.util.concurrent.TimeUnit;
-
-import io.reactivex.Flowable;
 import io.reactivex.Maybe;
 import io.reactivex.schedulers.Schedulers;
 
@@ -35,22 +29,15 @@ public enum KakaoPayAdapter {
     INSTANCE;
 
     private static final String TAG = "KakaoPayAdapter";
-    private final PaymentService paymentService;
     private KakaoPayService kakaoPayService;
 
     KakaoPayAdapter() {
-        paymentService = AppServerServiceProvider.INSTANCE.buildPaymentService();
     }
 
     public KakaoPayService buildService(String accessToken) {
         return kakaoPayService = KakaoPayServiceProvider.INSTANCE.buildService(accessToken);
     }
 
-    public Maybe<PaymentToken> createPaymentToken(PaymentToken paymentToken) {
-        return paymentService.createPaymentToken(paymentToken)
-                .retryWhen(flowable -> flowable.flatMap(error -> Flowable.timer(1, TimeUnit.SECONDS)))
-                .retry(3);
-    }
 
     public Maybe<PaymentReadyResponse> preparePayment(final PaymentReadyRequest paymentReadyRequest) {
         return kakaoPayService.readyPayment(

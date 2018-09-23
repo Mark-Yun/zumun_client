@@ -16,8 +16,6 @@ import android.util.Log;
 
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
-import com.mark.zumo.client.core.entity.MenuOrder;
-import com.mark.zumo.client.customer.model.NotificationHandler;
 
 import java.util.Map;
 
@@ -25,14 +23,16 @@ import java.util.Map;
  * Created by mark on 18. 6. 8.
  */
 public class CustomerFcmService extends FirebaseMessagingService {
+
     private final static String TAG = "StoreFcmService";
 
-    private NotificationHandler notificationHandler;
+    private CustomerMessageHandler customerMessageHandler;
 
     @Override
     public void onCreate() {
         super.onCreate();
-        notificationHandler = NotificationHandler.INSTANCE;
+
+        customerMessageHandler = CustomerMessageHandler.INSTANCE;
     }
 
     @Override
@@ -44,19 +44,7 @@ public class CustomerFcmService extends FirebaseMessagingService {
         Map<String, String> data = remoteMessage.getData();
         if (data.size() > 0) {
             Log.d(TAG, "Message data payload: " + data);
-
-            String uuid = data.get(MenuOrder.Schema.uuid);
-            String orderName = data.get(MenuOrder.Schema.orderName);
-            String orderNumber = data.get(MenuOrder.Schema.orderNumber);
-            long createdDate = Long.parseLong(data.get(MenuOrder.Schema.createdDate));
-            String customerUuid = data.get(MenuOrder.Schema.customerUuid);
-            int state = Integer.parseInt(data.get(MenuOrder.Schema.state));
-            String storeUuid = data.get(MenuOrder.Schema.storeUuid);
-            int totalPrice = Integer.parseInt(data.get(MenuOrder.Schema.totalPrice));
-            int totalQuantity = Integer.parseInt(data.get(MenuOrder.Schema.totalQuantity));
-
-            MenuOrder menuOrder = new MenuOrder(uuid, orderName, customerUuid, storeUuid, orderNumber, createdDate, totalQuantity, totalPrice, state);
-            notificationHandler.requestOrderProgressNotification(menuOrder);
+            customerMessageHandler.handleMessage(data);
         }
 
         // Check if message contains a notification payload.

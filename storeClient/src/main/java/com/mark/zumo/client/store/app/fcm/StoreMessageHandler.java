@@ -6,9 +6,9 @@
 
 package com.mark.zumo.client.store.app.fcm;
 
-import com.mark.zumo.client.core.appserver.message.MessageFactory;
-import com.mark.zumo.client.core.appserver.message.OrderCreatedMessage;
-import com.mark.zumo.client.core.appserver.message.SnsMessage;
+import com.mark.zumo.client.core.appserver.request.message.MessageFactory;
+import com.mark.zumo.client.core.appserver.request.message.OrderCreatedMessage;
+import com.mark.zumo.client.core.appserver.request.message.SnsMessage;
 import com.mark.zumo.client.store.model.OrderManager;
 
 import java.util.Map;

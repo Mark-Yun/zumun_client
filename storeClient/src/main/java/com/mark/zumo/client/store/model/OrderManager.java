@@ -10,6 +10,7 @@ import android.util.Log;
 
 import com.mark.zumo.client.core.entity.MenuOrder;
 import com.mark.zumo.client.core.entity.OrderDetail;
+import com.mark.zumo.client.core.repository.MessageHandler;
 import com.mark.zumo.client.core.repository.OrderRepository;
 import com.mark.zumo.client.store.model.entity.OrderBucket;
 
@@ -31,6 +32,8 @@ public enum OrderManager {
     private static final String TAG = "OrderManager";
 
     private final OrderRepository orderRepository;
+    private final MessageHandler messageHandler;
+    private final SessionManager sessionManager;
 
     private OrderBucket canceledOrderBucket;
     private OrderBucket requestedOrderBucket;
@@ -38,6 +41,8 @@ public enum OrderManager {
 
     OrderManager() {
         orderRepository = OrderRepository.INSTANCE;
+        messageHandler = MessageHandler.INSTANCE;
+        sessionManager = SessionManager.INSTANCE;
     }
 
     public void putRequestedOrderBucket(String menuOrderUuid) {
@@ -118,13 +123,16 @@ public enum OrderManager {
     }
 
     public Maybe<MenuOrder> acceptOrder(MenuOrder menuOrder) {
-        return orderRepository.updateMenuOrderState(menuOrder.uuid, MenuOrder.State.ACCEPTED.ordinal())
+        return sessionManager.getSessionStore()
+                .flatMap(x -> orderRepository.updateMenuOrderState(menuOrder.uuid, MenuOrder.State.ACCEPTED.ordinal()))
+                .flatMap(messageHandler::sendMessageAcceptedOrder)
                 .doOnSuccess(x -> requestedOrderBucket.notifyOnNext())
                 .subscribeOn(Schedulers.io());
     }
 
     public Maybe<MenuOrder> rejectOrder(String orderUuid) {
-        return orderRepository.updateMenuOrderState(orderUuid, MenuOrder.State.REJECTED.ordinal())
+        return sessionManager.getSessionStore()
+                .flatMap(x -> orderRepository.updateMenuOrderState(orderUuid, MenuOrder.State.REJECTED.ordinal()))
                 .map(menuOrder -> menuOrder.uuid)
                 .map(requestedOrderBucket::removeOrder)
                 .doOnSuccess(canceledOrderBucket::addOrder)
@@ -132,7 +140,9 @@ public enum OrderManager {
     }
 
     public Maybe<MenuOrder> completeOrder(String orderUuid) {
-        return orderRepository.updateMenuOrderState(orderUuid, MenuOrder.State.COMPLETE.ordinal())
+        return sessionManager.getSessionStore()
+                .flatMap(x -> orderRepository.updateMenuOrderState(orderUuid, MenuOrder.State.COMPLETE.ordinal()))
+                .flatMap(messageHandler::sendMessageCompleteOrder)
                 .map(menuOrder -> menuOrder.uuid)
                 .map(requestedOrderBucket::removeOrder)
                 .doOnSuccess(completeOrderBucket::addOrder)

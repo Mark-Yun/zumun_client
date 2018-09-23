@@ -4,19 +4,14 @@
  * Proprietary and confidential
  */
 
-package com.mark.zumo.client.core.appserver.message;
-
-import com.google.gson.annotations.SerializedName;
+package com.mark.zumo.client.core.appserver.request.message;
 
 /**
  * Created by mark on 18. 9. 16.
  */
 public class OrderAcceptedMessage extends SnsMessage {
-    @SerializedName(SnsMessageContract.Order.key)
-    public final String orderUuid;
 
     public OrderAcceptedMessage(final String orderUuid) {
-        super(SnsMessageContract.MessageType.orderAccepted);
-        this.orderUuid = orderUuid;
+        super(SnsMessageContract.MessageType.orderAccepted, orderUuid);
     }
 }

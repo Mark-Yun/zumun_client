@@ -3,7 +3,7 @@
  * Unauthorized copying of this file, via any medium is strictly prohibited
  * Proprietary and confidential
  */
-package com.mark.zumo.client.core.appserver.message;
+package com.mark.zumo.client.core.appserver.request.message;
 
 /**
  * Created by mark on 18. 9. 16.
@@ -11,7 +11,7 @@ package com.mark.zumo.client.core.appserver.message;
 public interface SnsMessageContract {
 
     interface MessageType {
-        String key = "message_type";
+        String key = "sns_message_type";
         String orderCreated = "order_created";
         String orderAccepted = "order_accepted";
         String orderComplete = "order_complete";

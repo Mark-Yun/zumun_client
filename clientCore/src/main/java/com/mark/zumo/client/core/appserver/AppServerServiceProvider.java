@@ -160,8 +160,8 @@ public enum AppServerServiceProvider {
                 .create(NetworkRepository.class);
     }
 
-    public PaymentService buildPaymentService() {
-        Interceptor interceptor = interceptor(headerBundle);
+    public PaymentService buildPaymentService(Bundle bundle) {
+        Interceptor interceptor = interceptor(bundle);
         OkHttpClient okHttpClient = okHttpClient(interceptor);
 
         return paymentService = new Retrofit.Builder()

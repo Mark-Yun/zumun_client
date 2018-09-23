@@ -4,7 +4,9 @@
  * Proprietary and confidential
  */
 
-package com.mark.zumo.client.core.appserver.message;
+package com.mark.zumo.client.core.appserver.request.message;
+
+import android.text.TextUtils;
 
 import java.util.Map;
 
@@ -15,6 +17,10 @@ public final class MessageFactory {
 
     public static SnsMessage create(Map<String, String> data) {
         String messageType = data.get(SnsMessageContract.MessageType.key);
+        if (TextUtils.isEmpty(messageType)) {
+            return null;
+        }
+
         switch (messageType) {
             case SnsMessageContract.MessageType.orderCreated:
                 String orderUuid = data.get(SnsMessageContract.Order.key);

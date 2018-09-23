@@ -116,6 +116,7 @@ public enum SessionRepository {
         }
 
         public NetworkRepository build() {
+            AppServerServiceProvider.INSTANCE.buildPaymentService(bundle);
             return AppServerServiceProvider.INSTANCE.buildNetworkRepository(bundle);
         }
     }

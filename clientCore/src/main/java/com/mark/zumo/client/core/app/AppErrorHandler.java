@@ -48,12 +48,14 @@ public class AppErrorHandler {
 
     public static void setup() {
         RxJavaPlugins.setErrorHandler(e -> {
+            e.printStackTrace();
             if (e instanceof UndeliverableException || e instanceof OnErrorNotImplementedException) {
                 e = e.getCause();
             }
 
-            Log.e(TAG, "an error caught.");
+            Log.e(TAG, "an error caught.", e);
             if (e != null && e.getMessage() != null) {
+                Log.e(TAG, e.getMessage());
                 Log.e(TAG, e.getMessage());
             }
             if (e instanceof HttpException) {

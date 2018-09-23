@@ -31,6 +31,7 @@ public class StoreServerApp extends Application {
         ContextInjector.inject(this);
         BlurKit.init(this);
         SessionManager sessionManager = SessionManager.INSTANCE;
+
         AppErrorHandler.setup();
     }
 }

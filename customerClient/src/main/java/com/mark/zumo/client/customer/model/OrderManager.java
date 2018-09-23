@@ -8,6 +8,7 @@ package com.mark.zumo.client.customer.model;
 
 import com.mark.zumo.client.core.entity.MenuOrder;
 import com.mark.zumo.client.core.entity.OrderDetail;
+import com.mark.zumo.client.core.repository.MessageHandler;
 import com.mark.zumo.client.core.repository.OrderRepository;
 import com.mark.zumo.client.core.util.context.ContextHolder;
 import com.mark.zumo.client.customer.R;
@@ -26,9 +27,13 @@ public enum OrderManager {
     INSTANCE;
 
     private final OrderRepository orderRepository;
+    private final MessageHandler messageHandler;
+    private final SessionManager sessionManager;
 
     OrderManager() {
         orderRepository = OrderRepository.INSTANCE;
+        messageHandler = MessageHandler.INSTANCE;
+        sessionManager = SessionManager.INSTANCE;
     }
 
     public Maybe<MenuOrder> createMenuOrder(List<OrderDetail> orderDetailList) {
@@ -58,6 +63,11 @@ public enum OrderManager {
                 .subscribeOn(Schedulers.io());
     }
 
+    public Maybe<MenuOrder> getMenuOrderFromApi(String orderUuid) {
+        return orderRepository.getMenuOrderFromApi(orderUuid)
+                .subscribeOn(Schedulers.io());
+    }
+
     public Observable<MenuOrder> getMenuOrder(String orderUuid) {
         return orderRepository.getMenuOrder(orderUuid)
                 .subscribeOn(Schedulers.io());
@@ -70,6 +80,17 @@ public enum OrderManager {
 
     public Observable<List<OrderDetail>> getOrderDetailListByOrderUuid(String orderUuid) {
         return orderRepository.getOrderDetailListByOrderUuid(orderUuid)
+                .subscribeOn(Schedulers.io());
+    }
+
+    public Maybe<MenuOrder> sendOrderCreateMessage(MenuOrder menuOrder) {
+        return sessionManager.getSessionUser()
+                .flatMap(x -> messageHandler.sendMessageCreateOrder(menuOrder))
+                .subscribeOn(Schedulers.io());
+    }
+
+    public Maybe<MenuOrder> updateMenuOrderState(String orderUuid) {
+        return orderRepository.updateMenuOrderState(orderUuid, MenuOrder.State.REQUESTED.ordinal())
                 .subscribeOn(Schedulers.io());
     }
 }
