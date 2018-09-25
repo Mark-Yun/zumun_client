@@ -14,6 +14,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -181,6 +182,7 @@ public class KakaoPayFragment extends Fragment {
                 Fragment fragment = Fragment.instantiate(getActivity(), PaymentRequestingFragment.class.getName(), bundle);
 
                 Objects.requireNonNull(getFragmentManager()).beginTransaction()
+                        .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
                         .replace(R.id.payment_main, fragment)
                         .commit();
 

@@ -45,4 +45,6 @@
 
     <string name="order_progress_channel_name">ZUMUN Order progress</string>
     <string name="is_finding_store">If inside ZUMUN store, \\nthe menu will appear in here.</string>
+
+    <string name="order_request_progress">Order requesting… Do not turn off!</string>
 </resources>

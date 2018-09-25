@@ -61,6 +61,12 @@ public class OrderFragment extends Fragment {
         swipeRefreshLayout.setOnRefreshListener(this::refreshOrderList);
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        refreshOrderList();
+    }
+
     private void inflateRecyclerView() {
         recyclerView.setHasFixedSize(true);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());

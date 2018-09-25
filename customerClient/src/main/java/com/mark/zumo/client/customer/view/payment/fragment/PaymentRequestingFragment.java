@@ -12,9 +12,12 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
+import android.support.v7.widget.AppCompatImageView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 
 import com.mark.zumo.client.customer.R;
 import com.mark.zumo.client.customer.view.payment.PaymentActivity;
@@ -23,12 +26,16 @@ import com.mark.zumo.client.customer.viewmodel.PaymentViewModel;
 
 import java.util.Objects;
 
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 /**
  * Created by mark on 18. 6. 24.
  */
 public class PaymentRequestingFragment extends Fragment {
+
+    @BindView(R.id.progress_image) AppCompatImageView progressImage;
+
     private PaymentViewModel paymentViewModel;
 
     @Override
@@ -52,8 +59,14 @@ public class PaymentRequestingFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_requesting_payment, container, false);
         ButterKnife.bind(this, view);
+        animateBell();
 
         return view;
+    }
+
+    public void animateBell() {
+        Animation shake = AnimationUtils.loadAnimation(getActivity(), R.anim.shake_animation);
+        progressImage.setAnimation(shake);
     }
 
     private void approvePayment() {
@@ -71,5 +84,4 @@ public class PaymentRequestingFragment extends Fragment {
         Objects.requireNonNull(activity).setResult(PaymentActivity.RESULT_CODE_PAYMENT_SUCCESS, intent);
         activity.finish();
     }
-
 }

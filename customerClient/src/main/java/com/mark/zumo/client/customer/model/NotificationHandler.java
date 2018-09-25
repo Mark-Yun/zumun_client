@@ -82,16 +82,8 @@ public enum NotificationHandler {
                 .setContentText(NumberFormat.getCurrencyInstance().format(menuOrder.totalPrice))
                 .setWhen(System.currentTimeMillis())
                 .setSmallIcon(R.drawable.ic_stat_order)
-                .setOngoing(true)
                 .setColor(ContextCompat.getColor(context, R.color.colorAccent))
                 .setContentIntent(activity)
                 .build();
-    }
-
-    private boolean isOngoing(MenuOrder menuOrder) {
-        MenuOrder.State state = MenuOrder.State.of(menuOrder.state);
-        return state == MenuOrder.State.COMPLETE
-                || state == MenuOrder.State.CANCELED
-                || state == MenuOrder.State.REJECTED;
     }
 }
