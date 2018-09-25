@@ -6,7 +6,9 @@
 
 package com.mark.zumo.client.core.repository;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.content.LocalBroadcastManager;
 
 import com.mark.zumo.client.core.appserver.AppServerServiceProvider;
 import com.mark.zumo.client.core.appserver.NetworkRepository;
@@ -17,6 +19,7 @@ import com.mark.zumo.client.core.entity.OrderDetail;
 import com.mark.zumo.client.core.entity.util.EntityComparator;
 import com.mark.zumo.client.core.entity.util.ListComparator;
 import com.mark.zumo.client.core.util.BundleUtils;
+import com.mark.zumo.client.core.util.context.ContextHolder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,7 +33,11 @@ import io.reactivex.schedulers.Schedulers;
  */
 
 public class OrderRepository {
+
+    public static final String ACTION_ORDER_UPDATED = "com.mark.zumo.client.zumo.action.ORDER_UPDATED";
+
     private static final String TAG = "OrderRepository";
+
     private static OrderRepository sInstance;
     private static Bundle session;
     private final DiskRepository diskRepository;
@@ -123,6 +130,12 @@ public class OrderRepository {
         return getMenuOrderFromDisk(menuOrderUuid)
                 .map(menuOrder -> menuOrder.updateState(state))
                 .flatMap(menuOrder -> networkRepository.updateMenuOrderState(menuOrder.uuid, menuOrder))
-                .doOnSuccess(diskRepository::insertMenuOrder);
+                .doOnSuccess(diskRepository::insertMenuOrder)
+                .doOnSuccess(x -> sendOrderUpdated());
+    }
+
+    private void sendOrderUpdated() {
+        LocalBroadcastManager localBroadcastManager = LocalBroadcastManager.getInstance(ContextHolder.getContext());
+        localBroadcastManager.sendBroadcast(new Intent(ACTION_ORDER_UPDATED));
     }
 }

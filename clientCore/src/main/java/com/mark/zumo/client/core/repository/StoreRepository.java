@@ -71,6 +71,7 @@ public class StoreRepository {
     public Observable<Store> getStore(String storeUuid) {
         Maybe<Store> storeDB = diskRepository.getStore(storeUuid);
         Maybe<Store> storeApi = networkRepository.getStore(storeUuid)
+                .switchIfEmpty(Maybe.just(Store.emptyStore()))
                 .doOnSuccess(diskRepository::insertStore);
 
         return Maybe.merge(storeDB, storeApi)

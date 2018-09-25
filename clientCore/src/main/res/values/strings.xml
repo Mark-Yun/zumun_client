@@ -18,4 +18,6 @@
     <string name="error_message_on_io_exception">Cannot update. Please retry later.</string>
     <string name="error_message_on_http_exception">Cannot update</string>
     <string name="error_message_on_unknown_host_exception">Cannot connect server</string>
+
+    <string name="deleted_store">Deleted Store</string>
 </resources>

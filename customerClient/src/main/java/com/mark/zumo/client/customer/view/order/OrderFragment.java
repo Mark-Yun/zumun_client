@@ -7,10 +7,15 @@
 package com.mark.zumo.client.customer.view.order;
 
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -21,6 +26,7 @@ import android.view.animation.AnimationUtils;
 import android.view.animation.LayoutAnimationController;
 
 import com.mark.zumo.client.core.entity.MenuOrder;
+import com.mark.zumo.client.core.repository.OrderRepository;
 import com.mark.zumo.client.customer.R;
 import com.mark.zumo.client.customer.viewmodel.OrderViewModel;
 
@@ -40,11 +46,28 @@ public class OrderFragment extends Fragment {
     private OrderViewModel orderViewModel;
     private OrderAdapter adapter;
 
+    private BroadcastReceiver broadcastReceiver;
+
     @Override
     public void onCreate(@Nullable final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         orderViewModel = ViewModelProviders.of(this).get(OrderViewModel.class);
+        registerOrderUpdatedActionReceiver();
+    }
+
+    private void registerOrderUpdatedActionReceiver() {
+        broadcastReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(final Context context, final Intent intent) {
+                if (!isAdded()) {
+                    return;
+                }
+                refreshOrderList();
+            }
+        };
+        IntentFilter intentFilter = new IntentFilter(OrderRepository.ACTION_ORDER_UPDATED);
+        LocalBroadcastManager.getInstance(getContext()).registerReceiver(broadcastReceiver, intentFilter);
     }
 
     @Nullable
@@ -62,9 +85,9 @@ public class OrderFragment extends Fragment {
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-        refreshOrderList();
+    public void onDestroy() {
+        super.onDestroy();
+        LocalBroadcastManager.getInstance(getContext()).unregisterReceiver(broadcastReceiver);
     }
 
     private void inflateRecyclerView() {
