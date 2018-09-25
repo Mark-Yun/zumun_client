@@ -14,4 +14,5 @@
     <string name="error_message_on_io_exception">서버에 접속할 수 없습니다. 잠시 후 다시 시도해주세요.</string>
     <string name="error_message_on_http_exception">서버에 접속할 수 없습니다.</string>
     <string name="error_message_on_unknown_host_exception">지금은 서비스를 사용할 수 없습니다.</string>
+    <string name="deleted_store">알 수 없는 가게</string>
 </resources>
