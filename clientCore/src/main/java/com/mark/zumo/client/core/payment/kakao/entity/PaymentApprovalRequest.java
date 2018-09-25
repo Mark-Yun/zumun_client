@@ -38,7 +38,7 @@ public class PaymentApprovalRequest {
 
     @Override
     public String toString() {
-        return EntityHelper.toString(this, PaymentApprovalRequest.class);
+        return EntityHelper.toString(this);
     }
 
     public static class Builder {

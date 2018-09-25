@@ -34,6 +34,6 @@ public class PaymentReadyResponse {
 
     @Override
     public String toString() {
-        return EntityHelper.toString(this, PaymentReadyResponse.class);
+        return EntityHelper.toString(this);
     }
 }

@@ -30,6 +30,6 @@ public class GuestUser {
 
     @Override
     public String toString() {
-        return EntityHelper.toString(this, GuestUser.class);
+        return EntityHelper.toString(this);
     }
 }

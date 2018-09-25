@@ -55,6 +55,6 @@ public class MenuOption implements Serializable {
 
     @Override
     public String toString() {
-        return EntityHelper.toString(this, MenuOption.class);
+        return EntityHelper.toString(this);
     }
 }

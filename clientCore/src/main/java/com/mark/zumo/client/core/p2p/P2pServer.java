@@ -7,6 +7,7 @@
 package com.mark.zumo.client.core.p2p;
 
 import android.app.Activity;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
@@ -29,6 +30,7 @@ import com.mark.zumo.client.core.p2p.packet.PacketType;
 import com.mark.zumo.client.core.p2p.packet.Request;
 import com.mark.zumo.client.core.p2p.packet.Response;
 import com.mark.zumo.client.core.repository.MenuRepository;
+import com.mark.zumo.client.core.repository.SessionRepository;
 
 import java.util.concurrent.Executors;
 
@@ -49,9 +51,15 @@ public class P2pServer {
     private final Store store;
     private Message storeMessage;
 
+    private MenuRepository menuRepository;
+
     public P2pServer(Activity activity, Store store) {
         this.activity = activity;
         this.store = store;
+
+        Bundle storeSession = SessionRepository.INSTANCE.buildStoreSessionHeader(store);
+        menuRepository = MenuRepository.getInstance(storeSession);
+
     }
 
     public void publish() {
@@ -66,7 +74,9 @@ public class P2pServer {
 
     public void unpublish() {
         Log.d(TAG, "unpublish");
-        if (storeMessage == null) return;
+        if (storeMessage == null) {
+            return;
+        }
 
         messageClient().unpublish(storeMessage);
         storeMessage = null;
@@ -160,7 +170,7 @@ public class P2pServer {
 
     private Maybe<String> sendMenuItems(String endPointId) {
         Log.d(TAG, "sendMenuItems: endPointId=" + endPointId);
-        return MenuRepository.INSTANCE.getMenuListOfStore(store.uuid)
+        return menuRepository.getMenuListOfStore(store.uuid)
                 .firstElement()
                 .map(Packet::new)
                 .flatMap(packet -> sendPayload(endPointId, packet))

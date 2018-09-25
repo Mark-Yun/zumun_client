@@ -42,6 +42,6 @@ public class CardInfo {
 
     @Override
     public String toString() {
-        return EntityHelper.toString(this, CardInfo.class);
+        return EntityHelper.toString(this);
     }
 }

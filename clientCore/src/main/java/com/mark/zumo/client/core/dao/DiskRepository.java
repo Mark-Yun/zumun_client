@@ -18,6 +18,7 @@ import com.mark.zumo.client.core.entity.MenuDetail;
 import com.mark.zumo.client.core.entity.MenuOption;
 import com.mark.zumo.client.core.entity.MenuOrder;
 import com.mark.zumo.client.core.entity.OrderDetail;
+import com.mark.zumo.client.core.entity.SnsToken;
 import com.mark.zumo.client.core.entity.Store;
 import com.mark.zumo.client.core.entity.user.GuestUser;
 import com.mark.zumo.client.core.payment.kakao.entity.PaymentToken;
@@ -132,6 +133,12 @@ public interface DiskRepository {
 
     @Delete
     void removePaymentToken(PaymentToken paymentToken);
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    void insertSnsToken(SnsToken snsToken);
+
+    @Query("SELECT * FROM " + SnsToken.Schema.table + " ORDER BY " + SnsToken.Schema.createdDate + " DESC LIMIT 1")
+    Maybe<SnsToken> getLatestSnsToken();
 
 
     @Query("SELECT * FROM " + MenuDetail.Schema.TABLE + " WHERE store_uuid LIKE :storeUuid")

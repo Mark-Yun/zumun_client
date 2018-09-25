@@ -7,6 +7,7 @@ package com.mark.zumo.client.core.appserver.request;
 
 import com.google.gson.annotations.SerializedName;
 import com.mark.zumo.client.core.appserver.request.message.SnsMessage;
+import com.mark.zumo.client.core.entity.util.EntityHelper;
 
 /**
  * Created by mark on 18. 9. 21.
@@ -26,5 +27,10 @@ public class SnsSendMessageRequest {
     interface Schema {
         String UUID = "uuid";
         String MESSAGE = "message";
+    }
+
+    @Override
+    public String toString() {
+        return EntityHelper.toString(this);
     }
 }

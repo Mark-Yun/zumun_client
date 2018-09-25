@@ -39,7 +39,7 @@ public class PaymentToken {
 
     @Override
     public String toString() {
-        return EntityHelper.toString(this, PaymentToken.class);
+        return EntityHelper.toString(this);
     }
 
     public interface Schema {

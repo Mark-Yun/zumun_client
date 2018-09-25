@@ -58,6 +58,6 @@ public class Packet<T> {
 
     @Override
     public String toString() {
-        return EntityHelper.toString(this, Packet.class);
+        return EntityHelper.toString(this);
     }
 }

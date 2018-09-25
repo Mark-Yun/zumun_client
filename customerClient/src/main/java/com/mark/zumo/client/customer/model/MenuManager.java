@@ -14,6 +14,7 @@ import com.mark.zumo.client.core.p2p.packet.CombinedResult;
 import com.mark.zumo.client.core.repository.CategoryRepository;
 import com.mark.zumo.client.core.repository.MenuDetailRepository;
 import com.mark.zumo.client.core.repository.MenuRepository;
+import com.mark.zumo.client.core.repository.SessionRepository;
 
 import java.util.List;
 import java.util.Map;
@@ -31,20 +32,28 @@ import io.reactivex.schedulers.Schedulers;
 public enum MenuManager {
     INSTANCE;
 
-    private final MenuRepository menuRepository;
-    private final MenuDetailRepository menuDetailRepository;
-    private final CategoryRepository categoryRepository;
+    private final SessionRepository sessionRepository;
 
     private P2pClient p2pClient;
 
+    private Maybe<MenuRepository> menuRepositoryMaybe;
+    private Maybe<CategoryRepository> categoryRepositoryMaybe;
+    private Maybe<MenuDetailRepository> menuDetailRepositoryMaybe;
+
     MenuManager() {
-        menuRepository = MenuRepository.INSTANCE;
-        categoryRepository = CategoryRepository.INSTANCE;
-        menuDetailRepository = MenuDetailRepository.INSTANCE;
+        sessionRepository = SessionRepository.INSTANCE;
+
+        menuRepositoryMaybe = sessionRepository.getCustomerSession()
+                .map(MenuRepository::getInstance);
+        categoryRepositoryMaybe = sessionRepository.getCustomerSession()
+                .map(CategoryRepository::getInstance);
+        menuDetailRepositoryMaybe = sessionRepository.getCustomerSession()
+                .map(MenuDetailRepository::getInstance);
+
     }
 
     public Maybe<Menu> getMenuFromDisk(String uuid) {
-        return menuRepository.getMenuFromDisk(uuid)
+        return menuRepositoryMaybe.flatMap(menuRepository -> menuRepository.getMenuFromDisk(uuid))
                 .subscribeOn(Schedulers.io());
     }
 
@@ -58,15 +67,14 @@ public enum MenuManager {
     }
 
     public Observable<GroupedObservable<String, MenuOption>> getMenuOptionList(String menuUuid) {
-        return menuRepository.getMenuOptionGroupByMenu(menuUuid)
+        return menuRepositoryMaybe.flatMapObservable(menuRepository -> menuRepository.getMenuOptionGroupByMenu(menuUuid))
                 .subscribeOn(Schedulers.computation());
     }
 
     public Maybe<Map<String, List<Menu>>> getMenuListByCategory(String storeUuid) {
-        return menuRepository.getMenuListOfStore(storeUuid)
+        return menuRepositoryMaybe.flatMapObservable(menuRepository -> menuRepository.getMenuListOfStore(storeUuid))
                 .filter(menuList -> menuList.size() > 0)
-                .map(menuList -> menuList.get(0).storeUuid)
-                .flatMap(menuDetailRepository::getMenuDetailListOfStore)
+                .flatMap(x -> menuDetailRepositoryMaybe.flatMapObservable(a -> a.getMenuDetailListOfStore(storeUuid)))
                 .flatMapSingle(groupedObservable ->
                         Single.zip(
                                 Single.just(groupedObservable.getKey()),
@@ -82,17 +90,19 @@ public enum MenuManager {
     }
 
     public Maybe<MenuOption> getMenuOptionFromDisk(String menuOptionUuid) {
-        return menuRepository.getMenuOptionFromDisk(menuOptionUuid)
+        return menuRepositoryMaybe.flatMap(menuRepository -> menuRepository.getMenuOptionFromDisk(menuOptionUuid))
                 .subscribeOn(Schedulers.io());
     }
 
     public Observable<List<MenuOption>> getMenuOptionList(List<String> menuOptionUuidList) {
-        return menuRepository.getMenuOptionList(menuOptionUuidList)
+        return menuRepositoryMaybe.flatMapObservable(menuRepository -> menuRepository.getMenuOptionList(menuOptionUuidList))
                 .subscribeOn(Schedulers.io());
     }
 
     public Observable<List<MenuCategory>> getMenuCategoryList(String storeUuid) {
-        return categoryRepository.getMenuCategoryList(storeUuid)
+        return sessionRepository.getCustomerSession()
+                .map(CategoryRepository::getInstance)
+                .flatMapObservable(categoryRepository -> categoryRepository.getMenuCategoryList(storeUuid))
                 .flatMapSingle(menuCategories ->
                         Observable.fromIterable(menuCategories)
                                 .sorted((c1, c2) -> c2.seqNum - c1.seqNum)

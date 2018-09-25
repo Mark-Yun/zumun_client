@@ -51,7 +51,7 @@ public class CustomerFcmIdService extends FirebaseInstanceIdService {
         }
 
         sessionManager.getSessionUser()
-                .flatMap(store -> sessionManager.registerToken(store, refreshedToken))
+                .flatMap(user -> sessionManager.registerToken(user, refreshedToken))
                 .doOnSuccess(snsToken -> Log.d(TAG, "onTokenRefresh: updated Success-" + snsToken))
                 .subscribe();
     }

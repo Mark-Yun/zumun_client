@@ -56,7 +56,7 @@ public class Store {
 
     @Override
     public String toString() {
-        return EntityHelper.toString(this, this.getClass());
+        return EntityHelper.toString(this);
     }
 
     public interface Schema {

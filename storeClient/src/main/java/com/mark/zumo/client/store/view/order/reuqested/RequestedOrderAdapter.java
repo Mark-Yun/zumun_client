@@ -16,6 +16,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.AppCompatTextView;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -165,16 +166,20 @@ class RequestedOrderAdapter extends RecyclerView.Adapter<RequestedOrderAdapter.V
     void clear() {
         //TODO: handle IlligalStateException
         //
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        for (String fragmentTag : FRAGMENT_TAGS) {
-            Fragment fragmentByTag = fragmentManager.findFragmentByTag(fragmentTag);
-            if (fragmentByTag == null) {
-                continue;
-            }
+        try {
+            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+            for (String fragmentTag : FRAGMENT_TAGS) {
+                Fragment fragmentByTag = fragmentManager.findFragmentByTag(fragmentTag);
+                if (fragmentByTag == null) {
+                    continue;
+                }
 
-            fragmentTransaction.remove(fragmentByTag);
+                fragmentTransaction.remove(fragmentByTag);
+            }
+            fragmentTransaction.commit();
+        } catch (IllegalStateException e) {
+            Log.e(TAG, "clear: ", e);
         }
-        fragmentTransaction.commit();
     }
 
     private int findEmptyFragment() {

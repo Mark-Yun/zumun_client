@@ -30,6 +30,6 @@ public class Amount {
 
     @Override
     public String toString() {
-        return EntityHelper.toString(this, Amount.class);
+        return EntityHelper.toString(this);
     }
 }

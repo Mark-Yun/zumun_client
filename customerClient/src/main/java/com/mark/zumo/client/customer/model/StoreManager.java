@@ -7,10 +7,10 @@
 package com.mark.zumo.client.customer.model;
 
 import android.location.Location;
-import android.util.Log;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.mark.zumo.client.core.entity.Store;
+import com.mark.zumo.client.core.repository.SessionRepository;
 import com.mark.zumo.client.core.repository.StoreRepository;
 
 import java.util.List;
@@ -28,31 +28,32 @@ public enum StoreManager {
 
     private static final String TAG = "StoreManager";
 
-    private final StoreRepository storeRepository;
+    private final SessionRepository sessionRepository;
+    private final Maybe<StoreRepository> storeRepositoryMaybe;
 
     StoreManager() {
-        storeRepository = StoreRepository.INSTANCE;
+        sessionRepository = SessionRepository.INSTANCE;
+        storeRepositoryMaybe = sessionRepository.getCustomerSession()
+                .map(StoreRepository::getInstance);
     }
 
     public Maybe<List<Store>> nearByStore(Location location) {
-        return storeRepository.nearByStore(location, 3)
+        return storeRepositoryMaybe.flatMap(storeRepository -> storeRepository.nearByStore(location, 3))
                 .subscribeOn(Schedulers.io());
     }
 
     public Maybe<List<Store>> nearByStore(LatLng latLng) {
-        return storeRepository.nearByStore(latLng.latitude, latLng.longitude, 3)
+        return storeRepositoryMaybe.flatMap(storeRepository -> storeRepository.nearByStore(latLng.latitude, latLng.longitude, 3))
                 .subscribeOn(Schedulers.io());
     }
 
     public Observable<Store> getStore(String storeUuid) {
-        return storeRepository.getStore(storeUuid)
-                .subscribeOn(Schedulers.io())
-                .doOnNext(store -> Log.d(TAG, "getStore: " + store));
+        return storeRepositoryMaybe.flatMapObservable(storeRepository -> storeRepository.getStore(storeUuid))
+                .subscribeOn(Schedulers.io());
     }
 
     public Maybe<Store> getStoreFromDisk(String storeUuid) {
-        return storeRepository.getStoreFromDisk(storeUuid)
-                .subscribeOn(Schedulers.io())
-                .doOnSuccess(store -> Log.d(TAG, "getStoreFromDisk: " + store));
+        return storeRepositoryMaybe.flatMap(storeRepository -> storeRepository.getStoreFromDisk(storeUuid))
+                .subscribeOn(Schedulers.io());
     }
 }

@@ -50,7 +50,7 @@ public class PaymentApprovalResponse {
 
     @Override
     public String toString() {
-        return EntityHelper.toString(this, PaymentApprovalResponse.class);
+        return EntityHelper.toString(this);
     }
 
 }

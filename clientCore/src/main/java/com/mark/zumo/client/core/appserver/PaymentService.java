@@ -7,7 +7,6 @@
 package com.mark.zumo.client.core.appserver;
 
 import com.mark.zumo.client.core.appserver.request.SnsSendMessageRequest;
-import com.mark.zumo.client.core.payment.kakao.entity.PaymentToken;
 
 import io.reactivex.Maybe;
 import retrofit2.http.Body;
@@ -17,9 +16,6 @@ import retrofit2.http.POST;
  * Created by mark on 18. 6. 9.
  */
 public interface PaymentService {
-
-    @POST("payment/kakaopay")
-    Maybe<PaymentToken> createPaymentToken(@Body PaymentToken paymentToken);
 
     @POST("sns/sendmsg")
     Maybe<SnsSendMessageRequest> sendMessage(@Body SnsSendMessageRequest message);

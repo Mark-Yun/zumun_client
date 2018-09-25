@@ -36,7 +36,7 @@ public class PaymentViewModel extends AndroidViewModel {
         orderManager.getMenuOrderFromDisk(menuOrderUuid)
                 .flatMap(order -> kakaoPaymentManager.approvalPayment(order, pgToken, tid))
                 .map(paymentApprovalResponse -> paymentApprovalResponse.partnerOrderId)
-                .flatMap(orderManager::updateMenuOrderState)
+                .flatMap(orderManager::updateMenuOrderStateRequested)
                 .flatMap(orderManager::sendOrderCreateMessage)
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSuccess(x -> liveData.setValue(menuOrderUuid))

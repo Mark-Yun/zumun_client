@@ -7,6 +7,7 @@
 package com.mark.zumo.client.core.repository;
 
 import android.location.Location;
+import android.os.Bundle;
 
 import com.mark.zumo.client.core.appserver.AppServerServiceProvider;
 import com.mark.zumo.client.core.appserver.NetworkRepository;
@@ -14,6 +15,7 @@ import com.mark.zumo.client.core.dao.AppDatabaseProvider;
 import com.mark.zumo.client.core.dao.DiskRepository;
 import com.mark.zumo.client.core.entity.Store;
 import com.mark.zumo.client.core.entity.util.EntityComparator;
+import com.mark.zumo.client.core.util.BundleUtils;
 
 import java.util.List;
 
@@ -25,19 +27,32 @@ import io.reactivex.schedulers.Schedulers;
  * Created by mark on 18. 4. 30.
  */
 
-public enum StoreRepository {
-    INSTANCE;
+public class StoreRepository {
 
     private static final String TAG = "StoreRepository";
 
-    private final DiskRepository diskRepository;
+    private static StoreRepository sInstance;
+    private static Bundle session;
 
-    StoreRepository() {
+    private final DiskRepository diskRepository;
+    private final NetworkRepository networkRepository;
+
+    private StoreRepository(final Bundle session) {
+        networkRepository = AppServerServiceProvider.INSTANCE.buildNetworkRepository(session);
         diskRepository = AppDatabaseProvider.INSTANCE.diskRepository;
+        StoreRepository.session = session;
     }
 
-    private NetworkRepository networkRepository() {
-        return AppServerServiceProvider.INSTANCE.networkRepository;
+    public static StoreRepository getInstance(Bundle session) {
+        if (sInstance == null || !BundleUtils.equalsBundles(StoreRepository.session, session)) {
+            synchronized (StoreRepository.class) {
+                if (sInstance == null) {
+                    sInstance = new StoreRepository(session);
+                }
+            }
+        }
+
+        return sInstance;
     }
 
     public Maybe<List<Store>> nearByStore(Location location, int distanceKm) {
@@ -45,17 +60,17 @@ public enum StoreRepository {
     }
 
     public Maybe<List<Store>> nearByStore(double latitude, double longitude, int distanceKm) {
-        return networkRepository().getNearByStore(latitude, longitude, distanceKm);
+        return networkRepository.getNearByStore(latitude, longitude, distanceKm);
     }
 
     public Maybe<Store> updateStore(Store store) {
-        return networkRepository().updateStore(store.uuid, store)
+        return networkRepository.updateStore(store.uuid, store)
                 .doOnSuccess(diskRepository::insertStore);
     }
 
     public Observable<Store> getStore(String storeUuid) {
         Maybe<Store> storeDB = diskRepository.getStore(storeUuid);
-        Maybe<Store> storeApi = networkRepository().getStore(storeUuid)
+        Maybe<Store> storeApi = networkRepository.getStore(storeUuid)
                 .doOnSuccess(diskRepository::insertStore);
 
         return Maybe.merge(storeDB, storeApi)
@@ -69,7 +84,7 @@ public enum StoreRepository {
     }
 
     public Maybe<Store> getStoreFromApi(String storeUuid) {
-        return networkRepository().getStore(storeUuid)
+        return networkRepository.getStore(storeUuid)
                 .doOnSuccess(diskRepository::insertStore);
     }
 }

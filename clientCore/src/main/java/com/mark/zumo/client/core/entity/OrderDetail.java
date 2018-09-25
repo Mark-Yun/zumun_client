@@ -71,7 +71,7 @@ public class OrderDetail implements Serializable {
 
     @Override
     public String toString() {
-        return EntityHelper.toString(this, OrderDetail.class);
+        return EntityHelper.toString(this);
     }
 
     public boolean isSameMenu(@NonNull OrderDetail orderDetail) {

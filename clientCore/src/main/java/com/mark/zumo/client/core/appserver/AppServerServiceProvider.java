@@ -20,6 +20,7 @@ import com.mark.zumo.client.core.app.BuildConfig;
 import com.mark.zumo.client.core.util.context.ContextHolder;
 
 import java.io.File;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.Cache;
@@ -90,13 +91,16 @@ public enum AppServerServiceProvider {
             Request original = chain.request();
             Request.Builder builder = original.newBuilder();
 
-            for (String key : bundle.keySet()) {
-                String value = bundle.getString(key);
-                if (value == null) {
-                    continue;
-                }
+            Set<String> keySet = bundle.keySet();
+            if (keySet != null) {
+                for (String key : keySet) {
+                    String value = bundle.getString(key);
+                    if (value == null) {
+                        continue;
+                    }
 
-                builder.header(key, value);
+                    builder.header(key, value);
+                }
             }
             builder.header(ContentType.KEY, ContentType.VALUE);
 

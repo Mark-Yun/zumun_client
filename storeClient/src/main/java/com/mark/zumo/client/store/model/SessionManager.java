@@ -24,26 +24,28 @@ public enum SessionManager {
     private static final String TAG = "SessionManager";
 
     private final SessionRepository sessionRepository;
-    private final StoreRepository storeRepository;
+    private final Maybe<StoreRepository> storeRepositoryMaybe;
 
     SessionManager() {
         sessionRepository = SessionRepository.INSTANCE;
-        storeRepository = StoreRepository.INSTANCE;
+        storeRepositoryMaybe = sessionRepository.getCustomerSession()
+                .map(StoreRepository::getInstance);
     }
 
     public Maybe<Store> getSessionStore() {
         return sessionRepository.getStoreFromCache()
-                .flatMap(storeRepository::getStoreFromDisk)
-                .switchIfEmpty(
-                        sessionRepository.getStoreFromCache()
-                                .flatMap(storeRepository::getStoreFromApi)
-                )
-                .subscribeOn(Schedulers.io());
+                .flatMap(storeUuid ->
+                        storeRepositoryMaybe.flatMap(storeRepository ->
+                                storeRepository.getStoreFromDisk(storeUuid)
+                                        .switchIfEmpty(sessionRepository.getStoreFromCache()
+                                                .flatMap(storeRepository::getStoreFromApi))
+                        )
+                ).subscribeOn(Schedulers.io());
     }
 
-    public Maybe<SnsToken> registerToken(Store store, String token) {
+    public Maybe<SnsToken> registerTokenOnRefresh(Store store, String token) {
         SnsToken snsToken = new SnsToken(store.uuid, SnsToken.TokenType.ANDROID, token);
-        return sessionRepository.createToken(snsToken)
+        return sessionRepository.registerSnsToken(snsToken)
                 .subscribeOn(Schedulers.io());
     }
 }

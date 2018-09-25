@@ -12,7 +12,10 @@ import android.util.Log;
 
 import com.mark.zumo.client.core.appserver.AppServerServiceProvider;
 import com.mark.zumo.client.core.appserver.NetworkRepository;
+import com.mark.zumo.client.core.dao.AppDatabaseProvider;
+import com.mark.zumo.client.core.dao.DiskRepository;
 import com.mark.zumo.client.core.entity.SnsToken;
+import com.mark.zumo.client.core.entity.Store;
 import com.mark.zumo.client.core.entity.user.GuestUser;
 import com.mark.zumo.client.core.security.SecurePreferences;
 import com.mark.zumo.client.core.util.DebugUtil;
@@ -34,17 +37,17 @@ public enum SessionRepository {
     public static final String KEY_STORE_UUID = "store_uuid";
 
     private static final String TAG = "SessionRepository";
-
+    private static final Object sessionHeaderLock = new Object();
     private final SecurePreferences securePreferences;
     private final NetworkRepository networkRepository;
-
-    private static final Object sessionHeaderLock = new Object();
-
+    private final DiskRepository diskRepository;
+    private GuestUser guestUser;
     private boolean isBuiltSessionHeader;
 
     SessionRepository() {
         securePreferences = SecuredRepository.INSTANCE.securePreferences();
         networkRepository = AppServerServiceProvider.INSTANCE.networkRepository;
+        diskRepository = AppDatabaseProvider.INSTANCE.diskRepository;
     }
 
     private GuestUser saveGuestUser(final GuestUser guestUser) {
@@ -52,22 +55,26 @@ public enum SessionRepository {
         return guestUser;
     }
 
-    public GuestUser getGuestUserFromCache() {
+    public GuestUser getCustomerFromSecuredRepository() {
+        if (guestUser != null) {
+            return guestUser;
+        }
+
         try {
             String guestUserUuid = securePreferences.getString(SessionRepository.KEY_CUSTOMER_UUID);
             if (TextUtils.isEmpty(guestUserUuid)) {
                 return null;
             }
 
-            return new GuestUser(guestUserUuid);
+            return guestUser = new GuestUser(guestUserUuid);
         } catch (SecurePreferences.SecurePreferencesException e) {
-            Log.e(TAG, "getGuestUserFromCache: ", e);
+            Log.e(TAG, "getCustomerFromSecuredRepository: ", e);
             return null;
         }
     }
 
     public Maybe<GuestUser> getSessionUser() {
-        return Maybe.fromCallable(this::getGuestUserFromCache)
+        return Maybe.fromCallable(this::getCustomerFromSecuredRepository)
                 .switchIfEmpty(createGuestUser())
                 .doOnSuccess(this::buildGuestUserSessionHeader);
     }
@@ -81,8 +88,16 @@ public enum SessionRepository {
     public Maybe<GuestUser> createGuestUser() {
         return networkRepository.createGuestUser()
                 .doOnSuccess(this::saveGuestUser)
+                .flatMap(this::registerSnsTokenOnCreateUser)
                 .retryWhen(errors -> errors.flatMap(error -> Flowable.timer(3, TimeUnit.SECONDS)))
                 .retry(2);
+    }
+
+    private Maybe<GuestUser> registerSnsTokenOnCreateUser(GuestUser guestUser) {
+        return diskRepository.getLatestSnsToken()
+                .map(snsToken -> new SnsToken(guestUser.uuid, snsToken.tokenType, snsToken.tokenValue))
+                .flatMap(this::registerSnsToken)
+                .map(x -> guestUser);
     }
 
     private void buildGuestUserSessionHeader(GuestUser guestUser) {
@@ -98,9 +113,34 @@ public enum SessionRepository {
         }
     }
 
-    public Maybe<SnsToken> createToken(SnsToken snsToken) {
+    private Bundle buildGuestUserSessionHeader2(GuestUser guestUser) {
+        return new SessionBuilder()
+                .put(SessionRepository.KEY_CUSTOMER_UUID, guestUser.uuid)
+                .build();
+    }
+
+    public Maybe<SnsToken> registerSnsToken(SnsToken snsToken) {
         return networkRepository.createSnsToken(snsToken)
+                .doOnSuccess(diskRepository::insertSnsToken)
                 .subscribeOn(Schedulers.io());
+    }
+
+    public Maybe<Bundle> getCustomerSession() {
+        return Maybe.fromCallable(this::getCustomerFromSecuredRepository)
+                .switchIfEmpty(createGuestUser())
+                .map(this::buildGuestUserSessionHeader2);
+    }
+
+    public Maybe<Bundle> getStoreSession() {
+        //TODO: remove test data
+        return Maybe.fromCallable(DebugUtil::store)
+                .map(this::buildStoreSessionHeader);
+    }
+
+    public Bundle buildStoreSessionHeader(Store store) {
+        return new SessionBuilder()
+                .put(SessionRepository.KEY_STORE_UUID, store.uuid)
+                .build();
     }
 
     private static class SessionBuilder {
@@ -115,9 +155,9 @@ public enum SessionRepository {
             return this;
         }
 
-        public NetworkRepository build() {
-            AppServerServiceProvider.INSTANCE.buildPaymentService(bundle);
-            return AppServerServiceProvider.INSTANCE.buildNetworkRepository(bundle);
+        public Bundle build() {
+            AppServerServiceProvider.INSTANCE.buildNetworkRepository(bundle);
+            return bundle;
         }
     }
 }

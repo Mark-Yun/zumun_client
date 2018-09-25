@@ -62,7 +62,7 @@ public class PaymentReadyRequest {
 
     @Override
     public String toString() {
-        return EntityHelper.toString(this, PaymentReadyRequest.class);
+        return EntityHelper.toString(this);
     }
 
     public static class Builder {

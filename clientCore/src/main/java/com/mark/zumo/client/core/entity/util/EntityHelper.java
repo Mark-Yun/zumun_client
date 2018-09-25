@@ -14,7 +14,8 @@ import java.lang.reflect.Field;
 
 public class EntityHelper {
 
-    public static String toString(Object object, Class clazz) {
+    public static String toString(Object object) {
+        Class clazz = object.getClass();
         StringBuilder ret = new StringBuilder(clazz.getSimpleName() + "[");
         Field[] declaredFields = clazz.getDeclaredFields();
         for (Field field : declaredFields) {
