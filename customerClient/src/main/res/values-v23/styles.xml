@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (c) 2018. Mark Soft - All Rights Reserved
+  ~ Unauthorized copying of this file, via any medium is strictly prohibited
+  ~ Proprietary and confidential
+  -->
+
+<resources>
+
+    <style name="AppTheme.NoActionBar" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorPrimaryDark">@color/colorPrimary</item>
+        <item name="android:windowLightStatusBar">true</item>
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorAccent">@color/colorAccent</item>
+    </style>
+</resources>
