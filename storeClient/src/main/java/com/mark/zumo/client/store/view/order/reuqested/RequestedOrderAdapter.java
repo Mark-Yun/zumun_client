@@ -176,7 +176,7 @@ class RequestedOrderAdapter extends RecyclerView.Adapter<RequestedOrderAdapter.V
 
                 fragmentTransaction.remove(fragmentByTag);
             }
-            fragmentTransaction.commit();
+            fragmentTransaction.commitAllowingStateLoss();
         } catch (IllegalStateException e) {
             Log.e(TAG, "clear: ", e);
         }

@@ -38,12 +38,22 @@ public enum StoreManager {
     }
 
     public Maybe<List<Store>> nearByStore(Location location) {
-        return storeRepositoryMaybe.flatMap(storeRepository -> storeRepository.nearByStore(location, 3))
+        return storeRepositoryMaybe.flatMap(storeRepository -> storeRepository.nearByStore(location, 1))
+                .flatMapObservable(Observable::fromIterable)
+                .sorted((s1, s2) -> (int) (location.distanceTo(from(s1.latitude, s1.longitude)) - location.distanceTo(from(s2.latitude, s2.longitude))))
+                .toList().toMaybe()
                 .subscribeOn(Schedulers.io());
     }
 
-    public Maybe<List<Store>> nearByStore(LatLng latLng) {
-        return storeRepositoryMaybe.flatMap(storeRepository -> storeRepository.nearByStore(latLng.latitude, latLng.longitude, 3))
+    private Location from(double latitude, double longitude) {
+        Location location = new Location("Place Point");
+        location.setLatitude(latitude);
+        location.setLongitude(longitude);
+        return location;
+    }
+
+    public Maybe<List<Store>> nearByStore(LatLng latLng, int distanceMeter) {
+        return storeRepositoryMaybe.flatMap(storeRepository -> storeRepository.nearByStore(latLng.latitude, latLng.longitude, distanceMeter))
                 .subscribeOn(Schedulers.io());
     }
 

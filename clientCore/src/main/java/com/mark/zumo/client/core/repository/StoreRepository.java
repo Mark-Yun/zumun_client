@@ -59,8 +59,8 @@ public class StoreRepository {
         return nearByStore(location.getLatitude(), location.getLongitude(), distanceKm);
     }
 
-    public Maybe<List<Store>> nearByStore(double latitude, double longitude, int distanceKm) {
-        return networkRepository.getNearByStore(latitude, longitude, distanceKm);
+    public Maybe<List<Store>> nearByStore(double latitude, double longitude, int distanceMeter) {
+        return networkRepository.getNearByStore(latitude, longitude, distanceMeter);
     }
 
     public Maybe<Store> updateStore(Store store) {

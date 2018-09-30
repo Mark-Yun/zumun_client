@@ -10,7 +10,6 @@ import android.app.Application;
 import android.arch.lifecycle.AndroidViewModel;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
-import android.location.Location;
 import android.support.annotation.NonNull;
 
 import com.google.android.gms.maps.model.LatLng;
@@ -47,10 +46,10 @@ public class PlaceViewModel extends AndroidViewModel {
         disposables = new CompositeDisposable();
     }
 
-    public LiveData<List<Store>> nearByStore(LatLng latLng) {
+    public LiveData<List<Store>> nearByStore(LatLng latLng, int distanceMeter) {
         MutableLiveData<List<Store>> nearByStore = new MutableLiveData<>();
 
-        storeManager.nearByStore(latLng)
+        storeManager.nearByStore(latLng, distanceMeter)
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSuccess(nearByStore::setValue)
                 .doOnSubscribe(disposables::add)
@@ -59,25 +58,11 @@ public class PlaceViewModel extends AndroidViewModel {
         return nearByStore;
     }
 
-    public LiveData<List<Store>> nearByStore() {
-        MutableLiveData<List<Store>> nearByStore = new MutableLiveData<>();
+    public LiveData<LatLng> currentLocation() {
+        MutableLiveData<LatLng> liveData = new MutableLiveData<>();
 
         locationProvider.currentLocationObservable
-                .subscribeOn(AndroidSchedulers.mainThread())
-                .doOnNext(location -> storeManager.nearByStore(location)
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .doOnSuccess(nearByStore::setValue)
-                        .doOnSubscribe(disposables::add)
-                        .subscribe()).doOnSubscribe(disposables::add)
-                .subscribe();
-
-        return nearByStore;
-    }
-
-    public LiveData<Location> myLocation() {
-        MutableLiveData<Location> liveData = new MutableLiveData<>();
-
-        locationProvider.currentLocationObservable
+                .map(location -> new LatLng(location.getLatitude(), location.getLongitude()))
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSubscribe(disposables::add)
                 .doOnNext(liveData::setValue)

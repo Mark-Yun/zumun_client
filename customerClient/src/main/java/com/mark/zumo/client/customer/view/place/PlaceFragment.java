@@ -9,7 +9,6 @@ package com.mark.zumo.client.customer.view.place;
 import android.annotation.SuppressLint;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
-import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -35,6 +34,8 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.VisibleRegion;
+import com.google.maps.android.SphericalUtil;
 import com.mark.zumo.client.core.entity.Store;
 import com.mark.zumo.client.customer.R;
 import com.mark.zumo.client.customer.view.place.adapter.NearbyStoreAdapter;
@@ -51,8 +52,8 @@ import butterknife.ButterKnife;
  */
 public class PlaceFragment extends Fragment {
 
+    public static final String TAG = "PlaceFragment";
     private static final int REQUEST_CODE_PLACE_PICKER = 15;
-
     @BindView(R.id.near_by_store) RecyclerView nearByStore;
     @BindView(R.id.swipe_refresh_layout) SwipeRefreshLayout swipeRefreshLayout;
 
@@ -84,15 +85,29 @@ public class PlaceFragment extends Fragment {
     }
 
     private void refreshNearByStore() {
-        placeViewModel.nearByStore().observe(this, this::onLoadNearByStoreList);
+        mapFragment.getMapAsync(this::onLocationLoaded);
     }
 
     @SuppressLint("MissingPermission")
     private void onReadyMap(GoogleMap googleMap) {
         googleMap.setMyLocationEnabled(true);
         googleMap.setOnMapClickListener(this::onClickMapFragment);
+        googleMap.setOnMyLocationButtonClickListener(() -> onMyLocationButtonClickListener(googleMap));
+        googleMap.setOnCameraIdleListener(() -> onCameraIdleListener(googleMap));
 
-        placeViewModel.myLocation().observe(this, location -> onLocationChanged(googleMap, location));
+        placeViewModel.currentLocation().observe(this, latLng -> onLocationLoaded(googleMap, latLng));
+    }
+
+    private void onCameraIdleListener(GoogleMap googleMap) {
+        LatLng target = googleMap.getCameraPosition().target;
+        VisibleRegion visibleRegion = googleMap.getProjection().getVisibleRegion();
+        double distance = SphericalUtil.computeDistanceBetween(visibleRegion.farLeft, target);
+        placeViewModel.nearByStore(target, (int) distance).observe(this, this::onLoadNearByStoreList);
+    }
+
+    private boolean onMyLocationButtonClickListener(GoogleMap googleMap) {
+        placeViewModel.currentLocation().observe(this, latLng -> onLocationLoaded(googleMap, latLng));
+        return true;
     }
 
     private void inflateMapFragment() {
@@ -105,10 +120,16 @@ public class PlaceFragment extends Fragment {
         mapFragment.getMapAsync(this::onReadyMap);
     }
 
-    private void onLocationChanged(GoogleMap googleMap, Location location) {
+    private void onLocationLoaded(GoogleMap googleMap) {
+        onLocationLoaded(googleMap, googleMap.getCameraPosition().target);
+    }
+
+    private void onLocationLoaded(GoogleMap googleMap, LatLng latLng) {
+        if (latLng == null) {
+            return;
+        }
         googleMap.clear();
-        LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
-        CameraUpdate locationUpdate = CameraUpdateFactory.newLatLngZoom(latLng, REQUEST_CODE_PLACE_PICKER);
+        CameraUpdate locationUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 15);
 
         googleMap.moveCamera(locationUpdate);
         googleMap.animateCamera(locationUpdate);
@@ -135,8 +156,6 @@ public class PlaceFragment extends Fragment {
 
         adapter = new NearbyStoreAdapter(placeViewModel, this);
         nearByStore.setAdapter(adapter);
-
-        placeViewModel.nearByStore().observe(this, this::onLoadNearByStoreList);
     }
 
     private void onLoadNearByStoreList(List<Store> storeList) {
@@ -169,7 +188,7 @@ public class PlaceFragment extends Fragment {
         switch (requestCode) {
             case REQUEST_CODE_PLACE_PICKER:
                 Place place = PlacePicker.getPlace(Objects.requireNonNull(getActivity()), data);
-                placeViewModel.nearByStore(place.getLatLng()).observe(this, this::onLoadNearByStoreList);
+                mapFragment.getMapAsync(googleMap -> onLocationLoaded(googleMap, place.getLatLng()));
                 break;
         }
     }
