@@ -13,9 +13,11 @@ import android.graphics.Point;
 import android.graphics.drawable.AnimationDrawable;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.AppCompatImageView;
 import android.view.Display;
 import android.view.LayoutInflater;
@@ -35,13 +37,35 @@ import butterknife.ButterKnife;
 public class FindingStoreFragment extends Fragment {
     @BindView(R.id.finding_glass) AppCompatImageView findingGlass;
     @BindView(R.id.store_image) AppCompatImageView storeImage;
+    @BindView(R.id.swipe_refresh_layout) SwipeRefreshLayout swipeRefreshLayout;
+
+    private StoreFindRefreshListener storeFindRefreshListener;
+
+    void setStoreFindRefreshListener(final StoreFindRefreshListener storeFindRefreshListener) {
+        this.storeFindRefreshListener = storeFindRefreshListener;
+    }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull final LayoutInflater inflater, @Nullable final ViewGroup container, @Nullable final Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_finding_store, container, false);
         ButterKnife.bind(this, view);
+        swipeRefreshLayout.setOnRefreshListener(this::onRefresh);
         return view;
+    }
+
+    private void onRefresh() {
+        if (storeFindRefreshListener != null) {
+            storeFindRefreshListener.onStoreRefreshFindRequested(swipeRefreshLayout);
+            new Handler().postDelayed(() -> {
+                swipeRefreshLayout.setRefreshing(false);
+                startFindingAnimation();
+            }, 500);
+        }
+    }
+
+    interface StoreFindRefreshListener {
+        void onStoreRefreshFindRequested(SwipeRefreshLayout swipeRefreshLayout);
     }
 
     @Override

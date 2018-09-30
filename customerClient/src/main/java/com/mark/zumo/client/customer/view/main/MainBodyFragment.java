@@ -14,6 +14,7 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -80,8 +81,13 @@ public class MainBodyFragment extends Fragment {
             }
         });
 
-        mainViewModel.findStore(getActivity())
-                .observe(this, this::onD2dLoadStore);
+        mainViewModel.findStore(getActivity()).observe(this, this::onD2dLoadStore);
+        tabPagerAdapter.setFindStoreRefreshListener(this::onRefresh);
+    }
+
+    private void onRefresh(SwipeRefreshLayout swipeRefreshLayout) {
+        Log.d(TAG, "onRefresh");
+        mainViewModel.findStore(getActivity()).observe(this, store -> onD2dLoadStore(store, swipeRefreshLayout));
     }
 
     private void onD2dLoadStore(Store store) {
@@ -92,6 +98,11 @@ public class MainBodyFragment extends Fragment {
         }
         tab.setText(store.name);
         tabPagerAdapter.onD2dLoadStore(store);
+    }
+
+    private void onD2dLoadStore(Store store, SwipeRefreshLayout swipeRefreshLayout) {
+        swipeRefreshLayout.setRefreshing(false);
+        onD2dLoadStore(store);
     }
 
     @Override

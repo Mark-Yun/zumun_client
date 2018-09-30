@@ -32,16 +32,24 @@ public class TabPagerAdapter extends FragmentStatePagerAdapter {
     };
 
     private final SparseArray<Fragment> fragmentList;
+    private FindingStoreFragment.StoreFindRefreshListener storeFindRefreshListener;
 
     TabPagerAdapter(final FragmentManager fragmentManager) {
         super(fragmentManager);
         fragmentList = new SparseArray<>();
     }
 
+    void setFindStoreRefreshListener(FindingStoreFragment.StoreFindRefreshListener listener) {
+        this.storeFindRefreshListener = listener;
+    }
+
     @Override
     public Fragment getItem(final int position) {
         if (fragmentList.get(position) == null) {
             Fragment fragment = Fragment.instantiate(ContextHolder.getContext(), FRAGMENTS_NAME[position]);
+            if (fragment instanceof FindingStoreFragment) {
+                ((FindingStoreFragment) fragment).setStoreFindRefreshListener(storeFindRefreshListener);
+            }
             fragmentList.put(position, fragment);
         }
 

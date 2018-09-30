@@ -13,6 +13,7 @@ import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.AppCompatTextView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -93,11 +94,13 @@ public class CartMenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         cartViewModel.getMenu(orderDetail.menuUuid).observe(lifecycleOwner, menu -> {
             holder.menuName.setText(Objects.requireNonNull(menu).name);
 
-            GlideApp.with(holder.itemView.getContext())
-                    .load(menu.imageUrl)
-                    .apply(GlideUtils.cartMenuImageOptions())
-                    .transition(GlideUtils.cartMenuTransitionOptions())
-                    .into(holder.menuImage);
+            if (!TextUtils.isEmpty(menu.imageUrl)) {
+                GlideApp.with(holder.itemView.getContext())
+                        .load(menu.imageUrl)
+                        .apply(GlideUtils.cartMenuImageOptions())
+                        .transition(GlideUtils.cartMenuTransitionOptions())
+                        .into(holder.menuImage);
+            }
 
             cartViewModel.getCartItemPriceLiveData(orderDetail.storeUuid, position).observe(lifecycleOwner, holder.menuPrice::setText);
 

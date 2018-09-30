@@ -3,67 +3,72 @@
   ~ Unauthorized copying of this file, via any medium is strictly prohibited
   ~ Proprietary and confidential
   -->
-
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v4.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/swipe_refresh_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <android.support.constraint.Guideline
-        android:id="@+id/start_guide"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.25" />
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-    <android.support.constraint.Guideline
-        android:id="@+id/glass_end_guide"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.5" />
+        <android.support.constraint.Guideline
+            android:id="@+id/start_guide"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.25" />
 
-    <android.support.constraint.Guideline
-        android:id="@+id/end_guide"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.75" />
+        <android.support.constraint.Guideline
+            android:id="@+id/glass_end_guide"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.5" />
 
-    <android.support.v7.widget.AppCompatImageView
-        android:id="@+id/store_image"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:scaleType="fitXY"
-        android:src="@drawable/store"
-        app:layout_constraintBottom_toTopOf="@+id/is_finding_text"
-        app:layout_constraintDimensionRatio="H, 1:1"
-        app:layout_constraintEnd_toEndOf="@+id/end_guide"
-        app:layout_constraintStart_toStartOf="@+id/start_guide"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_chainStyle="packed" />
+        <android.support.constraint.Guideline
+            android:id="@+id/end_guide"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.75" />
 
-    <android.support.v7.widget.AppCompatTextView
-        android:id="@+id/is_finding_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:maxLines="2"
-        android:text="@string/is_finding_store"
-        android:textAlignment="center"
-        style="@style/DescriptionTextLight"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/store_image" />
+        <android.support.v7.widget.AppCompatImageView
+            android:id="@+id/store_image"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:scaleType="fitXY"
+            android:src="@drawable/store"
+            app:layout_constraintBottom_toTopOf="@+id/is_finding_text"
+            app:layout_constraintDimensionRatio="H, 1:1"
+            app:layout_constraintEnd_toEndOf="@+id/end_guide"
+            app:layout_constraintStart_toStartOf="@+id/start_guide"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_chainStyle="packed" />
 
-    <android.support.v7.widget.AppCompatImageView
-        android:id="@+id/finding_glass"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:src="@drawable/search"
-        app:layout_constraintDimensionRatio="H, 1:1"
-        app:layout_constraintEnd_toEndOf="@+id/glass_end_guide"
-        app:layout_constraintStart_toStartOf="@+id/store_image"
-        app:layout_constraintTop_toTopOf="@+id/store_image" />
+        <android.support.v7.widget.AppCompatTextView
+            android:id="@+id/is_finding_text"
+            style="@style/DescriptionTextLight"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:maxLines="2"
+            android:text="@string/is_finding_store"
+            android:textAlignment="center"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/store_image" />
 
-</android.support.constraint.ConstraintLayout>
+        <android.support.v7.widget.AppCompatImageView
+            android:id="@+id/finding_glass"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:src="@drawable/search"
+            app:layout_constraintDimensionRatio="H, 1:1"
+            app:layout_constraintEnd_toEndOf="@+id/glass_end_guide"
+            app:layout_constraintStart_toStartOf="@+id/store_image"
+            app:layout_constraintTop_toTopOf="@+id/store_image" />
+
+    </android.support.constraint.ConstraintLayout>
+</android.support.v4.widget.SwipeRefreshLayout>
