@@ -40,12 +40,17 @@ public class CartMenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     private final LifecycleOwner lifecycleOwner;
     private final String storeUuid;
 
+    private final OnOrderDetailSelectedListener onOrderDetailSelectedListener;
+
     private List<OrderDetail> orderDetailList;
 
-    CartMenuAdapter(final CartViewModel cartViewModel, final LifecycleOwner lifecycleOwner, final String storeUuid) {
+    CartMenuAdapter(final CartViewModel cartViewModel, final LifecycleOwner lifecycleOwner,
+                    final String storeUuid, final OnOrderDetailSelectedListener onOrderDetailSelectedListener) {
+
         this.cartViewModel = cartViewModel;
         this.lifecycleOwner = lifecycleOwner;
         this.storeUuid = storeUuid;
+        this.onOrderDetailSelectedListener = onOrderDetailSelectedListener;
 
         orderDetailList = new ArrayList<>();
     }
@@ -112,6 +117,8 @@ public class CartMenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             TouchResponse.big();
             cartViewModel.removeCartItem(storeUuid, position);
         });
+
+        holder.itemView.setOnClickListener(v -> onOrderDetailSelectedListener.onOrderDetailSelected(orderDetail.storeUuid, orderDetail.menuUuid, position));
     }
 
     @Override
@@ -122,6 +129,10 @@ public class CartMenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     @Override
     public int getItemCount() {
         return orderDetailList.size() + 1;
+    }
+
+    interface OnOrderDetailSelectedListener {
+        void onOrderDetailSelected(String storeUuid, String menuUuid, int cartIndex);
     }
 
     class CartMenuViewHolder extends RecyclerView.ViewHolder {

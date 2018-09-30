@@ -125,7 +125,7 @@ public class CartViewModel extends AndroidViewModel {
         MutableLiveData<String> liveData = new MutableLiveData<>();
 
         cartManager.getCart(storeUuid)
-                .map(cart -> cart.getOrderList(position))
+                .map(cart -> cart.getOrderDetail(position))
                 .firstElement()
                 .flatMap(this::getCartItemPrice)
                 .map(NumberFormat.getCurrencyInstance()::format)

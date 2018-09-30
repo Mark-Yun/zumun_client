@@ -12,6 +12,8 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.AppCompatButton;
+import android.view.View;
 
 import com.mark.zumo.client.core.entity.Menu;
 import com.mark.zumo.client.core.entity.MenuOrder;
@@ -23,6 +25,7 @@ import com.mark.zumo.client.customer.view.menu.detail.fragment.MenuOptionFragmen
 import com.mark.zumo.client.customer.view.payment.PaymentActivity;
 import com.mark.zumo.client.customer.viewmodel.MenuDetailViewModel;
 
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
@@ -40,12 +43,15 @@ public class MenuDetailActivity extends AppCompatActivity {
     public static final int RESULT_CODE_PAYMENT_SUCCESS = PaymentActivity.RESULT_CODE_PAYMENT_SUCCESS;
     public static final int RESULT_CODE_PAYMENT_FAILED = PaymentActivity.RESULT_CODE_PAYMENT_FAILED;
 
+    @BindView(R.id.add_to_cart_button) AppCompatButton addToCartButton;
+    @BindView(R.id.place_order) AppCompatButton placeOrder;
+
     private MenuDetailViewModel menuDetailViewModel;
 
     private Menu menu;
 
     private String storeUuid;
-    private String cartIndex;
+    private int cartIndex;
 
     @Override
     protected void onCreate(@Nullable final Bundle savedInstanceState) {
@@ -59,25 +65,26 @@ public class MenuDetailActivity extends AppCompatActivity {
         menuDetailViewModel.getMenu(menuUuid).observe(this, menu -> this.menu = menu);
 
         storeUuid = getIntent().getStringExtra(KEY_MENU_STORE_UUID);
-        cartIndex = getIntent().getStringExtra(KEY_CART_INDEX);
+        cartIndex = getIntent().getIntExtra(KEY_CART_INDEX, -1);
 
-        inflateViews(menuUuid);
+        inflateViews();
 
         overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
     }
 
-    private void inflateViews(String menuUuid) {
-        Bundle bundle = new Bundle();
-        bundle.putString(KEY_MENU_UUID, menuUuid);
-        bundle.putString(KEY_CART_INDEX, cartIndex);
-
-        Fragment menuInfoFragment = Fragment.instantiate(this, MenuInfoFragment.class.getName(), bundle);
-        Fragment menuOptionFragment = Fragment.instantiate(this, MenuOptionFragment.class.getName(), bundle);
+    private void inflateViews() {
+        Fragment menuInfoFragment = Fragment.instantiate(this, MenuInfoFragment.class.getName(), getIntent().getExtras());
+        Fragment menuOptionFragment = Fragment.instantiate(this, MenuOptionFragment.class.getName(), getIntent().getExtras());
 
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.menu_info_fragment, menuInfoFragment)
                 .replace(R.id.menu_option_fragment, menuOptionFragment)
                 .commit();
+
+        boolean isUpdateCartItem = cartIndex > -1;
+
+        addToCartButton.setVisibility(isUpdateCartItem ? View.GONE : View.VISIBLE);
+        placeOrder.setVisibility(isUpdateCartItem ? View.GONE : View.VISIBLE);
     }
 
     @Override
@@ -89,6 +96,9 @@ public class MenuDetailActivity extends AppCompatActivity {
     @Override
     public void finish() {
         super.finish();
+        if (cartIndex > -1) {
+            menuDetailViewModel.updateToCartCurrentItems(storeUuid, menu, cartIndex);
+        }
         Navigator.setBlurLayoutVisible(false);
         overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
     }
@@ -96,7 +106,6 @@ public class MenuDetailActivity extends AppCompatActivity {
     @OnClick(R.id.add_to_cart_button)
     void onClickAddToCart() {
         TouchResponse.big();
-        menuDetailViewModel = ViewModelProviders.of(this).get(MenuDetailViewModel.class);
         menuDetailViewModel.addToCartCurrentItems(storeUuid, menu);
         finish();
     }

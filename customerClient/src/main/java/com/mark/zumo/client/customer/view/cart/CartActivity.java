@@ -21,10 +21,13 @@ import com.mark.zumo.client.core.entity.MenuOrder;
 import com.mark.zumo.client.core.entity.Store;
 import com.mark.zumo.client.core.util.glide.GlideApp;
 import com.mark.zumo.client.core.util.glide.GlideUtils;
+import com.mark.zumo.client.core.view.Navigator;
 import com.mark.zumo.client.core.view.TouchResponse;
 import com.mark.zumo.client.customer.R;
+import com.mark.zumo.client.customer.view.menu.detail.MenuDetailActivity;
 import com.mark.zumo.client.customer.view.payment.PaymentActivity;
 import com.mark.zumo.client.customer.viewmodel.CartViewModel;
+import com.wonderkiln.blurkit.BlurLayout;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -47,6 +50,7 @@ public class CartActivity extends AppCompatActivity {
     @BindView(R.id.order_detail_recycler_view) RecyclerView cartItemRecyclerView;
     @BindView(R.id.total_price) AppCompatTextView totalPrice;
     @BindView(R.id.place_order) AppCompatButton placeOrder;
+    @BindView(R.id.blur_filter) BlurLayout blurFilter;
 
     private String storeUuid;
     private CartViewModel cartViewModel;
@@ -61,6 +65,13 @@ public class CartActivity extends AppCompatActivity {
         ButterKnife.bind(this);
 
         inflateView(storeUuid);
+        Navigator.addBlurFilter(blurFilter);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Navigator.removeBlurFilter(blurFilter);
     }
 
     private void inflateView(String storeUuid) {
@@ -70,11 +81,20 @@ public class CartActivity extends AppCompatActivity {
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
         cartItemRecyclerView.setLayoutManager(layoutManager);
 
-        CartMenuAdapter cartMenuAdapter = new CartMenuAdapter(cartViewModel, this, storeUuid);
+        CartMenuAdapter cartMenuAdapter = new CartMenuAdapter(cartViewModel, this, storeUuid, this::onOrderDetailSelected);
         cartItemRecyclerView.setAdapter(cartMenuAdapter);
 
         cartViewModel.getCartItemList(storeUuid).observe(this, cartMenuAdapter::setOrderDetailList);
         cartViewModel.getTotalPrice(storeUuid).observe(this, totalPrice::setText);
+    }
+
+    private void onOrderDetailSelected(final String storeUuid, final String menuUuid, final int cartIndex) {
+        Intent intent = new Intent();
+        intent.setClass(this, MenuDetailActivity.class);
+        intent.putExtra(MenuDetailActivity.KEY_MENU_STORE_UUID, storeUuid);
+        intent.putExtra(MenuDetailActivity.KEY_MENU_UUID, menuUuid);
+        intent.putExtra(MenuDetailActivity.KEY_CART_INDEX, cartIndex);
+        startActivity(intent);
     }
 
     private void onLoadStore(Store store) {

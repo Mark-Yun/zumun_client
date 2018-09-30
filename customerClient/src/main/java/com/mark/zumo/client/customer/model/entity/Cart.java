@@ -43,6 +43,12 @@ public class Cart {
         notifyOnNext();
     }
 
+    public void updateCartItem(OrderDetail orderDetail, int index) {
+        orderDetailList.remove(index);
+        orderDetailList.add(index, orderDetail);
+        notifyOnNext();
+    }
+
     public Cart addEmitter(ObservableEmitter<Cart> emitter) {
         emitterCollection.add(emitter);
         return this;
@@ -56,7 +62,7 @@ public class Cart {
         }
     }
 
-    public OrderDetail getOrderList(int position) {
+    public OrderDetail getOrderDetail(int position) {
         return orderDetailList.get(position);
     }
 

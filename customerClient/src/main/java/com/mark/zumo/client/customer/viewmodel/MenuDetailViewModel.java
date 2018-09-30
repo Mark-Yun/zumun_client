@@ -53,7 +53,7 @@ public class MenuDetailViewModel extends AndroidViewModel {
 
     private final CompositeDisposable disposables;
 
-    private int amount;
+    private MutableLiveData<Integer> amountLiveData;
 
     public MenuDetailViewModel(@NonNull final Application application) {
         super(application);
@@ -87,6 +87,24 @@ public class MenuDetailViewModel extends AndroidViewModel {
         return liveData;
     }
 
+    public void insertOrderDetailFromCart(String storeUuid, int cartIndex) {
+        cartManager.getCart(storeUuid)
+                .map(cart -> cart.getOrderDetail(cartIndex))
+                .firstElement()
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnSuccess(this::insertMenuOptionDataFromOrderDetail)
+                .doOnSubscribe(disposables::add)
+                .subscribe();
+    }
+
+    private void insertMenuOptionDataFromOrderDetail(OrderDetail orderDetail) {
+        amountLiveData.setValue(orderDetail.quantity);
+
+        for (String menuOptionUuid : orderDetail.menuOptionUuidList) {
+            selectMenuOption(menuOptionUuid);
+        }
+    }
+
     private void loadMenuOptions(MutableLiveData<Map<String, List<MenuOption>>> liveData, String menuUuid) {
         menuOptionMap.clear();
         selectedOptionMap.clear();
@@ -100,23 +118,40 @@ public class MenuDetailViewModel extends AndroidViewModel {
                 .subscribe();
     }
 
-    public String getMenuAmount() {
-        return String.valueOf(amount = 1);
+    public LiveData<Integer> menuAmount() {
+        if (amountLiveData == null) {
+            amountLiveData = new MutableLiveData<>();
+            amountLiveData.setValue(1);
+        }
+        return amountLiveData;
     }
 
-    public String increaseAmount() {
-        return String.valueOf(++amount);
+    public void increaseAmount() {
+        amountLiveData.setValue(amountLiveData.getValue() + 1);
     }
 
-    public String decreaseAmount() {
-        return String.valueOf(amount > 1 ? --amount : amount);
+    public void decreaseAmount() {
+        Integer amount = amountLiveData.getValue();
+        amountLiveData.setValue(amount > 1 ? --amount : amount);
     }
 
     public void selectMenuOption(MenuOption menuOption) {
         Log.d(TAG, "selectMenuOption: " + menuOption);
         selectedOptionMap.put(menuOption.name, menuOption);
         MutableLiveData<MenuOption> liveData = selectedOptionLiveDataMap.get(menuOption.name);
+        if (liveData == null) {
+            liveData = new MutableLiveData<>();
+            selectedOptionLiveDataMap.put(menuOption.name, liveData);
+        }
         liveData.setValue(menuOption);
+    }
+
+    private void selectMenuOption(String menuOptionUuid) {
+        menuManager.getMenuOptionFromDisk(menuOptionUuid)
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnSuccess(this::selectMenuOption)
+                .doOnSubscribe(disposables::add)
+                .subscribe();
     }
 
     public void deselectMenuOption(String key) {
@@ -144,7 +179,7 @@ public class MenuDetailViewModel extends AndroidViewModel {
             price += menuOption.price;
         }
 
-        OrderDetail orderDetail = new OrderDetail("", storeUuid, menu.uuid, menu.name, "", menuOptionUuidList, amount, price);
+        OrderDetail orderDetail = new OrderDetail("", storeUuid, menu.uuid, menu.name, "", menuOptionUuidList, amountLiveData.getValue(), price);
         cartManager.getCart(storeUuid)
                 .firstElement()
                 .observeOn(AndroidSchedulers.mainThread())
@@ -152,6 +187,25 @@ public class MenuDetailViewModel extends AndroidViewModel {
                 .doOnSuccess(cart -> selectedOptionMap.clear())
                 .doOnSuccess(cart -> selectedOptionLiveDataMap.clear())
                 .doOnSuccess(cart -> showAddToCartSucceedToast())
+                .doOnSubscribe(disposables::add)
+                .subscribe();
+    }
+
+    public void updateToCartCurrentItems(String storeUuid, Menu menu, int cartIndex) {
+        int price = menu.price;
+        ArrayList<String> menuOptionUuidList = new ArrayList<>();
+        for (MenuOption menuOption : selectedOptionMap.values()) {
+            menuOptionUuidList.add(menuOption.uuid);
+            price += menuOption.price;
+        }
+
+        OrderDetail orderDetail = new OrderDetail("", storeUuid, menu.uuid, menu.name, "", menuOptionUuidList, amountLiveData.getValue(), price);
+        cartManager.getCart(storeUuid)
+                .firstElement()
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnSuccess(cart -> cart.updateCartItem(orderDetail, cartIndex))
+                .doOnSuccess(cart -> selectedOptionMap.clear())
+                .doOnSuccess(cart -> selectedOptionLiveDataMap.clear())
                 .doOnSubscribe(disposables::add)
                 .subscribe();
     }
@@ -166,7 +220,7 @@ public class MenuDetailViewModel extends AndroidViewModel {
             price += menuOption.price;
         }
 
-        OrderDetail orderDetail = new OrderDetail("", storeUuid, menu.uuid, menu.name, "", menuOptionUuidList, amount, price);
+        OrderDetail orderDetail = new OrderDetail("", storeUuid, menu.uuid, menu.name, "", menuOptionUuidList, amountLiveData.getValue(), price);
         orderDetail.menuOrderName = menu.name;
         sessionManager.getSessionUser()
                 .flatMap(ignored -> orderManager.createMenuOrder(orderDetail))

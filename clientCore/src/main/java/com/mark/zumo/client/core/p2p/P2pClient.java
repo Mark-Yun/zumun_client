@@ -12,7 +12,6 @@ import android.support.v4.util.SimpleArrayMap;
 import android.util.Log;
 
 import com.google.android.gms.nearby.Nearby;
-import com.google.android.gms.nearby.connection.ConnectionInfo;
 import com.google.android.gms.nearby.connection.ConnectionsClient;
 import com.google.android.gms.nearby.connection.DiscoveredEndpointInfo;
 import com.google.android.gms.nearby.connection.EndpointDiscoveryCallback;
@@ -79,6 +78,9 @@ public enum P2pClient {
     }
 
     public void stopDiscovery() {
+        if (connectionsClient == null) {
+            return;
+        }
         Log.d(TAG, "stopDiscovery: ");
         connectionsClient.stopDiscovery();
     }
@@ -96,11 +98,6 @@ public enum P2pClient {
         sessionId = "";
     }
 
-    private void saveConnectionInfo(@NonNull String endpointId1, @NonNull ConnectionInfo connectionInfo) {
-        String storeId = connectionInfo.getEndpointName();
-        endPointMap.put(storeId, endpointId1);
-    }
-
     @SuppressWarnings("unused")
     private void onSuccessAcceptConnection(Void unusedResult) {
         Log.d(TAG, "onSuccessAcceptConnection: ");
@@ -108,6 +105,7 @@ public enum P2pClient {
     }
 
     public Maybe<String> findStore(Activity activity, String customerUuid) {
+        stopDiscovery();
         return startDiscovery(activity, customerUuid)
                 .map(endPointMap::get)
                 .subscribeOn(Schedulers.io());

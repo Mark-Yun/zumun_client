@@ -6,6 +6,7 @@
 
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:blurkit="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorPrimary">
@@ -43,9 +44,9 @@
 
         <android.support.v7.widget.AppCompatTextView
             android:id="@+id/store_cover_title"
+            style="@style/HeadLineTextDark"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            style="@style/HeadLineTextDark"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -57,9 +58,9 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginBottom="15dp"
+        android:fadeScrollbars="false"
         android:isScrollContainer="true"
         android:nestedScrollingEnabled="true"
-        android:fadeScrollbars="false"
         android:scrollbars="vertical"
         app:layout_constraintBottom_toTopOf="@+id/total_price_container"
         app:layout_constraintTop_toBottomOf="@+id/store_cover_image"
@@ -75,17 +76,17 @@
 
         <TextView
             android:id="@+id/total_price_description"
+            style="@style/AccentTextLight"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/total_price"
-            style="@style/AccentTextLight"
             app:layout_constraintStart_toStartOf="parent" />
 
         <TextView
             android:id="@+id/total_price"
+            style="@style/AccentTextLight"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            style="@style/AccentTextLight"
             android:textColor="@color/colorAccent"
             app:layout_constraintEnd_toEndOf="parent" />
 
@@ -100,4 +101,15 @@
         android:padding="@dimen/big_margin"
         android:text="@string/button_text_send_order"
         app:layout_constraintBottom_toBottomOf="parent" />
+
+    <com.wonderkiln.blurkit.BlurLayout
+        android:id="@+id/blur_filter"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:clickable="false"
+        android:elevation="8dp"
+        android:focusable="false"
+        android:visibility="gone"
+        app:blurRadius="10"
+        blurkit:blk_fps="0" />
 </android.support.constraint.ConstraintLayout>
