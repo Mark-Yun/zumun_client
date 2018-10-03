@@ -102,7 +102,7 @@
         android:layout_height="wrap_content"
         android:background="@color/colorPrimary"
         android:padding="15dp"
-        app:layout_constraintBottom_toTopOf="@+id/cancel_order">
+        app:layout_constraintBottom_toBottomOf="parent">
 
         <TextView
             android:id="@+id/total_price_description"
@@ -121,14 +121,4 @@
             app:layout_constraintEnd_toEndOf="parent" />
 
     </android.support.constraint.ConstraintLayout>
-
-    <android.support.v7.widget.AppCompatButton
-        android:id="@+id/cancel_order"
-        style="@style/ButtonTextDark"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@android:color/holo_red_dark"
-        android:text="@string/order_cancel_button_text"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="parent" />
 </android.support.constraint.ConstraintLayout>

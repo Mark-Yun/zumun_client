@@ -47,4 +47,5 @@
     <string name="is_finding_store">If inside ZUMUN store, \\nthe menu will appear in here.</string>
 
     <string name="order_request_progress">Order requesting… Do not turn off!</string>
+    <string name="store_not_exist_current_map">There is no ZUMUN store on current map.</string>
 </resources>

@@ -38,4 +38,5 @@
     <string name="is_finding_store">주변의 Zumun 가게를 찾는 중입니다.</string>
     <string name="order_progress_channel_name">Zumun 주문 과정</string>
     <string name="order_request_progress">주문을 전송하는 중입니다. 앱을 종료하지 말아주세요.</string>
+    <string name="store_not_exist_current_map">현재 지도에 ZUMUN 가능한 가게가 없습니다.</string>
 </resources>

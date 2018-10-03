@@ -12,9 +12,10 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -55,7 +56,8 @@ public class PlaceFragment extends Fragment {
     public static final String TAG = "PlaceFragment";
     private static final int REQUEST_CODE_PLACE_PICKER = 15;
     @BindView(R.id.near_by_store) RecyclerView nearByStore;
-    @BindView(R.id.swipe_refresh_layout) SwipeRefreshLayout swipeRefreshLayout;
+    @BindView(R.id.non_store_text_view_layout) ConstraintLayout nonStoreTextViewLayout;
+    @BindView(R.id.near_by_store_layout) NestedScrollView nearByStoreLayout;
 
     private PlaceViewModel placeViewModel;
     private SupportMapFragment mapFragment;
@@ -74,18 +76,9 @@ public class PlaceFragment extends Fragment {
     public View onCreateView(@NonNull final LayoutInflater inflater, @Nullable final ViewGroup container, @Nullable final Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_place, container, false);
         ButterKnife.bind(this, view);
-        inflateSwipeRefreshLayout();
         inflateNearbyStoreRecyclerView();
         inflateMapFragment();
         return view;
-    }
-
-    private void inflateSwipeRefreshLayout() {
-        swipeRefreshLayout.setOnRefreshListener(this::refreshNearByStore);
-    }
-
-    private void refreshNearByStore() {
-        mapFragment.getMapAsync(this::onLocationLoaded);
     }
 
     @SuppressLint("MissingPermission")
@@ -118,10 +111,6 @@ public class PlaceFragment extends Fragment {
                 .commit();
 
         mapFragment.getMapAsync(this::onReadyMap);
-    }
-
-    private void onLocationLoaded(GoogleMap googleMap) {
-        onLocationLoaded(googleMap, googleMap.getCameraPosition().target);
     }
 
     private void onLocationLoaded(GoogleMap googleMap, LatLng latLng) {
@@ -159,11 +148,19 @@ public class PlaceFragment extends Fragment {
     }
 
     private void onLoadNearByStoreList(List<Store> storeList) {
-        swipeRefreshLayout.setRefreshing(false);
+        boolean isNonStore = storeList == null || storeList.isEmpty();
+
+        nonStoreTextViewLayout.setVisibility(isNonStore ? View.VISIBLE : View.GONE);
+        nearByStoreLayout.setVisibility(isNonStore ? View.GONE : View.VISIBLE);
+
         adapter.setStoreList(storeList);
         nearByStore.scheduleLayoutAnimation();
         mapFragment.getMapAsync(googleMap -> {
             googleMap.clear();
+
+            if (storeList == null) {
+                return;
+            }
 
             for (Store store : storeList) {
                 LatLng selectedLatLng = new LatLng(store.latitude, store.longitude);

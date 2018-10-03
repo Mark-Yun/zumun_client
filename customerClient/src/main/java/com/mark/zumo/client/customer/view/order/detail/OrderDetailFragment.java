@@ -11,7 +11,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.AppCompatTextView;
 import android.support.v7.widget.LinearLayoutManager;
@@ -45,7 +44,6 @@ public class OrderDetailFragment extends Fragment {
     @BindView(R.id.store_cover_title) AppCompatTextView storeCoverTitle;
     @BindView(R.id.order_detail_recycler_view) RecyclerView recyclerView;
     @BindView(R.id.total_price) TextView totalPrice;
-    @BindView(R.id.cancel_order) AppCompatButton cancelOrder;
     @BindView(R.id.order_step_view) StepView orderStepView;
 
     private OrderViewModel orderViewModel;
@@ -118,14 +116,9 @@ public class OrderDetailFragment extends Fragment {
     private void onLoadMenuOrder(MenuOrder menuOrder) {
         totalPrice.setText(NumberFormat.getCurrencyInstance().format(menuOrder.totalPrice));
         MenuOrder.State state = MenuOrder.State.of(menuOrder.state);
-        cancelOrder.setVisibility(state == MenuOrder.State.REQUESTED ? View.VISIBLE : View.GONE);
         orderStepView.go(state.ordinal(), true);
 
         inflateStoreInfo(menuOrder.storeUuid);
-    }
-
-    @OnClick(R.id.cancel_order)
-    public void onCancelOrderClicked() {
     }
 
     @OnClick(R.id.back_button)
