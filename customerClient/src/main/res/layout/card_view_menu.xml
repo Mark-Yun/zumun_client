@@ -6,9 +6,9 @@
 
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/menu_container"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:id="@+id/menu_container"
     android:layout_marginStart="@dimen/small_margin"
     android:layout_marginTop="@dimen/small_margin"
     android:clickable="true"
@@ -24,22 +24,30 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
-        android:id="@+id/price"
+    <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/backgroundMenuTitle"
-        android:textAlignment="center"
-        style="@style/SecondaryLineTextDark"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        android:background="@drawable/background_menu_description"
+        app:layout_constraintBottom_toBottomOf="parent">
 
-    <TextView
-        android:id="@+id/name"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/backgroundMenuTitle"
-        android:textAlignment="center"
-        style="@style/SubtitleTextDark"
-        app:layout_constraintBottom_toTopOf="@+id/price" />
+        <TextView
+            android:id="@+id/name"
+            style="@style/SubtitleTextDark"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAlignment="center"
+            app:layout_constraintBottom_toTopOf="@+id/price"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <TextView
+            android:id="@+id/price"
+            style="@style/SecondaryLineTextDark"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAlignment="center"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+    </android.support.constraint.ConstraintLayout>
 </android.support.constraint.ConstraintLayout>

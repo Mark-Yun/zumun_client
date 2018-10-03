@@ -32,6 +32,7 @@ import com.mark.zumo.client.core.entity.MenuCategory;
 import com.mark.zumo.client.core.entity.Store;
 import com.mark.zumo.client.core.util.glide.GlideApp;
 import com.mark.zumo.client.core.util.glide.GlideUtils;
+import com.mark.zumo.client.core.view.RapidClickGuard;
 import com.mark.zumo.client.core.view.TouchResponse;
 import com.mark.zumo.client.customer.R;
 import com.mark.zumo.client.customer.model.entity.Cart;
@@ -184,6 +185,10 @@ public class MenuFragment extends Fragment {
 
     @OnClick(R.id.store_cart_button)
     void onClickCartButton() {
+        if (RapidClickGuard.shouldBlock(cartButton, 1000)) {
+            return;
+        }
+
         TouchResponse.small();
         LiveData<Cart> cartLiveData = menuViewModel.getCart(storeUuid);
 

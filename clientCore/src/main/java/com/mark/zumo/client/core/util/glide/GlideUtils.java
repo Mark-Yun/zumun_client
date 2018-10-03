@@ -6,8 +6,12 @@
 
 package com.mark.zumo.client.core.util.glide;
 
+import com.bumptech.glide.load.resource.bitmap.CenterCrop;
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.bumptech.glide.request.RequestOptions;
+import com.mark.zumo.client.core.R;
+import com.mark.zumo.client.core.util.context.ContextHolder;
 
 /**
  * Created by mark on 18. 5. 19.
@@ -42,7 +46,9 @@ public final class GlideUtils {
     }
 
     public static RequestOptions menuImageOptions() {
-        return RequestOptions.fitCenterTransform();
+        int dimensionPixelSize = ContextHolder.getContext().getResources().getDimensionPixelSize(R.dimen.menu_round_corners);
+        return new RequestOptions()
+                .transforms(new CenterCrop(), new RoundedCorners(dimensionPixelSize));
     }
 
     public static DrawableTransitionOptions menuTransitionOptions() {

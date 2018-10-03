@@ -18,6 +18,7 @@ import android.view.View;
 import com.mark.zumo.client.core.entity.Menu;
 import com.mark.zumo.client.core.entity.MenuOrder;
 import com.mark.zumo.client.core.view.Navigator;
+import com.mark.zumo.client.core.view.RapidClickGuard;
 import com.mark.zumo.client.core.view.TouchResponse;
 import com.mark.zumo.client.customer.R;
 import com.mark.zumo.client.customer.view.menu.detail.fragment.MenuInfoFragment;
@@ -112,6 +113,9 @@ public class MenuDetailActivity extends AppCompatActivity {
 
     @OnClick(R.id.place_order)
     void onClickPlaceOrder() {
+        if (RapidClickGuard.shouldBlock(placeOrder, 2000)) {
+            return;
+        }
         TouchResponse.medium();
         menuDetailViewModel.placeOrder(storeUuid, menu).observe(this, this::onSuccessCreateOrder);
     }

@@ -22,6 +22,7 @@ import com.mark.zumo.client.core.entity.Store;
 import com.mark.zumo.client.core.util.glide.GlideApp;
 import com.mark.zumo.client.core.util.glide.GlideUtils;
 import com.mark.zumo.client.core.view.Navigator;
+import com.mark.zumo.client.core.view.RapidClickGuard;
 import com.mark.zumo.client.core.view.TouchResponse;
 import com.mark.zumo.client.customer.R;
 import com.mark.zumo.client.customer.view.menu.detail.MenuDetailActivity;
@@ -115,13 +116,15 @@ public class CartActivity extends AppCompatActivity {
 
     @OnClick(R.id.place_order)
     void onClickPlaceOrder() {
+        if (RapidClickGuard.shouldBlock(placeOrder, 2000)) {
+            return;
+        }
+
         TouchResponse.medium();
-        placeOrder.setEnabled(false);
         cartViewModel.placeOrder(storeUuid).observe(this, this::onSuccessCreateOrder);
     }
 
     private void onSuccessCreateOrder(MenuOrder menuOrder) {
-        placeOrder.setEnabled(true);
         Intent intent = new Intent(this, PaymentActivity.class);
         intent.putExtra(PaymentActivity.KEY_ORDER_UUID, menuOrder.uuid);
         startActivityForResult(intent, PaymentActivity.REQ_CODE_PAYMENT);
