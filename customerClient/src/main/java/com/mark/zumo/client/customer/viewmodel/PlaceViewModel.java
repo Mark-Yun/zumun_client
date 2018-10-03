@@ -46,10 +46,10 @@ public class PlaceViewModel extends AndroidViewModel {
         disposables = new CompositeDisposable();
     }
 
-    public LiveData<List<Store>> nearByStore(LatLng latLng, int distanceMeter) {
+    public LiveData<List<Store>> nearByStore(LatLng latLng, double distanceKm) {
         MutableLiveData<List<Store>> nearByStore = new MutableLiveData<>();
 
-        storeManager.nearByStore(latLng, distanceMeter)
+        storeManager.nearByStore(latLng, distanceKm)
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSuccess(nearByStore::setValue)
                 .doOnSubscribe(disposables::add)

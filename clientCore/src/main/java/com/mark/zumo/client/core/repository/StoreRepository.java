@@ -6,7 +6,6 @@
 
 package com.mark.zumo.client.core.repository;
 
-import android.location.Location;
 import android.os.Bundle;
 
 import com.mark.zumo.client.core.appserver.AppServerServiceProvider;
@@ -55,12 +54,8 @@ public class StoreRepository {
         return sInstance;
     }
 
-    public Maybe<List<Store>> nearByStore(Location location, int distanceKm) {
-        return nearByStore(location.getLatitude(), location.getLongitude(), distanceKm);
-    }
-
-    public Maybe<List<Store>> nearByStore(double latitude, double longitude, int distanceMeter) {
-        return networkRepository.getNearByStore(latitude, longitude, distanceMeter);
+    public Maybe<List<Store>> nearByStore(double latitude, double longitude, double distanceKm) {
+        return networkRepository.getNearByStore(latitude, longitude, distanceKm);
     }
 
     public Maybe<Store> updateStore(Store store) {

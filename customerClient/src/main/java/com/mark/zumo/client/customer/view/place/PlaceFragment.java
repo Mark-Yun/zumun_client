@@ -101,8 +101,8 @@ public class PlaceFragment extends Fragment {
     private void onCameraIdleListener(GoogleMap googleMap) {
         LatLng target = googleMap.getCameraPosition().target;
         VisibleRegion visibleRegion = googleMap.getProjection().getVisibleRegion();
-        double distance = SphericalUtil.computeDistanceBetween(visibleRegion.farLeft, target);
-        placeViewModel.nearByStore(target, (int) distance).observe(this, this::onLoadNearByStoreList);
+        double distance = SphericalUtil.computeDistanceBetween(visibleRegion.farLeft, target) / 1000;
+        placeViewModel.nearByStore(target, distance).observe(this, this::onLoadNearByStoreList);
     }
 
     private boolean onMyLocationButtonClickListener(GoogleMap googleMap) {

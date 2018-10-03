@@ -222,8 +222,8 @@ public class MenuDetailViewModel extends AndroidViewModel {
 
         OrderDetail orderDetail = new OrderDetail("", storeUuid, menu.uuid, menu.name, "", menuOptionUuidList, amountLiveData.getValue(), price);
         orderDetail.menuOrderName = menu.name;
-        sessionManager.getSessionUser()
-                .flatMap(ignored -> orderManager.createMenuOrder(orderDetail))
+
+        orderManager.createMenuOrder(orderDetail)
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSuccess(unused -> selectedOptionMap.clear())
                 .doOnSuccess(unused -> selectedOptionLiveDataMap.clear())

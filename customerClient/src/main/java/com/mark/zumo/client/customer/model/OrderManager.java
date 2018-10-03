@@ -61,7 +61,7 @@ public enum OrderManager {
     }
 
     public Maybe<MenuOrder> createMenuOrder(OrderDetail orderDetail) {
-        return orderRepositoryMaybe.flatMap(orderRepository -> createMenuOrder(orderDetail))
+        return orderRepositoryMaybe.flatMap(orderRepository -> orderRepository.createMenuOrder(orderDetail))
                 .subscribeOn(Schedulers.io());
     }
 

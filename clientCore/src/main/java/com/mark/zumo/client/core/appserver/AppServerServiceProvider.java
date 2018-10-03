@@ -143,6 +143,10 @@ public enum AppServerServiceProvider {
     public NetworkRepository buildNetworkRepository(final Bundle bundle) {
         Bundle mergedBundle = buildDefaultHeader();
         mergedBundle.putAll(bundle);
+        if (mergedBundle.equals(headerBundle)) {
+            return networkRepository;
+        }
+
         headerBundle = mergedBundle;
         return networkRepository = buildNetworkRepositoryInternal(mergedBundle);
     }

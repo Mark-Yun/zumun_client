@@ -6,8 +6,6 @@
 
 package com.mark.zumo.client.customer.model;
 
-import android.location.Location;
-
 import com.google.android.gms.maps.model.LatLng;
 import com.mark.zumo.client.core.entity.Store;
 import com.mark.zumo.client.core.repository.SessionRepository;
@@ -37,23 +35,8 @@ public enum StoreManager {
                 .map(StoreRepository::getInstance);
     }
 
-    public Maybe<List<Store>> nearByStore(Location location) {
-        return storeRepositoryMaybe.flatMap(storeRepository -> storeRepository.nearByStore(location, 1))
-                .flatMapObservable(Observable::fromIterable)
-                .sorted((s1, s2) -> (int) (location.distanceTo(from(s1.latitude, s1.longitude)) - location.distanceTo(from(s2.latitude, s2.longitude))))
-                .toList().toMaybe()
-                .subscribeOn(Schedulers.io());
-    }
-
-    private Location from(double latitude, double longitude) {
-        Location location = new Location("Place Point");
-        location.setLatitude(latitude);
-        location.setLongitude(longitude);
-        return location;
-    }
-
-    public Maybe<List<Store>> nearByStore(LatLng latLng, int distanceMeter) {
-        return storeRepositoryMaybe.flatMap(storeRepository -> storeRepository.nearByStore(latLng.latitude, latLng.longitude, distanceMeter))
+    public Maybe<List<Store>> nearByStore(LatLng latLng, double distanceKm) {
+        return storeRepositoryMaybe.flatMap(storeRepository -> storeRepository.nearByStore(latLng.latitude, latLng.longitude, distanceKm))
                 .subscribeOn(Schedulers.io());
     }
 
