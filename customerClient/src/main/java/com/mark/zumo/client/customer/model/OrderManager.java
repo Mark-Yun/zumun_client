@@ -82,11 +82,7 @@ public enum OrderManager {
 
     public Observable<List<MenuOrder>> getMenuOrderListByCustomerUuid(String customerUuid) {
         return orderRepositoryMaybe.flatMapObservable(orderRepository ->
-                orderRepository.getMenuOrderListByCustomerUuid(customerUuid, 0, 10)
-                        .flatMap(Observable::fromIterable)
-                        .filter(order -> order.state != MenuOrder.State.CREATED.ordinal())
-                        .sorted((o1, o2) -> (int) (o2.createdDate - o1.createdDate))
-                        .toList().toObservable()
+                orderRepository.getMenuOrderListByCustomerUuid(customerUuid, 0, 20)
         ).subscribeOn(Schedulers.io());
     }
 

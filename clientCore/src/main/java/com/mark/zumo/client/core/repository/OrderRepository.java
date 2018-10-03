@@ -112,10 +112,6 @@ public class OrderRepository {
                 .distinctUntilChanged(new ListComparator<>());
     }
 
-    public Maybe<List<MenuOrder>> getMenuOrderListByCustomerUuidFromDisk(String customerUuid, int offset, int limit) {
-        return diskRepository.getMenuOrderByCustomerUuid(customerUuid, offset, limit);
-    }
-
     public Observable<List<MenuOrder>> getMenuOrderListByStoreUuid(String storeUuid, int offset, int limit) {
         Maybe<List<MenuOrder>> menuOrderListDB = diskRepository.getMenuOrderByStoreUuid(storeUuid, offset, limit);
         Maybe<List<MenuOrder>> menuOrderListApi = networkRepository.getMenuOrderListByStoreUuid(storeUuid, offset, limit)

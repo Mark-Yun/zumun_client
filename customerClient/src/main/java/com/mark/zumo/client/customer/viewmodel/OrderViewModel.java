@@ -23,6 +23,7 @@ import com.mark.zumo.client.customer.model.StoreManager;
 
 import java.util.List;
 
+import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 
@@ -68,9 +69,17 @@ public class OrderViewModel extends AndroidViewModel {
         sessionManager.getSessionUser()
                 .map(guestUser -> guestUser.uuid)
                 .flatMapObservable(orderManager::getMenuOrderListByCustomerUuid)
-                .observeOn(AndroidSchedulers.mainThread())
-                .doOnNext(liveData::setValue)
-                .doOnSubscribe(compositeDisposable::add)
+                .doOnNext(menuOrderList ->
+                        Observable.fromIterable(menuOrderList)
+                                .distinct()
+                                .filter(order -> MenuOrder.State.of(order.state) != MenuOrder.State.CREATED)
+                                .sorted((o1, o2) -> (int) (o2.createdDate - o1.createdDate))
+                                .toList().toObservable()
+                                .observeOn(AndroidSchedulers.mainThread())
+                                .doOnNext(liveData::setValue)
+                                .doOnSubscribe(compositeDisposable::add)
+                                .subscribe()
+                ).doOnSubscribe(compositeDisposable::add)
                 .subscribe();
 
         return liveData;
