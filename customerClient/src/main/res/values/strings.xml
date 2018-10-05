@@ -11,6 +11,7 @@
     <string name="place_near_by_header_text">Near by Stores</string>
     <string name="distance_format_kilo_meter">%skm</string>
     <string name="distance_format_meter">%sm</string>
+    <string name="distance_description_under_100m">Closer 100M</string>
 
     <string name="added_to_cart">Added %s into cart.</string>
     <string name="cancel_action">Cancel</string>

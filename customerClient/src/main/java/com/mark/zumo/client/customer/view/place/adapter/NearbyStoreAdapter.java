@@ -10,7 +10,6 @@ import android.arch.lifecycle.LifecycleOwner;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -68,13 +67,11 @@ public class NearbyStoreAdapter extends RecyclerView.Adapter<NearbyStoreAdapter.
         placeViewModel.distanceFrom(store.latitude, store.longitude)
                 .observe(lifecycleOwner, holder.distance::setText);
 
-        if (!TextUtils.isEmpty(store.thumbnailUrl)) {
-            GlideApp.with(holder.itemView.getContext())
-                    .load(store.thumbnailUrl)
-                    .apply(GlideUtils.storeImageOptions())
-                    .transition(GlideUtils.storeTransitionOptions())
-                    .into(holder.image);
-        }
+        GlideApp.with(holder.itemView.getContext())
+                .load(store.thumbnailUrl)
+                .apply(GlideUtils.storeImageOptions())
+                .transition(GlideUtils.storeTransitionOptions())
+                .into(holder.image);
 
         holder.itemView.setOnClickListener(v -> {
             TouchResponse.small();

@@ -84,11 +84,10 @@ public class PlaceViewModel extends AndroidViewModel {
     }
 
     private String convertDistance(float distance) {
-        if (distance < 1000) {
-            String distMeter = String.format(Locale.getDefault(), "%.2f", distance);
-            return getApplication().getString(R.string.distance_format_meter, distMeter);
+        if (distance < 100) {
+            return getApplication().getString(R.string.distance_description_under_100m);
         } else {
-            String distKm = String.format(Locale.getDefault(), "%.2f", distance / 1000);
+            String distKm = String.format(Locale.getDefault(), "%.1f", distance / 1000);
             return getApplication().getString(R.string.distance_format_kilo_meter, distKm);
         }
     }
