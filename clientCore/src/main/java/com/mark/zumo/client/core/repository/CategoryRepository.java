@@ -13,7 +13,6 @@ import com.mark.zumo.client.core.appserver.NetworkRepository;
 import com.mark.zumo.client.core.dao.AppDatabaseProvider;
 import com.mark.zumo.client.core.dao.DiskRepository;
 import com.mark.zumo.client.core.entity.MenuCategory;
-import com.mark.zumo.client.core.entity.util.ListComparator;
 import com.mark.zumo.client.core.util.BundleUtils;
 
 import java.util.List;
@@ -58,7 +57,7 @@ public class CategoryRepository {
 
         return Maybe.merge(menuCategoryListDB, menuCategoryListApi)
                 .toObservable()
-                .distinctUntilChanged(new ListComparator<>());
+                .distinctUntilChanged();
     }
 
     public Maybe<MenuCategory> createMenuCategory(final MenuCategory menuCategory) {

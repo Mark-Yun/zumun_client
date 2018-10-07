@@ -12,6 +12,7 @@ import android.animation.ValueAnimator;
 import android.arch.lifecycle.LifecycleOwner;
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.support.constraint.ConstraintLayout;
 import android.support.v4.view.animation.FastOutSlowInInterpolator;
 import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.AppCompatTextView;
@@ -20,6 +21,8 @@ import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AnimationUtils;
+import android.view.animation.LayoutAnimationController;
 
 import com.mark.zumo.client.core.entity.Menu;
 import com.mark.zumo.client.core.entity.MenuCategory;
@@ -39,7 +42,7 @@ import butterknife.ButterKnife;
  */
 public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHolder> {
 
-    public static final int ANIM_DURATION = 300;
+    private static final int ANIM_DURATION = 300;
     private List<MenuCategory> categoryList;
     private Map<String, List<Menu>> menuListMap;
 
@@ -64,12 +67,18 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHo
     }
 
     void setCategoryList(final List<MenuCategory> categoryList) {
-        this.categoryList = categoryList;
+        if (this.categoryList.equals(categoryList)) {
+            return;
+        }
 
+        this.categoryList = categoryList;
         notifyIfReady();
     }
 
     void setMenuListMap(final Map<String, List<Menu>> menuListMap) {
+        if (this.menuListMap.equals(menuListMap)) {
+            return;
+        }
         this.menuListMap = menuListMap;
         notifyIfReady();
     }
@@ -107,14 +116,19 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHo
         recyclerView.setHasFixedSize(true);
         recyclerView.setNestedScrollingEnabled(false);
 
+        Context context = holder.itemView.getContext();
+        final LayoutAnimationController controller = AnimationUtils.loadLayoutAnimation(context, R.anim.layout_animation_fall_down);
+        recyclerView.setLayoutAnimation(controller);
+
         List<Menu> menuList = menuListMap.get(categoryUuid);
         MenuAdapter menuAdapter = new MenuAdapter(lifecycleOwner, menuViewModel);
         recyclerView.setAdapter(menuAdapter);
         menuAdapter.setMenuList(menuList);
+        recyclerView.scheduleLayoutAnimation();
 
         holder.categoryName.setText(categoryName + " (" + menuList.size() + ")");
 
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
+        holder.categoryHeader.setOnClickListener(new View.OnClickListener() {
             private boolean isVisible = true;
             private int viewHeight;
 
@@ -157,6 +171,7 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHo
 
     static class ViewHolder extends RecyclerView.ViewHolder {
         @BindView(R.id.category_name) AppCompatTextView categoryName;
+        @BindView(R.id.category_header) ConstraintLayout categoryHeader;
         @BindView(R.id.menu_recycler_view) RecyclerView menuRecyclerView;
         @BindView(R.id.category_expand_button) AppCompatImageView expandButton;
 

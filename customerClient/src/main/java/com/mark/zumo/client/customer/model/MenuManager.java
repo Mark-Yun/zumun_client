@@ -6,6 +6,8 @@
 
 package com.mark.zumo.client.customer.model;
 
+import android.support.annotation.WorkerThread;
+
 import com.mark.zumo.client.core.entity.Menu;
 import com.mark.zumo.client.core.entity.MenuCategory;
 import com.mark.zumo.client.core.entity.MenuOption;
@@ -32,6 +34,7 @@ import io.reactivex.schedulers.Schedulers;
 public enum MenuManager {
     INSTANCE;
 
+    public static final String TAG = "MenuManager";
     private final SessionRepository sessionRepository;
 
     private P2pClient p2pClient;
@@ -57,6 +60,11 @@ public enum MenuManager {
                 .subscribeOn(Schedulers.io());
     }
 
+    @WorkerThread
+    public Menu getMenuFromDiskBlocking(String uuid) {
+        return menuRepositoryMaybe.blockingGet().getMenuFromDisk(uuid).blockingGet();
+    }
+
     public void clearClient() {
         if (p2pClient == null) {
             return;
@@ -78,9 +86,9 @@ public enum MenuManager {
                 .flatMapSingle(groupedObservable ->
                         Single.zip(
                                 Single.just(groupedObservable.getKey()),
-                                groupedObservable.sorted((d1, d2) -> d2.menuSeqNum - d1.menuSeqNum)
+                                groupedObservable.sorted((d1, d2) -> d1.menuSeqNum - d2.menuSeqNum)
                                         .map(menuDetail -> menuDetail.menuUuid)
-                                        .flatMapMaybe(this::getMenuFromDisk)
+                                        .map(this::getMenuFromDiskBlocking)
                                         .toList(),
                                 CombinedResult::new
                         )
@@ -105,8 +113,10 @@ public enum MenuManager {
                 .flatMapObservable(categoryRepository -> categoryRepository.getMenuCategoryList(storeUuid))
                 .flatMapSingle(menuCategories ->
                         Observable.fromIterable(menuCategories)
-                                .sorted((c1, c2) -> c2.seqNum - c1.seqNum)
+                                .sorted((c1, c2) -> c1.seqNum - c2.seqNum)
                                 .toList()
-                ).subscribeOn(Schedulers.io());
+                )
+                .distinctUntilChanged()
+                .subscribeOn(Schedulers.io());
     }
 }

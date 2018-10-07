@@ -23,12 +23,13 @@ import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 
 import com.mark.zumo.client.core.entity.MenuOrder;
 import com.mark.zumo.client.core.entity.Store;
 import com.mark.zumo.client.core.util.context.ContextHolder;
 import com.mark.zumo.client.customer.R;
-import com.mark.zumo.client.customer.view.main.MainActivity;
+import com.mark.zumo.client.customer.view.order.detail.OrderDetailActivity;
 
 import java.text.NumberFormat;
 import java.util.Objects;
@@ -39,6 +40,7 @@ import java.util.Objects;
 public enum NotificationHandler {
     INSTANCE;
 
+    public static final String TAG = "NotificationHandler";
     private Context context;
     private StoreManager storeManager;
 
@@ -47,7 +49,8 @@ public enum NotificationHandler {
         storeManager = StoreManager.INSTANCE;
     }
 
-    public void requestOrderProgressNotification(@NonNull MenuOrder menuOrder) {
+    public void requestOrderProgressNotification(final Context context, @NonNull MenuOrder menuOrder) {
+        Log.d(TAG, "requestOrderProgressNotification: " + menuOrder);
 
         NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 
@@ -70,7 +73,8 @@ public enum NotificationHandler {
     }
 
     private Notification createOrderNotification(Store store, MenuOrder menuOrder) {
-        Intent intent = new Intent(context, MainActivity.class);
+        Intent intent = new Intent(context, OrderDetailActivity.class);
+        intent.putExtra(OrderDetailActivity.KEY_ORDER_UUID, menuOrder.uuid);
         PendingIntent activity = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         MenuOrder.State state = MenuOrder.State.of(menuOrder.state);
@@ -79,6 +83,7 @@ public enum NotificationHandler {
         return new NotificationCompat.Builder(context, menuOrder.uuid)
                 .setContentTitle(stateString + "- [" + store.name + "] " + menuOrder.orderName)
                 .setChannelId(menuOrder.uuid)
+                .setAutoCancel(true)
                 .setContentText(NumberFormat.getCurrencyInstance().format(menuOrder.totalPrice))
                 .setWhen(System.currentTimeMillis())
                 .setSmallIcon(R.drawable.ic_stat_order)

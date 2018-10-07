@@ -13,6 +13,7 @@ import android.os.SystemClock;
 import android.support.annotation.NonNull;
 
 import com.google.gson.annotations.SerializedName;
+import com.mark.zumo.client.core.entity.util.EntityComparator;
 import com.mark.zumo.client.core.entity.util.EntityHelper;
 
 /**
@@ -51,5 +52,10 @@ public class SnsToken {
         String tokenValue = "token_value";
         String tokenType = "token_type";
         String createdDate = "created_date";
+    }
+
+    @Override
+    public boolean equals(final Object obj) {
+        return new EntityComparator<>().test(this, obj);
     }
 }

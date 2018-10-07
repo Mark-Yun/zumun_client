@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "3772ee3caba59258b7e4a2d1c5b33c1a",
+    "identityHash": "9ed7ef1251c306d63bffc6939d057bb1",
     "entities": [
       {
         "tableName": "menu",
@@ -317,33 +317,6 @@
         "foreignKeys": []
       },
       {
-        "tableName": "visit_store",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`store_uuid` TEXT NOT NULL, `visit_date` TEXT NOT NULL, PRIMARY KEY(`store_uuid`, `visit_date`))",
-        "fields": [
-          {
-            "fieldPath": "storeUuid",
-            "columnName": "store_uuid",
-            "affinity": "TEXT",
-            "notNull": true
-          },
-          {
-            "fieldPath": "visitDate",
-            "columnName": "visit_date",
-            "affinity": "TEXT",
-            "notNull": true
-          }
-        ],
-        "primaryKey": {
-          "columnNames": [
-            "store_uuid",
-            "visit_date"
-          ],
-          "autoGenerate": false
-        },
-        "indices": [],
-        "foreignKeys": []
-      },
-      {
         "tableName": "payment_token",
         "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`menu_order_uuid` TEXT NOT NULL, `tid` TEXT, `pg_token` TEXT, `kakao_access_token` TEXT, PRIMARY KEY(`menu_order_uuid`))",
         "fields": [
@@ -504,7 +477,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"3772ee3caba59258b7e4a2d1c5b33c1a\")"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"9ed7ef1251c306d63bffc6939d057bb1\")"
     ]
   }
 }

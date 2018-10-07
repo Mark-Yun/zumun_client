@@ -13,7 +13,6 @@ import com.mark.zumo.client.core.appserver.NetworkRepository;
 import com.mark.zumo.client.core.dao.AppDatabaseProvider;
 import com.mark.zumo.client.core.dao.DiskRepository;
 import com.mark.zumo.client.core.entity.Store;
-import com.mark.zumo.client.core.entity.util.EntityComparator;
 import com.mark.zumo.client.core.util.BundleUtils;
 
 import java.util.List;
@@ -72,7 +71,7 @@ public class StoreRepository {
         return Maybe.merge(storeDB, storeApi)
                 .toObservable()
                 .subscribeOn(Schedulers.io())
-                .distinctUntilChanged(new EntityComparator<>());
+                .distinctUntilChanged();
     }
 
     public Maybe<Store> getStoreFromDisk(String storeUuid) {

@@ -6,8 +6,10 @@
 
 package com.mark.zumo.client.customer.app.fcm;
 
+import android.content.Context;
 import android.content.Intent;
 import android.support.v4.content.LocalBroadcastManager;
+import android.util.Log;
 
 import com.mark.zumo.client.core.appserver.request.message.MessageFactory;
 import com.mark.zumo.client.core.appserver.request.message.OrderAcceptedMessage;
@@ -26,6 +28,7 @@ import java.util.Map;
 public enum CustomerMessageHandler {
     INSTANCE;
 
+    public static final String TAG = "CustomerMessageHandler";
     private NotificationHandler notificationHandler;
     private OrderManager orderManager;
 
@@ -34,17 +37,18 @@ public enum CustomerMessageHandler {
         orderManager = OrderManager.INSTANCE;
     }
 
-    void handleMessage(Map<String, String> data) {
+    void handleMessage(Context context, Map<String, String> data) {
         SnsMessage snsMessage = MessageFactory.create(data);
         if (snsMessage == null) {
+            Log.e(TAG, "handleMessage: message is NULL!");
             return;
         }
 
         if (snsMessage instanceof OrderAcceptedMessage) {
-            onOrderAccepted((OrderAcceptedMessage) snsMessage);
+            onOrderAccepted(context, (OrderAcceptedMessage) snsMessage);
             sendOrderUpdated();
         } else if (snsMessage instanceof OrderCompleteMessage) {
-            onOrderComplete((OrderCompleteMessage) snsMessage);
+            onOrderComplete(context, (OrderCompleteMessage) snsMessage);
             sendOrderUpdated();
         }
     }
@@ -54,15 +58,17 @@ public enum CustomerMessageHandler {
         localBroadcastManager.sendBroadcast(new Intent(OrderRepository.ACTION_ORDER_UPDATED));
     }
 
-    private void onOrderAccepted(OrderAcceptedMessage message) {
+    private void onOrderAccepted(Context context, OrderAcceptedMessage message) {
+        Log.d(TAG, "onOrderAccepted: " + message);
         orderManager.getMenuOrderFromApi(message.orderUuid)
-                .doOnSuccess(notificationHandler::requestOrderProgressNotification)
+                .doOnSuccess(menuOrder -> notificationHandler.requestOrderProgressNotification(context, menuOrder))
                 .subscribe();
     }
 
-    private void onOrderComplete(OrderCompleteMessage message) {
+    private void onOrderComplete(Context context, OrderCompleteMessage message) {
+        Log.d(TAG, "onOrderComplete: " + message);
         orderManager.getMenuOrderFromApi(message.orderUuid)
-                .doOnSuccess(notificationHandler::requestOrderProgressNotification)
+                .doOnSuccess(menuOrder -> notificationHandler.requestOrderProgressNotification(context, menuOrder))
                 .subscribe();
     }
 }

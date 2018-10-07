@@ -13,6 +13,10 @@
         android:id="@+id/category_header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/small_margin"
+        android:clickable="true"
+        android:focusable="true"
+        android:foreground="?selectableItemBackground"
         app:layout_constraintBottom_toTopOf="@+id/menu_recycler_view"
         app:layout_constraintTop_toTopOf="parent">
 
@@ -20,7 +24,7 @@
             android:id="@+id/category_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/small_margin"
+            android:layout_margin="@dimen/medium_margin"
             android:textColor="@color/colorTextLight"
             android:textSize="16sp"
             app:layout_constraintBottom_toBottomOf="parent"

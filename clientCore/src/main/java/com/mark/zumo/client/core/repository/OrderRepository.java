@@ -16,8 +16,6 @@ import com.mark.zumo.client.core.dao.AppDatabaseProvider;
 import com.mark.zumo.client.core.dao.DiskRepository;
 import com.mark.zumo.client.core.entity.MenuOrder;
 import com.mark.zumo.client.core.entity.OrderDetail;
-import com.mark.zumo.client.core.entity.util.EntityComparator;
-import com.mark.zumo.client.core.entity.util.ListComparator;
 import com.mark.zumo.client.core.util.BundleUtils;
 import com.mark.zumo.client.core.util.context.ContextHolder;
 
@@ -88,7 +86,7 @@ public class OrderRepository {
         Maybe<MenuOrder> menuOrderDB = getMenuOrderFromDisk(orderUuid);
         Maybe<MenuOrder> menuOrderApi = getMenuOrderFromApi(orderUuid);
         return Maybe.merge(menuOrderDB, menuOrderApi)
-                .distinctUntilChanged(new EntityComparator<>())
+                .distinctUntilChanged()
                 .toObservable();
     }
 
@@ -99,7 +97,7 @@ public class OrderRepository {
 
         return Maybe.merge(orderDetailListDB, orderDetailListApi)
                 .toObservable()
-                .distinctUntilChanged(new ListComparator<>());
+                .distinctUntilChanged();
     }
 
     public Observable<List<MenuOrder>> getMenuOrderListByCustomerUuid(String customerUuid, int offset, int limit) {
@@ -109,7 +107,7 @@ public class OrderRepository {
 
         return Maybe.merge(menuOrderListDB, menuOrderListApi)
                 .toObservable()
-                .distinctUntilChanged(new ListComparator<>());
+                .distinctUntilChanged();
     }
 
     public Observable<List<MenuOrder>> getMenuOrderListByStoreUuid(String storeUuid, int offset, int limit) {
@@ -119,7 +117,7 @@ public class OrderRepository {
 
         return Maybe.merge(menuOrderListDB, menuOrderListApi)
                 .toObservable()
-                .distinctUntilChanged(new ListComparator<>());
+                .distinctUntilChanged();
     }
 
     public Maybe<MenuOrder> updateMenuOrderState(String menuOrderUuid, int state) {

@@ -12,6 +12,7 @@ import android.arch.persistence.room.PrimaryKey;
 import android.support.annotation.NonNull;
 
 import com.google.gson.annotations.SerializedName;
+import com.mark.zumo.client.core.entity.util.EntityComparator;
 import com.mark.zumo.client.core.entity.util.EntityHelper;
 
 import java.io.Serializable;
@@ -90,5 +91,10 @@ public class MenuDetail implements Serializable {
         String menuCategoryUuid = "menu_category_uuid";
         String menuSeqNum = "menu_seq_num";
         String storeUuid = "store_uuid";
+    }
+
+    @Override
+    public boolean equals(final Object obj) {
+        return new EntityComparator<>().test(this, obj);
     }
 }

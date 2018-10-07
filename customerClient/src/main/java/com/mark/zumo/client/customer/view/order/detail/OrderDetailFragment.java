@@ -7,10 +7,17 @@
 package com.mark.zumo.client.customer.view.order.detail;
 
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.LocalBroadcastManager;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.AppCompatTextView;
 import android.support.v7.widget.LinearLayoutManager;
@@ -18,10 +25,13 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.TextView;
 
 import com.mark.zumo.client.core.entity.MenuOrder;
 import com.mark.zumo.client.core.entity.Store;
+import com.mark.zumo.client.core.repository.OrderRepository;
 import com.mark.zumo.client.core.util.glide.GlideApp;
 import com.mark.zumo.client.core.util.glide.GlideUtils;
 import com.mark.zumo.client.customer.R;
@@ -40,18 +50,48 @@ import butterknife.OnClick;
  */
 public class OrderDetailFragment extends Fragment {
 
+    private static final ArrayList<MenuOrder.State> STEPS = new ArrayList<MenuOrder.State>() {{
+        add(MenuOrder.State.REQUESTED);
+        add(MenuOrder.State.ACCEPTED);
+        add(MenuOrder.State.COMPLETE);
+    }};
+
     @BindView(R.id.store_cover_image) AppCompatImageView storeCoverImage;
     @BindView(R.id.store_cover_title) AppCompatTextView storeCoverTitle;
     @BindView(R.id.order_detail_recycler_view) RecyclerView recyclerView;
     @BindView(R.id.total_price) TextView totalPrice;
     @BindView(R.id.order_step_view) StepView orderStepView;
+    @BindView(R.id.swipe_refresh_layout) SwipeRefreshLayout swipeRefreshLayout;
+    @BindView(R.id.big_order_number) AppCompatTextView bigOrderNumber;
+    @BindView(R.id.big_order_number_layout) ConstraintLayout bigOrderNumberLayout;
 
     private OrderViewModel orderViewModel;
+    private OrderDetailAdapter orderDetailAdapter;
+    private BroadcastReceiver broadcastReceiver;
 
     @Override
     public void onCreate(@Nullable final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         orderViewModel = ViewModelProviders.of(this).get(OrderViewModel.class);
+        registerOrderUpdateReceiver();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        LocalBroadcastManager.getInstance(getContext()).unregisterReceiver(broadcastReceiver);
+    }
+
+    private void registerOrderUpdateReceiver() {
+        broadcastReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(final Context context, final Intent intent) {
+                loadOrderInformation();
+            }
+        };
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(OrderRepository.ACTION_ORDER_UPDATED);
+        LocalBroadcastManager.getInstance(getContext()).registerReceiver(broadcastReceiver, intentFilter);
     }
 
     @Nullable
@@ -62,12 +102,19 @@ public class OrderDetailFragment extends Fragment {
 
         inflateOrderInfo();
         inflateOrderDetailRecyclerView();
-        inflateStepView();
+        inflateSwipeRefreshLayout();
+
+        loadOrderInformation();
 
         return view;
     }
 
-    private void inflateStepView() {
+    private void inflateSwipeRefreshLayout() {
+        swipeRefreshLayout.setOnRefreshListener(this::onRefresh);
+    }
+
+    private void onRefresh() {
+        loadOrderInformation();
     }
 
     private void inflateOrderDetailRecyclerView() {
@@ -75,11 +122,15 @@ public class OrderDetailFragment extends Fragment {
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(layoutManager);
 
-        OrderDetailAdapter adapter = new OrderDetailAdapter(orderViewModel, this);
-        recyclerView.setAdapter(adapter);
+        orderDetailAdapter = new OrderDetailAdapter(orderViewModel, this);
+        recyclerView.setAdapter(orderDetailAdapter);
+    }
 
+    private void loadOrderInformation() {
         String orderUuid = getArguments().getString(OrderDetailActivity.KEY_ORDER_UUID);
-        orderViewModel.getMenuOrderDetail(orderUuid).observe(this, adapter::setOrderDetailList);
+        orderViewModel.getMenuOrderDetail(orderUuid).observe(this, orderDetailAdapter::setOrderDetailList);
+        orderViewModel.getMenuOrder(orderUuid).observe(this, this::onLoadMenuOrder);
+        swipeRefreshLayout.setRefreshing(false);
     }
 
     private void inflateStoreInfo(String storeUuid) {
@@ -96,27 +147,31 @@ public class OrderDetailFragment extends Fragment {
     }
 
     private void inflateOrderInfo() {
-        String orderUuid = getArguments().getString(OrderDetailActivity.KEY_ORDER_UUID);
-
         ArrayList<String> steps = new ArrayList<String>() {{
-            add(getString(MenuOrder.State.CREATED.stringRes));
-            add(getString(MenuOrder.State.REQUESTED.stringRes));
-            add(getString(MenuOrder.State.ACCEPTED.stringRes));
-            add(getString(MenuOrder.State.COMPLETE.stringRes));
+            for (MenuOrder.State state : STEPS) {
+                add(getString(state.stringRes));
+            }
         }};
+
         orderStepView.getState()
                 .animationType(StepView.ANIMATION_ALL)
                 .animationDuration(500)
                 .steps(steps)
                 .commit();
-
-        orderViewModel.getMenuOrder(orderUuid).observe(this, this::onLoadMenuOrder);
     }
 
     private void onLoadMenuOrder(MenuOrder menuOrder) {
-        totalPrice.setText(NumberFormat.getCurrencyInstance().format(menuOrder.totalPrice));
         MenuOrder.State state = MenuOrder.State.of(menuOrder.state);
-        orderStepView.go(state.ordinal(), true);
+        boolean isComplete = state == MenuOrder.State.COMPLETE;
+
+        totalPrice.setText(NumberFormat.getCurrencyInstance().format(menuOrder.totalPrice));
+        orderStepView.go(STEPS.indexOf(state), true);
+        orderStepView.setVisibility(isComplete ? View.GONE : View.VISIBLE);
+        bigOrderNumberLayout.setVisibility(isComplete ? View.VISIBLE : View.GONE);
+        bigOrderNumber.setText(menuOrder.orderNumber);
+        Animation animation = AnimationUtils.loadAnimation(getContext(), R.anim.blink_animation);
+        bigOrderNumber.setAnimation(animation);
+        animation.start();
 
         inflateStoreInfo(menuOrder.storeUuid);
     }

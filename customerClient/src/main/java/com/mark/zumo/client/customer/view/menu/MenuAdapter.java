@@ -53,7 +53,11 @@ class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.ViewHolder> {
         this.menuViewModel = menuViewModel;
     }
 
-    public void setMenuList(final List<Menu> menuList) {
+    void setMenuList(final List<Menu> menuList) {
+        if (this.menuList.equals(menuList)) {
+            return;
+        }
+
         this.menuList = menuList;
         notifyDataSetChanged();
     }

@@ -63,14 +63,6 @@ public class MainViewModel extends AndroidViewModel {
         return liveData;
     }
 
-    public void onSuccessPayment(String orderUuid) {
-        orderManager.getMenuOrderFromDisk(orderUuid)
-                .observeOn(AndroidSchedulers.mainThread())
-                .doOnSuccess(notificationHandler::requestOrderProgressNotification)
-                .doOnSubscribe(compositeDisposable::add)
-                .subscribe();
-    }
-
     @Override
     protected void onCleared() {
         compositeDisposable.clear();

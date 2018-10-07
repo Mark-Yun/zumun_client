@@ -15,7 +15,6 @@ import com.mark.zumo.client.core.dao.DiskRepository;
 import com.mark.zumo.client.core.entity.Menu;
 import com.mark.zumo.client.core.entity.MenuCategory;
 import com.mark.zumo.client.core.entity.MenuOption;
-import com.mark.zumo.client.core.entity.util.ListComparator;
 import com.mark.zumo.client.core.util.BundleUtils;
 
 import java.util.List;
@@ -63,7 +62,7 @@ public class MenuRepository {
 
         return Maybe.merge(menuListDB, menuListApi)
                 .toObservable()
-                .distinctUntilChanged(new ListComparator<>());
+                .distinctUntilChanged();
     }
 
     public Maybe<List<Menu>> getMenuItemsOfStoreFromDisk(String storeUuid) {
@@ -103,7 +102,7 @@ public class MenuRepository {
 
         return Maybe.merge(menuOptionListDB, menuOptionListApi)
                 .toObservable()
-                .distinctUntilChanged(new ListComparator<>());
+                .distinctUntilChanged();
     }
 
     public Maybe<Menu> updateMenu(final Menu menu) {

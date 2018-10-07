@@ -13,6 +13,7 @@ import android.support.annotation.NonNull;
 
 import com.google.gson.annotations.SerializedName;
 import com.mark.zumo.client.core.R;
+import com.mark.zumo.client.core.entity.util.EntityComparator;
 import com.mark.zumo.client.core.entity.util.EntityHelper;
 
 import java.io.Serializable;
@@ -111,5 +112,10 @@ public class MenuOrder implements Serializable {
         String totalQuantity = "total_quantity";
         String totalPrice = "total_price";
         String state = "menu_order_state";
+    }
+
+    @Override
+    public boolean equals(final Object obj) {
+        return new EntityComparator<>().test(this, obj);
     }
 }

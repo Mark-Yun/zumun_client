@@ -12,6 +12,7 @@ import android.arch.persistence.room.PrimaryKey;
 import android.support.annotation.NonNull;
 
 import com.google.gson.annotations.SerializedName;
+import com.mark.zumo.client.core.entity.util.EntityComparator;
 import com.mark.zumo.client.core.entity.util.EntityHelper;
 
 import java.io.Serializable;
@@ -90,5 +91,10 @@ public class OrderDetail implements Serializable {
         String storeUuid = "store_uuid";
         String quantity = "ordered_quantity";
         String price = "ordered_price";
+    }
+
+    @Override
+    public boolean equals(final Object obj) {
+        return new EntityComparator<>().test(this, obj);
     }
 }

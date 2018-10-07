@@ -65,7 +65,7 @@ public class PaymentRequestingFragment extends Fragment {
     }
 
     public void animateBell() {
-        Animation shake = AnimationUtils.loadAnimation(getActivity(), R.anim.shake_animation);
+        Animation shake = AnimationUtils.loadAnimation(getActivity(), R.anim.shake_animation_loading);
         progressImage.setAnimation(shake);
     }
 

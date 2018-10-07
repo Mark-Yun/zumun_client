@@ -4,101 +4,95 @@
   ~ Proprietary and confidential
   -->
 
-<android.support.v4.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/swipe_refresh_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <android.support.constraint.ConstraintLayout
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/store_cart_button"
+        style="@style/AppTheme.NoActionBar.ActionButtonStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="30dp"
+        android:layout_marginBottom="80dp"
+        android:src="@drawable/order"
+        app:fabSize="normal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <android.support.v7.widget.AppCompatImageView
+        android:id="@+id/store_cart_badge_image"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/badge_background"
+        android:elevation="12dp"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="@+id/store_cart_button"
+        app:layout_constraintTop_toTopOf="@+id/store_cart_button" />
+
+    <TextView
+        android:id="@+id/store_cart_badge_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:elevation="12dp"
+        android:textColor="@color/colorTextDark"
+        android:textSize="15dp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@+id/store_cart_badge_image"
+        app:layout_constraintEnd_toEndOf="@+id/store_cart_badge_image"
+        app:layout_constraintStart_toStartOf="@+id/store_cart_badge_image"
+        app:layout_constraintTop_toTopOf="@+id/store_cart_badge_image" />
+
+    <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="@color/colorPrimary"
+        android:scrollbars="vertical">
 
-        <android.support.design.widget.FloatingActionButton
-            android:id="@+id/store_cart_button"
-            style="@style/AppTheme.NoActionBar.ActionButtonStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="80dp"
-            app:fabSize="normal"
-            android:layout_marginEnd="30dp"
-            android:src="@drawable/order"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
-
-        <android.support.v7.widget.AppCompatImageView
-            android:id="@+id/store_cart_badge_image"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/badge_background"
-            android:elevation="12dp"
-            android:visibility="gone"
-            app:layout_constraintEnd_toEndOf="@+id/store_cart_button"
-            app:layout_constraintTop_toTopOf="@+id/store_cart_button" />
-
-        <TextView
-            android:id="@+id/store_cart_badge_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:elevation="12dp"
-            android:textColor="@color/colorTextDark"
-            android:textSize="15dp"
-            android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="@+id/store_cart_badge_image"
-            app:layout_constraintEnd_toEndOf="@+id/store_cart_badge_image"
-            app:layout_constraintStart_toStartOf="@+id/store_cart_badge_image"
-            app:layout_constraintTop_toTopOf="@+id/store_cart_badge_image" />
-
-        <android.support.v4.widget.NestedScrollView
+        <android.support.constraint.ConstraintLayout
+            android:id="@+id/menu_fragment_root_view"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@color/colorPrimary"
-            android:scrollbars="vertical">
+            android:layout_height="wrap_content"
+            android:descendantFocusability="blocksDescendants"
+            android:isScrollContainer="true">
+
+            <android.support.v7.widget.AppCompatImageView
+                android:id="@+id/store_cover_image"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                app:layout_constraintBottom_toTopOf="@+id/menu_recycler_view"
+                app:layout_constraintDimensionRatio="H, 14:8"
+                app:layout_constraintTop_toTopOf="parent" />
 
             <android.support.constraint.ConstraintLayout
-                android:id="@+id/menu_fragment_root_view"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:descendantFocusability="blocksDescendants"
-                android:isScrollContainer="true">
+                android:layout_height="0dp"
+                android:background="@color/backgroundMenuTitle"
+                app:layout_constraintBottom_toBottomOf="@+id/store_cover_image"
+                app:layout_constraintDimensionRatio="H, 14:3"
+                app:layout_constraintTop_toTopOf="@+id/store_cover_image">
 
-                <android.support.v7.widget.AppCompatImageView
-                    android:id="@+id/store_cover_image"
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    app:layout_constraintBottom_toTopOf="@+id/menu_recycler_view"
-                    app:layout_constraintDimensionRatio="H, 14:8"
+                <android.support.v7.widget.AppCompatTextView
+                    android:id="@+id/store_cover_title"
+                    style="@style/HeadLineTextDark"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
-                <android.support.constraint.ConstraintLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:background="@color/backgroundMenuTitle"
-                    app:layout_constraintBottom_toBottomOf="@+id/store_cover_image"
-                    app:layout_constraintDimensionRatio="H, 14:3"
-                    app:layout_constraintTop_toTopOf="@+id/store_cover_image">
-
-                    <android.support.v7.widget.AppCompatTextView
-                        android:id="@+id/store_cover_title"
-                        style="@style/HeadLineTextDark"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
-
-                </android.support.constraint.ConstraintLayout>
-
-                <android.support.v7.widget.RecyclerView
-                    android:id="@+id/menu_recycler_view"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layoutAnimation="@anim/layout_animation_fall_down"
-                    android:nestedScrollingEnabled="false"
-                    android:paddingEnd="@dimen/card_view_menu_padding"
-                    app:layout_constraintTop_toBottomOf="@+id/store_cover_image" />
             </android.support.constraint.ConstraintLayout>
-        </android.support.v4.widget.NestedScrollView>
-    </android.support.constraint.ConstraintLayout>
-</android.support.v4.widget.SwipeRefreshLayout>
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/menu_recycler_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layoutAnimation="@anim/layout_animation_fall_down"
+                android:nestedScrollingEnabled="false"
+                android:paddingEnd="@dimen/card_view_menu_padding"
+                app:layout_constraintTop_toBottomOf="@+id/store_cover_image" />
+        </android.support.constraint.ConstraintLayout>
+    </android.support.v4.widget.NestedScrollView>
+</android.support.constraint.ConstraintLayout>
