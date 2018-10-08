@@ -6,8 +6,17 @@
 
 package com.mark.zumo.client.customer.app.fcm;
 
+import android.app.NotificationManager;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.media.AudioAttributes;
+import android.os.Build;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.VibrationEffect;
+import android.os.Vibrator;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
@@ -29,12 +38,37 @@ public enum CustomerMessageHandler {
     INSTANCE;
 
     public static final String TAG = "CustomerMessageHandler";
+
     private NotificationHandler notificationHandler;
     private OrderManager orderManager;
+
+    private Thread vibrationThread;
+    private String orderUuid;
+    private BroadcastReceiver broadcastReceiver;
+
+    private boolean isVibrating;
 
     CustomerMessageHandler() {
         notificationHandler = NotificationHandler.INSTANCE;
         orderManager = OrderManager.INSTANCE;
+    }
+
+    private void registerBroadCastReceiver(Context context) {
+        Log.d(TAG, "registerBroadCastReceiver: ");
+        broadcastReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(final Context context, final Intent intent) {
+                Log.d(TAG, "onReceive: " + intent.getAction());
+
+                if (orderUuid != null && orderUuid.equals(intent.getStringExtra(VibrationContract.ORDER_KEY))) {
+                    stopVibrationThread(context);
+                }
+            }
+        };
+
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(VibrationContract.ACTION);
+        context.registerReceiver(broadcastReceiver, intentFilter, VibrationContract.PERMISSION, new Handler(Looper.getMainLooper()));
     }
 
     void handleMessage(Context context, Map<String, String> data) {
@@ -70,5 +104,88 @@ public enum CustomerMessageHandler {
         orderManager.getMenuOrderFromApi(message.orderUuid)
                 .doOnSuccess(menuOrder -> notificationHandler.requestOrderProgressNotification(context, menuOrder))
                 .subscribe();
+
+        orderUuid = message.orderUuid;
+        setUpVibratorThread(context);
+        registerBroadCastReceiver(context);
+    }
+
+    private void setUpVibratorThread(Context context) {
+        Log.d(TAG, "setUpVibratorThread: ");
+        vibrationThread = new VibratorThread(context);
+        isVibrating = true;
+        vibrationThread.start();
+    }
+
+    private void stopVibrationThread(Context context) {
+        Log.d(TAG, "stopVibrationThread: isVibrating=" + isVibrating);
+        if (!isVibrating) {
+            return;
+        }
+        NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+        notificationManager.cancel(orderUuid.hashCode());
+
+        context.unregisterReceiver(broadcastReceiver);
+        isVibrating = false;
+        if (vibrationThread == null) {
+            return;
+        }
+        vibrationThread.interrupt();
+    }
+
+    private void createCompleteVibration(final Context context) {
+        Vibrator vibrator = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
+        if (vibrator == null || !vibrator.hasVibrator()) {
+            return;
+        }
+
+        if (Build.VERSION.SDK_INT >= 26) {
+            AudioAttributes audioAttributes = new AudioAttributes.Builder()
+                    .setUsage(AudioAttributes.USAGE_ALARM)
+                    .build();
+            vibrator.vibrate(VibrationEffect.createOneShot(3000, 255), audioAttributes);
+        } else {
+            vibrator.vibrate(3000);
+        }
+    }
+
+    public interface VibrationContract {
+        String ACTION = "com.mark.zumo.client.customer.action.STOP_VIBRATION";
+        String PERMISSION = "com.mark.zumo.client.customer.permission.ORDER_PROGRESS_NOTIFICATION";
+        String ORDER_KEY = "order_uuid";
+    }
+
+    private class VibratorThread extends Thread {
+        private Context context;
+
+        private VibratorThread(final Context context) {
+            this.context = context;
+        }
+
+        @Override
+        public void run() {
+            super.run();
+            while (isVibrating) {
+                createCompleteVibration(context);
+                synchronized (this) {
+                    try {
+                        wait(4000);
+                    } catch (InterruptedException e) {
+                        Log.d(TAG, "VibratorThread: interrupted");
+                    }
+                }
+            }
+        }
+
+        @Override
+        public void interrupt() {
+            Vibrator vibrator = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
+            if (vibrator == null || !vibrator.hasVibrator()) {
+                return;
+            }
+
+            vibrator.cancel();
+            super.interrupt();
+        }
     }
 }

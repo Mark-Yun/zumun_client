@@ -22,6 +22,7 @@ import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.AppCompatTextView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,6 +36,7 @@ import com.mark.zumo.client.core.repository.OrderRepository;
 import com.mark.zumo.client.core.util.glide.GlideApp;
 import com.mark.zumo.client.core.util.glide.GlideUtils;
 import com.mark.zumo.client.customer.R;
+import com.mark.zumo.client.customer.app.fcm.CustomerMessageHandler;
 import com.mark.zumo.client.customer.viewmodel.OrderViewModel;
 import com.shuhart.stepview.StepView;
 
@@ -55,6 +57,7 @@ public class OrderDetailFragment extends Fragment {
         add(MenuOrder.State.ACCEPTED);
         add(MenuOrder.State.COMPLETE);
     }};
+    public static final String TAG = "OrderDetailFragment";
 
     @BindView(R.id.store_cover_image) AppCompatImageView storeCoverImage;
     @BindView(R.id.store_cover_title) AppCompatTextView storeCoverTitle;
@@ -172,6 +175,14 @@ public class OrderDetailFragment extends Fragment {
         Animation animation = AnimationUtils.loadAnimation(getContext(), R.anim.blink_animation);
         bigOrderNumber.setAnimation(animation);
         animation.start();
+
+        if (isComplete) {
+            Intent intent = new Intent(CustomerMessageHandler.VibrationContract.ACTION);
+            intent.putExtra(CustomerMessageHandler.VibrationContract.ORDER_KEY, menuOrder.uuid);
+            intent.setPackage(getContext().getPackageName());
+            getContext().sendBroadcast(intent);
+            Log.d(TAG, "onLoadMenuOrder: send broadcast-" + intent.getAction());
+        }
 
         inflateStoreInfo(menuOrder.storeUuid);
     }

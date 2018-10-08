@@ -40,4 +40,5 @@
     <string name="order_request_progress">주문을 전송하는 중입니다. 앱을 종료하지 말아주세요.</string>
     <string name="store_not_exist_current_map">현재 지도에 ZUMUN 가능한 가게가 없습니다.</string>
     <string name="distance_description_under_100m">100m 이내</string>
+    <string name="turn_vibration_off_button_text">알람 끄기</string>
 </resources>

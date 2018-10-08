@@ -33,6 +33,17 @@ public class DebugMainActivity extends Activity {
         LinearLayout linearLayout = findViewById(R.id.debug_main_activity);
 
         setupPackageActivities(linearLayout, "com.mark.zumo.client.customer");
+        buildDebugActionButtons(linearLayout);
+    }
+
+    private void buildDebugActionButtons(final LinearLayout linearLayout) {
+        for (DebugAction debugAction : DebugAction.values()) {
+            Button button = buildButton(debugAction);
+            if (button == null) {
+                continue;
+            }
+            linearLayout.addView(button);
+        }
     }
 
     private void setupPackageActivities(LinearLayout linearLayout, String packageName) {
@@ -84,6 +95,17 @@ public class DebugMainActivity extends Activity {
 
         button.setText(simpleName);
         button.setOnClickListener(v -> startDebugActivity(clazz));
+
+        return button;
+    }
+
+    private Button buildButton(DebugAction debugAction) {
+        String name = debugAction.buttonName;
+
+        Button button = new Button(this);
+
+        button.setText(name);
+        button.setOnClickListener(v -> debugAction.runnable.run());
 
         return button;
     }

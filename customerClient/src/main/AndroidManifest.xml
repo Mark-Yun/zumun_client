@@ -49,6 +49,12 @@
             android:screenSize="normal" />
     </compatible-screens>
 
+    <permission
+        android:name="com.mark.zumo.client.customer.permission.ORDER_PROGRESS_NOTIFICATION"
+        android:protectionLevel="signature" />
+
+    <uses-permission android:name="com.mark.zumo.client.customer.permission.ORDER_PROGRESS_NOTIFICATION" />
+
     <application
         android:name=".app.CustomerClientApp"
         android:allowBackup="true"

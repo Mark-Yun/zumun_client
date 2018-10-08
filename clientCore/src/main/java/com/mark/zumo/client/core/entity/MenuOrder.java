@@ -76,27 +76,35 @@ public class MenuOrder implements Serializable {
         return EntityHelper.toString(this);
     }
 
+    @Override
+    public boolean equals(final Object obj) {
+        return new EntityComparator<>().test(this, obj);
+    }
+
     public enum State {
 
-        CREATED(R.string.order_state_created, R.color.order_state_created),
-        REQUESTED(R.string.order_state_requested, R.color.order_state_requested),
-        ACCEPTED(R.string.order_state_accepted, R.color.order_state_accepted),
-        COMPLETE(R.string.order_state_complete, R.color.order_state_complete),
-        REJECTED(R.string.order_state_rejected, R.color.order_state_rejected),
-        CANCELED(R.string.order_state_canceled, R.color.order_state_canceled);
+        CREATED(R.string.order_state_created, R.string.notification_description_created, R.color.order_state_created),
+        REQUESTED(R.string.order_state_requested, R.string.notification_description_requested, R.color.order_state_requested),
+        ACCEPTED(R.string.order_state_accepted, R.string.notification_description_accepted, R.color.order_state_accepted),
+        COMPLETE(R.string.order_state_complete, R.string.notification_description_complete, R.color.order_state_complete),
+        REJECTED(R.string.order_state_rejected, R.string.notification_description_rejected, R.color.order_state_rejected),
+        CANCELED(R.string.order_state_canceled, R.string.notification_description_canceled, R.color.order_state_canceled);
 
         public final int stringRes;
+        public final int notificationContentRes;
         public final int colorRes;
 
-        State(final int stringRes, final int colorRes) {
+        State(final int stringRes, final int notificationContentRes, final int colorRes) {
             this.stringRes = stringRes;
+            this.notificationContentRes = notificationContentRes;
             this.colorRes = colorRes;
         }
 
         public static State of(int orderState) {
             for (State state : values())
-                if (orderState == state.ordinal())
+                if (orderState == state.ordinal()) {
                     return state;
+                }
 
             throw new UnsupportedOperationException();
         }
@@ -112,10 +120,5 @@ public class MenuOrder implements Serializable {
         String totalQuantity = "total_quantity";
         String totalPrice = "total_price";
         String state = "menu_order_state";
-    }
-
-    @Override
-    public boolean equals(final Object obj) {
-        return new EntityComparator<>().test(this, obj);
     }
 }

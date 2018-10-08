@@ -49,4 +49,5 @@
 
     <string name="order_request_progress">Order requesting… Do not turn off!</string>
     <string name="store_not_exist_current_map">There is no ZUMUN store on current map.</string>
+    <string name="turn_vibration_off_button_text">Turn Alarm Off</string>
 </resources>
