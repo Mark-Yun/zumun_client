@@ -130,4 +130,13 @@ public class MainBodyFragment extends Fragment {
         intent.putExtra(OrderDetailActivity.KEY_ORDER_UUID, orderUuid);
         startActivity(intent);
     }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        for (Fragment fragment : getChildFragmentManager().getFragments()) {
+            fragment.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        }
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+    }
+
 }

@@ -37,6 +37,7 @@ import butterknife.OnClick;
 public class PermissionFragment extends Fragment {
 
     private static final int REQUEST_CODE = 1414;
+    public static final String TAG = "PermissionFragment";
     @BindView(R.id.title) AppCompatTextView title;
     @BindView(R.id.content) AppCompatTextView content;
 
