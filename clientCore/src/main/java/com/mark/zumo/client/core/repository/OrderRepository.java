@@ -21,7 +21,9 @@ import com.mark.zumo.client.core.util.context.ContextHolder;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
+import io.reactivex.Flowable;
 import io.reactivex.Maybe;
 import io.reactivex.Observable;
 import io.reactivex.schedulers.Schedulers;
@@ -124,6 +126,8 @@ public class OrderRepository {
         return getMenuOrderFromDisk(menuOrderUuid)
                 .map(menuOrder -> menuOrder.updateState(state))
                 .flatMap(menuOrder -> networkRepository.updateMenuOrderState(menuOrder.uuid, menuOrder))
+                .retry(5)
+                .retryWhen(errors -> errors.flatMap(error -> Flowable.timer(1, TimeUnit.SECONDS)))
                 .doOnSuccess(diskRepository::insertMenuOrder)
                 .doOnSuccess(x -> sendOrderUpdated());
     }
