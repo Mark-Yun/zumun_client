@@ -6,18 +6,22 @@
 
 package com.mark.zumo.client.customer.view.main;
 
+import android.Manifest;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.transition.Fade;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.content.ContextCompat;
 import android.util.SparseArray;
 
 import com.mark.zumo.client.core.entity.Store;
 import com.mark.zumo.client.core.util.context.ContextHolder;
 import com.mark.zumo.client.customer.view.menu.MenuFragment;
 import com.mark.zumo.client.customer.view.order.OrderFragment;
+import com.mark.zumo.client.customer.view.permission.PermissionFragment;
 import com.mark.zumo.client.customer.view.place.PlaceFragment;
 
 /**
@@ -32,28 +36,43 @@ public class TabPagerAdapter extends FragmentStatePagerAdapter {
     };
 
     private final SparseArray<Fragment> fragmentList;
-    private FindingStoreFragment.StoreFindRefreshListener storeFindRefreshListener;
+    private FindingStoreFragment.StoreFindListener storeFindListener;
 
     TabPagerAdapter(final FragmentManager fragmentManager) {
         super(fragmentManager);
         fragmentList = new SparseArray<>();
     }
 
-    void setFindStoreRefreshListener(FindingStoreFragment.StoreFindRefreshListener listener) {
-        this.storeFindRefreshListener = listener;
+    private static boolean isLocationPermissionGranted() {
+        return ContextCompat.checkSelfPermission(ContextHolder.getContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED;
+    }
+
+    void setFindListener(FindingStoreFragment.StoreFindListener listener) {
+        this.storeFindListener = listener;
     }
 
     @Override
     public Fragment getItem(final int position) {
         if (fragmentList.get(position) == null) {
-            Fragment fragment = Fragment.instantiate(ContextHolder.getContext(), FRAGMENTS_NAME[position]);
-            if (fragment instanceof FindingStoreFragment) {
-                ((FindingStoreFragment) fragment).setStoreFindRefreshListener(storeFindRefreshListener);
+            if (position <= 1 && !isLocationPermissionGranted()) {
+                Fragment fragment = PermissionFragment.instantiate(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, this::onGrantSuccess);
+                fragmentList.put(position, fragment);
+            } else {
+                Fragment fragment = Fragment.instantiate(ContextHolder.getContext(), FRAGMENTS_NAME[position]);
+                if (fragment instanceof FindingStoreFragment) {
+                    ((FindingStoreFragment) fragment).setStoreFindListener(storeFindListener);
+                }
+                fragmentList.put(position, fragment);
             }
-            fragmentList.put(position, fragment);
         }
 
         return fragmentList.get(position);
+    }
+
+    private void onGrantSuccess() {
+        fragmentList.remove(0);
+        fragmentList.remove(1);
+        notifyDataSetChanged();
     }
 
     @Override

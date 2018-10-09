@@ -27,4 +27,8 @@
     <string name="error_message_on_unknown_host_exception">Cannot connect server</string>
 
     <string name="deleted_store">Deleted Store</string>
+
+    <string name="permission_request">Configure</string>
+    <string name="permission_location_title">To find near by store on ZUMUN</string>
+    <string name="permission_location_content">We can search store near by or, mark up the location of stores on map.</string>
 </resources>
