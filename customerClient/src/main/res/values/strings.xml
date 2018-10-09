@@ -53,4 +53,6 @@
 
     <string name="order_complete_information_title">%s is Complete!</string>
     <string name="order_complete_information_content">Please take out with showing this number.</string>
+
+    <string name="order_list_empty_text">There is no order yet</string>
 </resources>

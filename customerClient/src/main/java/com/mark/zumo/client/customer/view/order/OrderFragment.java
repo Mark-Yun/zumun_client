@@ -14,6 +14,7 @@ import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -42,6 +43,7 @@ public class OrderFragment extends Fragment {
 
     @BindView(R.id.order_recycler_view) RecyclerView recyclerView;
     @BindView(R.id.swipe_refresh_layout) SwipeRefreshLayout swipeRefreshLayout;
+    @BindView(R.id.order_empty_text_view_layout) ConstraintLayout orderEmptyTextViewLayout;
 
     private OrderViewModel orderViewModel;
     private OrderAdapter adapter;
@@ -105,6 +107,11 @@ public class OrderFragment extends Fragment {
     }
 
     private void onLoadMenuOrderList(List<MenuOrder> menuOrderList) {
+        boolean isEmpty = menuOrderList.isEmpty();
+
+        orderEmptyTextViewLayout.setVisibility(isEmpty ? View.VISIBLE : View.GONE);
+        recyclerView.setVisibility(isEmpty ? View.GONE : View.VISIBLE);
+
         if (adapter != null) {
             adapter.setOrderList(menuOrderList);
         }

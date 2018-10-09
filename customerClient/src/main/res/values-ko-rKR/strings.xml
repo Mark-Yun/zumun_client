@@ -41,7 +41,7 @@
     <string name="store_not_exist_current_map">현재 지도에 ZUMUN 가능한 가게가 없습니다.</string>
     <string name="distance_description_under_100m">100m 이내</string>
     <string name="turn_vibration_off_button_text">알람 끄기</string>
-
     <string name="order_complete_information_title">주문하신 %s 나왔습니다</string>
     <string name="order_complete_information_content">주문 번호로 받아가세요</string>
+    <string name="order_list_empty_text">주문 내역이 없습니다.</string>
 </resources>
