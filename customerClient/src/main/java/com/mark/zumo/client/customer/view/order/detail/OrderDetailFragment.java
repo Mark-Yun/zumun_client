@@ -67,6 +67,7 @@ public class OrderDetailFragment extends Fragment {
     @BindView(R.id.swipe_refresh_layout) SwipeRefreshLayout swipeRefreshLayout;
     @BindView(R.id.big_order_number) AppCompatTextView bigOrderNumber;
     @BindView(R.id.big_order_number_layout) ConstraintLayout bigOrderNumberLayout;
+    @BindView(R.id.order_complete_information_title) AppCompatTextView orderCompleteInformationTitle;
 
     private OrderViewModel orderViewModel;
     private OrderDetailAdapter orderDetailAdapter;
@@ -183,6 +184,8 @@ public class OrderDetailFragment extends Fragment {
             getContext().sendBroadcast(intent);
             Log.d(TAG, "onLoadMenuOrder: send broadcast-" + intent.getAction());
         }
+
+        orderCompleteInformationTitle.setText(getContext().getString(R.string.order_complete_information_title, menuOrder.orderName));
 
         inflateStoreInfo(menuOrder.storeUuid);
     }

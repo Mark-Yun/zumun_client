@@ -70,7 +70,7 @@ public enum NotificationHandler {
     @RequiresApi(api = Build.VERSION_CODES.O)
     private NotificationChannel createNotificationChanel() {
         String name = context.getString(R.string.order_progress_channel_name);
-        int importance = NotificationManager.IMPORTANCE_DEFAULT;
+        int importance = NotificationManager.IMPORTANCE_HIGH;
         return new NotificationChannel(CHANNEL_ID_ORDER_PROGRESS, name, importance);
     }
 

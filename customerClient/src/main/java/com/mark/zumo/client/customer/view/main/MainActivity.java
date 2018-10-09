@@ -43,7 +43,7 @@ public class MainActivity extends BaseActivity {
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.main_body_fragment, mainBodyFragment)
                 .replace(R.id.main_header_fragment, mainHeaderFragment)
-                .commit();
+                .commitAllowingStateLoss();
     }
 
     @Override

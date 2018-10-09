@@ -15,6 +15,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.util.SparseArray;
 
 import com.mark.zumo.client.core.entity.Store;
@@ -34,6 +35,7 @@ public class TabPagerAdapter extends FragmentStatePagerAdapter {
             PlaceFragment.class.getName(),
             OrderFragment.class.getName()
     };
+    private static final String TAG = "TabPagerAdapter";
 
     private final SparseArray<Fragment> fragmentList;
     private FindingStoreFragment.StoreFindListener storeFindListener;
@@ -92,7 +94,11 @@ public class TabPagerAdapter extends FragmentStatePagerAdapter {
         fragmentList.put(0, fragment);
         fragment.setEnterTransition(new Fade(Fade.IN));
         fragment.setExitTransition(new Fade(Fade.OUT));
-        notifyDataSetChanged();
+        try {
+            notifyDataSetChanged();
+        } catch (IllegalStateException e) {
+            Log.e(TAG, "onD2dLoadStore: ", e);
+        }
     }
 
     @Override

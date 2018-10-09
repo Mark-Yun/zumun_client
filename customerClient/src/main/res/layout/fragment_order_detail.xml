@@ -99,8 +99,7 @@
             <android.support.constraint.ConstraintLayout
                 android:id="@+id/big_order_number_layout"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:visibility="gone">
+                android:layout_height="wrap_content">
 
                 <android.support.v7.widget.AppCompatTextView
                     android:id="@+id/big_order_number_title"
@@ -119,11 +118,37 @@
                     android:layout_height="wrap_content"
                     android:layout_margin="@dimen/big_margin"
                     android:textColor="@color/colorTextLight"
-                    android:textSize="60sp"
-                    app:layout_constraintBottom_toBottomOf="parent"
+                    android:textSize="84sp"
+                    app:layout_constraintBottom_toTopOf="@+id/order_complete_information_title"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/big_order_number_title" />
+
+                <android.support.v7.widget.AppCompatTextView
+                    android:id="@+id/order_complete_information_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAlignment="center"
+                    android:textColor="@color/colorTextLight"
+                    android:textSize="16sp"
+                    app:layout_constraintBottom_toTopOf="@+id/order_complete_information_content"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/big_order_number" />
+
+                <android.support.v7.widget.AppCompatTextView
+                    android:id="@+id/order_complete_information_content"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/small_margin"
+                    android:text="@string/order_complete_information_content"
+                    android:textAlignment="center"
+                    android:textColor="@color/colorTextLight"
+                    android:textSize="16sp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/order_complete_information_title" />
             </android.support.constraint.ConstraintLayout>
 
         </android.support.constraint.ConstraintLayout>

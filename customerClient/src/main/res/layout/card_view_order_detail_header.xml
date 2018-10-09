@@ -46,6 +46,7 @@
         android:layout_height="wrap_content"
         style="@style/SecondaryLineValueTextLight"
         app:layout_constraintBottom_toBottomOf="@+id/order_name_title"
+        android:layout_marginEnd="@dimen/medium_margin"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/order_name_title" />
 
@@ -64,7 +65,7 @@
         android:layout_height="wrap_content"
         style="@style/SecondaryLineValueTextLight"
         app:layout_constraintBottom_toBottomOf="@+id/order_number_title"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/order_name"
         app:layout_constraintTop_toTopOf="@+id/order_number_title" />
 
     <android.support.v7.widget.AppCompatTextView
@@ -82,7 +83,7 @@
         android:layout_height="wrap_content"
         style="@style/SecondaryLineValueTextLight"
         app:layout_constraintBottom_toBottomOf="@+id/order_time_title"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/order_name"
         app:layout_constraintTop_toTopOf="@+id/order_time_title" />
 
     <android.support.v7.widget.AppCompatTextView
@@ -100,7 +101,7 @@
         android:layout_height="wrap_content"
         style="@style/SecondaryLineValueTextLight"
         app:layout_constraintBottom_toBottomOf="@+id/order_price_title"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/order_name"
         app:layout_constraintTop_toTopOf="@+id/order_price_title" />
 
     <android.support.v7.widget.AppCompatTextView
