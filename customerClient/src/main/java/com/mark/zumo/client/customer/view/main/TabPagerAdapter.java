@@ -57,7 +57,8 @@ public class TabPagerAdapter extends FragmentStatePagerAdapter {
     public Fragment getItem(final int position) {
         if (fragmentList.get(position) == null) {
             if (position <= 1 && !isLocationPermissionGranted()) {
-                Fragment fragment = PermissionFragment.instantiate(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, this::onGrantSuccess);
+                String[] permissions = {Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION};
+                Fragment fragment = PermissionFragment.instantiate(permissions, this::onGrantSuccess);
                 fragmentList.put(position, fragment);
             } else {
                 Fragment fragment = Fragment.instantiate(ContextHolder.getContext(), FRAGMENTS_NAME[position]);

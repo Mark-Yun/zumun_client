@@ -21,10 +21,6 @@ import android.view.ViewGroup;
 
 import com.mark.zumo.client.core.entity.Store;
 import com.mark.zumo.client.customer.R;
-import com.mark.zumo.client.customer.view.cart.CartActivity;
-import com.mark.zumo.client.customer.view.menu.detail.MenuDetailActivity;
-import com.mark.zumo.client.customer.view.order.detail.OrderDetailActivity;
-import com.mark.zumo.client.customer.view.payment.PaymentActivity;
 import com.mark.zumo.client.customer.viewmodel.MainViewModel;
 
 import butterknife.BindView;
@@ -94,44 +90,6 @@ public class MainBodyFragment extends Fragment {
     }
 
     @Override
-    public void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
-        switch (requestCode) {
-            case CartActivity.REQUEST_CODE:
-                switch (resultCode) {
-                    case CartActivity.RESULT_CODE_PAYMENT_SUCCESS:
-                        String orderUuid = data.getStringExtra(PaymentActivity.KEY_ORDER_UUID);
-                        onSuccessPayment(orderUuid);
-                        break;
-
-                    case CartActivity.RESULT_CODE_PAYMENT_FAILED:
-                        break;
-                }
-                break;
-
-            case MenuDetailActivity.REQUEST_CODE:
-                switch (resultCode) {
-                    case MenuDetailActivity.RESULT_CODE_PAYMENT_SUCCESS:
-                        String orderUuid = data.getStringExtra(PaymentActivity.KEY_ORDER_UUID);
-                        onSuccessPayment(orderUuid);
-                        break;
-
-                    case MenuDetailActivity.RESULT_CODE_PAYMENT_FAILED:
-                        break;
-                }
-                break;
-        }
-
-        super.onActivityResult(requestCode, resultCode, data);
-    }
-
-    private void onSuccessPayment(@NonNull String orderUuid) {
-        Intent intent = new Intent();
-        intent.setClass(getContext(), OrderDetailActivity.class);
-        intent.putExtra(OrderDetailActivity.KEY_ORDER_UUID, orderUuid);
-        startActivity(intent);
-    }
-
-    @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         for (Fragment fragment : getChildFragmentManager().getFragments()) {
             fragment.onRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -139,4 +97,11 @@ public class MainBodyFragment extends Fragment {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 
+    @Override
+    public void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
+        for (Fragment fragment : getChildFragmentManager().getFragments()) {
+            fragment.onActivityResult(requestCode, resultCode, data);
+        }
+        super.onActivityResult(requestCode, resultCode, data);
+    }
 }
