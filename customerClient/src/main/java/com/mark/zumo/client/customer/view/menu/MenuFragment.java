@@ -32,6 +32,9 @@ import com.mark.zumo.client.core.view.TouchResponse;
 import com.mark.zumo.client.customer.R;
 import com.mark.zumo.client.customer.model.entity.Cart;
 import com.mark.zumo.client.customer.view.cart.CartActivity;
+import com.mark.zumo.client.customer.view.menu.detail.MenuDetailActivity;
+import com.mark.zumo.client.customer.view.order.detail.OrderDetailActivity;
+import com.mark.zumo.client.customer.view.payment.PaymentActivity;
 import com.mark.zumo.client.customer.viewmodel.MenuViewModel;
 
 import java.util.Objects;
@@ -149,6 +152,43 @@ public class MenuFragment extends Fragment {
             }
         };
         cartLiveData.observe(this, observer);
+    }
 
+    @Override
+    public void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
+        switch (requestCode) {
+            case CartActivity.REQUEST_CODE:
+                switch (resultCode) {
+                    case CartActivity.RESULT_CODE_PAYMENT_SUCCESS:
+                        String orderUuid = data.getStringExtra(PaymentActivity.KEY_ORDER_UUID);
+                        onSuccessPayment(orderUuid);
+                        break;
+
+                    case CartActivity.RESULT_CODE_PAYMENT_FAILED:
+                        break;
+                }
+                break;
+
+            case MenuDetailActivity.REQUEST_CODE:
+                switch (resultCode) {
+                    case MenuDetailActivity.RESULT_CODE_PAYMENT_SUCCESS:
+                        String orderUuid = data.getStringExtra(PaymentActivity.KEY_ORDER_UUID);
+                        onSuccessPayment(orderUuid);
+                        break;
+
+                    case MenuDetailActivity.RESULT_CODE_PAYMENT_FAILED:
+                        break;
+                }
+                break;
+        }
+
+        super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    private void onSuccessPayment(@NonNull String orderUuid) {
+        Intent intent = new Intent();
+        intent.setClass(getContext(), OrderDetailActivity.class);
+        intent.putExtra(OrderDetailActivity.KEY_ORDER_UUID, orderUuid);
+        startActivity(intent);
     }
 }

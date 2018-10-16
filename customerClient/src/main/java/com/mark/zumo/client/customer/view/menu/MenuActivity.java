@@ -6,6 +6,7 @@
 
 package com.mark.zumo.client.customer.view.menu;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -57,5 +58,13 @@ public class MenuActivity extends AppCompatActivity {
     @OnClick(R.id.back_button)
     void onClickBackButton() {
         finish();
+    }
+
+    @Override
+    public void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
+        for (Fragment fragment : getSupportFragmentManager().getFragments()) {
+            fragment.onActivityResult(requestCode, resultCode, data);
+        }
+        super.onActivityResult(requestCode, resultCode, data);
     }
 }

@@ -19,7 +19,6 @@ import com.mark.zumo.client.core.entity.Store;
 import com.mark.zumo.client.core.entity.user.GuestUser;
 import com.mark.zumo.client.core.p2p.P2pClient;
 import com.mark.zumo.client.core.p2p.P2pServer;
-import com.mark.zumo.client.core.util.DebugUtil;
 import com.mark.zumo.client.customer.R;
 
 import java.util.Set;
@@ -46,10 +45,6 @@ public class P2pDebugActivity extends Activity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.p2p_debug_activity);
-
-        currentUser = DebugUtil.guestUser();
-        testStore = DebugUtil.store();
-        testMenuOrder = DebugUtil.menuOrder();
 
         p2pClient = P2pClient.INSTANCE;
         p2pServer = new P2pServer(this, testStore);

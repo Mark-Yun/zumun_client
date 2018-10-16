@@ -7,48 +7,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.mark.zumo.client.customer">
 
-    <supports-screens android:largeScreens="false" />
-    <compatible-screens>
-        <!-- all small size screens -->
-        <screen
-            android:screenDensity="ldpi"
-            android:screenSize="small" />
-        <screen
-            android:screenDensity="mdpi"
-            android:screenSize="small" />
-        <screen
-            android:screenDensity="hdpi"
-            android:screenSize="small" />
-        <screen
-            android:screenDensity="xhdpi"
-            android:screenSize="small" />
-        <screen
-            android:screenDensity="xxhdpi"
-            android:screenSize="small" />
-        <screen
-            android:screenDensity="xxxhdpi"
-            android:screenSize="small" />
-        <!-- all normal size screens -->
-        <screen
-            android:screenDensity="ldpi"
-            android:screenSize="normal" />
-        <screen
-            android:screenDensity="mdpi"
-            android:screenSize="normal" />
-        <screen
-            android:screenDensity="hdpi"
-            android:screenSize="normal" />
-        <screen
-            android:screenDensity="xhdpi"
-            android:screenSize="normal" />
-        <screen
-            android:screenDensity="xxhdpi"
-            android:screenSize="normal" />
-        <screen
-            android:screenDensity="xxxhdpi"
-            android:screenSize="normal" />
-    </compatible-screens>
-
     <permission
         android:name="com.mark.zumo.client.customer.permission.ORDER_PROGRESS_NOTIFICATION"
         android:protectionLevel="signature" />
@@ -88,6 +46,7 @@
         <activity
             android:name=".view.main.MainActivity"
             android:launchMode="singleTop"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
@@ -98,15 +57,28 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".view.signup.SignUpActivity" />
-        <activity android:name=".view.cart.CartActivity" />
+        <activity
+            android:name=".view.signup.SignUpActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".view.cart.CartActivity"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".view.menu.detail.MenuDetailActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar.Translucent" />
-        <activity android:name=".view.payment.PaymentActivity" />
-        <activity android:name=".view.signup.kakao.KakaoSignActivity" />
-        <activity android:name=".view.order.detail.OrderDetailActivity" />
-        <activity android:name=".view.menu.MenuActivity" />
+        <activity
+            android:name=".view.payment.PaymentActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".view.signup.kakao.KakaoSignActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".view.order.detail.OrderDetailActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".view.menu.MenuActivity"
+            android:screenOrientation="portrait" />
     </application>
 
 </manifest>
