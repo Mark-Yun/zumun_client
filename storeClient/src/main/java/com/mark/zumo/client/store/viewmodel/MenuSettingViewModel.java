@@ -247,6 +247,16 @@ public class MenuSettingViewModel extends AndroidViewModel {
         return liveData;
     }
 
+    public LiveData<MenuCategory> removeCategory(MenuCategory menuCategory) {
+        MutableLiveData<MenuCategory> liveData = new MutableLiveData<>();
+        menuManager.removeCategory(menuCategory)
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnSubscribe(disposables::add)
+                .doOnSuccess(liveData::setValue)
+                .subscribe();
+        return liveData;
+    }
+
     public LiveData<Menu> uploadMenuImage(Activity activity, String menuUuid, Uri uri) {
         MutableLiveData<Menu> liveData = new MutableLiveData<>();
 

@@ -6,8 +6,6 @@
 
 package com.mark.zumo.client.customer.model;
 
-import android.support.annotation.WorkerThread;
-
 import com.mark.zumo.client.core.entity.Menu;
 import com.mark.zumo.client.core.entity.MenuCategory;
 import com.mark.zumo.client.core.entity.MenuOption;
@@ -60,11 +58,6 @@ public enum MenuManager {
                 .subscribeOn(Schedulers.io());
     }
 
-    @WorkerThread
-    public Menu getMenuFromDiskBlocking(String uuid) {
-        return menuRepositoryMaybe.blockingGet().getMenuFromDisk(uuid).blockingGet();
-    }
-
     public void clearClient() {
         if (p2pClient == null) {
             return;
@@ -88,7 +81,7 @@ public enum MenuManager {
                                 Single.just(groupedObservable.getKey()),
                                 groupedObservable.sorted((d1, d2) -> d1.menuSeqNum - d2.menuSeqNum)
                                         .map(menuDetail -> menuDetail.menuUuid)
-                                        .map(this::getMenuFromDiskBlocking)
+                                        .map(uuid -> menuRepositoryMaybe.blockingGet().getMenuFromDisk(uuid).blockingGet())
                                         .toList(),
                                 CombinedResult::new
                         )

@@ -12,16 +12,24 @@
 
 package com.mark.zumo.client.store.view.setting.fragment.menu;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.animation.ValueAnimator;
 import android.arch.lifecycle.LifecycleOwner;
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.view.animation.FastOutSlowInInterpolator;
+import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.AppCompatTextView;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AnimationUtils;
+import android.view.animation.LayoutAnimationController;
 
 import com.mark.zumo.client.core.entity.Menu;
 import com.mark.zumo.client.core.entity.MenuCategory;
@@ -40,6 +48,8 @@ import butterknife.ButterKnife;
  * Created by mark on 18. 8. 7.
  */
 public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHolder> {
+
+    private static final int ANIM_DURATION = 300;
 
     private final static int CATEGORY = 0;
     private final static int NONE_CATEGORY = 1;
@@ -86,6 +96,18 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHo
         if (categoryList.size() < 1 || menuListMap.size() < 1) {
             return;
         }
+        List<MenuCategory> emptyList = new ArrayList<>();
+
+        for (MenuCategory category : categoryList) {
+            boolean hasMenuItems = menuListMap.containsKey(category.uuid);
+            if (!hasMenuItems) {
+                emptyList.add(category);
+            }
+        }
+
+        for (MenuCategory emptyCategory : emptyList) {
+            categoryList.remove(emptyCategory);
+        }
 
         notifyDataSetChanged();
     }
@@ -93,38 +115,81 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHo
     @Override
     public void onBindViewHolder(@NonNull final ViewHolder holder, final int position) {
         int viewType = getItemViewType(position);
+        final Context context = holder.itemView.getContext();
+
         if (viewType == CATEGORY) {
             MenuCategory menuCategory = categoryList.get(position);
             String categoryName = menuCategory.name;
             String categoryUuid = menuCategory.uuid;
-
-            holder.categoryName.setText(categoryName);
-
             boolean isEmptyCategory = !menuListMap.containsKey(categoryUuid);
-            holder.categoryName.setVisibility(isEmptyCategory ? View.GONE : View.VISIBLE);
-            MenuAdapter menuAdapter = getMenuAdapter(holder);
             List<Menu> menuList = isEmptyCategory ? new ArrayList<>() : menuListMap.get(categoryUuid);
-            menuAdapter.setMenuList(menuList);
-        } else if (viewType == NONE_CATEGORY) {
-            String categoryName = "None";
-            holder.categoryName.setText(categoryName);
 
-            MenuAdapter menuAdapter = getMenuAdapter(holder);
+            holder.categoryName.setVisibility(isEmptyCategory ? View.GONE : View.VISIBLE);
+
+            RecyclerView recyclerView = holder.recyclerView;
+            RecyclerView.LayoutManager layoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
+            recyclerView.setLayoutManager(layoutManager);
+            recyclerView.setHasFixedSize(true);
+            recyclerView.setNestedScrollingEnabled(false);
+
+            final LayoutAnimationController controller = AnimationUtils.loadLayoutAnimation(context, R.anim.layout_animation_fall_down);
+            recyclerView.setLayoutAnimation(controller);
+
+            MenuAdapter menuAdapter = new MenuAdapter(fragmentManager);
+            recyclerView.setAdapter(menuAdapter);
+            menuAdapter.setMenuList(menuList);
+            recyclerView.scheduleLayoutAnimation();
+
+            holder.categoryName.setText(categoryName + " (" + menuList.size() + ")");
+            holder.categoryHeader.setOnClickListener(new View.OnClickListener() {
+                private boolean isVisible = true;
+                private int viewHeight;
+
+                @Override
+                public void onClick(final View v) {
+                    v.setClickable(false);
+                    holder.expandButton.animate()
+                            .setDuration(ANIM_DURATION)
+                            .rotation(isVisible ? 180 : 0);
+
+                    ValueAnimator anim = isVisible
+                            ? ValueAnimator.ofInt(viewHeight = recyclerView.getMeasuredHeight(), 0)
+                            : ValueAnimator.ofInt(0, viewHeight);
+
+                    anim.addUpdateListener(valueAnimator -> {
+                        int val = (Integer) valueAnimator.getAnimatedValue();
+                        ViewGroup.LayoutParams layoutParams = recyclerView.getLayoutParams();
+                        layoutParams.height = val;
+                        recyclerView.setLayoutParams(layoutParams);
+                    });
+                    anim.addListener(new AnimatorListenerAdapter() {
+                        @Override
+                        public void onAnimationEnd(final Animator animation) {
+                            super.onAnimationEnd(animation);
+                            isVisible = !isVisible;
+                            v.setClickable(true);
+                        }
+                    });
+                    anim.setInterpolator(new FastOutSlowInInterpolator());
+                    anim.setDuration(ANIM_DURATION);
+                    anim.start();
+                }
+            });
+
+        } else if (viewType == NONE_CATEGORY) {
+            holder.categoryName.setText("None");
+
+            RecyclerView recyclerView = holder.recyclerView;
+            RecyclerView.LayoutManager layoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
+            recyclerView.setLayoutManager(layoutManager);
+            recyclerView.setHasFixedSize(true);
+            recyclerView.setNestedScrollingEnabled(false);
+
+            MenuAdapter menuAdapter1 = new MenuAdapter(fragmentManager);
+            recyclerView.setAdapter(menuAdapter1);
+            MenuAdapter menuAdapter = menuAdapter1;
             menuSettingViewModel.loadUnCategorizedMenu().observe(lifecycleOwner, menuAdapter::setMenuList);
         }
-    }
-
-    @NonNull
-    private MenuAdapter getMenuAdapter(final @NonNull ViewHolder holder) {
-        RecyclerView recyclerView = holder.menuRecyclerView;
-        RecyclerView.LayoutManager layoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
-        recyclerView.setLayoutManager(layoutManager);
-        recyclerView.setHasFixedSize(true);
-        recyclerView.setNestedScrollingEnabled(false);
-
-        MenuAdapter menuAdapter = new MenuAdapter(fragmentManager);
-        recyclerView.setAdapter(menuAdapter);
-        return menuAdapter;
     }
 
     @Override
@@ -141,7 +206,9 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHo
 
     static class ViewHolder extends RecyclerView.ViewHolder {
         @BindView(R.id.category_name) AppCompatTextView categoryName;
-        @BindView(R.id.menu_recycler_view) RecyclerView menuRecyclerView;
+        @BindView(R.id.category_header) ConstraintLayout categoryHeader;
+        @BindView(R.id.menu_recycler_view) RecyclerView recyclerView;
+        @BindView(R.id.category_expand_button) AppCompatImageView expandButton;
 
         private ViewHolder(final View itemView) {
             super(itemView);

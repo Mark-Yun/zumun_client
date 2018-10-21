@@ -74,6 +74,9 @@
     <string name="menu_category_setting_update_category_dialog_title">Update category</string>
     <string name="menu_category_setting_update_category_dialog_message">Insert new category name</string>
 
+    <string name="menu_category_setting_remove_category_dialog_title">Remove category</string>
+    <string name="menu_category_setting_remove_category_dialog_message">Remove %s category?</string>
+
     <string name="content_desc_navigation_drawer_open">Open navigation drawer</string>
     <string name="content_desc_navigation_drawer_close">Close navigation drawer</string>
 

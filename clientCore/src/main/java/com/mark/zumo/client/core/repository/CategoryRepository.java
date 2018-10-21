@@ -26,10 +26,9 @@ import io.reactivex.Observable;
 public class CategoryRepository {
 
     private static final String TAG = "CategoryRepository";
-
-    private final DiskRepository diskRepository;
     private static Bundle session;
     private static CategoryRepository sInstance;
+    private final DiskRepository diskRepository;
     private final NetworkRepository networkRepository;
 
     private CategoryRepository(final Bundle session) {
@@ -82,5 +81,10 @@ public class CategoryRepository {
 
     public Maybe<MenuCategory> getMenuCategoryFromDisk(final String categoryUuid) {
         return diskRepository.getMenuCategory(categoryUuid);
+    }
+
+    public Maybe<MenuCategory> deleteCategory(final String categoryUuid) {
+        return networkRepository.deleteCategory(categoryUuid)
+                .doOnSuccess(diskRepository::deleteMenuCategory);
     }
 }

@@ -125,6 +125,10 @@ public interface DiskRepository {
     @Query("SELECT * FROM " + MenuCategory.Schema.table + " WHERE menu_category_uuid LIKE :menu_category_uuid LIMIT 1")
     Maybe<MenuCategory> getMenuCategory(String menu_category_uuid);
 
+    @Delete
+    void deleteMenuCategory(MenuCategory menuCategory);
+
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertPaymentToken(PaymentToken paymentToken);
 

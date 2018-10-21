@@ -21,6 +21,7 @@ import java.util.List;
 
 import io.reactivex.Maybe;
 import retrofit2.http.Body;
+import retrofit2.http.DELETE;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.PUT;
@@ -75,6 +76,9 @@ public interface NetworkRepository {
 
     @GET("category")
     Maybe<List<MenuCategory>> getMenuCategoryListByStoreUuid(@Query(MenuCategory.Schema.storeUuid) String storeUuid);
+
+    @DELETE("category/{" + MenuCategory.Schema.uuid)
+    Maybe<MenuCategory> deleteCategory(@Path(MenuCategory.Schema.uuid) String categoryUuid);
 
     @PUT("category/{" + MenuCategory.Schema.uuid + "}")
     Maybe<MenuCategory> updateCategoriesOfMenu(@Path(MenuCategory.Schema.uuid) final String menuCategoryUuid,

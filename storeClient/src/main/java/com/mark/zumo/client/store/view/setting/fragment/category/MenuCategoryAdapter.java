@@ -12,6 +12,7 @@ import android.arch.lifecycle.LifecycleOwner;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.AppCompatEditText;
+import android.support.v7.widget.AppCompatImageButton;
 import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.AppCompatTextView;
 import android.support.v7.widget.RecyclerView;
@@ -80,9 +81,9 @@ class MenuCategoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     public void onBindViewHolder(@NonNull final RecyclerView.ViewHolder holder, final int position) {
         if (holder instanceof BodyViewHolder) {
             final BodyViewHolder viewHolder = (BodyViewHolder) holder;
+            final Context context = viewHolder.itemView.getContext();
             final MenuCategory menuCategory = menuCategoryList.get(position - 1);
 
-            viewHolder.name.setText(menuCategory.name);
             viewHolder.reorder.setOnTouchListener((v, event) -> {
                 int action = event.getAction();
                 switch (action) {
@@ -93,8 +94,8 @@ class MenuCategoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                 return false;
             });
 
+            viewHolder.name.setText(menuCategory.name);
             viewHolder.name.setOnClickListener(v -> {
-                final Context context = viewHolder.itemView.getContext();
                 final AppCompatEditText editText = new AppCompatEditText(context);
                 new AlertDialog.Builder(context)
                         .setTitle(R.string.menu_category_setting_update_category_dialog_title)
@@ -110,6 +111,21 @@ class MenuCategoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                         .create()
                         .show();
             });
+
+            viewHolder.removeButton.setOnClickListener(v ->
+                    new AlertDialog.Builder(context)
+                            .setTitle(R.string.menu_category_setting_remove_category_dialog_title)
+                            .setMessage(context.getString(R.string.menu_category_setting_remove_category_dialog_message, menuCategory.name))
+                            .setCancelable(true)
+                            .setNegativeButton(R.string.button_text_cancel, (dialog, which) -> dialog.dismiss())
+                            .setPositiveButton(android.R.string.ok, (dialog, which) -> {
+                                menuSettingViewModel.removeCategory(menuCategory)
+                                        .observe(lifecycleOwner, x -> notifyItemRemoved(position));
+                                dialog.dismiss();
+                            })
+                            .create()
+                            .show()
+            );
 
             viewHolder.itemView.setOnClickListener(v -> onSelectCategory(menuCategory));
         } else if (holder instanceof HeaderViewHolder) {
@@ -200,6 +216,7 @@ class MenuCategoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     static class BodyViewHolder extends RecyclerView.ViewHolder {
         @BindView(R.id.name) AppCompatTextView name;
         @BindView(R.id.reorder) AppCompatImageView reorder;
+        @BindView(R.id.remove_button) AppCompatImageButton removeButton;
 
         private BodyViewHolder(final View itemView) {
             super(itemView);
@@ -207,7 +224,7 @@ class MenuCategoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         }
     }
 
-    static class HeaderViewHolder extends RecyclerView.ViewHolder {
+    private static class HeaderViewHolder extends RecyclerView.ViewHolder {
         private HeaderViewHolder(final View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
