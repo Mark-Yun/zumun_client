@@ -77,7 +77,7 @@ public interface NetworkRepository {
     @GET("category")
     Maybe<List<MenuCategory>> getMenuCategoryListByStoreUuid(@Query(MenuCategory.Schema.storeUuid) String storeUuid);
 
-    @DELETE("category/{" + MenuCategory.Schema.uuid)
+    @DELETE("category/{" + MenuCategory.Schema.uuid + "}")
     Maybe<MenuCategory> deleteCategory(@Path(MenuCategory.Schema.uuid) String categoryUuid);
 
     @PUT("category/{" + MenuCategory.Schema.uuid + "}")

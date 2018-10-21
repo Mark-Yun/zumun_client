@@ -121,8 +121,9 @@ class MenuCategoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                             .setPositiveButton(android.R.string.ok, (dialog, which) -> {
                                 menuSettingViewModel.removeCategory(menuCategory)
                                         .observe(lifecycleOwner, x -> {
-                                            menuCategoryList.remove(position);
-                                            notifyItemRemoved(position);
+                                            int removedPosition = menuCategoryList.indexOf(menuCategory);
+                                            menuCategoryList.remove(menuCategory);
+                                            notifyItemRemoved(removedPosition + 1);
                                         });
                                 dialog.dismiss();
                             })
@@ -181,7 +182,7 @@ class MenuCategoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
     private void onCreateMenuCategory(MenuCategory menuCategory) {
         menuCategoryList.add(menuCategory);
-        notifyItemInserted(menuCategoryList.size() - 1);
+        notifyItemInserted(menuCategoryList.size());
     }
 
     @Override
