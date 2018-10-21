@@ -75,7 +75,9 @@ public class MenuRepository {
                 .doOnSuccess(diskRepository::insertMenuOptionList)
                 .doOnSuccess(list -> Log.d(TAG, "getMenuOptionByMenuUuid: " + list));
 
-        return Maybe.merge(menuOptionListDB, menuOptionListApi).toObservable();
+        return Maybe.merge(menuOptionListDB, menuOptionListApi)
+                .toObservable()
+                .distinctUntilChanged();
     }
 
     public Maybe<Menu> getMenuFromDisk(final String uuid) {

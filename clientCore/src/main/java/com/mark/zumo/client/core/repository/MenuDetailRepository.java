@@ -60,7 +60,8 @@ public class MenuDetailRepository {
                 menuListDB.flatMapObservable(Observable::fromIterable)
                         .groupBy(menuDetail -> menuDetail.menuCategoryUuid),
                 menuListApi.flatMapObservable(Observable::fromIterable)
-                        .groupBy(menuDetail -> menuDetail.menuCategoryUuid));
+                        .groupBy(menuDetail -> menuDetail.menuCategoryUuid))
+                .distinctUntilChanged();
     }
 
     public Maybe<List<MenuDetail>> getMenuDetailListFromDisk(final String storeUuid) {
@@ -73,7 +74,8 @@ public class MenuDetailRepository {
                 .doOnSuccess(x -> diskRepository.deleteMenuDetailListByCategoryUuid(categoryUuid))
                 .doOnSuccess(diskRepository::insertMenuDetailList);
         return Maybe.merge(menuDetailListDB, menuDetailListApi)
-                .toObservable();
+                .toObservable()
+                .distinctUntilChanged();
     }
 
     public Maybe<List<MenuDetail>> getMenuDetailListFromDiskByMenuUuid(final String storeUuid, final String menuUuid) {

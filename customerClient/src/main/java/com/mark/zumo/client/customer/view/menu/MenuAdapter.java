@@ -54,10 +54,6 @@ class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.ViewHolder> {
     }
 
     void setMenuList(final List<Menu> menuList) {
-        if (this.menuList.equals(menuList)) {
-            return;
-        }
-
         this.menuList = menuList;
         notifyDataSetChanged();
     }
