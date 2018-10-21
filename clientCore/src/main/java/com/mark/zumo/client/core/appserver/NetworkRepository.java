@@ -11,6 +11,7 @@ import com.mark.zumo.client.core.entity.Menu;
 import com.mark.zumo.client.core.entity.MenuCategory;
 import com.mark.zumo.client.core.entity.MenuDetail;
 import com.mark.zumo.client.core.entity.MenuOption;
+import com.mark.zumo.client.core.entity.MenuOptionDetail;
 import com.mark.zumo.client.core.entity.MenuOrder;
 import com.mark.zumo.client.core.entity.OrderDetail;
 import com.mark.zumo.client.core.entity.SnsToken;
@@ -62,7 +63,10 @@ public interface NetworkRepository {
     Maybe<MenuOption> getMenuOptionList(@Path(MenuOption.Schema.uuid) String menuOptionUuid);
 
     @GET("menu/option")
-    Maybe<List<MenuOption>> getMenuOptionListByMenuUuid(@Query(MenuOption.Schema.menuUuid) String menuUuid);
+    Maybe<List<MenuOption>> getMenuOptionListByMenuUuid(@Query(MenuOptionDetail.Schema.menuUuid) String menuUuid);
+
+    @GET("menu/option")
+    Maybe<List<MenuOption>> getMenuOptionListByStoreUuid(@Query(MenuOptionDetail.Schema.storeUuid) String storeUuid);
 
     @PUT("menu/{" + Menu.Schema.uuid + "}/category")
     Maybe<Menu> updateCategoryInMenu(@Path(Menu.Schema.uuid) String menuUuid,

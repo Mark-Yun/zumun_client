@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "9ed7ef1251c306d63bffc6939d057bb1",
+    "identityHash": "174d4b636244bc224b5ba57900dff82f",
     "entities": [
       {
         "tableName": "menu",
@@ -274,12 +274,56 @@
       },
       {
         "tableName": "menu_option",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`menu_option_uuid` TEXT NOT NULL, `menu_uuid` TEXT, `option_name` TEXT, `option_value` TEXT, `option_price` INTEGER NOT NULL, PRIMARY KEY(`menu_option_uuid`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`menu_option_uuid` TEXT NOT NULL, `store_uuid` TEXT, `menu_option_name` TEXT, `menu_option_value` TEXT, `menu_option_price` INTEGER NOT NULL, PRIMARY KEY(`menu_option_uuid`))",
         "fields": [
           {
             "fieldPath": "uuid",
             "columnName": "menu_option_uuid",
             "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "storeUuid",
+            "columnName": "store_uuid",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "name",
+            "columnName": "menu_option_name",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "value",
+            "columnName": "menu_option_value",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "price",
+            "columnName": "menu_option_price",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "menu_option_uuid"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "menu_option_detail",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `menu_uuid` TEXT, `menu_option_uuid` TEXT, `store_uuid` TEXT, `menu_option_seq_num` INTEGER NOT NULL, PRIMARY KEY(`id`))",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
             "notNull": true
           },
           {
@@ -289,27 +333,27 @@
             "notNull": false
           },
           {
-            "fieldPath": "name",
-            "columnName": "option_name",
+            "fieldPath": "menu_option_uuid",
+            "columnName": "menu_option_uuid",
             "affinity": "TEXT",
             "notNull": false
           },
           {
-            "fieldPath": "value",
-            "columnName": "option_value",
+            "fieldPath": "storeUuid",
+            "columnName": "store_uuid",
             "affinity": "TEXT",
             "notNull": false
           },
           {
-            "fieldPath": "price",
-            "columnName": "option_price",
+            "fieldPath": "seqNum",
+            "columnName": "menu_option_seq_num",
             "affinity": "INTEGER",
             "notNull": true
           }
         ],
         "primaryKey": {
           "columnNames": [
-            "menu_option_uuid"
+            "id"
           ],
           "autoGenerate": false
         },
@@ -477,7 +521,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"9ed7ef1251c306d63bffc6939d057bb1\")"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"174d4b636244bc224b5ba57900dff82f\")"
     ]
   }
 }

@@ -16,6 +16,7 @@ import com.mark.zumo.client.core.entity.Menu;
 import com.mark.zumo.client.core.entity.MenuCategory;
 import com.mark.zumo.client.core.entity.MenuDetail;
 import com.mark.zumo.client.core.entity.MenuOption;
+import com.mark.zumo.client.core.entity.MenuOptionDetail;
 import com.mark.zumo.client.core.entity.MenuOrder;
 import com.mark.zumo.client.core.entity.OrderDetail;
 import com.mark.zumo.client.core.entity.SnsToken;
@@ -83,7 +84,10 @@ public interface DiskRepository {
     void insertMenuOrderList(List<MenuOrder> menuOrderList);
 
 
-    @Query("SELECT * FROM " + MenuOption.Schema.table + " WHERE menu_uuid LIKE :menuUuid")
+    @Query("SELECT * FROM " + MenuOptionDetail.Schema.table + " MenuOptionDetail"
+            + " left outer join " + MenuOption.Schema.table + " MenuOption"
+            + " on MenuOptionDetail.menu_option_uuid = MenuOption.menu_option_uuid"
+            + " WHERE menu_uuid LIKE :menuUuid")
     Maybe<List<MenuOption>> getMenuOptionListByMenuUuid(String menuUuid);
 
     @Query("SELECT * FROM " + MenuOption.Schema.table + " WHERE menu_option_uuid LIKE :menuOptionUuid LIMIT 1")

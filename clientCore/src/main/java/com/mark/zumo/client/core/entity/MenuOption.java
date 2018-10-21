@@ -28,6 +28,8 @@ public class MenuOption implements Serializable {
 
     @PrimaryKey @NonNull @SerializedName(Schema.uuid) @ColumnInfo(name = Schema.uuid)
     public final String uuid;
+    @SerializedName(Schema.storeUuid) @ColumnInfo(name = Schema.storeUuid)
+    public final String storeUuid;
     @SerializedName(Schema.name) @ColumnInfo(name = Schema.name)
     public final String name;
     @SerializedName(Schema.value) @ColumnInfo(name = Schema.value)
@@ -35,19 +37,12 @@ public class MenuOption implements Serializable {
     @SerializedName(Schema.price) @ColumnInfo(name = Schema.price)
     public final int price;
 
-    public MenuOption(@NonNull final String uuid, final String name, final String value, final int price) {
+    public MenuOption(@NonNull final String uuid, final String storeUuid, final String name, final String value, final int price) {
         this.uuid = uuid;
+        this.storeUuid = storeUuid;
         this.name = name;
         this.value = value;
         this.price = price;
-    }
-
-    public interface Schema {
-        String table = "menu_option";
-        String uuid = "menu_option_uuid";
-        String name = "option_name";
-        String value = "option_value";
-        String price = "option_price";
     }
 
     @Override
@@ -58,5 +53,14 @@ public class MenuOption implements Serializable {
     @Override
     public boolean equals(final Object obj) {
         return new EntityComparator<>().test(this, obj);
+    }
+
+    public interface Schema {
+        String table = "menu_option";
+        String uuid = "menu_option_uuid";
+        String storeUuid = "store_uuid";
+        String name = "menu_option_name";
+        String value = "menu_option_value";
+        String price = "menu_option_price";
     }
 }

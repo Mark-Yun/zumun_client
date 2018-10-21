@@ -7,6 +7,7 @@
 package com.mark.zumo.client.core.repository;
 
 import android.os.Bundle;
+import android.util.Log;
 
 import com.mark.zumo.client.core.appserver.AppServerServiceProvider;
 import com.mark.zumo.client.core.appserver.NetworkRepository;
@@ -21,7 +22,6 @@ import java.util.List;
 
 import io.reactivex.Maybe;
 import io.reactivex.Observable;
-import io.reactivex.observables.GroupedObservable;
 
 /**
  * Created by mark on 18. 4. 30.
@@ -69,16 +69,13 @@ public class MenuRepository {
         return diskRepository.getMenuList(storeUuid);
     }
 
-    public Observable<GroupedObservable<String, MenuOption>> getMenuOptionGroupByMenu(String menuUuid) {
+    public Observable<List<MenuOption>> getMenuOptionByMenuUuid(String menuUuid) {
         Maybe<List<MenuOption>> menuOptionListDB = diskRepository.getMenuOptionListByMenuUuid(menuUuid);
         Maybe<List<MenuOption>> menuOptionListApi = networkRepository.getMenuOptionListByMenuUuid(menuUuid)
-                .doOnSuccess(diskRepository::insertMenuOptionList);
+                .doOnSuccess(diskRepository::insertMenuOptionList)
+                .doOnSuccess(list -> Log.d(TAG, "getMenuOptionByMenuUuid: " + list));
 
-        return Observable.merge(
-                menuOptionListDB.flatMapObservable(Observable::fromIterable)
-                        .groupBy(menuOption -> menuOption.name),
-                menuOptionListApi.flatMapObservable(Observable::fromIterable)
-                        .groupBy(menuOption -> menuOption.name));
+        return Maybe.merge(menuOptionListDB, menuOptionListApi).toObservable();
     }
 
     public Maybe<Menu> getMenuFromDisk(final String uuid) {

@@ -15,7 +15,7 @@ import com.mark.zumo.client.core.entity.util.EntityHelper;
 
 import java.io.Serializable;
 
-import static com.mark.zumo.client.core.entity.MenuOption.Schema.table;
+import static com.mark.zumo.client.core.entity.MenuOptionDetail.Schema.table;
 
 /**
  * Created by mark on 18. 5. 23.
