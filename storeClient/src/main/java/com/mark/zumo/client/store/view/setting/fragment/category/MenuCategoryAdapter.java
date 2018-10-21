@@ -120,7 +120,10 @@ class MenuCategoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                             .setNegativeButton(R.string.button_text_cancel, (dialog, which) -> dialog.dismiss())
                             .setPositiveButton(android.R.string.ok, (dialog, which) -> {
                                 menuSettingViewModel.removeCategory(menuCategory)
-                                        .observe(lifecycleOwner, x -> notifyItemRemoved(position));
+                                        .observe(lifecycleOwner, x -> {
+                                            menuCategoryList.remove(position);
+                                            notifyItemRemoved(position);
+                                        });
                                 dialog.dismiss();
                             })
                             .create()

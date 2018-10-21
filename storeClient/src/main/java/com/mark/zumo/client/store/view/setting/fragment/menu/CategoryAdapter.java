@@ -185,9 +185,8 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHo
             recyclerView.setHasFixedSize(true);
             recyclerView.setNestedScrollingEnabled(false);
 
-            MenuAdapter menuAdapter1 = new MenuAdapter(fragmentManager);
-            recyclerView.setAdapter(menuAdapter1);
-            MenuAdapter menuAdapter = menuAdapter1;
+            MenuAdapter menuAdapter = new MenuAdapter(fragmentManager);
+            recyclerView.setAdapter(menuAdapter);
             menuSettingViewModel.loadUnCategorizedMenu().observe(lifecycleOwner, menuAdapter::setMenuList);
         }
     }
