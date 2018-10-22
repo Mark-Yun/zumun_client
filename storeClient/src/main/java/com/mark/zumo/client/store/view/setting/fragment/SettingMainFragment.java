@@ -15,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.mark.zumo.client.store.R;
+import com.mark.zumo.client.store.view.setting.fragment.profile.StoreProfileSettingFragment;
 
 import butterknife.ButterKnife;
 

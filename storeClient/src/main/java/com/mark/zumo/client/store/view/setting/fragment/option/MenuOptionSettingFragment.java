@@ -4,7 +4,13 @@
  * Proprietary and confidential
  */
 
-package com.mark.zumo.client.store.view.setting.fragment;
+/*
+ * Copyright (c) 2018. Mark Soft - All Rights Reserved
+ * Unauthorized copying of this file, via any medium is strictly prohibited
+ * Proprietary and confidential
+ */
+
+package com.mark.zumo.client.store.view.setting.fragment.option;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;

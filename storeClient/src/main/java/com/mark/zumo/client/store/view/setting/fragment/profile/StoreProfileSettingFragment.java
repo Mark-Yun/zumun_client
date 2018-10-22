@@ -4,7 +4,13 @@
  * Proprietary and confidential
  */
 
-package com.mark.zumo.client.store.view.setting.fragment;
+/*
+ * Copyright (c) 2018. Mark Soft - All Rights Reserved
+ * Unauthorized copying of this file, via any medium is strictly prohibited
+ * Proprietary and confidential
+ */
+
+package com.mark.zumo.client.store.view.setting.fragment.profile;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
@@ -27,6 +33,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.location.places.Place;
@@ -104,11 +111,13 @@ public class StoreProfileSettingFragment extends Fragment {
 
         GlideApp.with(this)
                 .load(store.coverImageUrl)
+                .transition(DrawableTransitionOptions.withCrossFade())
                 .into(coverImage);
 
         GlideApp.with(this)
                 .load(store.thumbnailUrl)
                 .apply(GlideUtils.storeImageOptions())
+                .transition(DrawableTransitionOptions.withCrossFade())
                 .into(thumbnailImage);
 
         storeName.setText(store.name);
