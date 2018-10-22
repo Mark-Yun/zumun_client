@@ -37,6 +37,7 @@ import com.mark.zumo.client.store.R;
 import com.mark.zumo.client.store.viewmodel.MenuSettingViewModel;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -59,7 +60,9 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHo
     private LifecycleOwner lifecycleOwner;
 
     private List<MenuCategory> categoryList;
+    private List<MenuCategory> refinedCategoryList;
     private Map<String, List<Menu>> menuListMap;
+    private Map<MenuCategory, MenuAdapter> menuAdapterMap;
 
     CategoryAdapter(final LifecycleOwner lifecycleOwner,
                     final MenuSettingViewModel menuSettingViewModel,
@@ -70,7 +73,9 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHo
         this.fragmentManager = fragmentManager;
 
         categoryList = new ArrayList<>();
+        refinedCategoryList = new ArrayList<>();
         menuListMap = new LinkedHashMap<>();
+        menuAdapterMap = new HashMap<>();
     }
 
     @NonNull
@@ -83,11 +88,19 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHo
     }
 
     void setCategoryList(final List<MenuCategory> categoryList) {
+        if (this.categoryList.equals(categoryList)) {
+            return;
+        }
+
         this.categoryList = categoryList;
         notifyIfReady();
     }
 
     void setMenuListMap(final Map<String, List<Menu>> menuListMap) {
+        if (this.menuListMap.equals(menuListMap)) {
+            return;
+        }
+
         this.menuListMap = menuListMap;
         notifyIfReady();
     }
@@ -98,7 +111,8 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHo
         }
         List<MenuCategory> emptyList = new ArrayList<>();
 
-        for (MenuCategory category : categoryList) {
+        refinedCategoryList = new ArrayList<>(categoryList);
+        for (MenuCategory category : refinedCategoryList) {
             boolean hasMenuItems = menuListMap.containsKey(category.uuid);
             if (!hasMenuItems) {
                 emptyList.add(category);
@@ -106,7 +120,7 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHo
         }
 
         for (MenuCategory emptyCategory : emptyList) {
-            categoryList.remove(emptyCategory);
+            refinedCategoryList.remove(emptyCategory);
         }
 
         notifyDataSetChanged();
@@ -118,7 +132,7 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHo
         final Context context = holder.itemView.getContext();
 
         if (viewType == CATEGORY) {
-            MenuCategory menuCategory = categoryList.get(position);
+            MenuCategory menuCategory = refinedCategoryList.get(position);
             String categoryName = menuCategory.name;
             String categoryUuid = menuCategory.uuid;
             boolean isEmptyCategory = !menuListMap.containsKey(categoryUuid);
@@ -135,10 +149,12 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHo
             final LayoutAnimationController controller = AnimationUtils.loadLayoutAnimation(context, R.anim.layout_animation_fall_down);
             recyclerView.setLayoutAnimation(controller);
 
-            MenuAdapter menuAdapter = new MenuAdapter(fragmentManager);
+            MenuAdapter menuAdapter = getMenuAdapter(menuCategory);
             recyclerView.setAdapter(menuAdapter);
             menuAdapter.setMenuList(menuList);
-            recyclerView.scheduleLayoutAnimation();
+            if (!recyclerView.isAnimating()) {
+                recyclerView.scheduleLayoutAnimation();
+            }
 
             holder.categoryName.setText(categoryName + " (" + menuList.size() + ")");
             holder.categoryHeader.setOnClickListener(new View.OnClickListener() {
@@ -191,15 +207,24 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHo
         }
     }
 
+    private MenuAdapter getMenuAdapter(final MenuCategory menuCategory) {
+        if (menuAdapterMap.containsKey(menuCategory)) {
+            return menuAdapterMap.get(menuCategory);
+        }
+        MenuAdapter menuAdapter = new MenuAdapter(fragmentManager);
+        menuAdapterMap.put(menuCategory, menuAdapter);
+        return menuAdapter;
+    }
+
     @Override
     public int getItemViewType(final int position) {
-        boolean isLastCategory = position == categoryList.size();
+        boolean isLastCategory = position == refinedCategoryList.size();
         return isLastCategory ? NONE_CATEGORY : CATEGORY;
     }
 
     @Override
     public int getItemCount() {
-        int size = categoryList.size();
+        int size = refinedCategoryList.size();
         return size > 0 ? size + 1 : 0;
     }
 

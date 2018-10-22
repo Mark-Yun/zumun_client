@@ -13,6 +13,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -91,18 +92,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         if (id == R.id.menu_order) {
             Fragment fragment = Fragment.instantiate(this, OrderFragment.class.getName());
-            getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.main_fragment, fragment)
-                    .commit();
+            updateMainFragment(fragment);
         } else if (id == R.id.nav_gallery) {
 
         } else if (id == R.id.nav_slideshow) {
 
         } else if (id == R.id.nav_manage) {
             Fragment fragment = Fragment.instantiate(this, SettingMainFragment.class.getName());
-            getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.main_fragment, fragment)
-                    .commit();
+            updateMainFragment(fragment);
         } else if (id == R.id.nav_share) {
 
         } else if (id == R.id.nav_send) {
@@ -111,5 +108,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    private void updateMainFragment(final Fragment fragment) {
+        getSupportFragmentManager().beginTransaction()
+                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+                .replace(R.id.main_fragment, fragment)
+                .commit();
     }
 }
