@@ -37,7 +37,7 @@
     </style>
 
     <style name="MenuOptionSelector">
-        <item name="android:layout_margin">@dimen/menu_option_margin</item>
+        <item name="android:layout_marginTop">@dimen/menu_option_margin</item>
         <item name="android:background">@drawable/shape_menu_option</item>
         <item name="android:clickable">true</item>
         <item name="android:focusable">true</item>
