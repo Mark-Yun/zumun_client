@@ -17,13 +17,13 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.AttributeSet;
 import android.view.MenuItem;
 import android.view.View;
 
 import com.mark.zumo.client.core.entity.Store;
+import com.mark.zumo.client.core.view.BaseActivity;
 import com.mark.zumo.client.store.R;
 import com.mark.zumo.client.store.view.order.OrderFragment;
 import com.mark.zumo.client.store.view.setting.fragment.SettingMainFragment;
@@ -35,7 +35,7 @@ import butterknife.ButterKnife;
 /**
  * Created by mark on 18. 7. 1.
  */
-public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class MainActivity extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener {
     @BindView(R.id.toolbar) Toolbar toolbar;
     @BindView(R.id.nav_view) NavigationView navView;
     @BindView(R.id.drawer_layout) DrawerLayout drawer;

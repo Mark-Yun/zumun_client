@@ -64,4 +64,9 @@
     <string name="number_of_orders">(%s)</string>
     <string name="menu_category_setting_remove_category_dialog_title">카테고리 삭제</string>
     <string name="menu_category_setting_remove_category_dialog_message">%s 카테고리를 삭제할까요?</string>
+
+    <string name="store_name_preference_title">가게 이름 설정</string>
+    <string name="store_thumbnail_image_preference_title">가게 로고 이미지 설정</string>
+    <string name="store_cover_image_preference_title">가게 배경 이미지 설정</string>
+    <string name="store_address_preference_title">가게 주소 설정</string>
 </resources>

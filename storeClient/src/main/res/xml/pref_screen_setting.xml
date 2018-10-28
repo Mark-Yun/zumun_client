@@ -7,7 +7,7 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
     <PreferenceCategory android:title="@string/preference_title_store_category">
         <Preference
-            android:fragment="com.mark.zumo.client.store.view.setting.fragment.profile.StoreProfileSettingFragment"
+            android:fragment="com.mark.zumo.client.store.view.setting.fragment.profile.StoreProfileMainFragment"
             android:key="@string/preference_key_store_profile"
             android:summary="@string/preference_summary_store_profile"
             android:title="@string/preference_title_store_profile" />

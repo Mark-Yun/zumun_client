@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (c) 2018. Mark Soft - All Rights Reserved
+  ~ Unauthorized copying of this file, via any medium is strictly prohibited
+  ~ Proprietary and confidential
+  -->
+
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <EditTextPreference
+        android:key="@string/store_name_preference_key"
+        android:title="@string/store_name_preference_title" />
+    <Preference
+        android:key="@string/store_thumbnail_image_preference_key"
+        android:title="@string/store_thumbnail_image_preference_title" />
+    <Preference
+        android:key="@string/store_cover_image_preference_key"
+        android:title="@string/store_cover_image_preference_title" />
+    <Preference
+        android:key="@string/store_address_preference_key"
+        android:title="@string/store_address_preference_title" />
+</PreferenceScreen>

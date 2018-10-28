@@ -29,11 +29,15 @@ import io.reactivex.disposables.CompositeDisposable;
  */
 public class StoreSettingViewModel extends AndroidViewModel {
 
+    public final static String ACTION_STORE_INFORMATION_CHANGED = "com.mark.zumo.client.store.action.STORE_INFORMATION_CHAGED";
+
     private final SessionManager sessionManager;
     private final StoreManager storeManager;
     private final S3TransferManager s3TransferManager;
 
     private final CompositeDisposable compositeDisposable;
+
+    private MutableLiveData<Store> currentStore;
 
     public StoreSettingViewModel(@NonNull final Application application) {
         super(application);
@@ -46,13 +50,21 @@ public class StoreSettingViewModel extends AndroidViewModel {
     }
 
     public LiveData<Store> getCurrentStore() {
-        MutableLiveData<Store> liveData = new MutableLiveData<>();
+        if (currentStore == null) {
+            currentStore = new MutableLiveData<>();
+        }
+
+        loadOnCurrentStore();
+
+        return currentStore;
+    }
+
+    public void loadOnCurrentStore() {
         sessionManager.getSessionStore()
                 .observeOn(AndroidSchedulers.mainThread())
-                .doOnSuccess(liveData::setValue)
+                .doOnSuccess(currentStore::setValue)
                 .doOnSubscribe(compositeDisposable::add)
                 .subscribe();
-        return liveData;
     }
 
     public LiveData<Store> updateStoreName(String newName) {

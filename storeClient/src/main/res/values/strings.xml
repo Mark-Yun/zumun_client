@@ -95,4 +95,12 @@
 
     <string name="error_message_insert_as_number">Insert as number</string>
     <string name="number_of_orders">(%s)</string>
+    <string name="store_name_preference_title">Store Name Setting</string>
+    <string name="store_thumbnail_image_preference_title">Store Logo Image Setting</string>
+    <string name="store_cover_image_preference_title">Store Cover Image Setting</string>
+    <string name="store_address_preference_title">Store Address Setting</string>
+    <string name="store_name_preference_key" translatable="false">store_profile_store_name_key</string>
+    <string name="store_thumbnail_image_preference_key" translatable="false">store_profile_store_thumbnail_key</string>
+    <string name="store_cover_image_preference_key" translatable="false">store_profile_store_image_key</string>
+    <string name="store_address_preference_key" translatable="false">store_profile_store_address_key</string>
 </resources>

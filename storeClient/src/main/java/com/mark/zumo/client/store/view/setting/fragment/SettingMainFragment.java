@@ -15,7 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.mark.zumo.client.store.R;
-import com.mark.zumo.client.store.view.setting.fragment.profile.StoreProfileSettingFragment;
+import com.mark.zumo.client.store.view.setting.fragment.profile.StoreProfileMainFragment;
 
 import butterknife.ButterKnife;
 
@@ -34,11 +34,11 @@ public class SettingMainFragment extends Fragment {
 
     private void inflateDefaultFragment() {
         Fragment settingPreferenceFragment = Fragment.instantiate(getActivity(), SettingPreferenceFragment.class.getName());
-        Fragment storeProfileSettingFragment = Fragment.instantiate(getActivity(), StoreProfileSettingFragment.class.getName());
+        Fragment storeProfileFragment = Fragment.instantiate(getActivity(), StoreProfileMainFragment.class.getName());
 
         getFragmentManager().beginTransaction()
                 .replace(R.id.preference_fragment, settingPreferenceFragment)
-                .replace(R.id.setting_main_fragment, storeProfileSettingFragment)
+                .replace(R.id.setting_main_fragment, storeProfileFragment)
                 .commit();
     }
 }
