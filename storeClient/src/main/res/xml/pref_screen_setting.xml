@@ -15,10 +15,10 @@
 
     <PreferenceCategory android:title="@string/preference_title_menu_category">
         <Preference
-            android:fragment="com.mark.zumo.client.store.view.setting.fragment.menu.MenuSettingFragment"
-            android:key="@string/preference_key_menu_management"
-            android:summary="@string/preference_summary_menu_management"
-            android:title="@string/preference_title_menu_management" />
+            android:fragment="com.mark.zumo.client.store.view.setting.fragment.category.MenuCategorySettingFragment"
+            android:key="@string/preference_key_menu_category_management"
+            android:summary="@string/preference_summary_menu_category_management"
+            android:title="@string/preference_title_menu_category_management" />
 
         <Preference
             android:fragment="com.mark.zumo.client.store.view.setting.fragment.option.MenuOptionSettingFragment"
@@ -27,9 +27,9 @@
             android:title="@string/preference_title_menu_option_management" />
 
         <Preference
-            android:fragment="com.mark.zumo.client.store.view.setting.fragment.category.MenuCategorySettingFragment"
-            android:key="@string/preference_key_menu_category_management"
-            android:summary="@string/preference_summary_menu_category_management"
-            android:title="@string/preference_title_menu_category_management" />
+            android:fragment="com.mark.zumo.client.store.view.setting.fragment.menu.MenuSettingFragment"
+            android:key="@string/preference_key_menu_management"
+            android:summary="@string/preference_summary_menu_management"
+            android:title="@string/preference_title_menu_management" />
     </PreferenceCategory>
 </PreferenceScreen>
