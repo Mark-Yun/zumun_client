@@ -103,4 +103,13 @@
     <string name="store_thumbnail_image_preference_key" translatable="false">store_profile_store_thumbnail_key</string>
     <string name="store_cover_image_preference_key" translatable="false">store_profile_store_image_key</string>
     <string name="store_address_preference_key" translatable="false">store_profile_store_address_key</string>
+
+    <string name="store_owner_name">Store Owner Name</string>
+    <string name="store_owner_password">Password</string>
+    <string name="store_owner_password_confirm">Password Confirm</string>
+    <string name="store_owner_phone_number">Store Owner Phone Number</string>
+    <string name="store_owner_email">Store Owner Email</string>
+    <string name="store_owner_bank_name">Store Owner Back Name</string>
+    <string name="store_owner_bank_account">Store Owner Back Account</string>
+    <string name="store_owner_bank_account_scan">Store Owner Back Account Scan</string>
 </resources>

@@ -4,7 +4,7 @@
  * Proprietary and confidential
  */
 
-package com.mark.zumo.client.store.view.signup;
+package com.mark.zumo.client.store.view.sign;
 
 import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
@@ -13,7 +13,7 @@ import android.support.v4.app.Fragment;
 
 import com.mark.zumo.client.core.view.BaseActivity;
 import com.mark.zumo.client.store.R;
-import com.mark.zumo.client.store.view.signup.fragment.SignInFragment;
+import com.mark.zumo.client.store.view.sign.fragment.SignInFragment;
 import com.mark.zumo.client.store.viewmodel.SignUpViewModel;
 
 /**

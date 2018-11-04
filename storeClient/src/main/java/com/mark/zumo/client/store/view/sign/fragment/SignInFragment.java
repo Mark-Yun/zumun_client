@@ -4,7 +4,7 @@
  * Proprietary and confidential
  */
 
-package com.mark.zumo.client.store.view.signup.fragment;
+package com.mark.zumo.client.store.view.sign.fragment;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;

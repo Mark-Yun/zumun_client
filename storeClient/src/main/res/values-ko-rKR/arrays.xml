@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (c) 2018. Mark Soft - All Rights Reserved
+  ~ Unauthorized copying of this file, via any medium is strictly prohibited
+  ~ Proprietary and confidential
+  -->
+
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <string-array name="bank_entries" tools:ignore="InconsistentArrays">
+        <item>기업은행</item>
+        <item>국민은행</item>
+        <item>농협중앙회</item>
+        <item>단위농협</item>
+        <item>우리은행</item>
+        <item>대구은행</item>
+        <item>외환은행</item>
+        <item>SC제일은행</item>
+        <item>부산은행</item>
+        <item>새마을금고</item>
+        <item>한국씨티은행</item>
+        <item>광주은행</item>
+        <item>경남은행</item>
+        <item>수협</item>
+        <item>신협</item>
+        <item>전북은행</item>
+        <item>제주은행</item>
+        <item>산림조합</item>
+        <item>우체국</item>
+        <item>하나은행</item>
+        <item>신한은행</item>
+        <item>동양종금증권</item>
+        <item>한국투자증권</item>
+        <item>삼성증권</item>
+        <item>미래에셋</item>
+        <item>우리투자증권</item>
+        <item>현대증권</item>
+        <item>SK증권</item>
+        <item>신한금융투자</item>
+        <item>하이증권</item>
+        <item>HMC증권</item>
+        <item>대신증권</item>
+        <item>하나대투증권</item>
+        <item>동부증권</item>
+        <item>유진증권</item>
+        <item>메리츠증권</item>
+        <item>신영증권</item>
+        <item>대우증권</item>
+    </string-array>
+
+    <string-array name="bank_codes" tools:ignore="InconsistentArrays">
+        <item>003</item>
+        <item>004</item>
+        <item>011</item>
+        <item>012</item>
+        <item>020</item>
+        <item>031</item>
+        <item>005</item>
+        <item>023</item>
+        <item>032</item>
+        <item>045</item>
+        <item>027</item>
+        <item>034</item>
+        <item>039</item>
+        <item>007</item>
+        <item>048</item>
+        <item>037</item>
+        <item>035</item>
+        <item>064</item>
+        <item>071</item>
+        <item>081</item>
+        <item>088</item>
+        <item>209</item>
+        <item>243</item>
+        <item>240</item>
+        <item>230</item>
+        <item>247</item>
+        <item>218</item>
+        <item>266</item>
+        <item>278</item>
+        <item>262</item>
+        <item>263</item>
+        <item>267</item>
+        <item>270</item>
+        <item>279</item>
+        <item>280</item>
+        <item>287</item>
+        <item>291</item>
+        <item>238</item>
+    </string-array>
+</resources>

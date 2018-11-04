@@ -8,8 +8,12 @@ package com.mark.zumo.client.store.viewmodel;
 
 import android.app.Application;
 import android.arch.lifecycle.AndroidViewModel;
+import android.arch.lifecycle.LiveData;
+import android.arch.lifecycle.MutableLiveData;
 import android.support.annotation.NonNull;
 
+import com.mark.zumo.client.core.appserver.request.signup.Exception;
+import com.mark.zumo.client.core.appserver.request.signup.StoreOwnerSignUpRequest;
 import com.mark.zumo.client.store.model.SessionManager;
 
 /**
@@ -23,5 +27,34 @@ public class SignUpViewModel extends AndroidViewModel {
     public SignUpViewModel(@NonNull Application application) {
         super(application);
         sessionManager = SessionManager.INSTANCE;
+    }
+
+    public LiveData<Exception> signUp(final String email,
+                                      final String password,
+                                      final String passwordConfirm,
+                                      final String name,
+                                      final String phoneNumber,
+                                      final String bankName,
+                                      final String backAccount,
+                                      final String backAccountUrl) {
+
+        MutableLiveData<Exception> liveData = new MutableLiveData<>();
+
+        try {
+            StoreOwnerSignUpRequest request = new StoreOwnerSignUpRequest.Builder()
+                    .setEmail(email)
+                    .setPassword(password)
+                    .setPasswordConfirm(passwordConfirm)
+                    .setName(name)
+                    .setPhoneNumber(phoneNumber)
+                    .setBankName(bankName)
+                    .setBankAccount(backAccount)
+                    .setBankAccountScanUrl(backAccountUrl)
+                    .build();
+        } catch (Exception e) {
+            liveData.setValue(e);
+        }
+
+        return liveData;
     }
 }
