@@ -11,8 +11,8 @@
         <item name="android:borderlessButtonStyle">
             @style/AppTheme.ButtonStyle.Borderless
         </item>
-        <item name="colorPrimary">@color/color_900_90</item>
-        <item name="colorPrimaryDark">@color/color_900_90</item>
+        <item name="colorPrimary">@color/color_900</item>
+        <item name="colorPrimaryDark">@color/color_900</item>
         <item name="android:textColorPrimary">@color/colorTextLight</item>
         <item name="android:actionButtonStyle">@style/AppTheme.ActionButtonStyle</item>
         <item name="preferenceTheme">@style/PreferenceThemeOverlay</item>

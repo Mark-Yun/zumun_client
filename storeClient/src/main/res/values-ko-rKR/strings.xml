@@ -76,4 +76,5 @@
     <string name="store_owner_bank_name">은행 선택</string>
     <string name="store_owner_bank_account">판매 금액이 입금될 계좌번호를 입력해주세요</string>
     <string name="store_owner_bank_account_scan">판매 금액이 입금될 통장 사본을 업로드 해주세요</string>
+    <string name="menu_title_widthdraw">출금</string>
 </resources>

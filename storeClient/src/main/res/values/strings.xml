@@ -112,4 +112,6 @@
     <string name="store_owner_bank_name">Store Owner Back Name</string>
     <string name="store_owner_bank_account">Store Owner Back Account</string>
     <string name="store_owner_bank_account_scan">Store Owner Back Account Scan</string>
+
+    <string name="menu_title_widthdraw">Withdraw</string>
 </resources>
