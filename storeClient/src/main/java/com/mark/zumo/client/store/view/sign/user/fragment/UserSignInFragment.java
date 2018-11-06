@@ -4,7 +4,7 @@
  * Proprietary and confidential
  */
 
-package com.mark.zumo.client.store.view.sign.fragment;
+package com.mark.zumo.client.store.view.sign.user.fragment;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -24,7 +24,7 @@ import butterknife.OnClick;
 /**
  * Created by mark on 18. 5. 13.
  */
-public class SignInFragment extends Fragment {
+public class UserSignInFragment extends Fragment {
     @Override
     public void onCreate(@Nullable final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -33,7 +33,7 @@ public class SignInFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull final LayoutInflater inflater, @Nullable final ViewGroup container, @Nullable final Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_sign_in, container, false);
+        View view = inflater.inflate(R.layout.fragment_store_user_sign_in, container, false);
         ButterKnife.bind(this, view);
         return view;
     }
@@ -46,7 +46,7 @@ public class SignInFragment extends Fragment {
     @OnClick(R.id.go_to_sign_up)
     void goToSignUp() {
         Objects.requireNonNull(getFragmentManager()).beginTransaction()
-                .replace(R.id.console_fragment, Fragment.instantiate(getActivity(), SignUpFragment.class.getName()))
+                .replace(R.id.console_fragment, Fragment.instantiate(getActivity(), UserSignUpFragment.class.getName()))
                 .commit();
     }
 }

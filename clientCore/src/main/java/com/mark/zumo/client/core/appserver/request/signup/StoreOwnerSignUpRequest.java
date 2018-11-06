@@ -9,6 +9,18 @@
  * Unauthorized copying of this file, via any medium is strictly prohibited
  * Proprietary and confidential
  */
+
+/*
+ * Copyright (c) 2018. Mark Soft - All Rights Reserved
+ * Unauthorized copying of this file, via any medium is strictly prohibited
+ * Proprietary and confidential
+ */
+
+/*
+ * Copyright (c) 2018. Mark Soft - All Rights Reserved
+ * Unauthorized copying of this file, via any medium is strictly prohibited
+ * Proprietary and confidential
+ */
 package com.mark.zumo.client.core.appserver.request.signup;
 
 import com.google.gson.annotations.SerializedName;
@@ -147,7 +159,7 @@ public class StoreOwnerSignUpRequest {
             return this;
         }
 
-        public StoreOwnerSignUpRequest build() throws Exception {
+        public StoreOwnerSignUpRequest build() throws StoreUserSignupException {
             StoreOwnerSignUpRequest storeOwnerSignUpRequest = new StoreOwnerSignUpRequest(id,
                     name, password, passwordConfirm, phoneNumber, email, bankName, bankAccount,
                     authType, bankAccountScanUrl, authToken);
@@ -155,7 +167,7 @@ public class StoreOwnerSignUpRequest {
 
             for (Validator validator : Validator.values()) {
                 if (!validator.verify(storeOwnerSignUpRequest)) {
-                    throw new Exception(validator.ofErrorCode());
+                    throw new StoreUserSignupException(validator.ofErrorCode());
                 }
             }
 

@@ -43,4 +43,15 @@
     <string name="sign_up_error_message_empty_bank_account_url">Bank account scan is empty</string>
     <string name="sign_up_error_message_password_discord">Password is discord</string>
     <string name="sign_up_error_message_email_incorrect">Incorrect email</string>
+
+    <string name="store_registration_error_message_success">Success</string>
+    <string name="store_registration_error_message_empty_store_name">Store name is empty</string>
+    <string name="store_registration_error_message_empty_store_phone_number">Store phone number is empty</string>
+    <string name="store_registration_error_message_empty_store_type">Store type is empty</string>
+    <string name="store_registration_error_message_empty_corporate_registration_number">Corporate registration number is empty</string>
+    <string name="store_registration_error_message_empty_corporate_registration_scan_url">Corporate registration scan is empty</string>
+    <string name="store_registration_error_message_empty_location">Location is empty</string>
+    <string name="store_registration_error_message_empty_address">Address is empty</string>
+    <string name="store_registration_error_message_empty_cover_image_url">Cover image is empty</string>
+    <string name="store_registration_error_message_empty_thumbnail_image_url">Thumbnail image is empty</string>
 </resources>

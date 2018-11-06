@@ -12,7 +12,7 @@ import com.mark.zumo.client.core.util.context.ContextHolder;
 /**
  * Created by mark on 18. 11. 4.
  */
-public enum ErrorCode {
+public enum StoreUserSignupErrorCode {
     SUCCESS(R.string.sign_up_error_message_success),
     EMPTY_EMAIL(R.string.sign_up_error_message_empty_email),
     EMPTY_PASSWORD(R.string.sign_up_error_message_empty_password),
@@ -27,7 +27,7 @@ public enum ErrorCode {
 
     public final String message;
 
-    ErrorCode(final int messageRes) {
+    StoreUserSignupErrorCode(final int messageRes) {
         this.message = ContextHolder.getContext().getString(messageRes);
     }
 }

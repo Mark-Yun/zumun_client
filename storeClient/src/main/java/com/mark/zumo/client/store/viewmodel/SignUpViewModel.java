@@ -12,8 +12,8 @@ import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.support.annotation.NonNull;
 
-import com.mark.zumo.client.core.appserver.request.signup.Exception;
 import com.mark.zumo.client.core.appserver.request.signup.StoreOwnerSignUpRequest;
+import com.mark.zumo.client.core.appserver.request.signup.StoreUserSignupException;
 import com.mark.zumo.client.store.model.SessionManager;
 
 /**
@@ -29,16 +29,16 @@ public class SignUpViewModel extends AndroidViewModel {
         sessionManager = SessionManager.INSTANCE;
     }
 
-    public LiveData<Exception> signUp(final String email,
-                                      final String password,
-                                      final String passwordConfirm,
-                                      final String name,
-                                      final String phoneNumber,
-                                      final String bankName,
-                                      final String backAccount,
-                                      final String backAccountUrl) {
+    public LiveData<StoreUserSignupException> signUp(final String email,
+                                                     final String password,
+                                                     final String passwordConfirm,
+                                                     final String name,
+                                                     final String phoneNumber,
+                                                     final String bankName,
+                                                     final String backAccount,
+                                                     final String backAccountUrl) {
 
-        MutableLiveData<Exception> liveData = new MutableLiveData<>();
+        MutableLiveData<StoreUserSignupException> liveData = new MutableLiveData<>();
 
         try {
             StoreOwnerSignUpRequest request = new StoreOwnerSignUpRequest.Builder()
@@ -51,7 +51,7 @@ public class SignUpViewModel extends AndroidViewModel {
                     .setBankAccount(backAccount)
                     .setBankAccountScanUrl(backAccountUrl)
                     .build();
-        } catch (Exception e) {
+        } catch (StoreUserSignupException e) {
             liveData.setValue(e);
         }
 

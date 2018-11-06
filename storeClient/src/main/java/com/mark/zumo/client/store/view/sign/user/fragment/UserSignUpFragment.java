@@ -4,7 +4,7 @@
  * Proprietary and confidential
  */
 
-package com.mark.zumo.client.store.view.sign.fragment;
+package com.mark.zumo.client.store.view.sign.user.fragment;
 
 import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
@@ -20,8 +20,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.mark.zumo.client.core.appserver.request.signup.ErrorCode;
-import com.mark.zumo.client.core.appserver.request.signup.Exception;
+import com.mark.zumo.client.core.appserver.request.signup.StoreUserSignupErrorCode;
+import com.mark.zumo.client.core.appserver.request.signup.StoreUserSignupException;
 import com.mark.zumo.client.store.R;
 import com.mark.zumo.client.store.viewmodel.SignUpViewModel;
 
@@ -34,9 +34,9 @@ import butterknife.OnClick;
 /**
  * Created by mark on 18. 5. 13.
  */
-public class SignUpFragment extends Fragment {
+public class UserSignUpFragment extends Fragment {
 
-    public static final String TAG = "SignUpFragment";
+    public static final String TAG = "UserSignUpFragment";
     @BindView(R.id.back_to_sign_in) TextView backToSignIn;
     @BindView(R.id.input_layout_email) TextInputLayout inputLayoutEmail;
     @BindView(R.id.input_layout_password) TextInputLayout inputLayoutPassword;
@@ -59,7 +59,7 @@ public class SignUpFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull final LayoutInflater inflater, @Nullable final ViewGroup container, @Nullable final Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_sign_up, container, false);
+        View view = inflater.inflate(R.layout.fragment_store_user_sign_up, container, false);
         ButterKnife.bind(this, view);
         return view;
     }
@@ -78,13 +78,13 @@ public class SignUpFragment extends Fragment {
                 .observe(this, this::onSignUpRequest);
     }
 
-    private void onSignUpRequest(Exception e) {
+    private void onSignUpRequest(StoreUserSignupException e) {
         Log.e(TAG, "onSignUpRequest: " + e.message);
 
-        ErrorCode errorCode = e.errorCode;
+        StoreUserSignupErrorCode storeUserSignupErrorCode = e.storeUserSignupErrorCode;
         String message = e.message;
         TextInputLayout targetInputLayout = null;
-        switch (errorCode) {
+        switch (storeUserSignupErrorCode) {
             case SUCCESS:
                 break;
             case EMPTY_EMAIL:
@@ -131,7 +131,7 @@ public class SignUpFragment extends Fragment {
     @OnClick(R.id.back_to_sign_in)
     void backToSignIn() {
         Objects.requireNonNull(getFragmentManager()).beginTransaction()
-                .replace(R.id.console_fragment, Fragment.instantiate(getActivity(), SignInFragment.class.getName()))
+                .replace(R.id.console_fragment, Fragment.instantiate(getActivity(), UserSignInFragment.class.getName()))
                 .commit();
     }
 
