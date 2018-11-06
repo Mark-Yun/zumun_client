@@ -11,7 +11,7 @@ import android.text.TextUtils;
 import com.google.gson.annotations.SerializedName;
 import com.mark.zumo.client.core.entity.util.EntityHelper;
 
-import junit.framework.Assert;
+import org.junit.Assert;
 
 import java.util.List;
 
@@ -89,8 +89,8 @@ public class PaymentReadyRequest {
             Assert.assertFalse(TextUtils.isEmpty(partnerOrderId));
             Assert.assertFalse(TextUtils.isEmpty(partnerUserId));
             Assert.assertFalse(TextUtils.isEmpty(itemName));
-            Assert.assertFalse(quantity == 0);
-            Assert.assertFalse(totalAmount == 0);
+            Assert.assertNotEquals(0, quantity);
+            Assert.assertNotEquals(0, totalAmount);
             Assert.assertFalse(TextUtils.isEmpty(approvalUrl));
             Assert.assertFalse(TextUtils.isEmpty(cancelUrl));
             Assert.assertFalse(TextUtils.isEmpty(failUrl));

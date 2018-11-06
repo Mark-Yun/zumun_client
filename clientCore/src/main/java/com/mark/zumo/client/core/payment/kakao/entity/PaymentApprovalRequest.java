@@ -11,7 +11,7 @@ import android.text.TextUtils;
 import com.google.gson.annotations.SerializedName;
 import com.mark.zumo.client.core.entity.util.EntityHelper;
 
-import junit.framework.Assert;
+import org.junit.Assert;
 
 /**
  * Created by mark on 18. 5. 30.
