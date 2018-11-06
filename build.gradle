@@ -37,7 +37,7 @@ allprojects {
 ext {
     compileSdk = 27
     targetSdk = 27
-    minSdk = 19
+    minSdk = 21
 
     java = '1.7'
     support = '27.1.1'
