@@ -4,85 +4,95 @@
   ~ Proprietary and confidential
   -->
 
-<!--
-  ~ Copyright (c) 2018. Mark Soft - All Rights Reserved
-  ~ Unauthorized copying of this file, via any medium is strictly prohibited
-  ~ Proprietary and confidential
-  -->
-
-<!--
-  ~ Copyright (c) 2018. Mark Soft - All Rights Reserved
-  ~ Unauthorized copying of this file, via any medium is strictly prohibited
-  ~ Proprietary and confidential
-  -->
-
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+
     <com.lsjwzh.widget.recyclerviewpager.RecyclerViewPager
         android:id="@+id/order_page"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="0dp"
         android:background="@color/colorTextDisable"
         android:clipToPadding="false"
-        android:paddingLeft="15dp"
-        android:paddingRight="15dp"
-        app:layout_constraintTop_toBottomOf="@+id/order_tab"
-        app:layout_constraintBottom_toTopOf="@+id/order_controller"
+        android:paddingEnd="@dimen/order_recycler_view_padding"
+        android:paddingStart="@dimen/order_recycler_view_padding"
+        app:layout_constraintBottom_toTopOf="@+id/order_tab"
+        app:layout_constraintEnd_toStartOf="@+id/order_controller"
+        app:layout_constraintHorizontal_weight="2"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_weight="1"
         app:rvp_singlePageFling="true"
         app:rvp_triggerOffset="0.1" />
 
     <android.support.constraint.ConstraintLayout
         android:id="@+id/order_controller"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         android:background="@color/colorDivider"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/order_page">
+        app:layout_constraintBottom_toTopOf="@+id/order_tab"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_weight="1"
+        app:layout_constraintStart_toEndOf="@+id/order_page"
+        app:layout_constraintVertical_weight="1">
 
         <android.support.v7.widget.AppCompatImageButton
             android:id="@+id/prev_order"
             android:layout_width="0dp"
             android:layout_height="@dimen/order_control_button_height"
-            android:layout_marginBottom="10dp"
             android:layout_marginStart="10dp"
+            android:layout_marginTop="@dimen/order_controller_button_bottom_margin"
             android:background="@drawable/order_controller_prev_order_button_background"
             android:elevation="5dp"
             android:padding="10dp"
             android:scaleType="fitStart"
             android:src="@drawable/black_arrow_back"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/next_order"
             app:layout_constraintHorizontal_weight="1"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <android.support.v7.widget.AppCompatImageButton
             android:id="@+id/next_order"
             android:layout_width="0dp"
             android:layout_height="@dimen/order_control_button_height"
-            android:layout_marginBottom="10dp"
             android:layout_marginEnd="10dp"
+            android:layout_marginTop="@dimen/order_controller_button_bottom_margin"
             android:background="@drawable/order_controller_next_order_button_background"
             android:elevation="5dp"
             android:padding="10dp"
             android:scaleType="fitEnd"
             android:src="@drawable/black_arrow_right"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_weight="1"
-            app:layout_constraintStart_toEndOf="@+id/prev_order" />
+            app:layout_constraintStart_toEndOf="@+id/prev_order"
+            app:layout_constraintTop_toTopOf="parent" />
     </android.support.constraint.ConstraintLayout>
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/requested_order_fab"
+        android:layout_width="@dimen/order_control_button_height"
+        android:layout_height="@dimen/order_control_button_height"
+        android:layout_marginStart="@dimen/big_margin"
+        android:layout_marginTop="@dimen/order_controller_button_bottom_margin"
+        android:background="@android:color/holo_red_dark"
+        android:scaleType="fitXY"
+        android:src="@drawable/receipt"
+        android:backgroundTint="@android:color/holo_red_dark"
+        android:elevation="5dp"
+        app:borderWidth="0dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <com.mark.zumo.client.store.view.acceptedorder.widget.CenteringTabLayout
         android:id="@+id/order_tab"
         android:layout_width="match_parent"
         android:layout_height="@dimen/tab_order_height"
         android:background="@color/colorDivider"
-        app:layout_constraintBottom_toTopOf="@+id/order_page"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:tabGravity="fill"
         app:tabIndicatorColor="@color/colorAccent"
         app:tabMode="scrollable"
