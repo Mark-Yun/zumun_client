@@ -123,11 +123,57 @@
             </android.support.design.widget.TextInputLayout>
         </LinearLayout>
 
+        <android.support.constraint.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <android.support.v7.widget.AppCompatImageView
+                android:id="@+id/bank_account_scan_image"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:background="@drawable/store_user_sign_up_back_scan_image_background"
+                android:clickable="true"
+                android:focusable="true"
+                android:foreground="?attr/selectableItemBackground"
+                app:layout_constraintDimensionRatio="H, 3:2" />
+
+            <android.support.constraint.ConstraintLayout
+                android:id="@+id/bank_account_scan_image_description"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toBottomOf="@+id/bank_account_scan_image"
+                app:layout_constraintEnd_toEndOf="@+id/bank_account_scan_image"
+                app:layout_constraintStart_toStartOf="@+id/bank_account_scan_image"
+                app:layout_constraintTop_toTopOf="@+id/bank_account_scan_image">
+
+                <android.support.v7.widget.AppCompatImageView
+                    android:id="@+id/bank_account_scan_image_description_icon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/ic_insert_photo_blue_grey_900_48dp"
+                    app:layout_constraintEnd_toStartOf="@+id/bank_account_scan_image_description_text"
+                    app:layout_constraintHorizontal_chainStyle="packed"
+                    app:layout_constraintStart_toStartOf="parent" />
+
+                <android.support.v7.widget.AppCompatTextView
+                    android:id="@+id/bank_account_scan_image_description_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/store_owner_bank_account_scan"
+                    app:layout_constraintBottom_toBottomOf="@+id/bank_account_scan_image_description_icon"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/bank_account_scan_image_description_icon"
+                    app:layout_constraintTop_toTopOf="@+id/bank_account_scan_image_description_icon" />
+
+            </android.support.constraint.ConstraintLayout>
+        </android.support.constraint.ConstraintLayout>
+
         <android.support.v7.widget.AppCompatButton
             android:id="@+id/button_sign_up"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/button_sign_in" />
+            android:text="@string/button_sign_up" />
     </LinearLayout>
 
 </android.support.constraint.ConstraintLayout>

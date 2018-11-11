@@ -11,6 +11,7 @@ import android.arch.persistence.room.Delete;
 import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.OnConflictStrategy;
 import android.arch.persistence.room.Query;
+import android.arch.persistence.room.RoomWarnings;
 
 import com.mark.zumo.client.core.entity.Menu;
 import com.mark.zumo.client.core.entity.MenuCategory;
@@ -83,7 +84,7 @@ public interface DiskRepository {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertMenuOrderList(List<MenuOrder> menuOrderList);
 
-
+    @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
     @Query("SELECT * FROM " + MenuOptionDetail.Schema.table + " MenuOptionDetail"
             + " left outer join " + MenuOption.Schema.table + " MenuOption"
             + " on MenuOptionDetail.menu_option_uuid = MenuOption.menu_option_uuid"

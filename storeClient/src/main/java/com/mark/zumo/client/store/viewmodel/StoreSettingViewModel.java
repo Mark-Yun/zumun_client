@@ -95,8 +95,7 @@ public class StoreSettingViewModel extends AndroidViewModel {
                 sessionManager.getSessionStore(),
                 sessionManager.getSessionStore()
                         .map(store -> store.uuid)
-                        .map(s3TransferManager::getCoverImageDirPath)
-                        .flatMap(s3Path -> s3TransferManager.uploadFile(activity, s3Path, uri)),
+                        .flatMap(storeUuid -> s3TransferManager.uploadCoverImage(activity, storeUuid, uri)),
                 storeManager::updateStoreCoverImageUrl
         ).doOnSuccess(
                 storeMaybe -> storeMaybe.observeOn(AndroidSchedulers.mainThread())
@@ -115,8 +114,7 @@ public class StoreSettingViewModel extends AndroidViewModel {
                 sessionManager.getSessionStore(),
                 sessionManager.getSessionStore()
                         .map(store -> store.uuid)
-                        .map(s3TransferManager::getThumbnailImageDirPath)
-                        .flatMap(s3Path -> s3TransferManager.uploadFile(activity, s3Path, uri)),
+                        .flatMap(storeUuid -> s3TransferManager.uploadThumbnailImage(activity, storeUuid, uri)),
                 storeManager::updateStoreThumbnailImageUrl
         ).doOnSuccess(
                 storeMaybe -> storeMaybe.observeOn(AndroidSchedulers.mainThread())

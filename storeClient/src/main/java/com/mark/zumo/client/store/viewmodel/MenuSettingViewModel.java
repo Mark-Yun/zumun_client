@@ -25,7 +25,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import io.reactivex.Maybe;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
@@ -260,8 +259,7 @@ public class MenuSettingViewModel extends AndroidViewModel {
     public LiveData<Menu> uploadMenuImage(Activity activity, String menuUuid, Uri uri) {
         MutableLiveData<Menu> liveData = new MutableLiveData<>();
 
-        Maybe.fromCallable(() -> s3TransferManager.getMenuImageDirPath(menuUuid))
-                .flatMap(s3Path -> s3TransferManager.uploadFile(activity, s3Path, uri))
+        s3TransferManager.uploadMenuImage(activity, menuUuid, uri)
                 .flatMap(url -> menuManager.updateMenuImageUrl(menuUuid, url))
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSuccess(liveData::setValue)
@@ -270,7 +268,6 @@ public class MenuSettingViewModel extends AndroidViewModel {
 
         return liveData;
     }
-
 
     @Override
     protected void onCleared() {

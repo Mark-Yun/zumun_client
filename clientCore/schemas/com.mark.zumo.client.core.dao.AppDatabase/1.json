@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "174d4b636244bc224b5ba57900dff82f",
+    "identityHash": "5a751c3f2179284226336b56a7da66b6",
     "entities": [
       {
         "tableName": "menu",
@@ -517,11 +517,49 @@
         },
         "indices": [],
         "foreignKeys": []
+      },
+      {
+        "tableName": "store_user_session",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`store_user_session_uuid` TEXT NOT NULL, `store_user_uuid` TEXT, `store_uuid` TEXT, `store_permission` INTEGER NOT NULL, PRIMARY KEY(`store_user_session_uuid`))",
+        "fields": [
+          {
+            "fieldPath": "storeUserSessionUuid",
+            "columnName": "store_user_session_uuid",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "storeUserUuid",
+            "columnName": "store_user_uuid",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "storeUuid",
+            "columnName": "store_uuid",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "storePermission",
+            "columnName": "store_permission",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "store_user_session_uuid"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [],
+        "foreignKeys": []
       }
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"174d4b636244bc224b5ba57900dff82f\")"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"5a751c3f2179284226336b56a7da66b6\")"
     ]
   }
 }

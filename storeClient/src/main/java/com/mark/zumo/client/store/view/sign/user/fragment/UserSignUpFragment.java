@@ -7,12 +7,17 @@
 package com.mark.zumo.client.store.view.sign.user.fragment;
 
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatButton;
+import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.AppCompatSpinner;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -20,11 +25,17 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.mark.zumo.client.core.appserver.request.signup.StoreUserSignupErrorCode;
 import com.mark.zumo.client.core.appserver.request.signup.StoreUserSignupException;
+import com.mark.zumo.client.core.util.glide.GlideApp;
 import com.mark.zumo.client.store.R;
+import com.mark.zumo.client.store.view.util.ImagePickerUtils;
 import com.mark.zumo.client.store.viewmodel.SignUpViewModel;
+import com.tangxiaolv.telegramgallery.GalleryActivity;
 
+import java.io.Serializable;
+import java.util.List;
 import java.util.Objects;
 
 import butterknife.BindView;
@@ -36,7 +47,9 @@ import butterknife.OnClick;
  */
 public class UserSignUpFragment extends Fragment {
 
-    public static final String TAG = "UserSignUpFragment";
+    private static final String TAG = "UserSignUpFragment";
+    private static final int BANK_SCAN_IMAGE_PICKER_REQUEST_CODE = 22;
+
     @BindView(R.id.back_to_sign_in) TextView backToSignIn;
     @BindView(R.id.input_layout_email) TextInputLayout inputLayoutEmail;
     @BindView(R.id.input_layout_password) TextInputLayout inputLayoutPassword;
@@ -47,6 +60,9 @@ public class UserSignUpFragment extends Fragment {
     @BindView(R.id.input_layout_bank) TextInputLayout inputLayoutBank;
 
     @BindView(R.id.button_sign_up) AppCompatButton buttonSignUp;
+
+    @BindView(R.id.bank_account_scan_image) AppCompatImageView bankAccountScanImage;
+    @BindView(R.id.bank_account_scan_image_description) ConstraintLayout bankAccountScanImageDescription;
 
     private SignUpViewModel signUpViewModel;
 
@@ -135,6 +151,11 @@ public class UserSignUpFragment extends Fragment {
                 .commit();
     }
 
+    @OnClick(R.id.bank_account_scan_image)
+    void onClickBackAccountScanImage() {
+        ImagePickerUtils.showImagePickerStoreThumbnail(getActivity(), BANK_SCAN_IMAGE_PICKER_REQUEST_CODE);
+    }
+
     private void clearError() {
         inputLayoutEmail.setError(null);
         inputLayoutPassword.setError(null);
@@ -142,5 +163,41 @@ public class UserSignUpFragment extends Fragment {
         inputLayoutName.setError(null);
         inputLayoutPhoneNumber.setError(null);
         inputLayoutBank.setError(null);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (resultCode != AppCompatActivity.RESULT_OK) {
+            return;
+        }
+
+        switch (requestCode) {
+            case BANK_SCAN_IMAGE_PICKER_REQUEST_CODE:
+                onBankAccountScanImagePicked(data);
+                break;
+        }
+    }
+
+    private void onBankAccountScanImagePicked(Intent data) {
+
+        Serializable serializableExtra = data.getSerializableExtra(GalleryActivity.PHOTOS);
+        List<String> photoList = (List<String>) serializableExtra;
+        if (photoList == null || photoList.size() == 0) {
+            return;
+        }
+
+        Uri selectedPath = Uri.parse(photoList.get(0));
+        signUpViewModel.uploadBankAccountScanImage(getActivity(), selectedPath).observe(this, this::onUploadBankAccountScanImage);
+    }
+
+    private void onUploadBankAccountScanImage(String url) {
+        GlideApp.with(getActivity())
+                .load(url)
+                .transition(DrawableTransitionOptions.withCrossFade())
+                .into(bankAccountScanImage);
+
+        bankAccountScanImageDescription.setVisibility(View.GONE);
     }
 }
