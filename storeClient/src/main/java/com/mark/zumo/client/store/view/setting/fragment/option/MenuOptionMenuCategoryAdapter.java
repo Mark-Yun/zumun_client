@@ -12,14 +12,16 @@
 
 package com.mark.zumo.client.store.view.setting.fragment.option;
 
+import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.AppCompatTextView;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.mark.zumo.client.core.entity.Menu;
+import com.mark.zumo.client.core.entity.MenuCategory;
 import com.mark.zumo.client.store.R;
 
 import java.util.ArrayList;
@@ -31,16 +33,18 @@ import butterknife.ButterKnife;
 /**
  * Created by mark on 18. 11. 11.
  */
-class MenuOptionMenuDetailAdapter extends RecyclerView.Adapter<MenuOptionMenuDetailAdapter.ViewHolder> {
+class MenuOptionMenuCategoryAdapter extends RecyclerView.Adapter<MenuOptionMenuCategoryAdapter.ViewHolder> {
 
-    private List<Menu> menuList;
+    private static final String TAG = "MenuOptionMenuCategoryAdapter";
 
-    MenuOptionMenuDetailAdapter() {
-        menuList = new ArrayList<>();
+    private List<MenuCategory> menuCategoryList;
+
+    MenuOptionMenuCategoryAdapter() {
+        menuCategoryList = new ArrayList<>();
     }
 
-    void setMenuList(final List<Menu> menuList) {
-        this.menuList = menuList;
+    void setMenuCategoryList(final List<MenuCategory> menuCategoryList) {
+        this.menuCategoryList = menuCategoryList;
         notifyDataSetChanged();
     }
 
@@ -48,28 +52,40 @@ class MenuOptionMenuDetailAdapter extends RecyclerView.Adapter<MenuOptionMenuDet
     @Override
     public ViewHolder onCreateViewHolder(@NonNull final ViewGroup parent, final int viewType) {
         LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
-        View view = layoutInflater.inflate(R.layout.card_view_menu_option_setting_category_menu_detail, parent, false);
+        View view = layoutInflater.inflate(R.layout.card_view_menu_optoin_setting_category, parent, false);
         return new ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull final ViewHolder holder, final int position) {
-        Menu menu = menuList.get(position);
-        holder.name.setText(menu.name);
+        Context context = holder.itemView.getContext();
+        MenuCategory menuCategory = menuCategoryList.get(position);
+
+        holder.name.setText(menuCategory.name);
+        RecyclerView recyclerView = holder.recyclerView;
+
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(context);
+        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setNestedScrollingEnabled(false);
+
+        MenuOptionMenuDetailAdapter menuOptionMenuDetailAdapter = new MenuOptionMenuDetailAdapter();
+        recyclerView.setAdapter(menuOptionMenuDetailAdapter);
+        menuOptionMenuDetailAdapter.setMenuList(menuCategory.menuList);
     }
 
     @Override
     public int getItemCount() {
-        return menuList.size();
+        return menuCategoryList.size();
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder {
         @BindView(R.id.name) AppCompatTextView name;
+        @BindView(R.id.recycler_view) RecyclerView recyclerView;
 
         ViewHolder(final View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
         }
     }
-
 }

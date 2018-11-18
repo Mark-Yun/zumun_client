@@ -20,6 +20,7 @@ import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -38,12 +39,15 @@ import butterknife.ButterKnife;
  */
 public class MenuOptionSettingFragment extends Fragment {
 
+    private static final String TAG = "MenuOptionSettingFragment";
+
     @BindView(R.id.menu_option_setting_header) ConstraintLayout menuOptionSettingHeader;
     @BindView(R.id.menu_option_recycler_view) RecyclerView menuOptionRecyclerView;
     @BindView(R.id.menu_option_detail_recycler_view) RecyclerView menuOptionDetailRecyclerView;
     @BindView(R.id.create_new_option) ConstraintLayout createNewOption;
 
     private MenuOptionSettingViewModel menuOptionSettingViewModel;
+    private MenuOptionMenuCategoryAdapter menuOptionMenuCategoryAdapter;
 
     @Override
     public void onCreate(@Nullable final Bundle savedInstanceState) {
@@ -59,6 +63,7 @@ public class MenuOptionSettingFragment extends Fragment {
         ButterKnife.bind(this, view);
 
         inflateMenuOptionList();
+        inflateMenuOptionMenuList();
         return view;
     }
 
@@ -75,16 +80,18 @@ public class MenuOptionSettingFragment extends Fragment {
         menuOptionSettingViewModel.getMenuOptionList().observe(this, menuOptionAdapter::setMenuOptionList);
     }
 
-    private void onSelectMenuOption(List<MenuOption> menuOptionList) {
+    private void inflateMenuOptionMenuList() {
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
         menuOptionDetailRecyclerView.setLayoutManager(layoutManager);
         menuOptionDetailRecyclerView.setHasFixedSize(true);
         menuOptionDetailRecyclerView.setNestedScrollingEnabled(false);
 
-        MenuOptionMenuAdapter menuOptionMenuAdapter = new MenuOptionMenuAdapter();
-        menuOptionDetailRecyclerView.setAdapter(menuOptionMenuAdapter);
+        menuOptionMenuCategoryAdapter = new MenuOptionMenuCategoryAdapter();
+        menuOptionDetailRecyclerView.setAdapter(menuOptionMenuCategoryAdapter);
+    }
 
-        menuOptionSettingViewModel.getMenuOptionDetailList().observe(this, menuOptionMenuAdapter::setMenuOptionDetailList);
-        menuOptionSettingViewModel.getMenuList().observe(this, menuOptionMenuAdapter::setMenuList);
+    private void onSelectMenuOption(List<MenuOption> menuOptionList) {
+        Log.d(TAG, "onSelectMenuOption: name=" + menuOptionList.get(0).name);
+        menuOptionSettingViewModel.getCategoryList().observe(this, menuOptionMenuCategoryAdapter::setMenuCategoryList);
     }
 }

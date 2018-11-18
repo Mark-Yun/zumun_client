@@ -101,13 +101,12 @@ class MenuOptionAdapter extends RecyclerView.Adapter<MenuOptionAdapter.ViewHolde
         recyclerView.setAdapter(menuOptionDetailAdapter);
         menuOptionDetailAdapter.setMenuOptionList(menuOptions);
 
-        holder.itemView.setOnClickListener(v -> listener.onSelectMenuOption(menuOptionMap.get(name)));
+        holder.menuOptionHeader.setOnClickListener(v -> listener.onSelectMenuOption(menuOptionMap.get(name)));
     }
 
     @Override
     public int getItemCount() {
         int size = optionNameList.size();
-        Log.d(TAG, "getItemCount: " + size);
         return size;
     }
 
