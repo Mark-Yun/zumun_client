@@ -36,7 +36,7 @@ import butterknife.ButterKnife;
 /**
  * Created by mark on 18. 6. 27.
  */
-class MenuCategoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements ItemTouchHelperAdapter {
+class MenuCategoryAdapter extends RecyclerView.Adapter<MenuCategoryAdapter.ViewHolder> implements ItemTouchHelperAdapter {
 
     private final OnSelectCategoryListener onSelectCategoryListener;
     private final MenuSettingViewModel menuSettingViewModel;
@@ -65,99 +65,66 @@ class MenuCategoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
     @NonNull
     @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull final ViewGroup parent, final int viewType) {
+    public ViewHolder onCreateViewHolder(@NonNull final ViewGroup parent, final int viewType) {
         LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
-        if (viewType == 0) {
-            View view = layoutInflater.inflate(R.layout.card_view_menu_category_setting_header, parent, false);
-            return new HeaderViewHolder(view);
-        } else {
-            View view = layoutInflater.inflate(R.layout.card_view_menu_category_setting, parent, false);
-            return new BodyViewHolder(view);
-        }
+        View view = layoutInflater.inflate(R.layout.card_view_menu_category_setting, parent, false);
+        return new ViewHolder(view);
     }
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
-    public void onBindViewHolder(@NonNull final RecyclerView.ViewHolder holder, final int position) {
-        if (holder instanceof BodyViewHolder) {
-            final BodyViewHolder viewHolder = (BodyViewHolder) holder;
-            final Context context = viewHolder.itemView.getContext();
-            final MenuCategory menuCategory = menuCategoryList.get(position - 1);
+    public void onBindViewHolder(@NonNull final ViewHolder viewHolder, final int position) {
+        final Context context = viewHolder.itemView.getContext();
+        final MenuCategory menuCategory = menuCategoryList.get(position);
 
-            viewHolder.reorder.setOnTouchListener((v, event) -> {
-                int action = event.getAction();
-                switch (action) {
-                    case MotionEvent.ACTION_DOWN:
-                        dragStartListener.onStartDrag(holder);
-                        break;
-                }
-                return false;
-            });
+        viewHolder.reorder.setOnTouchListener((v, event) -> {
+            int action = event.getAction();
+            switch (action) {
+                case MotionEvent.ACTION_DOWN:
+                    dragStartListener.onStartDrag(viewHolder);
+                    break;
+            }
+            return false;
+        });
 
-            viewHolder.name.setText(menuCategory.name);
-            viewHolder.name.setOnClickListener(v -> {
-                final AppCompatEditText editText = new AppCompatEditText(context);
+        viewHolder.name.setText(menuCategory.name);
+        viewHolder.name.setOnClickListener(v -> {
+            final AppCompatEditText editText = new AppCompatEditText(context);
+            new AlertDialog.Builder(context)
+                    .setTitle(R.string.menu_category_setting_update_category_dialog_title)
+                    .setMessage(R.string.menu_category_setting_update_category_dialog_message)
+                    .setView(editText)
+                    .setCancelable(true)
+                    .setNegativeButton(R.string.button_text_cancel, (dialog, which) -> dialog.dismiss())
+                    .setPositiveButton(R.string.button_text_apply, (dialog, which) -> {
+                        menuSettingViewModel.updateCategoryName(menuCategory, editText.getText().toString())
+                                .observe(lifecycleOwner, updatedMenuCategory -> viewHolder.name.setText(Objects.requireNonNull(updatedMenuCategory).name));
+                        dialog.dismiss();
+                    })
+                    .create()
+                    .show();
+        });
+
+        viewHolder.removeButton.setOnClickListener(v ->
                 new AlertDialog.Builder(context)
-                        .setTitle(R.string.menu_category_setting_update_category_dialog_title)
-                        .setMessage(R.string.menu_category_setting_update_category_dialog_message)
-                        .setView(editText)
+                        .setTitle(R.string.menu_category_setting_remove_category_dialog_title)
+                        .setMessage(context.getString(R.string.menu_category_setting_remove_category_dialog_message, menuCategory.name))
                         .setCancelable(true)
                         .setNegativeButton(R.string.button_text_cancel, (dialog, which) -> dialog.dismiss())
-                        .setPositiveButton(R.string.button_text_apply, (dialog, which) -> {
-                            menuSettingViewModel.updateCategoryName(menuCategory, editText.getText().toString())
-                                    .observe(lifecycleOwner, updatedMenuCategory -> viewHolder.name.setText(Objects.requireNonNull(updatedMenuCategory).name));
+                        .setPositiveButton(android.R.string.ok, (dialog, which) -> {
+                            menuSettingViewModel.removeCategory(menuCategory)
+                                    .observe(lifecycleOwner, x -> {
+                                        int removedPosition = menuCategoryList.indexOf(menuCategory);
+                                        menuCategoryList.remove(menuCategory);
+                                        notifyItemRemoved(removedPosition + 1);
+                                    });
                             dialog.dismiss();
                         })
                         .create()
-                        .show();
-            });
+                        .show()
+        );
 
-            viewHolder.removeButton.setOnClickListener(v ->
-                    new AlertDialog.Builder(context)
-                            .setTitle(R.string.menu_category_setting_remove_category_dialog_title)
-                            .setMessage(context.getString(R.string.menu_category_setting_remove_category_dialog_message, menuCategory.name))
-                            .setCancelable(true)
-                            .setNegativeButton(R.string.button_text_cancel, (dialog, which) -> dialog.dismiss())
-                            .setPositiveButton(android.R.string.ok, (dialog, which) -> {
-                                menuSettingViewModel.removeCategory(menuCategory)
-                                        .observe(lifecycleOwner, x -> {
-                                            int removedPosition = menuCategoryList.indexOf(menuCategory);
-                                            menuCategoryList.remove(menuCategory);
-                                            notifyItemRemoved(removedPosition + 1);
-                                        });
-                                dialog.dismiss();
-                            })
-                            .create()
-                            .show()
-            );
-
-            viewHolder.itemView.setOnClickListener(v -> onSelectCategory(menuCategory));
-        } else if (holder instanceof HeaderViewHolder) {
-            final HeaderViewHolder viewHolder = (HeaderViewHolder) holder;
-            final Context context = viewHolder.itemView.getContext();
-
-            viewHolder.itemView.setOnClickListener(v -> {
-                AppCompatEditText editText = new AppCompatEditText(context);
-
-                new AlertDialog.Builder(context)
-                        .setTitle(R.string.menu_category_setting_add_new_category_dialog_title)
-                        .setMessage(R.string.menu_category_setting_add_new_category_dialog_message)
-                        .setView(editText)
-                        .setCancelable(true)
-                        .setNegativeButton(R.string.button_text_cancel, (dialog, which) -> dialog.dismiss())
-                        .setPositiveButton(R.string.button_text_apply, (dialog, which) -> {
-                            int seqNum = -1;
-                            for (MenuCategory menuCategory : menuCategoryList) {
-                                seqNum = Math.max(seqNum, menuCategory.seqNum);
-                            }
-                            menuSettingViewModel.createCategory(editText.getText().toString(), seqNum + 1)
-                                    .observe(lifecycleOwner, this::onCreateMenuCategory);
-                            dialog.dismiss();
-                        })
-                        .create()
-                        .show();
-            });
-        }
+        viewHolder.itemView.setOnClickListener(v -> onSelectCategory(menuCategory));
     }
 
     private void onSelectCategory(MenuCategory menuCategory) {
@@ -190,11 +157,6 @@ class MenuCategoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         saveCategoryListSeq();
     }
 
-    @Override
-    public int getItemViewType(final int position) {
-        return position == 0 ? 0 : 1;
-    }
-
     private void saveCategoryListSeq() {
         for (MenuCategory menuCategory : menuCategoryList) {
             menuCategory.seqNum = menuCategoryList.indexOf(menuCategory);
@@ -210,26 +172,19 @@ class MenuCategoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
     @Override
     public int getItemCount() {
-        return menuCategoryList.size() + 1;
+        return menuCategoryList.size();
     }
 
     interface OnSelectCategoryListener {
         void onSelectCategory(MenuCategory menuCategory);
     }
 
-    static class BodyViewHolder extends RecyclerView.ViewHolder {
+    static class ViewHolder extends RecyclerView.ViewHolder {
         @BindView(R.id.name) AppCompatTextView name;
         @BindView(R.id.reorder) AppCompatImageView reorder;
         @BindView(R.id.remove_button) AppCompatImageButton removeButton;
 
-        private BodyViewHolder(final View itemView) {
-            super(itemView);
-            ButterKnife.bind(this, itemView);
-        }
-    }
-
-    private static class HeaderViewHolder extends RecyclerView.ViewHolder {
-        private HeaderViewHolder(final View itemView) {
+        private ViewHolder(final View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
         }

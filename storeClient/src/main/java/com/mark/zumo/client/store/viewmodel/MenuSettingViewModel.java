@@ -64,6 +64,18 @@ public class MenuSettingViewModel extends AndroidViewModel {
         return liveData;
     }
 
+    public LiveData<Menu> getMenu(String menuUuid) {
+        MutableLiveData<Menu> liveData = new MutableLiveData<>();
+
+        menuManager.getMenu(menuUuid)
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnSubscribe(disposables::add)
+                .doOnNext(liveData::setValue)
+                .subscribe();
+
+        return liveData;
+    }
+
     public LiveData<Menu> updateMenuName(String menuUuid, String menuName) {
         MutableLiveData<Menu> liveData = new MutableLiveData<>();
 

@@ -12,6 +12,7 @@ import com.mark.zumo.client.core.entity.Menu;
 import com.mark.zumo.client.core.entity.MenuCategory;
 import com.mark.zumo.client.core.entity.MenuDetail;
 import com.mark.zumo.client.core.entity.MenuOption;
+import com.mark.zumo.client.core.entity.MenuOptionDetail;
 import com.mark.zumo.client.core.p2p.packet.CombinedResult;
 import com.mark.zumo.client.core.repository.CategoryRepository;
 import com.mark.zumo.client.core.repository.MenuDetailRepository;
@@ -59,9 +60,20 @@ public enum MenuManager {
                 .subscribeOn(Schedulers.io());
     }
 
+    public Observable<List<MenuOptionDetail>> getMenuOptionDetailByMenuOptionUuid(String menuOptionUuid) {
+        return menuRepositoryMaybe.flatMapObservable(menuRepository -> menuRepository.getMenuOptionDetailListByMenuOptionUuid(menuOptionUuid))
+                .subscribeOn(Schedulers.io());
+    }
+
     public Observable<List<Menu>> getMenuList(String storeUuid) {
         return menuRepositoryMaybe.flatMapObservable(menuRepository -> menuRepository.getMenuListOfStore(storeUuid))
                 .subscribeOn(Schedulers.io());
+    }
+
+    public Observable<List<MenuOption>> getMenuOptionListByStoreUuid(String storeUuid) {
+        return menuRepositoryMaybe.flatMapObservable(
+                menuRepository -> menuRepository.getMenuOptionListByStoreUuid(storeUuid)
+        ).subscribeOn(Schedulers.io());
     }
 
     public Observable<List<MenuCategory>> getMenuCategoryList(String storeUuid) {
@@ -114,6 +126,11 @@ public enum MenuManager {
 
     public Maybe<Menu> getMenuFromDisk(String menuUuid) {
         return menuRepositoryMaybe.flatMap(menuRepository -> menuRepository.getMenuFromDisk(menuUuid))
+                .subscribeOn(Schedulers.io());
+    }
+
+    public Observable<Menu> getMenu(String menuUuid) {
+        return menuRepositoryMaybe.flatMapObservable(menuRepository -> menuRepository.getMenu(menuUuid))
                 .subscribeOn(Schedulers.io());
     }
 

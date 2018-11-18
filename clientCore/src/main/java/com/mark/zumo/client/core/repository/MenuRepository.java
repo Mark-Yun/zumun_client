@@ -16,6 +16,7 @@ import com.mark.zumo.client.core.dao.DiskRepository;
 import com.mark.zumo.client.core.entity.Menu;
 import com.mark.zumo.client.core.entity.MenuCategory;
 import com.mark.zumo.client.core.entity.MenuOption;
+import com.mark.zumo.client.core.entity.MenuOptionDetail;
 import com.mark.zumo.client.core.util.BundleUtils;
 
 import java.util.List;
@@ -80,8 +81,28 @@ public class MenuRepository {
                 .distinctUntilChanged();
     }
 
+    public Observable<List<MenuOptionDetail>> getMenuOptionDetailListByMenuOptionUuid(String menuOptionUuid) {
+        Maybe<List<MenuOptionDetail>> menuOptionListDB = diskRepository.getMenuOptionDetailListByMenuOptionUuid(menuOptionUuid);
+        Maybe<List<MenuOptionDetail>> menuOptionListApi = networkRepository.getMenuOptionListByOptionUuid(menuOptionUuid)
+                .doOnSuccess(diskRepository::insertMenuOptionDetailList);
+
+        return Maybe.merge(menuOptionListDB, menuOptionListApi)
+                .toObservable()
+                .distinctUntilChanged();
+    }
+
     public Maybe<Menu> getMenuFromDisk(final String uuid) {
         return diskRepository.getMenu(uuid);
+    }
+
+    public Observable<Menu> getMenu(final String uuid) {
+        Maybe<Menu> menuDB = diskRepository.getMenu(uuid);
+        Maybe<Menu> menuApi = networkRepository.getMenu(uuid)
+                .doOnSuccess(diskRepository::insertMenu);
+
+        return Maybe.merge(menuDB, menuApi)
+                .toObservable()
+                .distinctUntilChanged();
     }
 
     public Maybe<MenuOption> getMenuOptionFromDisk(final String menuOptionUuid) {
@@ -98,6 +119,16 @@ public class MenuRepository {
                 .toList()
                 .doOnSuccess(diskRepository::insertMenuOptionList)
                 .toMaybe();
+
+        return Maybe.merge(menuOptionListDB, menuOptionListApi)
+                .toObservable()
+                .distinctUntilChanged();
+    }
+
+    public Observable<List<MenuOption>> getMenuOptionListByStoreUuid(String storeUuid) {
+        Maybe<List<MenuOption>> menuOptionListDB = diskRepository.getMenuOptionListByStoreUuid(storeUuid);
+        Maybe<List<MenuOption>> menuOptionListApi = networkRepository.getMenuOptionListByStoreUuid(storeUuid)
+                .doOnSuccess(diskRepository::insertMenuOptionList);
 
         return Maybe.merge(menuOptionListDB, menuOptionListApi)
                 .toObservable()

@@ -232,7 +232,7 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHo
         @BindView(R.id.category_name) AppCompatTextView categoryName;
         @BindView(R.id.category_header) ConstraintLayout categoryHeader;
         @BindView(R.id.menu_recycler_view) RecyclerView recyclerView;
-        @BindView(R.id.category_expand_button) AppCompatImageView expandButton;
+        @BindView(R.id.expand_button) AppCompatImageView expandButton;
 
         private ViewHolder(final View itemView) {
             super(itemView);

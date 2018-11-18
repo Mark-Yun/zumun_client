@@ -67,6 +67,10 @@
     <string name="button_text_cancel">Cancel</string>
 
     <string name="menu_category_setting_add_new_category">Add new category</string>
+    <string name="menu_category_setting_add_new_menu">Add new menu</string>
+    <string name="menu_category_setting_link_menu">Link menu</string>
+    <string name="menu_category_setting_add_new_option">Add new option</string>
+    <string name="menu_category_setting_select_menu_to_apply_option">Select menu to apply</string>
 
     <string name="menu_category_setting_add_new_category_dialog_title">Create new category</string>
     <string name="menu_category_setting_add_new_category_dialog_message">Insert new category name</string>

@@ -91,11 +91,20 @@ public interface DiskRepository {
             + " WHERE menu_uuid LIKE :menuUuid")
     Maybe<List<MenuOption>> getMenuOptionListByMenuUuid(String menuUuid);
 
+    @Query("SELECT * FROM " + MenuOption.Schema.table + " WHERE store_uuid LIKE :storeUuid")
+    Maybe<List<MenuOption>> getMenuOptionListByStoreUuid(String storeUuid);
+
+    @Query("SELECT * FROM " + MenuOptionDetail.Schema.table + " WHERE menu_option_uuid LIKE :menuOptionUuid")
+    Maybe<List<MenuOptionDetail>> getMenuOptionDetailListByMenuOptionUuid(String menuOptionUuid);
+
     @Query("SELECT * FROM " + MenuOption.Schema.table + " WHERE menu_option_uuid LIKE :menuOptionUuid LIMIT 1")
     Maybe<MenuOption> getMenuOption(String menuOptionUuid);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertMenuOptionList(List<MenuOption> menuOptions);
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    void insertMenuOptionDetailList(List<MenuOptionDetail> menuOptionDetails);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertMenuOption(MenuOption menuOption);

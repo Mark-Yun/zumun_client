@@ -12,30 +12,28 @@
 
 package com.mark.zumo.client.store.view.setting.fragment.category;
 
+import android.app.AlertDialog;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.AppCompatButton;
+import android.support.v7.widget.AppCompatEditText;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.mark.zumo.client.core.entity.Menu;
 import com.mark.zumo.client.core.entity.MenuCategory;
-import com.mark.zumo.client.core.entity.MenuDetail;
 import com.mark.zumo.client.store.R;
 import com.mark.zumo.client.store.viewmodel.MenuSettingViewModel;
 
-import java.util.List;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 /**
  * Created by mark on 18. 6. 26.
@@ -44,7 +42,6 @@ public class MenuCategorySettingFragment extends Fragment implements OnStartDrag
 
     @BindView(R.id.category_recycler_view) RecyclerView categoryRecyclerView;
     @BindView(R.id.menu_recycler_view) RecyclerView menuRecyclerView;
-    @BindView(R.id.save_button) AppCompatButton saveButton;
 
     private MenuSettingViewModel menuSettingViewModel;
     private ItemTouchHelper itemTouchHelper;
@@ -85,20 +82,9 @@ public class MenuCategorySettingFragment extends Fragment implements OnStartDrag
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
         menuRecyclerView.setLayoutManager(layoutManager);
 
-        MenuListAdapter adapter = new MenuListAdapter(this, menuCategory, menuSettingViewModel);
+        MenuListAdapter adapter = new MenuListAdapter(this, menuSettingViewModel);
         menuRecyclerView.setAdapter(adapter);
-
-        menuSettingViewModel.menuList().observe(this, menuList -> onLoadMenuList(adapter, menuList));
-        menuSettingViewModel.menuDetailList(menuCategory.uuid).observe(this, menuDetailList -> onLoadMenuDetailList(adapter, menuDetailList));
-
-        saveButton.setOnClickListener(v ->
-                menuSettingViewModel.updateMenusOfCategory(adapter.getCategoryUuid(), adapter.getSelectedMenuUuidList())
-                        .observe(this, adapter::setMenuDetailList)
-        );
-    }
-
-    private void onUpdateMenusOfCategorySuccess(MenuListAdapter adapter, List<MenuDetail> menuDetailList) {
-        adapter.setMenuDetailList(menuDetailList);
+        menuSettingViewModel.menuDetailList(menuCategory.uuid).observe(this, adapter::setMenuDetailList);
     }
 
     @Override
@@ -106,20 +92,23 @@ public class MenuCategorySettingFragment extends Fragment implements OnStartDrag
         itemTouchHelper.startDrag(viewHolder);
     }
 
-    private void onLoadMenuList(final MenuListAdapter adapter, final List<Menu> menuList) {
-        adapter.setMenuList(menuList);
-        saveButton.setVisibility(View.VISIBLE);
-        saveButton.setEnabled(false);
-    }
+    @OnClick(R.id.create_new_category)
+    void onClickCreateCategory() {
+        Context context = getContext();
+        AppCompatEditText editText = new AppCompatEditText(context);
 
-    private void onLoadMenuDetailList(final MenuListAdapter adapter, final List<MenuDetail> menuDetailList) {
-        adapter.setMenuDetailList(menuDetailList);
-        adapter.setListChangeListener(this::onListChanged);
-    }
-
-    private void onListChanged(boolean isChanged) {
-        Log.d("MenuCategorySettingFragment", "onListChanged: " + isChanged);
-        saveButton.setEnabled(isChanged);
-        saveButton.setClickable(isChanged);
+        new AlertDialog.Builder(context)
+                .setTitle(R.string.menu_category_setting_add_new_category_dialog_title)
+                .setMessage(R.string.menu_category_setting_add_new_category_dialog_message)
+                .setView(editText)
+                .setCancelable(true)
+                .setNegativeButton(R.string.button_text_cancel, (dialog, which) -> dialog.dismiss())
+                .setPositiveButton(R.string.button_text_apply, (dialog, which) -> {
+//                    menuSettingViewModel.createCategory(editText.getText().toString(), seqNum + 1)
+//                            .observe(this, this::onCreateMenuCategory);
+                    dialog.dismiss();
+                })
+                .create()
+                .show();
     }
 }
