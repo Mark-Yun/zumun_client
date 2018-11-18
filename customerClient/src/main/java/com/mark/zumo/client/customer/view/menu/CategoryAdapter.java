@@ -24,15 +24,11 @@ import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
 import android.view.animation.LayoutAnimationController;
 
-import com.mark.zumo.client.core.entity.Menu;
 import com.mark.zumo.client.core.entity.MenuCategory;
 import com.mark.zumo.client.customer.R;
-import com.mark.zumo.client.customer.viewmodel.MenuViewModel;
 
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -44,17 +40,19 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHo
 
     private static final int ANIM_DURATION = 300;
     private List<MenuCategory> categoryList;
-    private Map<String, List<Menu>> menuListMap;
 
     private LifecycleOwner lifecycleOwner;
-    private MenuViewModel menuViewModel;
 
-    CategoryAdapter(final LifecycleOwner lifecycleOwner, final MenuViewModel menuViewModel) {
+    private MenuAdapter.MenuSelectListener listener;
+
+    CategoryAdapter(final LifecycleOwner lifecycleOwner) {
         this.lifecycleOwner = lifecycleOwner;
-        this.menuViewModel = menuViewModel;
 
         categoryList = new ArrayList<>();
-        menuListMap = new LinkedHashMap<>();
+    }
+
+    void setMenuSelectListener(final MenuAdapter.MenuSelectListener listener) {
+        this.listener = listener;
     }
 
     @NonNull
@@ -67,39 +65,7 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHo
     }
 
     void setCategoryList(final List<MenuCategory> categoryList) {
-        if (this.categoryList.equals(categoryList)) {
-            return;
-        }
-
         this.categoryList = categoryList;
-        notifyIfReady();
-    }
-
-    void setMenuListMap(final Map<String, List<Menu>> menuListMap) {
-        if (this.menuListMap.equals(menuListMap)) {
-            return;
-        }
-        this.menuListMap = menuListMap;
-        notifyIfReady();
-    }
-
-    private void notifyIfReady() {
-        if (categoryList.size() < 1 || menuListMap.size() < 1) {
-            return;
-        }
-        List<MenuCategory> emptyList = new ArrayList<>();
-
-        for (MenuCategory category : categoryList) {
-            boolean hasMenuItems = menuListMap.containsKey(category.uuid);
-            if (!hasMenuItems) {
-                emptyList.add(category);
-            }
-        }
-
-        for (MenuCategory emptyCategory : emptyList) {
-            categoryList.remove(emptyCategory);
-        }
-
         notifyDataSetChanged();
     }
 
@@ -107,7 +73,6 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHo
     public void onBindViewHolder(@NonNull final ViewHolder holder, final int position) {
         MenuCategory menuCategory = categoryList.get(position);
         String categoryName = menuCategory.name;
-        String categoryUuid = menuCategory.uuid;
 
 
         RecyclerView recyclerView = holder.menuRecyclerView;
@@ -120,13 +85,13 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHo
         final LayoutAnimationController controller = AnimationUtils.loadLayoutAnimation(context, R.anim.layout_animation_fall_down);
         recyclerView.setLayoutAnimation(controller);
 
-        List<Menu> menuList = menuListMap.get(categoryUuid);
-        MenuAdapter menuAdapter = new MenuAdapter(lifecycleOwner, menuViewModel);
+        MenuAdapter menuAdapter = new MenuAdapter(lifecycleOwner);
+        menuAdapter.setListener(listener);
         recyclerView.setAdapter(menuAdapter);
-        menuAdapter.setMenuList(menuList);
+        menuAdapter.setMenuList(menuCategory.menuList);
         recyclerView.scheduleLayoutAnimation();
 
-        holder.categoryName.setText(categoryName + " (" + menuList.size() + ")");
+        holder.categoryName.setText(categoryName + " (" + menuCategory.menuList.size() + ")");
 
         holder.categoryHeader.setOnClickListener(new View.OnClickListener() {
             private boolean isVisible = true;

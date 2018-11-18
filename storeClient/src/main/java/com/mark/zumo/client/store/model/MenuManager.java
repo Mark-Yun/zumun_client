@@ -92,7 +92,6 @@ public enum MenuManager {
                 .subscribeOn(Schedulers.io());
     }
 
-
     public Observable<List<MenuCategory>> getCombinedMenuCategoryList(String storeUuid) {
         return Observable.create(e -> {
             List<MenuCategory> menuCategoryList = new ArrayList<>();
@@ -104,8 +103,6 @@ public enum MenuManager {
                     .doOnNext(menuCategories -> {
                         menuCategoryList.clear();
                         menuCategoryList.addAll(menuCategories);
-                        Log.d(TAG, "getCombinedMenuCategoryList: 1 menuCategoryList=" + menuCategoryList.size() +
-                                " menuList=" + menuList.size() + " menuDetailMap=" + menuDetailMap.size());
                         if (!menuCategoryList.isEmpty() && !menuList.isEmpty() && !menuDetailMap.isEmpty()) {
                             List<MenuCategory> mappedCategoryList = mapCategoryWithMenu(menuCategoryList, menuList, menuDetailMap);
                             e.onNext(mappedCategoryList);
@@ -121,8 +118,6 @@ public enum MenuManager {
                     .doOnSuccess(createdMenuDetailMap -> {
                         menuDetailMap.clear();
                         menuDetailMap.putAll(createdMenuDetailMap);
-                        Log.d(TAG, "getCombinedMenuCategoryList: 2 menuCategoryList=" + menuCategoryList.size() +
-                                " menuList=" + menuList.size() + " menuDetailMap=" + menuDetailMap.size());
                         if (!menuCategoryList.isEmpty() && !menuList.isEmpty() && !menuDetailMap.isEmpty()) {
                             List<MenuCategory> mappedCategoryList = mapCategoryWithMenu(menuCategoryList, menuList, menuDetailMap);
                             e.onNext(mappedCategoryList);
@@ -136,8 +131,6 @@ public enum MenuManager {
                     .doOnNext(menus -> {
                         menuList.clear();
                         menuList.addAll(menus);
-                        Log.d(TAG, "getCombinedMenuCategoryList: 3 menuCategoryList=" + menuCategoryList.size() +
-                                " menuList=" + menuList.size() + " menuDetailMap=" + menuDetailMap.size());
                         if (!menuCategoryList.isEmpty() && !menuList.isEmpty() && !menuDetailMap.isEmpty()) {
                             List<MenuCategory> mappedCategoryList = mapCategoryWithMenu(menuCategoryList, menuList, menuDetailMap);
                             e.onNext(mappedCategoryList);

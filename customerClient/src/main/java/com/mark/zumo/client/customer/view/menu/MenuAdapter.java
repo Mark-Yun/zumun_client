@@ -11,7 +11,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.RecyclerView;
@@ -28,7 +27,6 @@ import com.mark.zumo.client.core.view.TouchResponse;
 import com.mark.zumo.client.customer.R;
 import com.mark.zumo.client.customer.view.menu.detail.MenuDetailActivity;
 import com.mark.zumo.client.customer.view.rebound.Rebound;
-import com.mark.zumo.client.customer.viewmodel.MenuViewModel;
 
 import java.text.NumberFormat;
 import java.util.ArrayList;
@@ -43,19 +41,23 @@ import butterknife.ButterKnife;
 class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.ViewHolder> {
 
     private final LifecycleOwner lifecycleOwner;
-    private final MenuViewModel menuViewModel;
+
+    private MenuSelectListener listener;
 
     private List<Menu> menuList;
 
-    MenuAdapter(LifecycleOwner lifecycleOwner, MenuViewModel menuViewModel) {
-        menuList = new ArrayList<>();
+    MenuAdapter(LifecycleOwner lifecycleOwner) {
         this.lifecycleOwner = lifecycleOwner;
-        this.menuViewModel = menuViewModel;
+        menuList = new ArrayList<>();
     }
 
     void setMenuList(final List<Menu> menuList) {
         this.menuList = menuList;
         notifyDataSetChanged();
+    }
+
+    void setListener(final MenuSelectListener listener) {
+        this.listener = listener;
     }
 
     @NonNull
@@ -80,24 +82,17 @@ class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.ViewHolder> {
                     .into(viewHolder.image);
         }
 
-        viewHolder.itemView.setOnClickListener(v -> onClickMenu(v, menu));
+        viewHolder.itemView.setOnClickListener(v -> onClickMenu(menu));
         viewHolder.itemView.setOnLongClickListener(v -> onLongClickMenu(v, menu));
         viewHolder.itemView.setOnTouchListener(Rebound.INSTANCE.onTouchListener(lifecycleOwner));
     }
 
-    private void onClickMenu(final View itemView, final Menu menu) {
+    private void onClickMenu(final Menu menu) {
         TouchResponse.big();
-        menuViewModel.addMenuToCart(menu);
-        onAddCartComplete(itemView, menu);
-    }
-
-    private void onAddCartComplete(final View itemView, final Menu menu) {
-        String text = itemView.getContext().getString(R.string.added_to_cart, menu.name);
-        Snackbar.make(itemView, text, Snackbar.LENGTH_LONG).show();
+        listener.onSelectMenu(menu);
     }
 
     private boolean onLongClickMenu(final View itemView, final Menu menu) {
-
         Context context = itemView.getContext();
         Intent intent = new Intent(context, MenuDetailActivity.class);
         intent.putExtra(MenuDetailActivity.KEY_MENU_UUID, menu.uuid);
@@ -109,6 +104,10 @@ class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.ViewHolder> {
     @Override
     public int getItemCount() {
         return menuList.size();
+    }
+
+    public interface MenuSelectListener {
+        void onSelectMenu(Menu menu);
     }
 
     // Provide a reference to the views for each data item

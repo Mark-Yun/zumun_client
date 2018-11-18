@@ -22,7 +22,6 @@ import com.mark.zumo.client.store.model.S3TransferManager;
 import com.mark.zumo.client.store.model.SessionManager;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import io.reactivex.Observable;
@@ -40,7 +39,7 @@ public class MenuSettingViewModel extends AndroidViewModel {
 
     private final CompositeDisposable disposables;
 
-    private MutableLiveData<Map<String, List<Menu>>> menuListByCateogryLiveData;
+    private MutableLiveData<List<MenuCategory>> categoryListLiveData;
 
     public MenuSettingViewModel(@NonNull final Application application) {
         super(application);
@@ -162,51 +161,24 @@ public class MenuSettingViewModel extends AndroidViewModel {
         return liveData;
     }
 
-    public MutableLiveData<List<MenuDetail>> updateMenusOfCategory(final String categoryUuid,
-                                                                   final List<String> menuUuidList) {
-
-        MutableLiveData<List<MenuDetail>> liveData = new MutableLiveData<>();
-
-        sessionManager.getSessionStore()
-                .map(store -> store.uuid)
-                .flatMap(storeUuid -> menuManager.updateMenusOfCategory(storeUuid, categoryUuid, menuUuidList))
-                .observeOn(AndroidSchedulers.mainThread())
-                .doOnSuccess(liveData::setValue)
-                .doOnSubscribe(disposables::add)
-                .subscribe();
-
-        return liveData;
-    }
-
-    public MutableLiveData<List<MenuCategory>> loadMenuCategoryList() {
-        MutableLiveData<List<MenuCategory>> liveData = new MutableLiveData<>();
-
-        sessionManager.getSessionStore()
-                .map(store -> store.uuid)
-                .flatMapObservable(menuManager::getMenuCategoryList)
-                .observeOn(AndroidSchedulers.mainThread())
-                .doOnNext(liveData::setValue)
-                .doOnSubscribe(disposables::add)
-                .subscribe();
-
-        return liveData;
-    }
-
-    public MutableLiveData<Map<String, List<Menu>>> getMenuListByCategory() {
-        if (menuListByCateogryLiveData == null) {
-            menuListByCateogryLiveData = new MutableLiveData<>();
+    private MutableLiveData<List<MenuCategory>> getCategoryListLiveData() {
+        if (categoryListLiveData == null) {
+            categoryListLiveData = new MutableLiveData<>();
         }
-        loadMenuListByCategory(menuListByCateogryLiveData);
-        return menuListByCateogryLiveData;
+        return categoryListLiveData;
     }
 
-    private void loadMenuListByCategory(final MutableLiveData<Map<String, List<Menu>>> liveData) {
+    public void loadMenuListByCategory() {
+        if (categoryListLiveData == null) {
+            categoryListLiveData = new MutableLiveData<>();
+        }
+
         sessionManager.getSessionStore()
                 .map(store -> store.uuid)
-                .flatMap(menuManager::getMenuListByCategory)
+                .flatMapObservable(menuManager::getCombinedMenuCategoryList)
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSubscribe(disposables::add)
-                .doOnSuccess(liveData::setValue)
+                .doOnNext(categoryListLiveData::setValue)
                 .subscribe();
     }
 
@@ -224,6 +196,11 @@ public class MenuSettingViewModel extends AndroidViewModel {
                 .doOnSuccess(liveData::setValue)
                 .subscribe();
         return liveData;
+    }
+
+    public LiveData<List<MenuCategory>> getCombinedMenuCategoryList() {
+        loadMenuListByCategory();
+        return categoryListLiveData;
     }
 
     public LiveData<MenuCategory> createCategory(String categoryName, int seqNum) {

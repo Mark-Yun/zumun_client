@@ -22,7 +22,6 @@ import com.mark.zumo.client.customer.model.StoreManager;
 import com.mark.zumo.client.customer.model.entity.Cart;
 
 import java.util.List;
-import java.util.Map;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
@@ -70,22 +69,10 @@ public class MenuViewModel extends AndroidViewModel {
         return cartLiveData;
     }
 
-    public MutableLiveData<Map<String, List<Menu>>> loadMenuByCategory(String storeUuid) {
-        MutableLiveData<Map<String, List<Menu>>> liveData = new MutableLiveData<>();
-
-        menuManager.getMenuListByCategory(storeUuid)
-                .observeOn(AndroidSchedulers.mainThread())
-                .doOnSubscribe(disposables::add)
-                .doOnSuccess(liveData::setValue)
-                .subscribe();
-
-        return liveData;
-    }
-
-    public MutableLiveData<List<MenuCategory>> loadMenuCategoryList(String storeUuid) {
+    public MutableLiveData<List<MenuCategory>> loadCombinedMenuCategoryList(String storeUuid) {
         MutableLiveData<List<MenuCategory>> liveData = new MutableLiveData<>();
 
-        menuManager.getMenuCategoryList(storeUuid)
+        menuManager.getCombinedMenuCategoryList(storeUuid)
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnNext(liveData::setValue)
                 .doOnSubscribe(disposables::add)
