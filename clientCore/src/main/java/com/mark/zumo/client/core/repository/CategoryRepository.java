@@ -52,6 +52,7 @@ public class CategoryRepository {
     public Observable<List<MenuCategory>> getMenuCategoryList(final String storeUuid) {
         Maybe<List<MenuCategory>> menuCategoryListDB = diskRepository.getMenuCategoryList(storeUuid);
         Maybe<List<MenuCategory>> menuCategoryListApi = networkRepository.getMenuCategoryListByStoreUuid(storeUuid)
+                .doOnSuccess(categoryList -> diskRepository.deleteCategoriesOfStore(storeUuid))
                 .doOnSuccess(diskRepository::insertMenuCategoryList);
 
         return Maybe.merge(menuCategoryListDB, menuCategoryListApi)

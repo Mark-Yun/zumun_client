@@ -43,9 +43,6 @@ public interface DiskRepository {
     Maybe<Store> getStore(String uuid);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    void insertStoreList(List<Store> stores);
-
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertStore(Store store);
 
 
@@ -57,9 +54,6 @@ public interface DiskRepository {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertOrderDetailList(List<OrderDetail> orderDetailList);
-
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    void insertOrderDetail(OrderDetail orderDetailList);
 
 
     @Query("SELECT * FROM " + MenuOrder.TABLE + " WHERE menu_order_uuid LIKE :menuOrderUuid LIMIT 1")
@@ -97,6 +91,12 @@ public interface DiskRepository {
     @Query("SELECT * FROM " + MenuOptionDetail.Schema.table + " WHERE menu_option_uuid LIKE :menuOptionUuid")
     Maybe<List<MenuOptionDetail>> getMenuOptionDetailListByMenuOptionUuid(String menuOptionUuid);
 
+    @Query("DELETE FROM " + MenuOptionDetail.Schema.table + " WHERE menu_option_uuid LIKE :menuOptionUuid")
+    void deleteMenuOptionDetailOfMenuOption(String menuOptionUuid);
+
+    @Query("DELETE FROM " + MenuOptionDetail.Schema.table + " WHERE menu_uuid LIKE :menuUuid")
+    void deleteMenuOptionDetailOfMenu(String menuUuid);
+
     @Query("SELECT * FROM " + MenuOption.Schema.table + " WHERE menu_option_uuid LIKE :menuOptionUuid LIMIT 1")
     Maybe<MenuOption> getMenuOption(String menuOptionUuid);
 
@@ -116,6 +116,9 @@ public interface DiskRepository {
     @Query("SELECT * FROM " + Menu.MENU_TABLE + " WHERE store_uuid LIKE :storeUuid")
     Maybe<List<Menu>> getMenuList(String storeUuid);
 
+    @Query("DELETE FROM " + Menu.MENU_TABLE + " WHERE store_uuid LIKE :storeUuid")
+    void deleteMenuOfStore(String storeUuid);
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertMenuList(List<Menu> menus);
 
@@ -129,6 +132,9 @@ public interface DiskRepository {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertMenuCategory(MenuCategory menuCategory);
+
+    @Query("DELETE FROM " + MenuCategory.Schema.table + " WHERE store_uuid LIKE :storeUuid")
+    void deleteCategoriesOfStore(String storeUuid);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertMenuCategoryList(List<MenuCategory> menuCategoryList);
