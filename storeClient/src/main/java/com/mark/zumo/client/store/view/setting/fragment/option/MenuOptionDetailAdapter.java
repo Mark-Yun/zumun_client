@@ -35,6 +35,10 @@ import butterknife.ButterKnife;
  */
 class MenuOptionDetailAdapter extends RecyclerView.Adapter<MenuOptionDetailAdapter.ViewHolder> {
 
+    private boolean isReorderMode;
+    private boolean isDeleteMode;
+    private boolean isEditMode;
+
     private List<MenuOption> menuOptionList;
 
     MenuOptionDetailAdapter() {
@@ -60,6 +64,7 @@ class MenuOptionDetailAdapter extends RecyclerView.Adapter<MenuOptionDetailAdapt
         holder.value.setText(menuOption.value);
         String priceText = "(" + NumberFormat.getCurrencyInstance().format(menuOption.price) + ")";
         holder.price.setText(priceText);
+        holder.reorder.setVisibility(isReorderMode ? View.VISIBLE : View.GONE);
     }
 
     @Override

@@ -141,6 +141,7 @@ configure(libraries) {
     }
     dependencies {
         implementation "com.android.support:appcompat-v7:$support"
+        implementation "com.android.support:recyclerview-v7:$support"
 
         implementation "com.squareup.retrofit2:retrofit:$retrofit"
         implementation "com.squareup.retrofit2:adapter-rxjava2:$retrofit"

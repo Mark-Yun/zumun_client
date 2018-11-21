@@ -81,4 +81,7 @@
     <string name="store_owner_bank_account">계좌번호</string>
     <string name="store_owner_bank_account_scan">통장 사본 업로드</string>
     <string name="menu_title_widthdraw">출금</string>
+    <string name="option_setting_mode_description_edit">수정할 옵션을 선택하세요</string>
+    <string name="option_setting_mode_description_delete">삭제할 옵션들을 선택하세요</string>
+    <string name="option_setting_mode_description_reorder">드래깅하여 순서를 바꾸세요</string>
 </resources>

@@ -23,7 +23,7 @@
 
         <include
             android:id="@+id/create_new_option"
-            layout="@layout/card_view_menu_option_setting_create_option"
+            layout="@layout/card_view_menu_option_setting_menu_bar"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             app:layout_constraintEnd_toStartOf="@+id/select_option"

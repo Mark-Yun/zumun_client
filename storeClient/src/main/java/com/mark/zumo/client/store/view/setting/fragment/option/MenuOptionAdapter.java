@@ -7,9 +7,11 @@
 package com.mark.zumo.client.store.view.setting.fragment.option;
 
 import android.content.Context;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
-import android.support.v7.widget.AppCompatImageButton;
+import android.support.v7.widget.AppCompatCheckBox;
 import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.AppCompatTextView;
 import android.support.v7.widget.LinearLayoutManager;
@@ -20,10 +22,13 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.mark.zumo.client.core.entity.MenuOption;
+import com.mark.zumo.client.core.view.util.RecyclerUtils;
 import com.mark.zumo.client.store.R;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -41,9 +46,57 @@ class MenuOptionAdapter extends RecyclerView.Adapter<MenuOptionAdapter.ViewHolde
     private Map<String, List<MenuOption>> menuOptionMap;
     private MenuOptionSelectListener listener;
 
+    private HashSet<Runnable> modeUpdateOperationPool;
+
+    private boolean reorderMode;
+    private boolean deleteMode;
+    private boolean editMode;
+
     MenuOptionAdapter() {
         optionNameList = new ArrayList<>();
         menuOptionMap = new HashMap<>();
+        modeUpdateOperationPool = new HashSet<>();
+    }
+
+    void setReorderMode(final boolean reorderMode) {
+        disableAllMode();
+        this.reorderMode = reorderMode;
+        notifyModeChange();
+    }
+
+    void setDeleteMode(final boolean deleteMode) {
+        disableAllMode();
+        this.deleteMode = deleteMode;
+        notifyModeChange();
+    }
+
+    void setEditMode(final boolean editMode) {
+        disableAllMode();
+        this.editMode = editMode;
+        notifyModeChange();
+    }
+
+    void setNoneMode() {
+        disableAllMode();
+        notifyModeChange();
+    }
+
+    private void disableAllMode() {
+        reorderMode = false;
+        deleteMode = false;
+        editMode = false;
+    }
+
+    private void notifyModeChange() {
+        Iterator<Runnable> iterator = modeUpdateOperationPool.iterator();
+        if (iterator == null) {
+            return;
+        }
+        new Handler(Looper.getMainLooper()).post(() -> {
+            while (iterator.hasNext()) {
+                iterator.next().run();
+            }
+        });
     }
 
     void setListener(final MenuOptionSelectListener listener) {
@@ -102,12 +155,21 @@ class MenuOptionAdapter extends RecyclerView.Adapter<MenuOptionAdapter.ViewHolde
         menuOptionDetailAdapter.setMenuOptionList(menuOptions);
 
         holder.menuOptionHeader.setOnClickListener(v -> listener.onSelectMenuOption(menuOptionMap.get(name)));
+
+        View.OnClickListener recyclerViewExpandClickListener = RecyclerUtils.recyclerViewExpandButton(recyclerView, holder.expandButton);
+        holder.expandClickArea.setOnClickListener(recyclerViewExpandClickListener);
+
+        Runnable modeUpdateOperation = () -> {
+            holder.reorder.setVisibility(reorderMode ? View.VISIBLE : View.GONE);
+            holder.checkBox.setVisibility(deleteMode ? View.VISIBLE : View.GONE);
+        };
+        modeUpdateOperation.run();
+        modeUpdateOperationPool.add(modeUpdateOperation);
     }
 
     @Override
     public int getItemCount() {
-        int size = optionNameList.size();
-        return size;
+        return optionNameList.size();
     }
 
     interface MenuOptionSelectListener {
@@ -115,12 +177,13 @@ class MenuOptionAdapter extends RecyclerView.Adapter<MenuOptionAdapter.ViewHolde
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder {
-        @BindView(R.id.remove_button) AppCompatImageButton removeButton;
         @BindView(R.id.name) AppCompatTextView name;
         @BindView(R.id.expand_button) AppCompatImageView expandButton;
         @BindView(R.id.reorder) AppCompatImageView reorder;
         @BindView(R.id.menu_option_header) ConstraintLayout menuOptionHeader;
         @BindView(R.id.option_recycler_view) RecyclerView optionRecyclerView;
+        @BindView(R.id.check_box) AppCompatCheckBox checkBox;
+        @BindView(R.id.expand_click_area) ConstraintLayout expandClickArea;
 
         ViewHolder(final View itemView) {
             super(itemView);

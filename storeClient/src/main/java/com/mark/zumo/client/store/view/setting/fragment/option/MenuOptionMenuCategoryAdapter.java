@@ -14,6 +14,9 @@ package com.mark.zumo.client.store.view.setting.fragment.option;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.support.constraint.ConstraintLayout;
+import android.support.v7.widget.AppCompatCheckBox;
+import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.AppCompatTextView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -22,6 +25,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.mark.zumo.client.core.entity.MenuCategory;
+import com.mark.zumo.client.core.view.util.RecyclerUtils;
 import com.mark.zumo.client.store.R;
 
 import java.util.ArrayList;
@@ -36,6 +40,7 @@ import butterknife.ButterKnife;
 class MenuOptionMenuCategoryAdapter extends RecyclerView.Adapter<MenuOptionMenuCategoryAdapter.ViewHolder> {
 
     private static final String TAG = "MenuOptionMenuCategoryAdapter";
+    private static final int ANIM_DURATION = 300;
 
     private List<MenuCategory> menuCategoryList;
 
@@ -62,6 +67,7 @@ class MenuOptionMenuCategoryAdapter extends RecyclerView.Adapter<MenuOptionMenuC
         MenuCategory menuCategory = menuCategoryList.get(position);
 
         holder.name.setText(menuCategory.name);
+
         RecyclerView recyclerView = holder.recyclerView;
 
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(context);
@@ -72,6 +78,10 @@ class MenuOptionMenuCategoryAdapter extends RecyclerView.Adapter<MenuOptionMenuC
         MenuOptionMenuDetailAdapter menuOptionMenuDetailAdapter = new MenuOptionMenuDetailAdapter();
         recyclerView.setAdapter(menuOptionMenuDetailAdapter);
         menuOptionMenuDetailAdapter.setMenuList(menuCategory.menuList);
+
+        holder.header.setOnClickListener(RecyclerUtils.recyclerViewExpandButton(recyclerView, holder.expandButton));
+//        holder.checkBox.setOnCheckedChangeListener((buttonView, isChecked) -> );
+        holder.name.setOnClickListener(v -> holder.checkBox.performClick());
     }
 
     @Override
@@ -81,7 +91,10 @@ class MenuOptionMenuCategoryAdapter extends RecyclerView.Adapter<MenuOptionMenuC
 
     static class ViewHolder extends RecyclerView.ViewHolder {
         @BindView(R.id.name) AppCompatTextView name;
+        @BindView(R.id.header) ConstraintLayout header;
         @BindView(R.id.recycler_view) RecyclerView recyclerView;
+        @BindView(R.id.expand_button) AppCompatImageView expandButton;
+        @BindView(R.id.check_box) AppCompatCheckBox checkBox;
 
         ViewHolder(final View itemView) {
             super(itemView);
