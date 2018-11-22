@@ -12,19 +12,25 @@
 
 package com.mark.zumo.client.store.view.setting.fragment.option;
 
+import android.os.Handler;
+import android.os.Looper;
 import android.support.annotation.NonNull;
+import android.support.v7.widget.AppCompatCheckBox;
 import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.AppCompatTextView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
 
 import com.mark.zumo.client.core.entity.MenuOption;
 import com.mark.zumo.client.store.R;
 
 import java.text.NumberFormat;
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 
 import butterknife.BindView;
@@ -33,16 +39,21 @@ import butterknife.ButterKnife;
 /**
  * Created by mark on 18. 11. 11.
  */
-class MenuOptionDetailAdapter extends RecyclerView.Adapter<MenuOptionDetailAdapter.ViewHolder> {
+class MenuOptionDetailAdapter extends RecyclerView.Adapter<MenuOptionDetailAdapter.ViewHolder>
+        implements MenuOptionSettingModeSelectee {
 
-    private boolean isReorderMode;
-    private boolean isDeleteMode;
-    private boolean isEditMode;
-
+    private final MenuOptionSelectListener menuOptionSelectListener;
+    final private HashSet<Runnable> modeUpdateOperationPool;
+    final private HashSet<CheckBox> checkBoxSet;
+    private MenuSettingMode menuSettingMode = MenuSettingMode.NONE;
     private List<MenuOption> menuOptionList;
 
-    MenuOptionDetailAdapter() {
+    MenuOptionDetailAdapter(@NonNull MenuOptionSelectListener menuOptionSelectListener) {
+        this.menuOptionSelectListener = menuOptionSelectListener;
+
         menuOptionList = new ArrayList<>();
+        modeUpdateOperationPool = new HashSet<>();
+        checkBoxSet = new HashSet<>();
     }
 
     void setMenuOptionList(final List<MenuOption> menuOptionList) {
@@ -62,9 +73,43 @@ class MenuOptionDetailAdapter extends RecyclerView.Adapter<MenuOptionDetailAdapt
     public void onBindViewHolder(@NonNull final ViewHolder holder, final int position) {
         MenuOption menuOption = menuOptionList.get(position);
         holder.value.setText(menuOption.value);
-        String priceText = "(" + NumberFormat.getCurrencyInstance().format(menuOption.price) + ")";
-        holder.price.setText(priceText);
-        holder.reorder.setVisibility(isReorderMode ? View.VISIBLE : View.GONE);
+        holder.price.setText(NumberFormat.getCurrencyInstance().format(menuOption.price));
+
+        holder.itemView.setOnClickListener(v -> onClickItemView(holder, menuOption));
+        Runnable runnable = () -> {
+            holder.checkBox.setVisibility(menuSettingMode.isDeleteMode() ? View.VISIBLE : View.GONE);
+            holder.reorder.setVisibility(menuSettingMode.isReorderMode() ? View.VISIBLE : View.GONE);
+        };
+        runnable.run();
+        modeUpdateOperationPool.add(runnable);
+
+        holder.checkBox.setOnCheckedChangeListener((buttonView, isChecked) -> menuOptionSelectListener.onSelectMenuOption(menuOption, isChecked));
+        checkBoxSet.add(holder.checkBox);
+    }
+
+    void onClickParent(boolean isChecked) {
+        Iterator<CheckBox> iterator = checkBoxSet.iterator();
+        if (iterator == null) {
+            return;
+        }
+
+        while (iterator.hasNext()) {
+            CheckBox checkBox = iterator.next();
+            if (checkBox.isChecked() != isChecked) {
+                checkBox.performClick();
+            }
+        }
+    }
+
+    private void onClickItemView(final ViewHolder holder, final MenuOption menuOption) {
+        if (menuSettingMode.isEditMode()) {
+            menuOptionSelectListener.onModifyMenuOption(menuOption);
+        } else if (menuSettingMode.isDeleteMode()) {
+            holder.checkBox.performClick();
+            menuOptionSelectListener.onSelectMenuOption(menuOption, holder.checkBox.isChecked());
+        } else {
+            menuOptionSelectListener.onClickMenuOption(menuOption);
+        }
     }
 
     @Override
@@ -72,9 +117,40 @@ class MenuOptionDetailAdapter extends RecyclerView.Adapter<MenuOptionDetailAdapt
         return menuOptionList.size();
     }
 
+    @Override
+    public MenuSettingMode getMode() {
+        return menuSettingMode;
+    }
+
+    @Override
+    public void setMode(final MenuSettingMode mode) {
+        menuSettingMode = mode;
+        notifyModeChange();
+    }
+
+    private void notifyModeChange() {
+        Iterator<Runnable> iterator = modeUpdateOperationPool.iterator();
+        if (iterator == null) {
+            return;
+        }
+        new Handler(Looper.getMainLooper()).post(() -> {
+            while (iterator.hasNext()) {
+                iterator.next().run();
+            }
+        });
+    }
+
+    interface MenuOptionSelectListener {
+        void onClickMenuOption(MenuOption menuOption);
+        void onModifyMenuOption(MenuOption menuOption);
+        void onSelectMenuOption(MenuOption menuOption, boolean isChecked);
+        void onReorderMenuOption(List<MenuOption> menuOptionList);
+    }
+
     class ViewHolder extends RecyclerView.ViewHolder {
         @BindView(R.id.value) AppCompatTextView value;
         @BindView(R.id.price) AppCompatTextView price;
+        @BindView(R.id.check_box) AppCompatCheckBox checkBox;
         @BindView(R.id.reorder) AppCompatImageView reorder;
 
         ViewHolder(final View itemView) {

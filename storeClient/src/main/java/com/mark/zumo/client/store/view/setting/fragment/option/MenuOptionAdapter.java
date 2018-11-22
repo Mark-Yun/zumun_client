@@ -38,7 +38,8 @@ import butterknife.ButterKnife;
 /**
  * Created by mark on 18. 11. 11.
  */
-class MenuOptionAdapter extends RecyclerView.Adapter<MenuOptionAdapter.ViewHolder> {
+class MenuOptionAdapter extends RecyclerView.Adapter<MenuOptionAdapter.ViewHolder>
+        implements MenuOptionSettingModeSelectee {
 
     private static final String TAG = "MenuOptionAdapter";
 
@@ -46,11 +47,8 @@ class MenuOptionAdapter extends RecyclerView.Adapter<MenuOptionAdapter.ViewHolde
     private Map<String, List<MenuOption>> menuOptionMap;
     private MenuOptionSelectListener listener;
 
+    private MenuSettingMode menuSettingMode = MenuSettingMode.NONE;
     private HashSet<Runnable> modeUpdateOperationPool;
-
-    private boolean reorderMode;
-    private boolean deleteMode;
-    private boolean editMode;
 
     MenuOptionAdapter() {
         optionNameList = new ArrayList<>();
@@ -58,33 +56,15 @@ class MenuOptionAdapter extends RecyclerView.Adapter<MenuOptionAdapter.ViewHolde
         modeUpdateOperationPool = new HashSet<>();
     }
 
-    void setReorderMode(final boolean reorderMode) {
-        disableAllMode();
-        this.reorderMode = reorderMode;
-        notifyModeChange();
+    @Override
+    public MenuSettingMode getMode() {
+        return menuSettingMode;
     }
 
-    void setDeleteMode(final boolean deleteMode) {
-        disableAllMode();
-        this.deleteMode = deleteMode;
+    @Override
+    public void setMode(final MenuSettingMode mode) {
+        menuSettingMode = mode;
         notifyModeChange();
-    }
-
-    void setEditMode(final boolean editMode) {
-        disableAllMode();
-        this.editMode = editMode;
-        notifyModeChange();
-    }
-
-    void setNoneMode() {
-        disableAllMode();
-        notifyModeChange();
-    }
-
-    private void disableAllMode() {
-        reorderMode = false;
-        deleteMode = false;
-        editMode = false;
     }
 
     private void notifyModeChange() {
@@ -149,22 +129,59 @@ class MenuOptionAdapter extends RecyclerView.Adapter<MenuOptionAdapter.ViewHolde
         recyclerView.setNestedScrollingEnabled(false);
 
         List<MenuOption> menuOptions = menuOptionMap.get(name);
-        MenuOptionDetailAdapter menuOptionDetailAdapter = new MenuOptionDetailAdapter();
+        final MenuOptionDetailAdapter menuOptionDetailAdapter = new MenuOptionDetailAdapter(getMenuOptionSelectListener());
 
         recyclerView.setAdapter(menuOptionDetailAdapter);
         menuOptionDetailAdapter.setMenuOptionList(menuOptions);
 
-        holder.menuOptionHeader.setOnClickListener(v -> listener.onSelectMenuOption(menuOptionMap.get(name)));
+        holder.menuOptionHeader.setOnClickListener(v -> onClickItemView(holder, name));
+        holder.checkBox.setOnCheckedChangeListener((buttonView, isChecked) -> menuOptionDetailAdapter.onClickParent(isChecked));
 
         View.OnClickListener recyclerViewExpandClickListener = RecyclerUtils.recyclerViewExpandButton(recyclerView, holder.expandButton);
         holder.expandClickArea.setOnClickListener(recyclerViewExpandClickListener);
 
         Runnable modeUpdateOperation = () -> {
-            holder.reorder.setVisibility(reorderMode ? View.VISIBLE : View.GONE);
-            holder.checkBox.setVisibility(deleteMode ? View.VISIBLE : View.GONE);
+            holder.reorder.setVisibility(menuSettingMode.isReorderMode() ? View.VISIBLE : View.GONE);
+            holder.checkBox.setVisibility(menuSettingMode.isDeleteMode() ? View.VISIBLE : View.GONE);
+            menuOptionDetailAdapter.setMode(menuSettingMode);
         };
         modeUpdateOperation.run();
         modeUpdateOperationPool.add(modeUpdateOperation);
+    }
+
+    private void onClickItemView(final ViewHolder viewHolder, final String name) {
+        if (menuSettingMode.isEditMode()) {
+            listener.onModifyMenuOption(menuOptionMap.get(name));
+        } else if (menuSettingMode.isDeleteMode()) {
+            viewHolder.checkBox.performClick();
+        } else {
+            listener.onClickMenuOption(menuOptionMap.get(name));
+        }
+    }
+
+    @NonNull
+    private MenuOptionDetailAdapter.MenuOptionSelectListener getMenuOptionSelectListener() {
+        return new MenuOptionDetailAdapter.MenuOptionSelectListener() {
+            @Override
+            public void onClickMenuOption(final MenuOption menuOption) {
+                listener.onClickMenuOption(menuOption);
+            }
+
+            @Override
+            public void onModifyMenuOption(final MenuOption menuOption) {
+                listener.onModifyMenuOption(menuOption);
+            }
+
+            @Override
+            public void onSelectMenuOption(final MenuOption menuOption, final boolean isChecked) {
+                listener.onSelectMenuOption(menuOption, isChecked);
+            }
+
+            @Override
+            public void onReorderMenuOption(final List<MenuOption> menuOptionList) {
+                listener.onReorderMenuOption(menuOptionList);
+            }
+        };
     }
 
     @Override
@@ -172,8 +189,9 @@ class MenuOptionAdapter extends RecyclerView.Adapter<MenuOptionAdapter.ViewHolde
         return optionNameList.size();
     }
 
-    interface MenuOptionSelectListener {
-        void onSelectMenuOption(List<MenuOption> menuOptionList);
+    interface MenuOptionSelectListener extends MenuOptionDetailAdapter.MenuOptionSelectListener {
+        void onClickMenuOption(List<MenuOption> menuOptionList);
+        void onModifyMenuOption(List<MenuOption> menuOptionList);
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder {
