@@ -154,18 +154,13 @@ public enum MenuManager {
         }
 
         for (MenuCategory menuCategory : categoryList) {
-            if (!menuDetailMap.containsKey(menuCategory.uuid)) {
-                continue;
-            }
-
             List<MenuDetail> menuDetailList = menuDetailMap.get(menuCategory.uuid);
-            if (menuDetailList.size() > 1) {
-                Collections.sort(menuDetailList, (o1, o2) -> o1.menuSeqNum - o2.menuSeqNum);
-            }
-
             List<Menu> categoryMenuList = new ArrayList<>();
-            for (MenuDetail menuDetail : menuDetailList) {
-                categoryMenuList.add(menuMap.get(menuDetail.menuUuid));
+            if (menuDetailList != null && !menuDetailList.isEmpty()) {
+                Collections.sort(menuDetailList, (o1, o2) -> o1.menuSeqNum - o2.menuSeqNum);
+                for (MenuDetail menuDetail : menuDetailList) {
+                    categoryMenuList.add(menuMap.get(menuDetail.menuUuid));
+                }
             }
 
             MenuCategory combinedMenuCategory = new MenuCategory(
@@ -330,10 +325,12 @@ public enum MenuManager {
         ).subscribeOn(Schedulers.io());
     }
 
-    public Maybe<MenuCategory> removeCategory(final MenuCategory menuCategory) {
-        return categoryRepositoryMaybe.flatMap(categoryRepository ->
-                categoryRepository.deleteCategory(menuCategory.uuid)
-        ).subscribeOn(Schedulers.io());
+    public Maybe<List<MenuCategory>> deleteCategories(final List<MenuCategory> menuCategoryList) {
+        return Observable.fromIterable(menuCategoryList)
+                .map(menuCategory -> menuCategory.uuid)
+                .flatMapMaybe(categoryUuid -> categoryRepositoryMaybe.flatMap(categoryRepository -> categoryRepository.deleteCategory(categoryUuid)))
+                .toList().toMaybe()
+                .subscribeOn(Schedulers.io());
     }
 
     public Maybe<List<MenuCategory>> updateCategoriesOfMenu(final String storeUuid,

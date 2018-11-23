@@ -7,12 +7,11 @@
 package com.mark.zumo.client.store.view.setting.fragment.category;
 
 import android.annotation.SuppressLint;
-import android.app.AlertDialog;
 import android.arch.lifecycle.LifecycleOwner;
-import android.content.Context;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.annotation.NonNull;
-import android.support.v7.widget.AppCompatEditText;
-import android.support.v7.widget.AppCompatImageButton;
+import android.support.v7.widget.AppCompatCheckBox;
 import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.AppCompatTextView;
 import android.support.v7.widget.RecyclerView;
@@ -27,8 +26,9 @@ import com.mark.zumo.client.store.viewmodel.MenuSettingViewModel;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
-import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -36,7 +36,8 @@ import butterknife.ButterKnife;
 /**
  * Created by mark on 18. 6. 27.
  */
-class MenuCategoryAdapter extends RecyclerView.Adapter<MenuCategoryAdapter.ViewHolder> implements ItemTouchHelperAdapter {
+class MenuCategoryAdapter extends RecyclerView.Adapter<MenuCategoryAdapter.ViewHolder>
+        implements ItemTouchHelperAdapter, MenuCategorySettingModeSelectee {
 
     private final OnSelectCategoryListener onSelectCategoryListener;
     private final MenuSettingViewModel menuSettingViewModel;
@@ -44,6 +45,9 @@ class MenuCategoryAdapter extends RecyclerView.Adapter<MenuCategoryAdapter.ViewH
     private final OnStartDragListener dragStartListener;
 
     private List<MenuCategory> menuCategoryList;
+
+    private MenuCategorySettingModeSelectee.SettingMode settingMode = MenuCategorySettingModeSelectee.SettingMode.NONE;
+    private HashSet<Runnable> modeUpdateOperationPool;
 
     MenuCategoryAdapter(final OnSelectCategoryListener onSelectCategoryListener,
                         final MenuSettingViewModel menuSettingViewModel,
@@ -56,11 +60,35 @@ class MenuCategoryAdapter extends RecyclerView.Adapter<MenuCategoryAdapter.ViewH
         this.dragStartListener = dragStartListener;
 
         menuCategoryList = new ArrayList<>();
+        modeUpdateOperationPool = new HashSet<>();
     }
 
     void setMenuCategoryList(final List<MenuCategory> menuCategoryList) {
         this.menuCategoryList = menuCategoryList;
         notifyDataSetChanged();
+    }
+
+    @Override
+    public SettingMode getMode() {
+        return settingMode;
+    }
+
+    @Override
+    public void setMode(final SettingMode mode) {
+        settingMode = mode;
+        notifyModeChange();
+    }
+
+    private void notifyModeChange() {
+        Iterator<Runnable> iterator = modeUpdateOperationPool.iterator();
+        if (iterator == null) {
+            return;
+        }
+        new Handler(Looper.getMainLooper()).post(() -> {
+            while (iterator.hasNext()) {
+                iterator.next().run();
+            }
+        });
     }
 
     @NonNull
@@ -73,67 +101,42 @@ class MenuCategoryAdapter extends RecyclerView.Adapter<MenuCategoryAdapter.ViewH
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
-    public void onBindViewHolder(@NonNull final ViewHolder viewHolder, final int position) {
-        final Context context = viewHolder.itemView.getContext();
+    public void onBindViewHolder(@NonNull final ViewHolder holder, final int position) {
         final MenuCategory menuCategory = menuCategoryList.get(position);
 
-        viewHolder.reorder.setOnTouchListener((v, event) -> {
+        holder.reorder.setOnTouchListener((v, event) -> {
             int action = event.getAction();
             switch (action) {
                 case MotionEvent.ACTION_DOWN:
-                    dragStartListener.onStartDrag(viewHolder);
+                    dragStartListener.onStartDrag(holder);
                     break;
             }
             return false;
         });
 
-        viewHolder.name.setText(menuCategory.name);
-        viewHolder.name.setOnClickListener(v -> {
-            final AppCompatEditText editText = new AppCompatEditText(context);
-            new AlertDialog.Builder(context)
-                    .setTitle(R.string.menu_category_setting_update_category_dialog_title)
-                    .setMessage(R.string.menu_category_setting_update_category_dialog_message)
-                    .setView(editText)
-                    .setCancelable(true)
-                    .setNegativeButton(R.string.button_text_cancel, (dialog, which) -> dialog.dismiss())
-                    .setPositiveButton(R.string.button_text_apply, (dialog, which) -> {
-                        menuSettingViewModel.updateCategoryName(menuCategory, editText.getText().toString())
-                                .observe(lifecycleOwner, updatedMenuCategory -> viewHolder.name.setText(Objects.requireNonNull(updatedMenuCategory).name));
-                        dialog.dismiss();
-                    })
-                    .create()
-                    .show();
-        });
+        holder.name.setText(menuCategory.name);
+        holder.checkBox.setOnCheckedChangeListener((buttonView, isChecked) -> onSelectCategoryListener.onSelectMenuCategory(menuCategory, isChecked));
+        holder.itemView.setOnClickListener(v -> onClickItemView(holder, menuCategory));
 
-        viewHolder.removeButton.setOnClickListener(v ->
-                new AlertDialog.Builder(context)
-                        .setTitle(R.string.menu_category_setting_remove_category_dialog_title)
-                        .setMessage(context.getString(R.string.menu_category_setting_remove_category_dialog_message, menuCategory.name))
-                        .setCancelable(true)
-                        .setNegativeButton(R.string.button_text_cancel, (dialog, which) -> dialog.dismiss())
-                        .setPositiveButton(android.R.string.ok, (dialog, which) -> {
-                            menuSettingViewModel.removeCategory(menuCategory)
-                                    .observe(lifecycleOwner, x -> {
-                                        int removedPosition = menuCategoryList.indexOf(menuCategory);
-                                        menuCategoryList.remove(menuCategory);
-                                        notifyItemRemoved(removedPosition + 1);
-                                    });
-                            dialog.dismiss();
-                        })
-                        .create()
-                        .show()
-        );
+        Runnable modeUpdateOperation = () -> {
+            holder.reorder.setVisibility(settingMode.isReorderMode() ? View.VISIBLE : View.GONE);
+            holder.checkBox.setVisibility(settingMode.isDeleteMode() ? View.VISIBLE : View.GONE);
+        };
 
-        viewHolder.itemView.setOnClickListener(v -> onSelectCategory(menuCategory));
+        modeUpdateOperation.run();
+        modeUpdateOperationPool.add(modeUpdateOperation);
     }
 
-    private void onSelectCategory(MenuCategory menuCategory) {
-        OnSelectCategoryListener onSelectCategoryListener = this.onSelectCategoryListener;
-        if (onSelectCategoryListener == null) {
-            return;
+    private void onClickItemView(final ViewHolder viewHolder, final MenuCategory menuCategory) {
+        if (settingMode.isEditMode()) {
+            onSelectCategoryListener.onModifyMenuCategory(menuCategory, updatedMenuCategory ->
+                    viewHolder.name.setText(updatedMenuCategory.name)
+            );
+        } else if (settingMode.isDeleteMode()) {
+            viewHolder.checkBox.performClick();
+        } else {
+            onSelectCategoryListener.onClickMenuCategoryOption(menuCategory);
         }
-
-        onSelectCategoryListener.onSelectCategory(menuCategory);
     }
 
     @Override
@@ -147,9 +150,22 @@ class MenuCategoryAdapter extends RecyclerView.Adapter<MenuCategoryAdapter.ViewH
         //Empty Body
     }
 
-    private void onCreateMenuCategory(MenuCategory menuCategory) {
-        menuCategoryList.add(menuCategory);
-        notifyItemInserted(menuCategoryList.size());
+    void onCreateMenuCategory(MenuCategory menuCategory) {
+        menuCategoryList.add(menuCategoryList.size() - 1, menuCategory);
+        notifyItemInserted(menuCategoryList.size() - 2);
+    }
+
+    void onRemoveCategory(final List<MenuCategory> menuCategoryList) {
+        for (MenuCategory removedMenuCategory : menuCategoryList) {
+            List<MenuCategory> tmpCategoryList = new ArrayList<>(this.menuCategoryList);
+            for (int i = 0; i < tmpCategoryList.size(); i++) {
+                if (this.menuCategoryList.get(i).uuid.equals(removedMenuCategory.uuid)) {
+                    this.menuCategoryList.remove(i);
+                    notifyItemRemoved(i);
+                    break;
+                }
+            }
+        }
     }
 
     @Override
@@ -176,13 +192,22 @@ class MenuCategoryAdapter extends RecyclerView.Adapter<MenuCategoryAdapter.ViewH
     }
 
     interface OnSelectCategoryListener {
-        void onSelectCategory(MenuCategory menuCategory);
+        void onSelectMenuCategory(MenuCategory menuCategory);
+        void onClickMenuCategoryOption(MenuCategory menuCategory);
+        void onModifyMenuCategory(MenuCategory menuCategory, MenuCategoryUpdateListener listener);
+        void onSelectMenuCategory(MenuCategory menuCategory, boolean isChecked);
+        void onReorderMenuCategory(List<MenuCategory> menuCategoryList);
+
+        @FunctionalInterface
+        interface MenuCategoryUpdateListener {
+            void onMenuCategoryUpdated(MenuCategory menuCategory);
+        }
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder {
         @BindView(R.id.name) AppCompatTextView name;
         @BindView(R.id.reorder) AppCompatImageView reorder;
-        @BindView(R.id.remove_button) AppCompatImageButton removeButton;
+        @BindView(R.id.check_box) AppCompatCheckBox checkBox;
 
         private ViewHolder(final View itemView) {
             super(itemView);

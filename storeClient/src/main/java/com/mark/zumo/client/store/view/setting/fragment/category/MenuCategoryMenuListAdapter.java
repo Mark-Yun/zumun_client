@@ -8,7 +8,6 @@ package com.mark.zumo.client.store.view.setting.fragment.category;
 
 import android.arch.lifecycle.LifecycleOwner;
 import android.support.annotation.NonNull;
-import android.support.v7.widget.AppCompatImageButton;
 import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.AppCompatTextView;
 import android.support.v7.widget.RecyclerView;
@@ -29,15 +28,16 @@ import butterknife.ButterKnife;
 /**
  * Created by mark on 18. 8. 12.
  */
-public class CategoryMenuListAdapter extends RecyclerView.Adapter<CategoryMenuListAdapter.ViewHolder> {
+public class MenuCategoryMenuListAdapter extends RecyclerView.Adapter<MenuCategoryMenuListAdapter.ViewHolder> {
 
     private LifecycleOwner lifecycleOwner;
     private MenuSettingViewModel menuSettingViewModel;
 
     private List<Menu> menuList;
 
-    CategoryMenuListAdapter(final LifecycleOwner lifecycleOwner,
-                            final MenuSettingViewModel menuSettingViewModel) {
+
+    MenuCategoryMenuListAdapter(final LifecycleOwner lifecycleOwner,
+                                final MenuSettingViewModel menuSettingViewModel) {
 
         this.lifecycleOwner = lifecycleOwner;
         this.menuSettingViewModel = menuSettingViewModel;
@@ -50,6 +50,7 @@ public class CategoryMenuListAdapter extends RecyclerView.Adapter<CategoryMenuLi
         notifyDataSetChanged();
     }
 
+
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull final ViewGroup parent, final int viewType) {
@@ -59,9 +60,9 @@ public class CategoryMenuListAdapter extends RecyclerView.Adapter<CategoryMenuLi
     }
 
     @Override
-    public void onBindViewHolder(@NonNull final ViewHolder viewHolder, final int position) {
+    public void onBindViewHolder(@NonNull final ViewHolder holder, final int position) {
         Menu menu = menuList.get(position);
-        viewHolder.name.setText(menu.name);
+        holder.name.setText(menu.name);
     }
 
     @Override
@@ -69,10 +70,9 @@ public class CategoryMenuListAdapter extends RecyclerView.Adapter<CategoryMenuLi
         return menuList.size();
     }
 
-    class ViewHolder extends RecyclerView.ViewHolder {
+    static class ViewHolder extends RecyclerView.ViewHolder {
         @BindView(R.id.name) AppCompatTextView name;
         @BindView(R.id.reorder) AppCompatImageView reorder;
-        @BindView(R.id.remove_button) AppCompatImageButton removeButton;
 
         ViewHolder(final View itemView) {
             super(itemView);

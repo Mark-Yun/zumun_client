@@ -45,7 +45,7 @@ class MenuOptionDetailAdapter extends RecyclerView.Adapter<MenuOptionDetailAdapt
     private final MenuOptionSelectListener menuOptionSelectListener;
     final private HashSet<Runnable> modeUpdateOperationPool;
     final private HashSet<CheckBox> checkBoxSet;
-    private MenuSettingMode menuSettingMode = MenuSettingMode.NONE;
+    private SettingMode settingMode = SettingMode.NONE;
     private List<MenuOption> menuOptionList;
 
     MenuOptionDetailAdapter(@NonNull MenuOptionSelectListener menuOptionSelectListener) {
@@ -77,8 +77,8 @@ class MenuOptionDetailAdapter extends RecyclerView.Adapter<MenuOptionDetailAdapt
 
         holder.itemView.setOnClickListener(v -> onClickItemView(holder, menuOption));
         Runnable runnable = () -> {
-            holder.checkBox.setVisibility(menuSettingMode.isDeleteMode() ? View.VISIBLE : View.GONE);
-            holder.reorder.setVisibility(menuSettingMode.isReorderMode() ? View.VISIBLE : View.GONE);
+            holder.checkBox.setVisibility(settingMode.isDeleteMode() ? View.VISIBLE : View.GONE);
+            holder.reorder.setVisibility(settingMode.isReorderMode() ? View.VISIBLE : View.GONE);
         };
         runnable.run();
         modeUpdateOperationPool.add(runnable);
@@ -102,9 +102,9 @@ class MenuOptionDetailAdapter extends RecyclerView.Adapter<MenuOptionDetailAdapt
     }
 
     private void onClickItemView(final ViewHolder holder, final MenuOption menuOption) {
-        if (menuSettingMode.isEditMode()) {
+        if (settingMode.isEditMode()) {
             menuOptionSelectListener.onModifyMenuOption(menuOption);
-        } else if (menuSettingMode.isDeleteMode()) {
+        } else if (settingMode.isDeleteMode()) {
             holder.checkBox.performClick();
             menuOptionSelectListener.onSelectMenuOption(menuOption, holder.checkBox.isChecked());
         } else {
@@ -118,13 +118,13 @@ class MenuOptionDetailAdapter extends RecyclerView.Adapter<MenuOptionDetailAdapt
     }
 
     @Override
-    public MenuSettingMode getMode() {
-        return menuSettingMode;
+    public SettingMode getMode() {
+        return settingMode;
     }
 
     @Override
-    public void setMode(final MenuSettingMode mode) {
-        menuSettingMode = mode;
+    public void setMode(final SettingMode mode) {
+        settingMode = mode;
         notifyModeChange();
     }
 

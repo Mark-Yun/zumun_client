@@ -47,7 +47,7 @@ class MenuOptionAdapter extends RecyclerView.Adapter<MenuOptionAdapter.ViewHolde
     private Map<String, List<MenuOption>> menuOptionMap;
     private MenuOptionSelectListener listener;
 
-    private MenuSettingMode menuSettingMode = MenuSettingMode.NONE;
+    private SettingMode settingMode = SettingMode.NONE;
     private HashSet<Runnable> modeUpdateOperationPool;
 
     MenuOptionAdapter() {
@@ -57,13 +57,13 @@ class MenuOptionAdapter extends RecyclerView.Adapter<MenuOptionAdapter.ViewHolde
     }
 
     @Override
-    public MenuSettingMode getMode() {
-        return menuSettingMode;
+    public SettingMode getMode() {
+        return settingMode;
     }
 
     @Override
-    public void setMode(final MenuSettingMode mode) {
-        menuSettingMode = mode;
+    public void setMode(final SettingMode mode) {
+        settingMode = mode;
         notifyModeChange();
     }
 
@@ -141,18 +141,18 @@ class MenuOptionAdapter extends RecyclerView.Adapter<MenuOptionAdapter.ViewHolde
         holder.expandClickArea.setOnClickListener(recyclerViewExpandClickListener);
 
         Runnable modeUpdateOperation = () -> {
-            holder.reorder.setVisibility(menuSettingMode.isReorderMode() ? View.VISIBLE : View.GONE);
-            holder.checkBox.setVisibility(menuSettingMode.isDeleteMode() ? View.VISIBLE : View.GONE);
-            menuOptionDetailAdapter.setMode(menuSettingMode);
+            holder.reorder.setVisibility(settingMode.isReorderMode() ? View.VISIBLE : View.GONE);
+            holder.checkBox.setVisibility(settingMode.isDeleteMode() ? View.VISIBLE : View.GONE);
+            menuOptionDetailAdapter.setMode(settingMode);
         };
         modeUpdateOperation.run();
         modeUpdateOperationPool.add(modeUpdateOperation);
     }
 
     private void onClickItemView(final ViewHolder viewHolder, final String name) {
-        if (menuSettingMode.isEditMode()) {
+        if (settingMode.isEditMode()) {
             listener.onModifyMenuOption(menuOptionMap.get(name));
-        } else if (menuSettingMode.isDeleteMode()) {
+        } else if (settingMode.isDeleteMode()) {
             viewHolder.checkBox.performClick();
         } else {
             listener.onClickMenuOption(menuOptionMap.get(name));

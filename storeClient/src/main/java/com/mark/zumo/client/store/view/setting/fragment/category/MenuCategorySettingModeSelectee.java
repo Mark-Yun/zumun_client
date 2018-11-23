@@ -4,12 +4,18 @@
  * Proprietary and confidential
  */
 
-package com.mark.zumo.client.store.view.setting.fragment.option;
+/*
+ * Copyright (c) 2018. Mark Soft - All Rights Reserved
+ * Unauthorized copying of this file, via any medium is strictly prohibited
+ * Proprietary and confidential
+ */
+
+package com.mark.zumo.client.store.view.setting.fragment.category;
 
 /**
  * Created by mark on 18. 11. 22.
  */
-interface MenuOptionSettingModeSelectee {
+interface MenuCategorySettingModeSelectee {
     SettingMode getMode();
     void setMode(SettingMode mode);
 

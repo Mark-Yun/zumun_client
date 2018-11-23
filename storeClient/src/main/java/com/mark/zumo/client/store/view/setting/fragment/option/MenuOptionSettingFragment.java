@@ -146,7 +146,7 @@ public class MenuOptionSettingFragment extends Fragment {
     }
 
     private void onClickMenuOption(List<MenuOption> menuOptionList) {
-        Log.d(TAG, "onClickMenuOption: name=" + menuOptionList.get(0).name);
+        Log.d(TAG, "onClickMenuCategoryOption: name=" + menuOptionList.get(0).name);
         menuOptionSettingViewModel.getCategoryList().observe(this, menuOptionMenuCategoryAdapter::setMenuCategoryList);
     }
 
@@ -156,14 +156,14 @@ public class MenuOptionSettingFragment extends Fragment {
     }
 
     private void updateMenuBar() {
-        MenuOptionSettingModeSelectee.MenuSettingMode menuSettingMode = menuOptionAdapter.getMode();
-        boolean isInAnyMode = !menuSettingMode.isNone();
+        MenuOptionSettingModeSelectee.SettingMode settingMode = menuOptionAdapter.getMode();
+        boolean isInAnyMode = !settingMode.isNone();
         buttonBox.setVisibility(!isInAnyMode ? View.VISIBLE : View.GONE);
         modeDescriptionLayout.setVisibility(isInAnyMode ? View.VISIBLE : View.GONE);
         if (isInAnyMode) {
             int iconResId;
             int textResId;
-            switch (menuSettingMode) {
+            switch (settingMode) {
                 case REORDER_MODE:
                     iconResId = R.drawable.ic_swap_vert_grey_700_48dp;
                     textResId = R.string.option_setting_mode_description_reorder;
@@ -203,25 +203,25 @@ public class MenuOptionSettingFragment extends Fragment {
 
     @OnClick(R.id.reorder)
     void reorderClick() {
-        menuOptionAdapter.setMode(MenuOptionSettingModeSelectee.MenuSettingMode.REORDER_MODE);
+        menuOptionAdapter.setMode(MenuOptionSettingModeSelectee.SettingMode.REORDER_MODE);
         startAnyMode();
     }
 
     @OnClick(R.id.edit)
     void editClick() {
-        menuOptionAdapter.setMode(MenuOptionSettingModeSelectee.MenuSettingMode.EDIT_MODE);
+        menuOptionAdapter.setMode(MenuOptionSettingModeSelectee.SettingMode.EDIT_MODE);
         startAnyMode();
     }
 
     @OnClick(R.id.delete)
     void deleteClick() {
-        menuOptionAdapter.setMode(MenuOptionSettingModeSelectee.MenuSettingMode.DELETE_MODE);
+        menuOptionAdapter.setMode(MenuOptionSettingModeSelectee.SettingMode.DELETE_MODE);
         startAnyMode();
     }
 
     @OnClick(R.id.mode_confirm_button)
     void onClickModeConfirmButton() {
-        menuOptionAdapter.setMode(MenuOptionSettingModeSelectee.MenuSettingMode.NONE);
+        menuOptionAdapter.setMode(MenuOptionSettingModeSelectee.SettingMode.NONE);
         startAnyMode();
     }
 }

@@ -235,9 +235,9 @@ public class MenuSettingViewModel extends AndroidViewModel {
         return liveData;
     }
 
-    public LiveData<MenuCategory> removeCategory(MenuCategory menuCategory) {
-        MutableLiveData<MenuCategory> liveData = new MutableLiveData<>();
-        menuManager.removeCategory(menuCategory)
+    public LiveData<List<MenuCategory>> removeCategory(List<MenuCategory> menuCategoryList) {
+        MutableLiveData<List<MenuCategory>> liveData = new MutableLiveData<>();
+        menuManager.deleteCategories(menuCategoryList)
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSubscribe(disposables::add)
                 .doOnSuccess(liveData::setValue)

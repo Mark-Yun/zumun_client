@@ -67,7 +67,7 @@ public class MenuDetailSettingFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull final LayoutInflater inflater, @Nullable final ViewGroup container, @Nullable final Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_menu_detail_setting, container, false);
+        View view = inflater.inflate(R.layout.fragment_setting_menu_detail, container, false);
         ButterKnife.bind(this, view);
 
         inflatePreferenceFragment();
