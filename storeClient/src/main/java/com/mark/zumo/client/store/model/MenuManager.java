@@ -18,6 +18,8 @@ import com.mark.zumo.client.core.repository.CategoryRepository;
 import com.mark.zumo.client.core.repository.MenuDetailRepository;
 import com.mark.zumo.client.core.repository.MenuRepository;
 import com.mark.zumo.client.core.repository.SessionRepository;
+import com.mark.zumo.client.core.util.context.ContextHolder;
+import com.mark.zumo.client.store.R;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -177,7 +179,52 @@ public enum MenuManager {
             resultMenuCategoryList.add(combinedMenuCategory);
         }
 
+        resultMenuCategoryList.add(createNoneCategory(categoryList, menuList, menuDetailMap));
         return resultMenuCategoryList;
+    }
+
+    private MenuCategory createNoneCategory(final List<MenuCategory> categoryList,
+                                            final List<Menu> menuList,
+                                            final Map<String, List<MenuDetail>> menuDetailMap) {
+
+        String unCategorizedMenusName = ContextHolder.getContext().getString(R.string.un_categorized_menu_category_title);
+        MenuCategory noneCategory = new MenuCategory("", unCategorizedMenusName, "", Integer.MAX_VALUE);
+        List<Menu> unCategorizedMenuList = new ArrayList<>(menuList);
+        for (List<MenuDetail> menuDetailList : menuDetailMap.values()) {
+            for (MenuDetail menuDetail : menuDetailList) {
+                for (Menu menu : menuList) {
+                    if (hasMenuInMenuList(unCategorizedMenuList, menu)
+                            && hasMenuCategoryInMenuCategoryList(categoryList, menuDetail.menuCategoryUuid)
+                            && menu.uuid.equals(menuDetail.menuUuid)) {
+                        unCategorizedMenuList.remove(menu);
+                    }
+                }
+            }
+        }
+
+        noneCategory.menuList = unCategorizedMenuList;
+        return noneCategory;
+    }
+
+    private boolean hasMenuInMenuList(List<Menu> menuList, Menu menu) {
+        for (Menu menu1 : menuList) {
+            if (menu1.uuid.equals(menu.uuid)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private boolean hasMenuCategoryInMenuCategoryList(final List<MenuCategory> menuCategoryList,
+                                                      final String menuCategoryUuid) {
+        for (MenuCategory menuCategory1 : menuCategoryList) {
+            if (menuCategory1.uuid.equals(menuCategoryUuid)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     public Maybe<Map<String, List<Menu>>> getMenuListByCategory(String storeUuid) {

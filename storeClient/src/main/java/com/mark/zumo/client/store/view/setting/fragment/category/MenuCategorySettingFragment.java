@@ -74,7 +74,7 @@ public class MenuCategorySettingFragment extends Fragment implements OnStartDrag
         ItemTouchHelper.Callback callback = new CategorySettingTouchHelperCallback(adapter);
         itemTouchHelper = new ItemTouchHelper(callback);
         itemTouchHelper.attachToRecyclerView(categoryRecyclerView);
-        menuSettingViewModel.categoryList().observe(this, adapter::setMenuCategoryList);
+        menuSettingViewModel.getCombinedMenuCategoryList().observe(this, adapter::setMenuCategoryList);
     }
 
     private void onSelectCategory(MenuCategory menuCategory) {
@@ -82,9 +82,9 @@ public class MenuCategorySettingFragment extends Fragment implements OnStartDrag
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
         menuRecyclerView.setLayoutManager(layoutManager);
 
-        MenuListAdapter adapter = new MenuListAdapter(this, menuSettingViewModel);
+        CategoryMenuListAdapter adapter = new CategoryMenuListAdapter(this, menuSettingViewModel);
         menuRecyclerView.setAdapter(adapter);
-        menuSettingViewModel.menuDetailList(menuCategory.uuid).observe(this, adapter::setMenuDetailList);
+        adapter.setMenuList(menuCategory.menuList);
     }
 
     @Override

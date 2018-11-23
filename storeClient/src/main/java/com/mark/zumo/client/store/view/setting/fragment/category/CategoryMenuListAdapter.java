@@ -16,7 +16,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.mark.zumo.client.core.entity.MenuDetail;
+import com.mark.zumo.client.core.entity.Menu;
 import com.mark.zumo.client.store.R;
 import com.mark.zumo.client.store.viewmodel.MenuSettingViewModel;
 
@@ -29,24 +29,24 @@ import butterknife.ButterKnife;
 /**
  * Created by mark on 18. 8. 12.
  */
-public class MenuListAdapter extends RecyclerView.Adapter<MenuListAdapter.ViewHolder> {
+public class CategoryMenuListAdapter extends RecyclerView.Adapter<CategoryMenuListAdapter.ViewHolder> {
 
     private LifecycleOwner lifecycleOwner;
     private MenuSettingViewModel menuSettingViewModel;
 
-    private List<MenuDetail> menuDetailList;
+    private List<Menu> menuList;
 
-    MenuListAdapter(final LifecycleOwner lifecycleOwner,
-                    final MenuSettingViewModel menuSettingViewModel) {
+    CategoryMenuListAdapter(final LifecycleOwner lifecycleOwner,
+                            final MenuSettingViewModel menuSettingViewModel) {
 
         this.lifecycleOwner = lifecycleOwner;
         this.menuSettingViewModel = menuSettingViewModel;
 
-        menuDetailList = new ArrayList<>();
+        menuList = new ArrayList<>();
     }
 
-    void setMenuDetailList(List<MenuDetail> menuDetailList) {
-        this.menuDetailList = menuDetailList;
+    void setMenuList(final List<Menu> menuList) {
+        this.menuList = menuList;
         notifyDataSetChanged();
     }
 
@@ -60,20 +60,13 @@ public class MenuListAdapter extends RecyclerView.Adapter<MenuListAdapter.ViewHo
 
     @Override
     public void onBindViewHolder(@NonNull final ViewHolder viewHolder, final int position) {
-        MenuDetail menuDetail = menuDetailList.get(position);
-        menuSettingViewModel.getMenu(menuDetail.menuUuid)
-                .observe(lifecycleOwner, menu -> {
-                    if (menu == null) {
-                        return;
-                    }
-
-                    viewHolder.name.setText(menu.name);
-                });
+        Menu menu = menuList.get(position);
+        viewHolder.name.setText(menu.name);
     }
 
     @Override
     public int getItemCount() {
-        return menuDetailList.size();
+        return menuList.size();
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {
