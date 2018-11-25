@@ -73,7 +73,7 @@ public enum MenuManager {
 
     public Observable<GroupedObservable<String, MenuOption>> getMenuOptionList(String menuUuid) {
         return menuRepositoryMaybe.flatMapObservable(
-                menuRepository -> menuRepository.getMenuOptionByMenuUuid(menuUuid)
+                menuRepository -> menuRepository.getMenuOptionListByMenuOptionCategoryUuid(menuUuid)
                         .distinctUntilChanged()
                         .flatMap(Observable::fromIterable)
                         .groupBy(menuOption -> menuOption.name)

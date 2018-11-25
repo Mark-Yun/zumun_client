@@ -79,23 +79,20 @@ public interface DiskRepository {
     void insertMenuOrderList(List<MenuOrder> menuOrderList);
 
     @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
-    @Query("SELECT * FROM " + MenuOptionDetail.Schema.table + " MenuOptionDetail"
-            + " left outer join " + MenuOption.Schema.table + " MenuOption"
-            + " on MenuOptionDetail.menu_option_uuid = MenuOption.menu_option_uuid"
-            + " WHERE menu_uuid LIKE :menuUuid")
-    Maybe<List<MenuOption>> getMenuOptionListByMenuUuid(String menuUuid);
+    @Query("SELECT * FROM " + MenuOption.Schema.table + " WHERE menu_option_category_uuid LIKE :menuOptionCategoryUuid")
+    Maybe<List<MenuOption>> getMenuOptionListByMenuOptionCategoryUuid(String menuOptionCategoryUuid);
 
     @Query("SELECT * FROM " + MenuOption.Schema.table + " WHERE store_uuid LIKE :storeUuid")
     Maybe<List<MenuOption>> getMenuOptionListByStoreUuid(String storeUuid);
 
-    @Query("SELECT * FROM " + MenuOptionDetail.Schema.table + " WHERE menu_option_uuid LIKE :menuOptionUuid")
-    Maybe<List<MenuOptionDetail>> getMenuOptionDetailListByMenuOptionUuid(String menuOptionUuid);
+    @Query("SELECT * FROM " + MenuOptionDetail.Schema.table + " WHERE menu_option_category_uuid LIKE :menuOptionCategoryUuid")
+    Maybe<List<MenuOptionDetail>> getMenuOptionDetailListByMenuOptionCategoryUuid(String menuOptionCategoryUuid);
 
-    @Query("DELETE FROM " + MenuOptionDetail.Schema.table + " WHERE menu_option_uuid LIKE :menuOptionUuid")
-    void deleteMenuOptionDetailOfMenuOption(String menuOptionUuid);
+    @Query("DELETE FROM " + MenuOptionDetail.Schema.table + " WHERE menu_option_category_uuid LIKE :menuOptionCategoryUuid")
+    void deleteMenuOptionDetailOfMenuOption(String menuOptionCategoryUuid);
 
-    @Query("DELETE FROM " + MenuOptionDetail.Schema.table + " WHERE menu_uuid LIKE :menuUuid")
-    void deleteMenuOptionDetailOfMenu(String menuUuid);
+    @Query("DELETE FROM " + MenuOptionDetail.Schema.table + " WHERE menu_option_category_uuid LIKE :menuOptionCategoryUuid")
+    void deleteMenuOptionDetailOfMenu(String menuOptionCategoryUuid);
 
     @Query("SELECT * FROM " + MenuOption.Schema.table + " WHERE menu_option_uuid LIKE :menuOptionUuid LIMIT 1")
     Maybe<MenuOption> getMenuOption(String menuOptionUuid);

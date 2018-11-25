@@ -11,6 +11,7 @@ import com.mark.zumo.client.core.entity.Menu;
 import com.mark.zumo.client.core.entity.MenuCategory;
 import com.mark.zumo.client.core.entity.MenuDetail;
 import com.mark.zumo.client.core.entity.MenuOption;
+import com.mark.zumo.client.core.entity.MenuOptionCategory;
 import com.mark.zumo.client.core.entity.MenuOptionDetail;
 import com.mark.zumo.client.core.entity.MenuOrder;
 import com.mark.zumo.client.core.entity.OrderDetail;
@@ -62,27 +63,72 @@ public interface NetworkRepository {
     Maybe<Menu> updateMenu(@Path(Menu.Schema.uuid) String menuUuid,
                            @Body Menu menu);
 
-    @GET("menu/option/{" + MenuOption.Schema.uuid + "}")
-    Maybe<MenuOption> getMenuOptionList(@Path(MenuOption.Schema.uuid) String menuOptionUuid);
-
-    @GET("menu/option")
-    Maybe<List<MenuOption>> getMenuOptionListByMenuUuid(@Query(MenuOptionDetail.Schema.menuUuid) String menuUuid);
-
-    @GET("menu/option/detail")
-    Maybe<List<MenuOptionDetail>> getMenuOptionListByOptionUuid(@Query(MenuOptionDetail.Schema.menu_option_uuid) String menuOptionUuid);
-
-    @GET("menu/option")
-    Maybe<List<MenuOption>> getMenuOptionListByStoreUuid(@Query(MenuOptionDetail.Schema.storeUuid) String storeUuid);
-
     @PUT("menu/{" + Menu.Schema.uuid + "}/category")
     Maybe<Menu> updateCategoryInMenu(@Path(Menu.Schema.uuid) String menuUuid,
                                      @Body MenuCategory menuCategory);
+
 
     @GET("menu/detail")
     Maybe<List<MenuDetail>> getMenuDetailByStoreUuid(@Query(MenuDetail.Schema.storeUuid) String storeUuid);
 
     @GET("menu/detail")
     Maybe<List<MenuDetail>> getMenuDetailByCategoryUuid(@Query(MenuDetail.Schema.menuCategoryUuid) String menuCategoryUuid);
+
+
+
+    @GET("menu/option/{" + MenuOption.Schema.uuid + "}")
+    Maybe<MenuOption> getMenuOption(@Path(MenuOption.Schema.uuid) String menuOptionUuid);
+
+    @GET("menu/option")
+    Maybe<List<MenuOption>> getMenuOptionListByStoreUuid(@Query(MenuOptionDetail.Schema.storeUuid) String storeUuid);
+
+    @POST("menu/option")
+    Maybe<MenuOption> createMenuOption(final @Body MenuOption menuOption);
+
+    @GET("menu/option")
+    Maybe<List<MenuOption>> getMenuOptionListByMenuOptionCategoryUuid(final @Query(MenuOption.Schema.menuOptionCategoryUuid) String menuOptionCategoryUuid);
+
+    @PUT("menu/option/{" + MenuOption.Schema.uuid + "}")
+    Maybe<MenuOption> updateMenuOption(final @Body MenuOption menuOption);
+
+    @PUT("menu/option")
+    Maybe<MenuOption> updateMenuOptions(final @Body List<MenuOption> menuOptionList);
+
+    @DELETE("menu/option/{" + MenuOption.Schema.uuid + "}")
+    Maybe<MenuOption> deleteMenuOption(final @Path(MenuOption.Schema.uuid) String menuOptionUuid);
+
+    @DELETE("menu/option")
+    Maybe<MenuOption> deleteMenuOptions(final @Body List<MenuOption> menuOptionList);
+
+
+
+    @GET("menu/option/detail")
+    Maybe<List<MenuOptionDetail>> getMenuOptionDetailListByMenuOptionCategoryUuid(@Query(MenuOptionDetail.Schema.menuOptionCategoryUuid) String menuOptionUuid);
+
+    @PUT("menu/option/detail")
+    Maybe<List<MenuOptionDetail>> updateMenuOptionDetailList(@Body List<MenuOptionDetail> menuOptionDetailList);
+
+
+    @POST("menu/option/category")
+    Maybe<MenuOptionCategory> createMenuOptionCategory(final @Body MenuOptionCategory menuOptionCategory);
+
+    @GET("menu/option/category")
+    Maybe<List<MenuOptionCategory>> getMenuOptionCategoryListByStoreUuid(final @Query(MenuOptionCategory.Schema.storeUuid) String storeUuid);
+
+    @PUT("menu/option/category/{" + MenuOptionCategory.Schema.uuid + "}")
+    Maybe<MenuOptionCategory> updateMenuOptionCategory(final @Path(MenuOptionCategory.Schema.uuid) String menuOptionCategoryUuid,
+                                                       final @Body MenuOptionCategory menuOptionCategory);
+
+    @PUT("menu/option/category")
+    Maybe<MenuOptionCategory> updateMenuOptionCategories(final @Body List<MenuOptionCategory> menuOptionCategoryList);
+
+    @DELETE("menu/option/category")
+    Maybe<MenuOptionCategory> deleteMenuOptionCategories(final @Body List<MenuOptionCategory> menuOptionCategoryList);
+
+    @DELETE("menu/option/category/{" + MenuOptionCategory.Schema.uuid + "}")
+    Maybe<MenuOptionCategory> deleteMenuOptionCategory(final @Path(MenuOptionCategory.Schema.uuid) String menuOptionCategoryUuid);
+
+
 
     @GET("category")
     Maybe<List<MenuCategory>> getMenuCategoryListByStoreUuid(@Query(MenuCategory.Schema.storeUuid) String storeUuid);
@@ -97,7 +143,7 @@ public interface NetworkRepository {
     @PUT("category")
     Maybe<List<MenuCategory>> updateMenuCategoryList(@Body final List<MenuCategory> menuCategoryList);
 
-    @GET("category/1{" + MenuCategory.Schema.uuid + "}")
+    @GET("category/{" + MenuCategory.Schema.uuid + "}")
     Maybe<MenuCategory> getMenuCategory(@Path(MenuCategory.Schema.uuid) final String menuCategoryUuid);
 
     @PUT("menu/detail/")
@@ -108,9 +154,9 @@ public interface NetworkRepository {
     Maybe<List<MenuDetail>> updateMenusOfCategory(@Query(MenuCategory.Schema.uuid) String categoryUuid,
                                                   @Body List<MenuDetail> menuDetailList);
 
-
     @POST("category")
     Maybe<MenuCategory> createMenuCategory(@Body MenuCategory menuCategory);
+
 
 
     @POST("order")
@@ -118,9 +164,6 @@ public interface NetworkRepository {
 
     @GET("order/{" + MenuOrder.Schema.uuid + "}")
     Maybe<MenuOrder> getMenuOrder(@Path(MenuOrder.Schema.uuid) String uuid);
-
-    @GET("order/detail")
-    Maybe<List<OrderDetail>> getOrderDetailList(@Query(OrderDetail.Schema.menuOrderUuid) String menuOrderUuid);
 
     @GET("order")
     Maybe<List<MenuOrder>> getMenuOrderListByCustomerUuid(@Query(MenuOrder.Schema.customerUuid) String customerUuid,
@@ -134,6 +177,10 @@ public interface NetworkRepository {
     @PUT("order/{" + MenuOrder.Schema.uuid + "}/state")
     Maybe<MenuOrder> updateMenuOrderState(@Path(MenuOrder.Schema.uuid) String uuid,
                                           @Body MenuOrder menuOrder);
+
+
+    @GET("order/detail")
+    Maybe<List<OrderDetail>> getOrderDetailList(@Query(OrderDetail.Schema.menuOrderUuid) String menuOrderUuid);
 
 
     @POST("token")
