@@ -32,6 +32,7 @@ import android.widget.LinearLayout;
 
 import com.mark.zumo.client.core.entity.MenuOption;
 import com.mark.zumo.client.store.R;
+import com.mark.zumo.client.store.view.setting.SettingModeSelectee;
 import com.mark.zumo.client.store.viewmodel.MenuOptionSettingViewModel;
 
 import java.util.ArrayList;
@@ -156,7 +157,7 @@ public class MenuOptionSettingFragment extends Fragment {
     }
 
     private void updateMenuBar() {
-        MenuOptionSettingModeSelectee.SettingMode settingMode = menuOptionAdapter.getMode();
+        SettingModeSelectee.SettingMode settingMode = menuOptionAdapter.getMode();
         boolean isInAnyMode = !settingMode.isNone();
         buttonBox.setVisibility(!isInAnyMode ? View.VISIBLE : View.GONE);
         modeDescriptionLayout.setVisibility(isInAnyMode ? View.VISIBLE : View.GONE);
@@ -203,25 +204,25 @@ public class MenuOptionSettingFragment extends Fragment {
 
     @OnClick(R.id.reorder)
     void reorderClick() {
-        menuOptionAdapter.setMode(MenuOptionSettingModeSelectee.SettingMode.REORDER_MODE);
+        menuOptionAdapter.setMode(SettingModeSelectee.SettingMode.REORDER_MODE);
         startAnyMode();
     }
 
     @OnClick(R.id.edit)
     void editClick() {
-        menuOptionAdapter.setMode(MenuOptionSettingModeSelectee.SettingMode.EDIT_MODE);
+        menuOptionAdapter.setMode(SettingModeSelectee.SettingMode.EDIT_MODE);
         startAnyMode();
     }
 
     @OnClick(R.id.delete)
     void deleteClick() {
-        menuOptionAdapter.setMode(MenuOptionSettingModeSelectee.SettingMode.DELETE_MODE);
+        menuOptionAdapter.setMode(SettingModeSelectee.SettingMode.DELETE_MODE);
         startAnyMode();
     }
 
     @OnClick(R.id.mode_confirm_button)
     void onClickModeConfirmButton() {
-        menuOptionAdapter.setMode(MenuOptionSettingModeSelectee.SettingMode.NONE);
+        menuOptionAdapter.setMode(SettingModeSelectee.SettingMode.NONE);
         startAnyMode();
     }
 }

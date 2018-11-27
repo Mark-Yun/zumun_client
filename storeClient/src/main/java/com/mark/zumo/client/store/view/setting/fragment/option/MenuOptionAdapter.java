@@ -24,6 +24,7 @@ import android.view.ViewGroup;
 import com.mark.zumo.client.core.entity.MenuOption;
 import com.mark.zumo.client.core.view.util.RecyclerUtils;
 import com.mark.zumo.client.store.R;
+import com.mark.zumo.client.store.view.setting.SettingModeSelectee;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -39,7 +40,7 @@ import butterknife.ButterKnife;
  * Created by mark on 18. 11. 11.
  */
 class MenuOptionAdapter extends RecyclerView.Adapter<MenuOptionAdapter.ViewHolder>
-        implements MenuOptionSettingModeSelectee {
+        implements SettingModeSelectee {
 
     private static final String TAG = "MenuOptionAdapter";
 

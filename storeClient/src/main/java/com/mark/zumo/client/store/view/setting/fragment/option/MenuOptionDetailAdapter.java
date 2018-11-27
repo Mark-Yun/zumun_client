@@ -26,6 +26,7 @@ import android.widget.CheckBox;
 
 import com.mark.zumo.client.core.entity.MenuOption;
 import com.mark.zumo.client.store.R;
+import com.mark.zumo.client.store.view.setting.SettingModeSelectee;
 
 import java.text.NumberFormat;
 import java.util.ArrayList;
@@ -40,7 +41,7 @@ import butterknife.ButterKnife;
  * Created by mark on 18. 11. 11.
  */
 class MenuOptionDetailAdapter extends RecyclerView.Adapter<MenuOptionDetailAdapter.ViewHolder>
-        implements MenuOptionSettingModeSelectee {
+        implements SettingModeSelectee {
 
     private final MenuOptionSelectListener menuOptionSelectListener;
     final private HashSet<Runnable> modeUpdateOperationPool;

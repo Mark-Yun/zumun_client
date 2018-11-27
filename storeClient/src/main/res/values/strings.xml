@@ -124,4 +124,5 @@
     <string name="option_setting_mode_description_reorder">Reorder options by dragging</string>
 
     <string name="un_categorized_menu_category_title">Not Categorized Menus</string>
+    <string name="menu_selector_title_to_select_menus_to_add_into_category">Select menus to add into %s category</string>
 </resources>

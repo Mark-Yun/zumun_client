@@ -4,12 +4,24 @@
  * Proprietary and confidential
  */
 
-package com.mark.zumo.client.store.view.setting.fragment.option;
+/*
+ * Copyright (c) 2018. Mark Soft - All Rights Reserved
+ * Unauthorized copying of this file, via any medium is strictly prohibited
+ * Proprietary and confidential
+ */
+
+/*
+ * Copyright (c) 2018. Mark Soft - All Rights Reserved
+ * Unauthorized copying of this file, via any medium is strictly prohibited
+ * Proprietary and confidential
+ */
+
+package com.mark.zumo.client.store.view.setting;
 
 /**
  * Created by mark on 18. 11. 22.
  */
-interface MenuOptionSettingModeSelectee {
+public interface SettingModeSelectee {
     SettingMode getMode();
     void setMode(SettingMode mode);
 
@@ -19,19 +31,19 @@ interface MenuOptionSettingModeSelectee {
         REORDER_MODE,
         DELETE_MODE;
 
-        boolean isEditMode() {
+        public boolean isEditMode() {
             return this.equals(EDIT_MODE);
         }
 
-        boolean isReorderMode() {
+        public boolean isReorderMode() {
             return this.equals(REORDER_MODE);
         }
 
-        boolean isDeleteMode() {
+        public boolean isDeleteMode() {
             return this.equals(DELETE_MODE);
         }
 
-        boolean isNone() {
+        public boolean isNone() {
             return this.equals(NONE);
         }
     }

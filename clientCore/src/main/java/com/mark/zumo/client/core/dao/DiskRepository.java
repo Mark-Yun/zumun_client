@@ -89,9 +89,6 @@ public interface DiskRepository {
     Maybe<List<MenuOptionDetail>> getMenuOptionDetailListByMenuOptionCategoryUuid(String menuOptionCategoryUuid);
 
     @Query("DELETE FROM " + MenuOptionDetail.Schema.table + " WHERE menu_option_category_uuid LIKE :menuOptionCategoryUuid")
-    void deleteMenuOptionDetailOfMenuOption(String menuOptionCategoryUuid);
-
-    @Query("DELETE FROM " + MenuOptionDetail.Schema.table + " WHERE menu_option_category_uuid LIKE :menuOptionCategoryUuid")
     void deleteMenuOptionDetailOfMenu(String menuOptionCategoryUuid);
 
     @Query("SELECT * FROM " + MenuOption.Schema.table + " WHERE menu_option_uuid LIKE :menuOptionUuid LIMIT 1")

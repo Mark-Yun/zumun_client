@@ -15,6 +15,7 @@ import android.support.v7.widget.AppCompatCheckBox;
 import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.AppCompatTextView;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -22,6 +23,7 @@ import android.view.ViewGroup;
 
 import com.mark.zumo.client.core.entity.MenuCategory;
 import com.mark.zumo.client.store.R;
+import com.mark.zumo.client.store.view.setting.SettingModeSelectee;
 import com.mark.zumo.client.store.viewmodel.MenuSettingViewModel;
 
 import java.util.ArrayList;
@@ -36,8 +38,8 @@ import butterknife.ButterKnife;
 /**
  * Created by mark on 18. 6. 27.
  */
-class MenuCategoryAdapter extends RecyclerView.Adapter<MenuCategoryAdapter.ViewHolder>
-        implements ItemTouchHelperAdapter, MenuCategorySettingModeSelectee {
+class MenuCategorySettingCategoryListAdapter extends RecyclerView.Adapter<MenuCategorySettingCategoryListAdapter.ViewHolder>
+        implements ItemTouchHelperAdapter, SettingModeSelectee {
 
     private final OnSelectCategoryListener onSelectCategoryListener;
     private final MenuSettingViewModel menuSettingViewModel;
@@ -46,13 +48,13 @@ class MenuCategoryAdapter extends RecyclerView.Adapter<MenuCategoryAdapter.ViewH
 
     private List<MenuCategory> menuCategoryList;
 
-    private MenuCategorySettingModeSelectee.SettingMode settingMode = MenuCategorySettingModeSelectee.SettingMode.NONE;
+    private SettingModeSelectee.SettingMode settingMode = SettingModeSelectee.SettingMode.NONE;
     private HashSet<Runnable> modeUpdateOperationPool;
 
-    MenuCategoryAdapter(final OnSelectCategoryListener onSelectCategoryListener,
-                        final MenuSettingViewModel menuSettingViewModel,
-                        final LifecycleOwner lifecycleOwner,
-                        final OnStartDragListener dragStartListener) {
+    MenuCategorySettingCategoryListAdapter(final OnSelectCategoryListener onSelectCategoryListener,
+                                           final MenuSettingViewModel menuSettingViewModel,
+                                           final LifecycleOwner lifecycleOwner,
+                                           final OnStartDragListener dragStartListener) {
 
         this.onSelectCategoryListener = onSelectCategoryListener;
         this.menuSettingViewModel = menuSettingViewModel;
@@ -104,6 +106,8 @@ class MenuCategoryAdapter extends RecyclerView.Adapter<MenuCategoryAdapter.ViewH
     public void onBindViewHolder(@NonNull final ViewHolder holder, final int position) {
         final MenuCategory menuCategory = menuCategoryList.get(position);
 
+        final boolean isNoneCategory = TextUtils.isEmpty(menuCategory.uuid);
+
         holder.reorder.setOnTouchListener((v, event) -> {
             int action = event.getAction();
             switch (action) {
@@ -119,8 +123,8 @@ class MenuCategoryAdapter extends RecyclerView.Adapter<MenuCategoryAdapter.ViewH
         holder.itemView.setOnClickListener(v -> onClickItemView(holder, menuCategory));
 
         Runnable modeUpdateOperation = () -> {
-            holder.reorder.setVisibility(settingMode.isReorderMode() ? View.VISIBLE : View.GONE);
-            holder.checkBox.setVisibility(settingMode.isDeleteMode() ? View.VISIBLE : View.GONE);
+            holder.reorder.setVisibility(!isNoneCategory && settingMode.isReorderMode() ? View.VISIBLE : View.GONE);
+            holder.checkBox.setVisibility(!isNoneCategory && settingMode.isDeleteMode() ? View.VISIBLE : View.GONE);
         };
 
         modeUpdateOperation.run();
@@ -140,8 +144,13 @@ class MenuCategoryAdapter extends RecyclerView.Adapter<MenuCategoryAdapter.ViewH
     }
 
     @Override
+    public int getItemViewType(final int position) {
+        return menuCategoryList.size() - 1 == position ? 1 : 0;
+    }
+
+    @Override
     public void onItemMove(final int fromPosition, final int toPosition) {
-        Collections.swap(menuCategoryList, fromPosition - 1, toPosition - 1);
+        Collections.swap(menuCategoryList, fromPosition, toPosition);
         notifyItemMoved(fromPosition, toPosition);
     }
 
