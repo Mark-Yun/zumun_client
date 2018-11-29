@@ -65,6 +65,11 @@ public class MenuDetailRepository {
                 .distinctUntilChanged();
     }
 
+    public Maybe<List<MenuDetail>> createMenuDetailList(List<MenuDetail> menuDetailList) {
+        return networkRepository.createMenuDetailList(menuDetailList)
+                .doOnSuccess(diskRepository::insertMenuDetailList);
+    }
+
     public Maybe<List<MenuDetail>> getMenuDetailListFromDisk(final String storeUuid) {
         return diskRepository.getMenuDetailByStoreUuid(storeUuid);
     }

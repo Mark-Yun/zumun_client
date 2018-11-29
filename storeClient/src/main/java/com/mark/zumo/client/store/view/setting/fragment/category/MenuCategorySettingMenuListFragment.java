@@ -22,7 +22,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
-import android.widget.Toast;
 
 import com.mark.zumo.client.core.entity.Menu;
 import com.mark.zumo.client.core.entity.MenuCategory;
@@ -69,7 +68,7 @@ public class MenuCategorySettingMenuListFragment extends Fragment implements OnS
 
     public void onSelectMenuCategory(final MenuCategory menuCategory) {
         selectedMenuCategory = menuCategory;
-        menuListAdapter.setMenuList(selectedMenuCategory.menuList);
+        menuListAdapter.setMenuList(new ArrayList<>(selectedMenuCategory.menuList));
 
         updateButtonBoxVisibility();
     }
@@ -183,7 +182,7 @@ public class MenuCategorySettingMenuListFragment extends Fragment implements OnS
     }
 
     private void onMenuListSelectedAdditionally(List<Menu> menuList) {
-        Toast.makeText(getActivity(), menuList.toString(), Toast.LENGTH_SHORT).show();
+        menuSettingViewModel.createMenuDetailListAsMenuList(selectedMenuCategory, menuList).observe(this, menuListAdapter::onMenuDetailCreated);
     }
 
     @OnClick(R.id.reorder)

@@ -261,6 +261,11 @@ public enum MenuManager {
                 .subscribeOn(Schedulers.io());
     }
 
+    public Maybe<Menu> getMenuFromApi(String menuUuid) {
+        return menuRepositoryMaybe.flatMap(menuRepository -> menuRepository.getMenuFromApi(menuUuid))
+                .subscribeOn(Schedulers.io());
+    }
+
     public Observable<Menu> getMenu(String menuUuid) {
         return menuRepositoryMaybe.flatMapObservable(menuRepository -> menuRepository.getMenu(menuUuid))
                 .subscribeOn(Schedulers.io());
@@ -310,6 +315,22 @@ public enum MenuManager {
         return categoryRepositoryMaybe.flatMap(categoryRepository ->
                 categoryRepository.createMenuCategory(new MenuCategory(null, name, storeUuid, seqNum))
         ).subscribeOn(Schedulers.io());
+    }
+
+    public Maybe<List<Menu>> createMenuDetailListAsMenuList(final MenuCategory menuCategory,
+                                                            final List<Menu> menuList) {
+        return menuDetailRepositoryMaybe.flatMap(menuDetailRepository ->
+                Observable.fromIterable(menuList)
+                        .map(menu -> menu.uuid)
+                        .map(menuUuid -> new MenuDetail(0, menuUuid, menuCategory.uuid, 0, menuCategory.storeUuid))
+                        .toList().toMaybe()
+                        .flatMap(menuDetailList -> menuDetailRepository.createMenuDetailList(menuDetailList)
+                                .flatMapObservable(Observable::fromIterable)
+                                .map(menuDetail -> menuDetail.menuUuid)
+                                .flatMapMaybe(this::getMenuFromApi)
+                                .toList().toMaybe()
+                        )
+        );
     }
 
     public Maybe<List<MenuCategory>> updateMenuCategoryList(final List<MenuCategory> menuCategoryList) {

@@ -48,13 +48,19 @@ public class MenuCategorySettingMenuListAdapter extends RecyclerView.Adapter<Men
         modeUpdateOperationPool = new HashSet<>();
     }
 
+    List<Menu> getMenuList() {
+        return menuList;
+    }
+
     void setMenuList(final List<Menu> menuList) {
         this.menuList = menuList;
         notifyDataSetChanged();
     }
 
-    List<Menu> getMenuList() {
-        return menuList;
+    void onMenuDetailCreated(List<Menu> createdMenuList) {
+        int startPosition = this.menuList.size();
+        this.menuList.addAll(createdMenuList);
+        notifyItemRangeInserted(startPosition, this.menuList.size() - 1);
     }
 
     @NonNull

@@ -98,6 +98,11 @@ public class MenuRepository {
         return diskRepository.getMenu(uuid);
     }
 
+    public Maybe<Menu> getMenuFromApi(final String uuid) {
+        return networkRepository.getMenu(uuid)
+                .doOnSuccess(diskRepository::insertMenu);
+    }
+
     public Observable<Menu> getMenu(final String uuid) {
         Maybe<Menu> menuDB = diskRepository.getMenu(uuid);
         Maybe<Menu> menuApi = networkRepository.getMenu(uuid)
