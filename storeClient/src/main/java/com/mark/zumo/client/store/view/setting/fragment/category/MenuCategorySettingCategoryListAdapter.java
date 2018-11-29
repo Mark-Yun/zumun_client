@@ -187,7 +187,7 @@ class MenuCategorySettingCategoryListAdapter extends RecyclerView.Adapter<MenuCa
             menuCategory.seqNum = menuCategoryList.indexOf(menuCategory);
         }
 
-        menuSettingViewModel.updateCategorySeqNum(menuCategoryList).observe(lifecycleOwner, this::onLoadMenuCategoryList);
+        onSelectCategoryListener.onReorderMenuCategory(menuCategoryList);
     }
 
     private void onLoadMenuCategoryList(List<MenuCategory> menuCategoryList) {

@@ -32,8 +32,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
-import com.mark.zumo.client.core.entity.Menu;
 import com.mark.zumo.client.core.entity.MenuCategory;
 import com.mark.zumo.client.store.R;
 import com.mark.zumo.client.store.view.setting.SettingModeSelectee;
@@ -197,27 +197,8 @@ public class MenuCategorySettingCategoryListFragment extends Fragment implements
 
             @Override
             public void onReorderMenuCategory(final List<MenuCategory> menuCategoryList) {
-
-            }
-        };
-    }
-
-    @NonNull
-    private MenuCategorySettingMenuListAdapter.SelectMenuListener getSelectMenuListener() {
-        return new MenuCategorySettingMenuListAdapter.SelectMenuListener() {
-            @Override
-            public void onModifyMenuList(final List<Menu> menuList) {
-
-            }
-
-            @Override
-            public void onDeleteMenuList(final List<Menu> menuList) {
-
-            }
-
-            @Override
-            public void onSelectMenuList(final List<Menu> menuList) {
-
+                selectedMenuCategoryList.clear();
+                selectedMenuCategoryList.addAll(menuCategoryList);
             }
         };
     }
@@ -279,10 +260,17 @@ public class MenuCategorySettingCategoryListFragment extends Fragment implements
                 case DELETE_MODE:
                     menuSettingViewModel.removeCategory(new ArrayList<>(selectedMenuCategoryList)).observe(this, menuCategoryMenuCategorySettingCategoryListAdapter::onRemoveCategory);
                     break;
+                case REORDER_MODE:
+                    menuSettingViewModel.updateCategorySeqNum(new ArrayList<>(selectedMenuCategoryList)).observe(this, this::onUpdateMenuCategories);
+                    break;
             }
         }
         menuCategoryMenuCategorySettingCategoryListAdapter.setMode(SettingModeSelectee.SettingMode.NONE);
         startAnyMode();
+    }
+
+    private void onUpdateMenuCategories(List<MenuCategory> updatedMenuCategorList) {
+        Toast.makeText(getContext(), "Updated", Toast.LENGTH_SHORT).show();
     }
 
     @FunctionalInterface
