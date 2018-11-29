@@ -269,6 +269,29 @@ public class MenuSettingViewModel extends AndroidViewModel {
         return liveData;
     }
 
+    public LiveData<List<Menu>> removeMenuDetailList(final MenuCategory menuCategory,
+                                                     final List<Menu> menuList) {
+        MutableLiveData<List<Menu>> liveData = new MutableLiveData<>();
+        menuManager.removeMenuDetailListAsMenuList(menuCategory, menuList)
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnSuccess(liveData::setValue)
+                .doOnSubscribe(disposables::add)
+                .subscribe();
+        return liveData;
+    }
+
+    public LiveData<List<Menu>> updateMenuDetailSequence(final MenuCategory menuCategory,
+                                                         final List<Menu> menuList) {
+        MutableLiveData<List<Menu>> liveData = new MutableLiveData<>();
+        menuManager.updateMenuDetailSequenceAsMenuList(menuCategory, menuList)
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnSuccess(liveData::setValue)
+                .doOnSubscribe(disposables::add)
+                .subscribe();
+        return liveData;
+    }
+
+
     @Override
     protected void onCleared() {
         disposables.clear();

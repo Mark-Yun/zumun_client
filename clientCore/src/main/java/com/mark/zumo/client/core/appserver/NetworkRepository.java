@@ -71,6 +71,9 @@ public interface NetworkRepository {
     @POST("menu/detail")
     Maybe<List<MenuDetail>> createMenuDetailList(@Body List<MenuDetail> menuDetailList);
 
+    @DELETE("menu/detail")
+    Maybe<List<MenuDetail>> deleteMenuDetailList(@Body List<MenuDetail> menuDetailList);
+
     @PUT("menu/detail/")
     Maybe<List<MenuDetail>> updateCategoriesOfMenu(@Query(RequestUpdateCategoriesOfMenu.Schema.menuUuid) String menuUuid,
                                                    @Body List<MenuDetail> menuDetailList);

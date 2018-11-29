@@ -168,10 +168,18 @@ public interface DiskRepository {
     @Query("DELETE FROM " + MenuDetail.Schema.TABLE + " WHERE menu_category_uuid LIKE :categoryUuid")
     void deleteMenuDetailListByCategoryUuid(String categoryUuid);
 
+    @Delete
+    void deleteMenuDetailList(List<MenuDetail> menuDetailList);
+
     @Query("SELECT * FROM " + MenuDetail.Schema.TABLE +
             " WHERE store_uuid LIKE :storeUuid" +
             " AND menu_uuid LIKE :menuUuid")
-    Maybe<List<MenuDetail>> getMenuDetailByStringMenuUuidFromDisk(String storeUuid, String menuUuid);
+    Maybe<List<MenuDetail>> getMenuDetailByStringMenuUuid(String storeUuid, String menuUuid);
+
+    @Query("SELECT * FROM " + MenuDetail.Schema.TABLE +
+            " WHERE menu_category_uuid LIKE :categoryUuid" +
+            " AND menu_uuid LIKE :menuUuid LIMIT 1")
+    Maybe<MenuDetail> getMenuDetailByCategoryUuidAndMenuUuid(String categoryUuid, String menuUuid);
 
     @Query("DELETE FROM " + MenuDetail.Schema.TABLE + " WHERE menu_uuid LIKE :menuUuid")
     void deleteMenuDetailListByMenuUuid(String menuUuid);

@@ -13,7 +13,6 @@ import com.mark.zumo.client.core.entity.MenuCategory;
 import com.mark.zumo.client.core.entity.MenuDetail;
 import com.mark.zumo.client.core.entity.MenuOption;
 import com.mark.zumo.client.core.entity.MenuOptionDetail;
-import com.mark.zumo.client.core.p2p.packet.CombinedResult;
 import com.mark.zumo.client.core.repository.CategoryRepository;
 import com.mark.zumo.client.core.repository.MenuDetailRepository;
 import com.mark.zumo.client.core.repository.MenuRepository;
@@ -30,7 +29,6 @@ import java.util.Set;
 
 import io.reactivex.Maybe;
 import io.reactivex.Observable;
-import io.reactivex.Single;
 import io.reactivex.schedulers.Schedulers;
 
 /**
@@ -222,24 +220,6 @@ public enum MenuManager {
         return false;
     }
 
-    public Maybe<Map<String, List<Menu>>> getMenuListByCategory(String storeUuid) {
-        return menuRepositoryMaybe.flatMapObservable(menuRepository -> menuRepository.getMenuListOfStore(storeUuid))
-                .filter(menuList -> menuList.size() > 0)
-                .flatMap(x -> menuDetailRepositoryMaybe.flatMapObservable(a -> a.getMenuDetailListOfStore(storeUuid)))
-                .flatMapSingle(groupedObservable ->
-                        Single.zip(
-                                Single.just(groupedObservable.getKey()),
-                                groupedObservable.sorted((d1, d2) -> d1.menuSeqNum - d2.menuSeqNum)
-                                        .map(menuDetail -> menuDetail.menuUuid)
-                                        .map(uuid -> menuRepositoryMaybe.blockingGet().getMenuFromDisk(uuid).blockingGet())
-                                        .toList(),
-                                CombinedResult::new
-                        )
-                ).toMap(combinedResult -> combinedResult.t, combinedResult -> combinedResult.r)
-                .toMaybe()
-                .subscribeOn(Schedulers.computation());
-    }
-
     public Maybe<List<Menu>> unCategorizedMenu(String storeUuid) {
         return menuDetailRepositoryMaybe.flatMap(menuDetailRepository -> menuDetailRepository.getMenuDetailListFromDisk(storeUuid)
                 .flatMapObservable(Observable::fromIterable)
@@ -313,7 +293,7 @@ public enum MenuManager {
 
     public Maybe<MenuCategory> createMenuCategory(final String name, final String storeUuid, final int seqNum) {
         return categoryRepositoryMaybe.flatMap(categoryRepository ->
-                categoryRepository.createMenuCategory(new MenuCategory(null, name, storeUuid, seqNum))
+                categoryRepository.createMenuCategory(new MenuCategory("", name, storeUuid, seqNum))
         ).subscribeOn(Schedulers.io());
     }
 
@@ -330,7 +310,39 @@ public enum MenuManager {
                                 .flatMapMaybe(this::getMenuFromApi)
                                 .toList().toMaybe()
                         )
-        );
+        ).subscribeOn(Schedulers.io());
+    }
+
+    public Maybe<List<Menu>> removeMenuDetailListAsMenuList(final MenuCategory menuCategory,
+                                                            final List<Menu> menuList) {
+
+        return menuDetailRepositoryMaybe.flatMap(menuDetailRepository ->
+                Observable.fromIterable(menuList)
+                        .map(menu -> menu.uuid)
+                        .flatMapMaybe(menuUuid -> menuDetailRepository.getMenuDetailByCategoryUuidAndMenuUuidFromDisk(menuCategory.uuid, menuUuid))
+                        .toList().toMaybe()
+                        .flatMap(menuDetailList -> menuDetailRepository.removeMenuDetailList(menuDetailList)
+                                .flatMapObservable(Observable::fromIterable)
+                                .map(menuDetail -> menuDetail.menuUuid)
+                                .flatMapMaybe(this::getMenuFromApi)
+                                .toList().toMaybe())
+        ).subscribeOn(Schedulers.io());
+    }
+
+    public Maybe<List<Menu>> updateMenuDetailSequenceAsMenuList(final MenuCategory menuCategory,
+                                                                final List<Menu> menuList) {
+
+        return menuDetailRepositoryMaybe.flatMap(menuDetailRepository ->
+                Observable.fromIterable(menuList)
+                        .map(menu -> menu.uuid)
+                        .flatMapMaybe(menuUuid -> menuDetailRepository.getMenuDetailByCategoryUuidAndMenuUuidFromDisk(menuCategory.uuid, menuUuid))
+                        .toList().toMaybe()
+                        .flatMap(menuDetailList -> menuDetailRepository.updateMenuDetailSequence(menuCategory.uuid, menuDetailList)
+                                .flatMapObservable(Observable::fromIterable)
+                                .map(menuDetail -> menuDetail.menuUuid)
+                                .flatMapMaybe(this::getMenuFromApi)
+                                .toList().toMaybe())
+        ).subscribeOn(Schedulers.io());
     }
 
     public Maybe<List<MenuCategory>> updateMenuCategoryList(final List<MenuCategory> menuCategoryList) {

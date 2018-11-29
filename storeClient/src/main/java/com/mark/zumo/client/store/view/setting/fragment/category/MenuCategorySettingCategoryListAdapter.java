@@ -7,7 +7,6 @@
 package com.mark.zumo.client.store.view.setting.fragment.category;
 
 import android.annotation.SuppressLint;
-import android.arch.lifecycle.LifecycleOwner;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.annotation.NonNull;
@@ -24,7 +23,6 @@ import android.view.ViewGroup;
 import com.mark.zumo.client.core.entity.MenuCategory;
 import com.mark.zumo.client.store.R;
 import com.mark.zumo.client.store.view.setting.SettingModeSelectee;
-import com.mark.zumo.client.store.viewmodel.MenuSettingViewModel;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -42,8 +40,6 @@ class MenuCategorySettingCategoryListAdapter extends RecyclerView.Adapter<MenuCa
         implements ItemTouchHelperAdapter, SettingModeSelectee {
 
     private final OnSelectCategoryListener onSelectCategoryListener;
-    private final MenuSettingViewModel menuSettingViewModel;
-    private final LifecycleOwner lifecycleOwner;
     private final OnStartDragListener dragStartListener;
 
     private List<MenuCategory> menuCategoryList;
@@ -52,13 +48,9 @@ class MenuCategorySettingCategoryListAdapter extends RecyclerView.Adapter<MenuCa
     private HashSet<Runnable> modeUpdateOperationPool;
 
     MenuCategorySettingCategoryListAdapter(final OnSelectCategoryListener onSelectCategoryListener,
-                                           final MenuSettingViewModel menuSettingViewModel,
-                                           final LifecycleOwner lifecycleOwner,
                                            final OnStartDragListener dragStartListener) {
 
         this.onSelectCategoryListener = onSelectCategoryListener;
-        this.menuSettingViewModel = menuSettingViewModel;
-        this.lifecycleOwner = lifecycleOwner;
         this.dragStartListener = dragStartListener;
 
         menuCategoryList = new ArrayList<>();
@@ -179,20 +171,11 @@ class MenuCategorySettingCategoryListAdapter extends RecyclerView.Adapter<MenuCa
 
     @Override
     public void onDrop() {
-        saveCategoryListSeq();
-    }
-
-    private void saveCategoryListSeq() {
         for (MenuCategory menuCategory : menuCategoryList) {
             menuCategory.seqNum = menuCategoryList.indexOf(menuCategory);
         }
 
         onSelectCategoryListener.onReorderMenuCategory(menuCategoryList);
-    }
-
-    private void onLoadMenuCategoryList(List<MenuCategory> menuCategoryList) {
-        this.menuCategoryList = menuCategoryList;
-        notifyDataSetChanged();
     }
 
     @Override

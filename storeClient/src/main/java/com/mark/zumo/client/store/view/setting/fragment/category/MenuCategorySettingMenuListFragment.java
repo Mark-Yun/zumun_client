@@ -22,6 +22,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import com.mark.zumo.client.core.entity.Menu;
 import com.mark.zumo.client.core.entity.MenuCategory;
@@ -55,7 +56,7 @@ public class MenuCategorySettingMenuListFragment extends Fragment implements OnS
     private ItemTouchHelper itemTouchHelper;
     private MenuCategorySettingMenuListAdapter menuListAdapter;
 
-    private List<MenuCategory> selectedMenuCategoryList;
+    private List<Menu> selectedMenuList;
     private MenuCategory selectedMenuCategory;
 
     @Override
@@ -63,7 +64,7 @@ public class MenuCategorySettingMenuListFragment extends Fragment implements OnS
         super.onCreate(savedInstanceState);
 
         menuSettingViewModel = ViewModelProviders.of(this).get(MenuSettingViewModel.class);
-        selectedMenuCategoryList = new ArrayList<>();
+        selectedMenuList = new ArrayList<>();
     }
 
     public void onSelectMenuCategory(final MenuCategory menuCategory) {
@@ -74,7 +75,11 @@ public class MenuCategorySettingMenuListFragment extends Fragment implements OnS
     }
 
     private void updateButtonBoxVisibility() {
-        boolean canShowButtonBox = selectedMenuCategory != null && !selectedMenuCategory.uuid.isEmpty();
+        SettingModeSelectee.SettingMode settingMode = menuListAdapter.getMode();
+        boolean isInAnyMode = !settingMode.isNone();
+
+        boolean canShowButtonBox = selectedMenuCategory != null && !selectedMenuCategory.uuid.isEmpty()
+                && !isInAnyMode;
         buttonBox.setVisibility(canShowButtonBox ? View.VISIBLE : View.GONE);
     }
 
@@ -84,20 +89,19 @@ public class MenuCategorySettingMenuListFragment extends Fragment implements OnS
         View view = inflater.inflate(R.layout.fragment_setting_menu_category_menu_list, container, false);
         ButterKnife.bind(this, view);
 
-        updateButtonBoxVisibility();
         inflateRecyclerView();
+        updateButtonBoxVisibility();
         return view;
     }
 
     private void startAnyMode() {
-        selectedMenuCategoryList.clear();
+        selectedMenuList.clear();
         updateMenuBar();
     }
 
     private void updateMenuBar() {
         SettingModeSelectee.SettingMode settingMode = menuListAdapter.getMode();
         boolean isInAnyMode = !settingMode.isNone();
-        buttonBox.setVisibility(!isInAnyMode ? View.VISIBLE : View.GONE);
         updateButtonBoxVisibility();
         modeDescriptionLayout.setVisibility(isInAnyMode ? View.VISIBLE : View.GONE);
         if (isInAnyMode) {
@@ -131,7 +135,7 @@ public class MenuCategorySettingMenuListFragment extends Fragment implements OnS
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
         menuRecyclerView.setLayoutManager(layoutManager);
 
-        menuListAdapter = new MenuCategorySettingMenuListAdapter(getListener());
+        menuListAdapter = new MenuCategorySettingMenuListAdapter(getListener(), this);
         menuRecyclerView.setAdapter(menuListAdapter);
 
         ItemTouchHelper.Callback callback = new CategorySettingTouchHelperCallback(menuListAdapter);
@@ -143,8 +147,9 @@ public class MenuCategorySettingMenuListFragment extends Fragment implements OnS
     private MenuCategorySettingMenuListAdapter.SelectMenuListener getListener() {
         return new MenuCategorySettingMenuListAdapter.SelectMenuListener() {
             @Override
-            public void onModifyMenuList(final List<Menu> menuList) {
-
+            public void onReorderMenuList(final List<Menu> menuUuidList) {
+                selectedMenuList.clear();
+                selectedMenuList.addAll(menuUuidList);
             }
 
             @Override
@@ -153,8 +158,12 @@ public class MenuCategorySettingMenuListFragment extends Fragment implements OnS
             }
 
             @Override
-            public void onSelectMenuList(final List<Menu> menuList) {
-
+            public void onSelectMenuList(final Menu menu, final boolean isChecked) {
+                if (isChecked) {
+                    selectedMenuList.add(menu);
+                } else {
+                    selectedMenuList.remove(menu);
+                }
             }
         };
     }
@@ -205,14 +214,24 @@ public class MenuCategorySettingMenuListFragment extends Fragment implements OnS
 
     @OnClick(R.id.mode_confirm_button)
     void onClickModeConfirmButton() {
-        Log.d(TAG, "onClickModeConfirmButton: selectedMenuCategoryList=" + selectedMenuCategoryList);
-        if (!selectedMenuCategoryList.isEmpty()) {
+        Log.d(TAG, "onClickModeConfirmButton: selectedMenuList=" + selectedMenuList);
+        if (!selectedMenuList.isEmpty()) {
             switch (menuListAdapter.getMode()) {
                 case DELETE_MODE:
+                    menuSettingViewModel.removeMenuDetailList(selectedMenuCategory, new ArrayList<>(selectedMenuList))
+                            .observe(this, menuListAdapter::onRemoveMenuList);
+                    break;
+                case REORDER_MODE:
+                    menuSettingViewModel.updateMenuDetailSequence(selectedMenuCategory, new ArrayList<>(selectedMenuList))
+                            .observe(this, this::onReorderMenuList);
                     break;
             }
         }
         menuListAdapter.setMode(SettingModeSelectee.SettingMode.NONE);
         startAnyMode();
+    }
+
+    private void onReorderMenuList(List<Menu> reorderedMenuList) {
+        Toast.makeText(getActivity(), "Updated", Toast.LENGTH_SHORT).show();
     }
 }

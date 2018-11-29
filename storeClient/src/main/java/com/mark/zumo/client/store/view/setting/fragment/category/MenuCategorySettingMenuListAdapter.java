@@ -6,6 +6,7 @@
 
 package com.mark.zumo.client.store.view.setting.fragment.category;
 
+import android.annotation.SuppressLint;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.annotation.NonNull;
@@ -14,6 +15,7 @@ import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.AppCompatTextView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -22,6 +24,7 @@ import com.mark.zumo.client.store.R;
 import com.mark.zumo.client.store.view.setting.SettingModeSelectee;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -36,14 +39,17 @@ public class MenuCategorySettingMenuListAdapter extends RecyclerView.Adapter<Men
         implements ItemTouchHelperAdapter, SettingModeSelectee {
 
     private final SelectMenuListener listener;
+    private final OnStartDragListener dragStartListener;
 
     private SettingMode settingMode = SettingMode.NONE;
     private HashSet<Runnable> modeUpdateOperationPool;
 
     private List<Menu> menuList;
 
-    MenuCategorySettingMenuListAdapter(final SelectMenuListener listener) {
+    MenuCategorySettingMenuListAdapter(final SelectMenuListener listener,
+                                       final OnStartDragListener dragStartListener) {
         this.listener = listener;
+        this.dragStartListener = dragStartListener;
         menuList = new ArrayList<>();
         modeUpdateOperationPool = new HashSet<>();
     }
@@ -71,10 +77,21 @@ public class MenuCategorySettingMenuListAdapter extends RecyclerView.Adapter<Men
         return new ViewHolder(view);
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     public void onBindViewHolder(@NonNull final ViewHolder holder, final int position) {
         Menu menu = menuList.get(position);
         holder.name.setText(menu.name);
+
+        holder.reorder.setOnTouchListener((v, event) -> {
+            int action = event.getAction();
+            switch (action) {
+                case MotionEvent.ACTION_DOWN:
+                    dragStartListener.onStartDrag(holder);
+                    break;
+            }
+            return false;
+        });
 
         Runnable modeUpdateOperation = () -> {
             holder.reorder.setVisibility(settingMode.isReorderMode() ? View.VISIBLE : View.GONE);
@@ -83,6 +100,8 @@ public class MenuCategorySettingMenuListAdapter extends RecyclerView.Adapter<Men
 
         modeUpdateOperation.run();
         modeUpdateOperationPool.add(modeUpdateOperation);
+
+        holder.checkBox.setOnCheckedChangeListener((buttonView, isChecked) -> listener.onSelectMenuList(menu, isChecked));
     }
 
     @Override
@@ -90,9 +109,23 @@ public class MenuCategorySettingMenuListAdapter extends RecyclerView.Adapter<Men
         return menuList.size();
     }
 
+    void onRemoveMenuList(final List<Menu> removedMenuList) {
+        for (Menu removedMenu : removedMenuList) {
+            List<Menu> tmpMenuList = new ArrayList<>(this.menuList);
+            for (int i = 0; i < tmpMenuList.size(); i++) {
+                if (this.menuList.get(i).uuid.equals(removedMenu.uuid)) {
+                    this.menuList.remove(i);
+                    notifyItemRemoved(i);
+                    break;
+                }
+            }
+        }
+    }
+
     @Override
     public void onItemMove(final int fromPosition, final int toPosition) {
-
+        Collections.swap(menuList, fromPosition, toPosition);
+        notifyItemMoved(fromPosition, toPosition);
     }
 
     @Override
@@ -102,7 +135,7 @@ public class MenuCategorySettingMenuListAdapter extends RecyclerView.Adapter<Men
 
     @Override
     public void onDrop() {
-
+        listener.onReorderMenuList(menuList);
     }
 
     @Override
@@ -130,9 +163,9 @@ public class MenuCategorySettingMenuListAdapter extends RecyclerView.Adapter<Men
     }
 
     interface SelectMenuListener {
-        void onModifyMenuList(List<Menu> menuList);
+        void onReorderMenuList(List<Menu> menu);
         void onDeleteMenuList(List<Menu> menuList);
-        void onSelectMenuList(List<Menu> menuList);
+        void onSelectMenuList(Menu menu, boolean isChecked);
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder {

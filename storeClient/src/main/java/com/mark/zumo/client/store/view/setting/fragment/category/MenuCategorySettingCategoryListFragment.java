@@ -132,7 +132,7 @@ public class MenuCategorySettingCategoryListFragment extends Fragment implements
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
         categoryRecyclerView.setLayoutManager(layoutManager);
 
-        menuCategoryMenuCategorySettingCategoryListAdapter = new MenuCategorySettingCategoryListAdapter(getOnSelectCategoryListener(), menuSettingViewModel, this, this);
+        menuCategoryMenuCategorySettingCategoryListAdapter = new MenuCategorySettingCategoryListAdapter(getOnSelectCategoryListener(), this);
         categoryRecyclerView.setAdapter(menuCategoryMenuCategorySettingCategoryListAdapter);
 
         ItemTouchHelper.Callback callback = new CategorySettingTouchHelperCallback(menuCategoryMenuCategorySettingCategoryListAdapter);
