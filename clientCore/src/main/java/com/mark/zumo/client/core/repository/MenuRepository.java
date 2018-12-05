@@ -101,6 +101,11 @@ public class MenuRepository {
                 .doOnSuccess(diskRepository::insertMenuOptionCategory);
     }
 
+    public Maybe<List<MenuOptionDetail>> createMenuOptionDetailList(List<MenuOptionDetail> menuOptionDetailList) {
+        return networkRepository.createMenuOptionDetailList(menuOptionDetailList)
+                .doOnSuccess(diskRepository::insertMenuOptionDetailList);
+    }
+
     public Observable<GroupedObservable<String, MenuOptionDetail>> getMenuOptionDetailListByStoreUuid(String storeUuid) {
         Maybe<List<MenuOptionDetail>> menuOptionListDB = diskRepository.getMenuOptionDetailListByMenuOptionCategoryUuid(storeUuid);
         Maybe<List<MenuOptionDetail>> menuOptionListApi = networkRepository.getMenuOptionDetailListByMenuOptionCategoryUuid(storeUuid)

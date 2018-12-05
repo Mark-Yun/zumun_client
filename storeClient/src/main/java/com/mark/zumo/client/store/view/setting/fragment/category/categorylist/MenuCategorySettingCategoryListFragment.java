@@ -223,7 +223,7 @@ public class MenuCategorySettingCategoryListFragment extends Fragment implements
     }
 
     @OnClick(R.id.add)
-    void addClick() {
+    void onAddClick() {
         Context context = getContext();
         AppCompatEditText editText = new AppCompatEditText(context);
 

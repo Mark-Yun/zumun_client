@@ -185,6 +185,24 @@ public enum MenuOptionManager {
         ).subscribeOn(Schedulers.io());
     }
 
+    public Maybe<List<Menu>> createMenuOptionDetailListAsMenu(final String storeUuid,
+                                                              final String menuOptionCategoryUuid,
+                                                              final List<Menu> menuList) {
+
+        return menuRepositoryMaybe.flatMap(menuRepository ->
+                Observable.fromIterable(menuList)
+                        .map(menu -> menu.uuid)
+                        .map(menuUuid -> MenuOptionDetail.create(storeUuid, menuOptionCategoryUuid, menuUuid))
+                        .toList().toMaybe()
+                        .flatMap(menuRepository::createMenuOptionDetailList)
+                        .flatMap(menuOptionDetailList -> Observable.fromIterable(menuOptionDetailList)
+                                .map(menuOptionDetail -> menuOptionDetail.menuUuid)
+                                .flatMapMaybe(menuRepository::getMenuFromDisk)
+                                .toList().toMaybe()
+                        ).subscribeOn(Schedulers.io())
+        );
+    }
+
     public Maybe<MenuOptionCategory> createMenuOptionCategory(String storeUuid, String name) {
         MenuOptionCategory menuOptionCategory = MenuOptionCategory.create(name, storeUuid);
         return menuRepositoryMaybe.flatMap(menuRepository -> menuRepository.createMenuOptionCategory(menuOptionCategory))

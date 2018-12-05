@@ -43,6 +43,7 @@ import com.mark.zumo.client.store.view.setting.SettingModeSelectee;
 import com.mark.zumo.client.store.view.setting.fragment.menu.selector.MenuSelectorDialogFragment;
 import com.mark.zumo.client.store.view.util.draghelper.reorder.DragNDropReorderHelperCallback;
 import com.mark.zumo.client.store.view.util.draghelper.reorder.OnStartDragListener;
+import com.mark.zumo.client.store.viewmodel.MenuOptionSettingViewModel;
 import com.mark.zumo.client.store.viewmodel.MenuSettingViewModel;
 
 import java.util.ArrayList;
@@ -67,6 +68,7 @@ public class MenuOptionSettingMenuListFragment extends Fragment implements OnSta
     @BindView(R.id.mode_description_layout) ConstraintLayout modeDescriptionLayout;
 
     private MenuSettingViewModel menuSettingViewModel;
+    private MenuOptionSettingViewModel menuOptionSettingViewModel;
     private ItemTouchHelper itemTouchHelper;
     private MenuOptionSettingMenuListAdapter menuListAdapter;
 
@@ -78,6 +80,7 @@ public class MenuOptionSettingMenuListFragment extends Fragment implements OnSta
         super.onCreate(savedInstanceState);
 
         menuSettingViewModel = ViewModelProviders.of(this).get(MenuSettingViewModel.class);
+        menuOptionSettingViewModel = ViewModelProviders.of(this).get(MenuOptionSettingViewModel.class);
         selectedMenuList = new ArrayList<>();
     }
 
@@ -204,7 +207,8 @@ public class MenuOptionSettingMenuListFragment extends Fragment implements OnSta
     }
 
     private void onMenuListSelectedAdditionally(List<Menu> menuList) {
-//        menuSettingViewModel.createMenuDetailListAsMenuList(selectedMenuOptionCategory, menuList).observe(this, menuListAdapter::onMenuDetailCreated);
+        menuOptionSettingViewModel.createMenuOptionDetailList(selectedMenuOptionCategory.uuid, new ArrayList<>(menuList))
+                .observe(this, menuListAdapter::onMenuDetailCreated);
     }
 
     @OnClick(R.id.reorder)

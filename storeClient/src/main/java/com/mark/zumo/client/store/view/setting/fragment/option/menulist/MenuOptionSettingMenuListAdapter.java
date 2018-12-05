@@ -77,7 +77,9 @@ public class MenuOptionSettingMenuListAdapter extends RecyclerView.Adapter<MenuO
             return;
         }
 
-        this.menuList = menuList;
+        this.menuList.clear();
+        this.menuList.addAll(menuList);
+
         notifyDataSetChanged();
     }
 

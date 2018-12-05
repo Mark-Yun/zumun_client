@@ -43,6 +43,10 @@ public class MenuOptionDetail implements Serializable {
         this.seqNum = seqNum;
     }
 
+    public static MenuOptionDetail create(final String storeUuid, final String menuOptionCategoryUuid, final String menuUuid) {
+        return new MenuOptionDetail(0, menuUuid, menuOptionCategoryUuid, storeUuid, 0);
+    }
+
     @Override
     public String toString() {
         return EntityHelper.toString(this);

@@ -18,6 +18,7 @@ import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.support.annotation.NonNull;
 
+import com.mark.zumo.client.core.entity.Menu;
 import com.mark.zumo.client.core.entity.MenuCategory;
 import com.mark.zumo.client.core.entity.MenuOption;
 import com.mark.zumo.client.core.entity.MenuOptionCategory;
@@ -72,6 +73,22 @@ public class MenuOptionSettingViewModel extends AndroidViewModel {
         sessionManager.getSessionStore()
                 .map(store -> store.uuid)
                 .flatMap(storeUuid -> menuOptionManager.createMenuOptionCategory(storeUuid, name))
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnSubscribe(disposables::add)
+                .doOnSuccess(liveData::setValue)
+                .subscribe();
+
+        return liveData;
+    }
+
+    public LiveData<List<Menu>> createMenuOptionDetailList(final String menuOptionCategoryUuid,
+                                                           final List<Menu> menuList) {
+
+        MutableLiveData<List<Menu>> liveData = new MutableLiveData<>();
+
+        sessionManager.getSessionStore()
+                .map(store -> store.uuid)
+                .flatMap(storeUuid -> menuOptionManager.createMenuOptionDetailListAsMenu(storeUuid, menuOptionCategoryUuid, menuList))
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSubscribe(disposables::add)
                 .doOnSuccess(liveData::setValue)

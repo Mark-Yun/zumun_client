@@ -115,6 +115,8 @@ public interface NetworkRepository {
     Maybe<List<MenuOption>> deleteMenuOptions(final @Body List<MenuOption> menuOptionList);
 
 
+    @POST("menu/option/detail")
+    Maybe<List<MenuOptionDetail>> createMenuOptionDetailList(@Body List<MenuOptionDetail> menuOptionDetailList);
 
     @GET("menu/option/detail")
     Maybe<List<MenuOptionDetail>> getMenuOptionDetailListByMenuOptionCategoryUuid(@Query(MenuOptionDetail.Schema.menuOptionCategoryUuid) String menuOptionUuid);
