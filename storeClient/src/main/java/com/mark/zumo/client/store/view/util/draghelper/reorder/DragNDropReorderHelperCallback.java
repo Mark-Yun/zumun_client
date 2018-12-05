@@ -4,7 +4,13 @@
  * Proprietary and confidential
  */
 
-package com.mark.zumo.client.store.view.setting.fragment.category;
+/*
+ * Copyright (c) 2018. Mark Soft - All Rights Reserved
+ * Unauthorized copying of this file, via any medium is strictly prohibited
+ * Proprietary and confidential
+ */
+
+package com.mark.zumo.client.store.view.util.draghelper.reorder;
 
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
@@ -12,12 +18,12 @@ import android.support.v7.widget.helper.ItemTouchHelper;
 /**
  * Created by mark on 18. 6. 28.
  */
-public class CategorySettingTouchHelperCallback extends ItemTouchHelper.Callback {
+public class DragNDropReorderHelperCallback extends ItemTouchHelper.Callback {
 
     private final ItemTouchHelperAdapter adapter;
     private boolean isMoved;
 
-    CategorySettingTouchHelperCallback(final ItemTouchHelperAdapter adapter) {
+    public DragNDropReorderHelperCallback(final ItemTouchHelperAdapter adapter) {
         this.adapter = adapter;
     }
 

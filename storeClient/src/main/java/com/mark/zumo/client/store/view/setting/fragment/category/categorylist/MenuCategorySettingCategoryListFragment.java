@@ -10,7 +10,13 @@
  * Proprietary and confidential
  */
 
-package com.mark.zumo.client.store.view.setting.fragment.category;
+/*
+ * Copyright (c) 2018. Mark Soft - All Rights Reserved
+ * Unauthorized copying of this file, via any medium is strictly prohibited
+ * Proprietary and confidential
+ */
+
+package com.mark.zumo.client.store.view.setting.fragment.category.categorylist;
 
 import android.app.AlertDialog;
 import android.arch.lifecycle.ViewModelProviders;
@@ -37,6 +43,8 @@ import android.widget.Toast;
 import com.mark.zumo.client.core.entity.MenuCategory;
 import com.mark.zumo.client.store.R;
 import com.mark.zumo.client.store.view.setting.SettingModeSelectee;
+import com.mark.zumo.client.store.view.util.draghelper.reorder.DragNDropReorderHelperCallback;
+import com.mark.zumo.client.store.view.util.draghelper.reorder.OnStartDragListener;
 import com.mark.zumo.client.store.viewmodel.MenuSettingViewModel;
 
 import java.util.ArrayList;
@@ -135,7 +143,7 @@ public class MenuCategorySettingCategoryListFragment extends Fragment implements
         menuCategoryMenuCategorySettingCategoryListAdapter = new MenuCategorySettingCategoryListAdapter(getOnSelectCategoryListener(), this);
         categoryRecyclerView.setAdapter(menuCategoryMenuCategorySettingCategoryListAdapter);
 
-        ItemTouchHelper.Callback callback = new CategorySettingTouchHelperCallback(menuCategoryMenuCategorySettingCategoryListAdapter);
+        ItemTouchHelper.Callback callback = new DragNDropReorderHelperCallback(menuCategoryMenuCategorySettingCategoryListAdapter);
         itemTouchHelper = new ItemTouchHelper(callback);
         itemTouchHelper.attachToRecyclerView(categoryRecyclerView);
 

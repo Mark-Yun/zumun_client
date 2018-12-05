@@ -4,7 +4,13 @@
  * Proprietary and confidential
  */
 
-package com.mark.zumo.client.store.view.setting.fragment.category;
+/*
+ * Copyright (c) 2018. Mark Soft - All Rights Reserved
+ * Unauthorized copying of this file, via any medium is strictly prohibited
+ * Proprietary and confidential
+ */
+
+package com.mark.zumo.client.store.view.setting.fragment.category.categorylist;
 
 import android.annotation.SuppressLint;
 import android.os.Handler;
@@ -23,6 +29,8 @@ import android.view.ViewGroup;
 import com.mark.zumo.client.core.entity.MenuCategory;
 import com.mark.zumo.client.store.R;
 import com.mark.zumo.client.store.view.setting.SettingModeSelectee;
+import com.mark.zumo.client.store.view.util.draghelper.reorder.ItemTouchHelperAdapter;
+import com.mark.zumo.client.store.view.util.draghelper.reorder.OnStartDragListener;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -151,6 +159,29 @@ class MenuCategorySettingCategoryListAdapter extends RecyclerView.Adapter<MenuCa
         //Empty Body
     }
 
+    @Override
+    public void onDrop() {
+        int unCategorizedCategoryIndex = -1;
+        for (MenuCategory menuCategory : menuCategoryList) {
+            menuCategory.seqNum = menuCategoryList.indexOf(menuCategory);
+            if (TextUtils.isEmpty(menuCategory.name)) {
+                unCategorizedCategoryIndex = menuCategoryList.indexOf(menuCategory);
+            }
+        }
+
+        List<MenuCategory> reorderedMenuCategoryList = new ArrayList<>(menuCategoryList);
+        if (unCategorizedCategoryIndex > -1) {
+            reorderedMenuCategoryList.remove(unCategorizedCategoryIndex);
+        }
+
+        onSelectCategoryListener.onReorderMenuCategory(reorderedMenuCategoryList);
+    }
+
+    @Override
+    public int getItemCount() {
+        return menuCategoryList.size();
+    }
+
     void onCreateMenuCategory(MenuCategory menuCategory) {
         menuCategoryList.add(menuCategoryList.size() - 1, menuCategory);
         notifyItemInserted(menuCategoryList.size() - 2);
@@ -167,20 +198,6 @@ class MenuCategorySettingCategoryListAdapter extends RecyclerView.Adapter<MenuCa
                 }
             }
         }
-    }
-
-    @Override
-    public void onDrop() {
-        for (MenuCategory menuCategory : menuCategoryList) {
-            menuCategory.seqNum = menuCategoryList.indexOf(menuCategory);
-        }
-
-        onSelectCategoryListener.onReorderMenuCategory(menuCategoryList);
-    }
-
-    @Override
-    public int getItemCount() {
-        return menuCategoryList.size();
     }
 
     interface OnSelectCategoryListener {

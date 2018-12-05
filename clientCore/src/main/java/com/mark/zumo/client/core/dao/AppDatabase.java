@@ -14,6 +14,7 @@ import com.mark.zumo.client.core.entity.Menu;
 import com.mark.zumo.client.core.entity.MenuCategory;
 import com.mark.zumo.client.core.entity.MenuDetail;
 import com.mark.zumo.client.core.entity.MenuOption;
+import com.mark.zumo.client.core.entity.MenuOptionCategory;
 import com.mark.zumo.client.core.entity.MenuOptionDetail;
 import com.mark.zumo.client.core.entity.MenuOrder;
 import com.mark.zumo.client.core.entity.OrderDetail;
@@ -30,7 +31,8 @@ import com.mark.zumo.client.core.payment.kakao.entity.PaymentToken;
         entities = {
                 Menu.class, MenuOrder.class, Store.class, GuestUser.class,
                 OrderDetail.class, MenuOption.class, MenuOptionDetail.class, PaymentToken.class,
-                MenuCategory.class, MenuDetail.class, SnsToken.class, StoreUserSession.class
+                MenuCategory.class, MenuDetail.class, SnsToken.class, StoreUserSession.class,
+                MenuOptionCategory.class
         }, version = 1)
 @TypeConverters({Converters.class})
 public abstract class AppDatabase extends RoomDatabase {

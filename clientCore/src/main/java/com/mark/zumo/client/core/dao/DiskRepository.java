@@ -17,6 +17,7 @@ import com.mark.zumo.client.core.entity.Menu;
 import com.mark.zumo.client.core.entity.MenuCategory;
 import com.mark.zumo.client.core.entity.MenuDetail;
 import com.mark.zumo.client.core.entity.MenuOption;
+import com.mark.zumo.client.core.entity.MenuOptionCategory;
 import com.mark.zumo.client.core.entity.MenuOptionDetail;
 import com.mark.zumo.client.core.entity.MenuOrder;
 import com.mark.zumo.client.core.entity.OrderDetail;
@@ -98,10 +99,31 @@ public interface DiskRepository {
     void insertMenuOptionList(List<MenuOption> menuOptions);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
+    void insertMenuOptionCategoryList(List<MenuOptionCategory> menuOptionCategoryList);
+
+    @Query("DELETE FROM " + MenuOptionCategory.Schema.table + " WHERE store_uuid LIKE :storeUuid")
+    void deleteMenuOptionCategoryListByStoreUuid(String storeUuid);
+
+    @Delete
+    void deleteMenuOptionCategoryList(List<MenuOptionCategory> menuOptionCategoryList);
+
+    @Delete
+    void deleteMenuOptionList(List<MenuOption> menuOptionList);
+
+    @Query("SELECT * FROM " + MenuOptionCategory.Schema.table + " WHERE store_uuid LIKE :storeUuid")
+    Maybe<List<MenuOptionCategory>> getMenuOptionCategoryListByStoreUuid(String storeUuid);
+
+    @Query("SELECT * FROM " + MenuOptionCategory.Schema.table + " WHERE menu_option_category_uuid LIKE :menuOptionCategoryUuid")
+    Maybe<MenuOptionCategory> getMenuOptionCategory(String menuOptionCategoryUuid);
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertMenuOptionDetailList(List<MenuOptionDetail> menuOptionDetails);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertMenuOption(MenuOption menuOption);
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    void insertMenuOptionCategory(MenuOptionCategory menuOptionCategory);
 
 
     @Query("SELECT * FROM " + Menu.MENU_TABLE + " WHERE menu_uuid LIKE :uuid LIMIT 1")
@@ -164,6 +186,9 @@ public interface DiskRepository {
 
     @Query("SELECT * FROM " + MenuDetail.Schema.TABLE + " WHERE menu_category_uuid LIKE :categoryUuid")
     Maybe<List<MenuDetail>> getMenuDetailByCategoryUuid(String categoryUuid);
+
+    @Query("SELECT * FROM " + MenuDetail.Schema.TABLE + " WHERE menu_detail_uuid LIKE :menuDetailUuid")
+    Maybe<MenuDetail> getMenuDetail(String menuDetailUuid);
 
     @Query("DELETE FROM " + MenuDetail.Schema.TABLE + " WHERE menu_category_uuid LIKE :categoryUuid")
     void deleteMenuDetailListByCategoryUuid(String categoryUuid);

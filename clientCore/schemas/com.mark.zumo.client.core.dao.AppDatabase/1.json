@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "a3fa0ead6c2db3f7905aa97135cee73e",
+    "identityHash": "e406ee13a84d20316027dbf0c3e13d8f",
     "entities": [
       {
         "tableName": "menu",
@@ -324,13 +324,19 @@
       },
       {
         "tableName": "menu_option_detail",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `menu_option_category_uuid` TEXT, `store_uuid` TEXT, `menu_option_seq_num` INTEGER NOT NULL, PRIMARY KEY(`id`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `menu_uuid` TEXT, `menu_option_category_uuid` TEXT, `store_uuid` TEXT, `menu_option_seq_num` INTEGER NOT NULL, PRIMARY KEY(`id`))",
         "fields": [
           {
             "fieldPath": "id",
             "columnName": "id",
             "affinity": "INTEGER",
             "notNull": true
+          },
+          {
+            "fieldPath": "menuUuid",
+            "columnName": "menu_uuid",
+            "affinity": "TEXT",
+            "notNull": false
           },
           {
             "fieldPath": "menuOptionCategoryUuid",
@@ -400,7 +406,7 @@
       },
       {
         "tableName": "menu_category",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`menu_category_uuid` TEXT NOT NULL, `menu_category_name` TEXT, `store_uuid` TEXT, `menu_category_seq_num` INTEGER NOT NULL, PRIMARY KEY(`menu_category_uuid`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`menu_category_uuid` TEXT NOT NULL, `menu_category_name` TEXT, `store_uuid` TEXT, `menu_option_value_seq_num` INTEGER NOT NULL, PRIMARY KEY(`menu_category_uuid`))",
         "fields": [
           {
             "fieldPath": "uuid",
@@ -422,7 +428,7 @@
           },
           {
             "fieldPath": "seqNum",
-            "columnName": "menu_category_seq_num",
+            "columnName": "menu_option_value_seq_num",
             "affinity": "INTEGER",
             "notNull": true
           }
@@ -438,12 +444,12 @@
       },
       {
         "tableName": "menu_detail",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `menu_uuid` TEXT, `menu_category_uuid` TEXT, `menu_seq_num` INTEGER NOT NULL, `store_uuid` TEXT, PRIMARY KEY(`id`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`menu_detail_uuid` TEXT NOT NULL, `menu_uuid` TEXT, `menu_category_uuid` TEXT, `menu_seq_num` INTEGER NOT NULL, `store_uuid` TEXT, PRIMARY KEY(`menu_detail_uuid`))",
         "fields": [
           {
-            "fieldPath": "id",
-            "columnName": "id",
-            "affinity": "INTEGER",
+            "fieldPath": "uuid",
+            "columnName": "menu_detail_uuid",
+            "affinity": "TEXT",
             "notNull": true
           },
           {
@@ -473,7 +479,7 @@
         ],
         "primaryKey": {
           "columnNames": [
-            "id"
+            "menu_detail_uuid"
           ],
           "autoGenerate": false
         },
@@ -555,11 +561,43 @@
         },
         "indices": [],
         "foreignKeys": []
+      },
+      {
+        "tableName": "menu_option_category",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`menu_option_category_uuid` TEXT NOT NULL, `menu_option_name` TEXT, `store_uuid` TEXT, PRIMARY KEY(`menu_option_category_uuid`))",
+        "fields": [
+          {
+            "fieldPath": "uuid",
+            "columnName": "menu_option_category_uuid",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "name",
+            "columnName": "menu_option_name",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "storeUuid",
+            "columnName": "store_uuid",
+            "affinity": "TEXT",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "menu_option_category_uuid"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [],
+        "foreignKeys": []
       }
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"a3fa0ead6c2db3f7905aa97135cee73e\")"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"e406ee13a84d20316027dbf0c3e13d8f\")"
     ]
   }
 }

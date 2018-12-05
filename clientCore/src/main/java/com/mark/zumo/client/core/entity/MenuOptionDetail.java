@@ -26,6 +26,8 @@ public class MenuOptionDetail implements Serializable {
 
     @PrimaryKey @SerializedName(Schema.id) @ColumnInfo(name = Schema.id)
     public final long id;
+    @SerializedName(Schema.menuUuid) @ColumnInfo(name = Schema.menuUuid)
+    public final String menuUuid;
     @SerializedName(Schema.menuOptionCategoryUuid) @ColumnInfo(name = Schema.menuOptionCategoryUuid)
     public final String menuOptionCategoryUuid;
     @SerializedName(Schema.storeUuid) @ColumnInfo(name = Schema.storeUuid)
@@ -33,8 +35,9 @@ public class MenuOptionDetail implements Serializable {
     @SerializedName(Schema.seqNum) @ColumnInfo(name = Schema.seqNum)
     public final int seqNum;
 
-    public MenuOptionDetail(final long id, final String menuOptionCategoryUuid, final String storeUuid, final int seqNum) {
+    public MenuOptionDetail(final long id, final String menuUuid, final String menuOptionCategoryUuid, final String storeUuid, final int seqNum) {
         this.id = id;
+        this.menuUuid = menuUuid;
         this.menuOptionCategoryUuid = menuOptionCategoryUuid;
         this.storeUuid = storeUuid;
         this.seqNum = seqNum;
@@ -54,6 +57,7 @@ public class MenuOptionDetail implements Serializable {
         String table = "menu_option_detail";
         String id = "id";
         String menuOptionCategoryUuid = "menu_option_category_uuid";
+        String menuUuid = "menu_uuid";
         String storeUuid = "store_uuid";
         String seqNum = "menu_option_seq_num";
     }

@@ -10,7 +10,13 @@
  * Proprietary and confidential
  */
 
-package com.mark.zumo.client.store.view.setting.fragment.option;
+/*
+ * Copyright (c) 2018. Mark Soft - All Rights Reserved
+ * Unauthorized copying of this file, via any medium is strictly prohibited
+ * Proprietary and confidential
+ */
+
+package com.mark.zumo.client.store.view.setting.fragment.option.optionlist;
 
 import android.os.Handler;
 import android.os.Looper;
@@ -30,9 +36,9 @@ import com.mark.zumo.client.store.view.setting.SettingModeSelectee;
 
 import java.text.NumberFormat;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -40,25 +46,29 @@ import butterknife.ButterKnife;
 /**
  * Created by mark on 18. 11. 11.
  */
-class MenuOptionDetailAdapter extends RecyclerView.Adapter<MenuOptionDetailAdapter.ViewHolder>
+class MenuOptionSettingOptionDetailListAdapter extends RecyclerView.Adapter<MenuOptionSettingOptionDetailListAdapter.ViewHolder>
         implements SettingModeSelectee {
 
     private final MenuOptionSelectListener menuOptionSelectListener;
-    final private HashSet<Runnable> modeUpdateOperationPool;
-    final private HashSet<CheckBox> checkBoxSet;
+    final private List<Runnable> modeUpdateOperationPool;
+    final private List<CheckBox> checkBoxSet;
     private SettingMode settingMode = SettingMode.NONE;
     private List<MenuOption> menuOptionList;
 
-    MenuOptionDetailAdapter(@NonNull MenuOptionSelectListener menuOptionSelectListener) {
+    MenuOptionSettingOptionDetailListAdapter(@NonNull MenuOptionSelectListener menuOptionSelectListener) {
         this.menuOptionSelectListener = menuOptionSelectListener;
 
         menuOptionList = new ArrayList<>();
-        modeUpdateOperationPool = new HashSet<>();
-        checkBoxSet = new HashSet<>();
+        modeUpdateOperationPool = new CopyOnWriteArrayList<>();
+        checkBoxSet = new CopyOnWriteArrayList<>();
     }
 
     void setMenuOptionList(final List<MenuOption> menuOptionList) {
-        this.menuOptionList = menuOptionList;
+        if (menuOptionList == null || menuOptionList.isEmpty()) {
+            return;
+        }
+        this.menuOptionList.clear();
+        this.menuOptionList.addAll(menuOptionList);
         notifyDataSetChanged();
     }
 
@@ -139,6 +149,14 @@ class MenuOptionDetailAdapter extends RecyclerView.Adapter<MenuOptionDetailAdapt
                 iterator.next().run();
             }
         });
+    }
+
+    void onMenuOptionListRemoved(List<MenuOption> removedMenuOptionList) {
+
+    }
+
+    void onMenuOptionListUpdated(List<MenuOption> updatedMenuOptionList) {
+
     }
 
     interface MenuOptionSelectListener {

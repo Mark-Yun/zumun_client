@@ -32,14 +32,24 @@ public class MenuOptionCategory {
     public final String name;
     @ColumnInfo(name = Schema.storeUuid) @SerializedName(Schema.storeUuid)
     public final String storeUuid;
+    @ColumnInfo(name = Schema.seqNum) @SerializedName(Schema.seqNum)
+    public int seqNum;
     @Ignore @Expose(deserialize = false, serialize = false)
-    public List<MenuOption> optionList;
+    public List<MenuOption> menuOptionList;
+    @Ignore @Expose(deserialize = false, serialize = false)
+    public List<Menu> menuList;
 
-    public MenuOptionCategory(@NonNull final String uuid, final String name, final String storeUuid) {
+    public MenuOptionCategory(@NonNull final String uuid, final String name, final String storeUuid, final int seqNum) {
         this.uuid = uuid;
         this.name = name;
         this.storeUuid = storeUuid;
-        optionList = new ArrayList<>();
+        this.seqNum = seqNum;
+        menuOptionList = new ArrayList<>();
+        menuList = new ArrayList<>();
+    }
+
+    public static MenuOptionCategory create(String name, String storeUuid) {
+        return new MenuOptionCategory("", name, storeUuid, 0);
     }
 
     @Override
@@ -50,7 +60,8 @@ public class MenuOptionCategory {
     public interface Schema {
         String table = "menu_option_category";
         String uuid = "menu_option_category_uuid";
-        String name = "menu_option_category_name";
+        String name = "menu_option_name";
         String storeUuid = "store_uuid";
+        String seqNum = "menu_option_category_seq_num";
     }
 }

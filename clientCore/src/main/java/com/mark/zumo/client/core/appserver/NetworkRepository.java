@@ -71,8 +71,8 @@ public interface NetworkRepository {
     @POST("menu/detail")
     Maybe<List<MenuDetail>> createMenuDetailList(@Body List<MenuDetail> menuDetailList);
 
-    @DELETE("menu/detail")
-    Maybe<List<MenuDetail>> deleteMenuDetailList(@Body List<MenuDetail> menuDetailList);
+    @DELETE("menu/detail/{" + MenuDetail.Schema.uuid + "}")
+    Maybe<MenuDetail> deleteMenuDetail(@Path(MenuDetail.Schema.uuid) String menuDetailUuid);
 
     @PUT("menu/detail/")
     Maybe<List<MenuDetail>> updateCategoriesOfMenu(@Query(RequestUpdateCategoriesOfMenu.Schema.menuUuid) String menuUuid,
@@ -106,18 +106,21 @@ public interface NetworkRepository {
     Maybe<MenuOption> updateMenuOption(final @Body MenuOption menuOption);
 
     @PUT("menu/option")
-    Maybe<MenuOption> updateMenuOptions(final @Body List<MenuOption> menuOptionList);
+    Maybe<List<MenuOption>> updateMenuOptions(final @Body List<MenuOption> menuOptionList);
 
     @DELETE("menu/option/{" + MenuOption.Schema.uuid + "}")
     Maybe<MenuOption> deleteMenuOption(final @Path(MenuOption.Schema.uuid) String menuOptionUuid);
 
     @DELETE("menu/option")
-    Maybe<MenuOption> deleteMenuOptions(final @Body List<MenuOption> menuOptionList);
+    Maybe<List<MenuOption>> deleteMenuOptions(final @Body List<MenuOption> menuOptionList);
 
 
 
     @GET("menu/option/detail")
     Maybe<List<MenuOptionDetail>> getMenuOptionDetailListByMenuOptionCategoryUuid(@Query(MenuOptionDetail.Schema.menuOptionCategoryUuid) String menuOptionUuid);
+
+    @GET("menu/option/detail")
+    Maybe<List<MenuOptionDetail>> getMenuOptionDetailListByStoreUuid(@Query(MenuOptionDetail.Schema.storeUuid) String storeUuid);
 
     @PUT("menu/option/detail")
     Maybe<List<MenuOptionDetail>> updateMenuOptionDetailList(@Body List<MenuOptionDetail> menuOptionDetailList);
@@ -134,10 +137,7 @@ public interface NetworkRepository {
                                                        final @Body MenuOptionCategory menuOptionCategory);
 
     @PUT("menu/option/category")
-    Maybe<MenuOptionCategory> updateMenuOptionCategories(final @Body List<MenuOptionCategory> menuOptionCategoryList);
-
-    @DELETE("menu/option/category")
-    Maybe<MenuOptionCategory> deleteMenuOptionCategories(final @Body List<MenuOptionCategory> menuOptionCategoryList);
+    Maybe<List<MenuOptionCategory>> updateMenuOptionCategories(final @Body List<MenuOptionCategory> menuOptionCategoryList);
 
     @DELETE("menu/option/category/{" + MenuOptionCategory.Schema.uuid + "}")
     Maybe<MenuOptionCategory> deleteMenuOptionCategory(final @Path(MenuOptionCategory.Schema.uuid) String menuOptionCategoryUuid);

@@ -3,7 +3,19 @@
  * Unauthorized copying of this file, via any medium is strictly prohibited
  * Proprietary and confidential
  */
-package com.mark.zumo.client.store.view.setting.fragment.category;
+
+/*
+ * Copyright (c) 2018. Mark Soft - All Rights Reserved
+ * Unauthorized copying of this file, via any medium is strictly prohibited
+ * Proprietary and confidential
+ */
+
+/*
+ * Copyright (c) 2018. Mark Soft - All Rights Reserved
+ * Unauthorized copying of this file, via any medium is strictly prohibited
+ * Proprietary and confidential
+ */
+package com.mark.zumo.client.store.view.setting.fragment.option.menulist;
 
 import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
@@ -25,10 +37,12 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.mark.zumo.client.core.entity.Menu;
-import com.mark.zumo.client.core.entity.MenuCategory;
+import com.mark.zumo.client.core.entity.MenuOptionCategory;
 import com.mark.zumo.client.store.R;
 import com.mark.zumo.client.store.view.setting.SettingModeSelectee;
 import com.mark.zumo.client.store.view.setting.fragment.menu.selector.MenuSelectorDialogFragment;
+import com.mark.zumo.client.store.view.util.draghelper.reorder.DragNDropReorderHelperCallback;
+import com.mark.zumo.client.store.view.util.draghelper.reorder.OnStartDragListener;
 import com.mark.zumo.client.store.viewmodel.MenuSettingViewModel;
 
 import java.util.ArrayList;
@@ -41,9 +55,9 @@ import butterknife.OnClick;
 /**
  * Created by mark on 18. 6. 26.
  */
-public class MenuCategorySettingMenuListFragment extends Fragment implements OnStartDragListener {
+public class MenuOptionSettingMenuListFragment extends Fragment implements OnStartDragListener {
 
-    private static final String TAG = "MenuCategorySettingCategoryListFragment";
+    private static final String TAG = "MenuOptionSettingMenuListFragment";
 
     @BindView(R.id.menu_recycler_view) RecyclerView menuRecyclerView;
     @BindView(R.id.button_box) LinearLayout buttonBox;
@@ -54,10 +68,10 @@ public class MenuCategorySettingMenuListFragment extends Fragment implements OnS
 
     private MenuSettingViewModel menuSettingViewModel;
     private ItemTouchHelper itemTouchHelper;
-    private MenuCategorySettingMenuListAdapter menuListAdapter;
+    private MenuOptionSettingMenuListAdapter menuListAdapter;
 
     private List<Menu> selectedMenuList;
-    private MenuCategory selectedMenuCategory;
+    private MenuOptionCategory selectedMenuOptionCategory;
 
     @Override
     public void onCreate(@Nullable final Bundle savedInstanceState) {
@@ -67,10 +81,9 @@ public class MenuCategorySettingMenuListFragment extends Fragment implements OnS
         selectedMenuList = new ArrayList<>();
     }
 
-    public void onSelectMenuCategory(final MenuCategory menuCategory) {
-        selectedMenuCategory = menuCategory;
-        menuListAdapter.setMenuList(new ArrayList<>(selectedMenuCategory.menuList));
-
+    public void onSelectMenuOptionCategory(final MenuOptionCategory menuOptionCategory) {
+        selectedMenuOptionCategory = menuOptionCategory;
+        menuListAdapter.setMenuList(selectedMenuOptionCategory.menuList);
         updateButtonBoxVisibility();
     }
 
@@ -78,7 +91,7 @@ public class MenuCategorySettingMenuListFragment extends Fragment implements OnS
         SettingModeSelectee.SettingMode settingMode = menuListAdapter.getMode();
         boolean isInAnyMode = !settingMode.isNone();
 
-        boolean canShowButtonBox = selectedMenuCategory != null && !selectedMenuCategory.uuid.isEmpty()
+        boolean canShowButtonBox = selectedMenuOptionCategory != null && !selectedMenuOptionCategory.uuid.isEmpty()
                 && !isInAnyMode;
         buttonBox.setVisibility(canShowButtonBox ? View.VISIBLE : View.GONE);
     }
@@ -86,7 +99,7 @@ public class MenuCategorySettingMenuListFragment extends Fragment implements OnS
     @Nullable
     @Override
     public View onCreateView(@NonNull final LayoutInflater inflater, @Nullable final ViewGroup container, @Nullable final Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_setting_menu_category_menu_list, container, false);
+        View view = inflater.inflate(R.layout.fragment_setting_menu_option_menu_list, container, false);
         ButterKnife.bind(this, view);
 
         inflateRecyclerView();
@@ -135,17 +148,17 @@ public class MenuCategorySettingMenuListFragment extends Fragment implements OnS
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
         menuRecyclerView.setLayoutManager(layoutManager);
 
-        menuListAdapter = new MenuCategorySettingMenuListAdapter(getListener(), this);
+        menuListAdapter = new MenuOptionSettingMenuListAdapter(getListener(), this);
         menuRecyclerView.setAdapter(menuListAdapter);
 
-        ItemTouchHelper.Callback callback = new CategorySettingTouchHelperCallback(menuListAdapter);
+        ItemTouchHelper.Callback callback = new DragNDropReorderHelperCallback(menuListAdapter);
         itemTouchHelper = new ItemTouchHelper(callback);
         itemTouchHelper.attachToRecyclerView(menuRecyclerView);
     }
 
     @NonNull
-    private MenuCategorySettingMenuListAdapter.SelectMenuListener getListener() {
-        return new MenuCategorySettingMenuListAdapter.SelectMenuListener() {
+    private MenuOptionSettingMenuListAdapter.SelectMenuListener getListener() {
+        return new MenuOptionSettingMenuListAdapter.SelectMenuListener() {
             @Override
             public void onReorderMenuList(final List<Menu> menuUuidList) {
                 selectedMenuList.clear();
@@ -181,7 +194,7 @@ public class MenuCategorySettingMenuListFragment extends Fragment implements OnS
 
     @OnClick(R.id.add)
     void addClick() {
-        String titleText = getString(R.string.menu_selector_title_to_select_menus_to_add_into_category, selectedMenuCategory.name);
+        String titleText = getString(R.string.menu_selector_title_to_select_menus_to_add_into_category, selectedMenuOptionCategory.name);
 
         MenuSelectorDialogFragment.newInstance()
                 .except(menuListAdapter.getMenuList())
@@ -191,7 +204,7 @@ public class MenuCategorySettingMenuListFragment extends Fragment implements OnS
     }
 
     private void onMenuListSelectedAdditionally(List<Menu> menuList) {
-        menuSettingViewModel.createMenuDetailListAsMenuList(selectedMenuCategory, menuList).observe(this, menuListAdapter::onMenuDetailCreated);
+//        menuSettingViewModel.createMenuDetailListAsMenuList(selectedMenuOptionCategory, menuList).observe(this, menuListAdapter::onMenuDetailCreated);
     }
 
     @OnClick(R.id.reorder)
@@ -217,14 +230,14 @@ public class MenuCategorySettingMenuListFragment extends Fragment implements OnS
         Log.d(TAG, "onClickModeConfirmButton: selectedMenuList=" + selectedMenuList);
         if (!selectedMenuList.isEmpty()) {
             switch (menuListAdapter.getMode()) {
-                case DELETE_MODE:
-                    menuSettingViewModel.removeMenuDetailList(selectedMenuCategory, new ArrayList<>(selectedMenuList))
-                            .observe(this, menuListAdapter::onRemoveMenuList);
-                    break;
-                case REORDER_MODE:
-                    menuSettingViewModel.updateMenuDetailSequence(selectedMenuCategory, new ArrayList<>(selectedMenuList))
-                            .observe(this, this::onReorderMenuList);
-                    break;
+//                case DELETE_MODE:
+//                    menuSettingViewModel.removeMenuDetailList(selectedMenuOptionCategory, new ArrayList<>(selectedMenuList))
+//                            .observe(this, menuListAdapter::onRemoveMenuList);
+//                    break;
+//                case REORDER_MODE:
+//                    menuSettingViewModel.updateMenuDetailSequence(selectedMenuOptionCategory, new ArrayList<>(selectedMenuList))
+//                            .observe(this, this::onReorderMenuList);
+//                    break;
             }
         }
         menuListAdapter.setMode(SettingModeSelectee.SettingMode.NONE);

@@ -16,6 +16,7 @@ import com.mark.zumo.client.core.dao.DiskRepository;
 import com.mark.zumo.client.core.entity.Menu;
 import com.mark.zumo.client.core.entity.MenuCategory;
 import com.mark.zumo.client.core.entity.MenuOption;
+import com.mark.zumo.client.core.entity.MenuOptionCategory;
 import com.mark.zumo.client.core.entity.MenuOptionDetail;
 import com.mark.zumo.client.core.util.BundleUtils;
 
@@ -23,6 +24,7 @@ import java.util.List;
 
 import io.reactivex.Maybe;
 import io.reactivex.Observable;
+import io.reactivex.observables.GroupedObservable;
 
 /**
  * Created by mark on 18. 4. 30.
@@ -94,6 +96,25 @@ public class MenuRepository {
                 .distinctUntilChanged();
     }
 
+    public Maybe<MenuOptionCategory> createMenuOptionCategory(MenuOptionCategory menuOptionCategory) {
+        return networkRepository.createMenuOptionCategory(menuOptionCategory)
+                .doOnSuccess(diskRepository::insertMenuOptionCategory);
+    }
+
+    public Observable<GroupedObservable<String, MenuOptionDetail>> getMenuOptionDetailListByStoreUuid(String storeUuid) {
+        Maybe<List<MenuOptionDetail>> menuOptionListDB = diskRepository.getMenuOptionDetailListByMenuOptionCategoryUuid(storeUuid);
+        Maybe<List<MenuOptionDetail>> menuOptionListApi = networkRepository.getMenuOptionDetailListByMenuOptionCategoryUuid(storeUuid)
+                .doOnSuccess(x -> diskRepository.deleteMenuOptionDetailOfMenu(storeUuid))
+                .doOnSuccess(diskRepository::insertMenuOptionDetailList);
+
+        return Observable.merge(
+                menuOptionListDB.flatMapObservable(Observable::fromIterable)
+                        .groupBy(menuOptionDetail -> menuOptionDetail.menuOptionCategoryUuid),
+                menuOptionListApi.flatMapObservable(Observable::fromIterable)
+                        .groupBy(menuOptionDetail -> menuOptionDetail.menuOptionCategoryUuid)
+        ).distinctUntilChanged();
+    }
+
     public Maybe<Menu> getMenuFromDisk(final String uuid) {
         return diskRepository.getMenu(uuid);
     }
@@ -143,6 +164,30 @@ public class MenuRepository {
                 .distinctUntilChanged();
     }
 
+    public Observable<GroupedObservable<String, MenuOption>> getGroupedMenuOptionListByStoreUuid(String storeUuid) {
+        Maybe<List<MenuOption>> menuOptionListDB = diskRepository.getMenuOptionListByStoreUuid(storeUuid);
+        Maybe<List<MenuOption>> menuOptionListApi = networkRepository.getMenuOptionListByStoreUuid(storeUuid)
+                .doOnSuccess(diskRepository::insertMenuOptionList);
+
+        return Observable.merge(
+                menuOptionListDB.flatMapObservable(Observable::fromIterable)
+                        .groupBy(menuOption -> menuOption.menuOptionCategoryUuid),
+                menuOptionListApi.flatMapObservable(Observable::fromIterable)
+                        .groupBy(menuOption -> menuOption.menuOptionCategoryUuid))
+                .distinctUntilChanged();
+    }
+
+    public Observable<List<MenuOptionCategory>> getMenuOptionCategoryListByStoreUuid(String storeUuid) {
+        Maybe<List<MenuOptionCategory>> menuOptionCategoryListApi = networkRepository.getMenuOptionCategoryListByStoreUuid(storeUuid)
+                .doOnSuccess(x -> diskRepository.deleteMenuOptionCategoryListByStoreUuid(storeUuid))
+                .doOnSuccess(diskRepository::insertMenuOptionCategoryList);
+        Maybe<List<MenuOptionCategory>> menuOptionCategoryListDB = diskRepository.getMenuOptionCategoryListByStoreUuid(storeUuid);
+
+        return Maybe.merge(menuOptionCategoryListDB, menuOptionCategoryListApi)
+                .toObservable()
+                .distinctUntilChanged();
+    }
+
     public Maybe<Menu> updateMenu(final Menu menu) {
         return networkRepository.updateMenu(menu.uuid, menu)
                 .doOnSuccess(diskRepository::insertMenu);
@@ -151,5 +196,41 @@ public class MenuRepository {
     public Maybe<Menu> updateCategoryInMenu(final String menuUuid, final MenuCategory menuCategory) {
         return networkRepository.updateCategoryInMenu(menuUuid, menuCategory)
                 .doOnSuccess(diskRepository::insertMenu);
+    }
+
+    public Maybe<List<MenuOptionCategory>> deleteMenuOptionCategories(List<MenuOptionCategory> menuOptionCategoryList) {
+        return Observable.fromIterable(menuOptionCategoryList)
+                .map(menuOptionCategory -> menuOptionCategory.uuid)
+                .flatMapMaybe(networkRepository::deleteMenuOptionCategory)
+                .toList().toMaybe()
+                .flatMap(menuOptionCategories -> Observable.fromIterable(menuOptionCategories)
+                        .map(menuOptionCategory -> menuOptionCategory.uuid)
+                        .flatMapMaybe(diskRepository::getMenuOptionCategory)
+                        .toList()
+                        .toMaybe())
+                .doOnSuccess(diskRepository::deleteMenuOptionCategoryList);
+    }
+
+    public Maybe<List<MenuOptionCategory>> updateMenuOptionCategories(List<MenuOptionCategory> menuOptionCategoryList) {
+        return networkRepository.updateMenuOptionCategories(menuOptionCategoryList)
+                .doOnSuccess(diskRepository::insertMenuOptionCategoryList);
+    }
+
+    public Maybe<List<MenuOption>> deleteMenuOptions(List<MenuOption> menuOptionList) {
+        return Observable.fromIterable(menuOptionList)
+                .map(menuOption -> menuOption.uuid)
+                .flatMapMaybe(networkRepository::deleteMenuOption)
+                .toList().toMaybe()
+                .flatMap(menuOptions -> Observable.fromIterable(menuOptions)
+                        .map(menuOption -> menuOption.uuid)
+                        .flatMapMaybe(diskRepository::getMenuOption)
+                        .toList()
+                        .toMaybe())
+                .doOnSuccess(diskRepository::deleteMenuOptionList);
+    }
+
+    public Maybe<List<MenuOption>> updateMenuOptions(List<MenuOption> menuOptionList) {
+        return networkRepository.updateMenuOptions(menuOptionList)
+                .doOnSuccess(diskRepository::insertMenuOptionList);
     }
 }

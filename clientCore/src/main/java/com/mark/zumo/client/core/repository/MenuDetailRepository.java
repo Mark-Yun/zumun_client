@@ -80,7 +80,12 @@ public class MenuDetailRepository {
     }
 
     public Maybe<List<MenuDetail>> removeMenuDetailList(final List<MenuDetail> menuDetailList) {
-        return networkRepository.deleteMenuDetailList(menuDetailList)
+        return Observable.fromIterable(menuDetailList)
+                .map(menuDetail -> menuDetail.uuid)
+                .flatMapMaybe(menuDetail -> networkRepository.deleteMenuDetail(menuDetail)
+                        .map(menuDetail1 -> menuDetail1.uuid)
+                        .flatMap(diskRepository::getMenuDetail))
+                .toList().toMaybe()
                 .doOnSuccess(diskRepository::deleteMenuDetailList);
     }
 

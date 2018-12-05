@@ -16,6 +16,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.mark.zumo.client.store.R;
+import com.mark.zumo.client.store.view.setting.fragment.category.categorylist.MenuCategorySettingCategoryListFragment;
+import com.mark.zumo.client.store.view.setting.fragment.category.menulist.MenuCategorySettingMenuListFragment;
 
 import butterknife.ButterKnife;
 

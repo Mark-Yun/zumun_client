@@ -60,7 +60,7 @@ public class MenuCategory {
         String uuid = "menu_category_uuid";
         String name = "menu_category_name";
         String storeUuid = "store_uuid";
-        String seqNum = "menu_category_seq_num";
+        String seqNum = "menu_option_value_seq_num";
     }
 
     @Override

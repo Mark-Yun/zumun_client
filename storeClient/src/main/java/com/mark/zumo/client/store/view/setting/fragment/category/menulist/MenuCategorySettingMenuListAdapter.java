@@ -4,7 +4,13 @@
  * Proprietary and confidential
  */
 
-package com.mark.zumo.client.store.view.setting.fragment.category;
+/*
+ * Copyright (c) 2018. Mark Soft - All Rights Reserved
+ * Unauthorized copying of this file, via any medium is strictly prohibited
+ * Proprietary and confidential
+ */
+
+package com.mark.zumo.client.store.view.setting.fragment.category.menulist;
 
 import android.annotation.SuppressLint;
 import android.os.Handler;
@@ -22,6 +28,8 @@ import android.view.ViewGroup;
 import com.mark.zumo.client.core.entity.Menu;
 import com.mark.zumo.client.store.R;
 import com.mark.zumo.client.store.view.setting.SettingModeSelectee;
+import com.mark.zumo.client.store.view.util.draghelper.reorder.ItemTouchHelperAdapter;
+import com.mark.zumo.client.store.view.util.draghelper.reorder.OnStartDragListener;
 
 import java.util.ArrayList;
 import java.util.Collections;
