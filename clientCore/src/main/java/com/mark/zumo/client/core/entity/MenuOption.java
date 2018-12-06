@@ -38,14 +38,17 @@ public class MenuOption implements Serializable {
     public final String value;
     @SerializedName(Schema.price) @ColumnInfo(name = Schema.price)
     public final int price;
+    @SerializedName(Schema.seqNum) @ColumnInfo(name = Schema.seqNum)
+    public int seqNum;
 
-    public MenuOption(@NonNull final String uuid, final String storeUuid, final String menuOptionCategoryUuid, final String name, final String value, final int price) {
+    public MenuOption(@NonNull final String uuid, final String storeUuid, final String menuOptionCategoryUuid, final String name, final String value, final int price, final int seqNum) {
         this.uuid = uuid;
         this.storeUuid = storeUuid;
         this.menuOptionCategoryUuid = menuOptionCategoryUuid;
         this.name = name;
         this.value = value;
         this.price = price;
+        this.seqNum = seqNum;
     }
 
     @Override
@@ -66,5 +69,6 @@ public class MenuOption implements Serializable {
         String name = "menu_option_name";
         String value = "menu_option_value";
         String price = "menu_option_price";
+        String seqNum = "menu_option_value_seq_num";
     }
 }

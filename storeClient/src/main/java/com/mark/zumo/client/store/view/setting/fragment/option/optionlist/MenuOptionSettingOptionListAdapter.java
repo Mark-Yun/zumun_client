@@ -23,6 +23,7 @@ import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.AppCompatTextView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -33,6 +34,7 @@ import com.mark.zumo.client.core.entity.MenuOptionCategory;
 import com.mark.zumo.client.core.view.util.RecyclerUtils;
 import com.mark.zumo.client.store.R;
 import com.mark.zumo.client.store.view.setting.SettingModeSelectee;
+import com.mark.zumo.client.store.view.util.draghelper.reorder.DragNDropReorderHelperCallback;
 import com.mark.zumo.client.store.view.util.draghelper.reorder.ItemTouchHelperAdapter;
 import com.mark.zumo.client.store.view.util.draghelper.reorder.OnStartDragListener;
 
@@ -130,11 +132,18 @@ class MenuOptionSettingOptionListAdapter extends RecyclerView.Adapter<MenuOption
         recyclerView.setHasFixedSize(true);
         recyclerView.setNestedScrollingEnabled(false);
 
-        final MenuOptionSettingOptionDetailListAdapter menuOptionSettingOptionDetailListAdapter = new MenuOptionSettingOptionDetailListAdapter(getMenuOptionSelectListener());
+        final MenuOptionSettingOptionDetailListAdapter menuOptionSettingOptionDetailListAdapter =
+                new MenuOptionSettingOptionDetailListAdapter(getMenuOptionSelectListener());
 
         recyclerView.setAdapter(menuOptionSettingOptionDetailListAdapter);
         menuOptionSettingOptionDetailListAdapter.setMenuOptionList(menuOptionCategory.menuOptionList);
         optionDetailListAdapterMap.put(menuOptionCategory.uuid, menuOptionSettingOptionDetailListAdapter);
+
+        ItemTouchHelper.Callback callback = new DragNDropReorderHelperCallback(menuOptionSettingOptionDetailListAdapter);
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(callback);
+        itemTouchHelper.attachToRecyclerView(recyclerView);
+
+        menuOptionSettingOptionDetailListAdapter.setOnStartDragListener(itemTouchHelper::startDrag);
 
         holder.menuOptionHeader.setOnClickListener(v -> onClickItemView(holder, menuOptionCategory));
         holder.checkBox.setOnCheckedChangeListener((buttonView, isChecked) -> {

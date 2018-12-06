@@ -6,6 +6,7 @@
 
 package com.mark.zumo.client.store.model;
 
+import android.support.annotation.WorkerThread;
 import android.util.Log;
 
 import com.mark.zumo.client.core.entity.Menu;
@@ -136,6 +137,7 @@ public enum MenuManager {
         }).subscribeOn(Schedulers.io());
     }
 
+    @WorkerThread
     private List<MenuCategory> mapCategoryWithMenu(final List<MenuCategory> categoryList,
                                                    final List<Menu> menuList,
                                                    final Map<String, List<MenuDetail>> menuDetailMap) {
@@ -342,13 +344,18 @@ public enum MenuManager {
 
         return menuDetailRepositoryMaybe.flatMap(menuDetailRepository ->
                 Observable.fromIterable(menuList)
-                        .map(menu -> menu.uuid)
-                        .flatMapMaybe(menuUuid -> menuDetailRepository.getMenuDetailByCategoryUuidAndMenuUuidFromDisk(menuCategory.uuid, menuUuid))
+                        .concatMapMaybe(menu -> menuDetailRepository.getMenuDetailByCategoryUuidAndMenuUuidFromDisk(menuCategory.uuid, menu.uuid))
                         .toList().toMaybe()
+                        .map(menuDetailList -> {
+                            for (MenuDetail menuDetail : menuDetailList)
+                                menuDetail.menuSeqNum = menuDetailList.indexOf(menuDetail);
+                            return menuDetailList;
+                        })
                         .flatMap(menuDetailList -> menuDetailRepository.updateMenuDetailSequence(menuCategory.uuid, menuDetailList)
                                 .flatMapObservable(Observable::fromIterable)
+                                .sorted((o1, o2) -> o1.menuSeqNum - o2.menuSeqNum)
                                 .map(menuDetail -> menuDetail.menuUuid)
-                                .flatMapMaybe(this::getMenuFromApi)
+                                .concatMapMaybe(this::getMenuFromDisk)
                                 .toList().toMaybe())
         ).subscribeOn(Schedulers.io());
     }

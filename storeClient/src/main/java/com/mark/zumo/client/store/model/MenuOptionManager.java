@@ -18,6 +18,7 @@ import com.mark.zumo.client.core.repository.MenuRepository;
 import com.mark.zumo.client.core.repository.SessionRepository;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Deque;
 import java.util.HashMap;
 import java.util.List;
@@ -160,6 +161,7 @@ public enum MenuOptionManager {
             if (menuOptionMap.containsKey(menuOptionCategory.uuid)) {
                 menuOptionCategory.menuOptionList = new ArrayList<>();
                 menuOptionCategory.menuOptionList.addAll(menuOptionMap.get(menuOptionCategory.uuid));
+                Collections.sort(menuOptionCategory.menuOptionList, (o1, o2) -> o1.seqNum - o2.seqNum);
             }
 
             if (menuOptionDetailMap.containsKey(menuOptionCategory.uuid)) {

@@ -119,7 +119,7 @@ public interface NetworkRepository {
     Maybe<List<MenuOptionDetail>> createMenuOptionDetailList(@Body List<MenuOptionDetail> menuOptionDetailList);
 
     @GET("menu/option/detail")
-    Maybe<List<MenuOptionDetail>> getMenuOptionDetailListByMenuOptionCategoryUuid(@Query(MenuOptionDetail.Schema.menuOptionCategoryUuid) String menuOptionUuid);
+    Maybe<List<MenuOptionDetail>> getMenuOptionDetailListByMenuOptionByStoreUuid(@Query(MenuOptionDetail.Schema.storeUuid) String storeUuid);
 
     @GET("menu/option/detail")
     Maybe<List<MenuOptionDetail>> getMenuOptionDetailListByStoreUuid(@Query(MenuOptionDetail.Schema.storeUuid) String storeUuid);

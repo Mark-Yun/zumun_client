@@ -18,6 +18,7 @@
 
 package com.mark.zumo.client.store.view.setting.fragment.option.optionlist;
 
+import android.annotation.SuppressLint;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.annotation.NonNull;
@@ -26,6 +27,7 @@ import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.AppCompatTextView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
@@ -33,9 +35,12 @@ import android.widget.CheckBox;
 import com.mark.zumo.client.core.entity.MenuOption;
 import com.mark.zumo.client.store.R;
 import com.mark.zumo.client.store.view.setting.SettingModeSelectee;
+import com.mark.zumo.client.store.view.util.draghelper.reorder.ItemTouchHelperAdapter;
+import com.mark.zumo.client.store.view.util.draghelper.reorder.OnStartDragListener;
 
 import java.text.NumberFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -47,20 +52,27 @@ import butterknife.ButterKnife;
  * Created by mark on 18. 11. 11.
  */
 class MenuOptionSettingOptionDetailListAdapter extends RecyclerView.Adapter<MenuOptionSettingOptionDetailListAdapter.ViewHolder>
-        implements SettingModeSelectee {
+        implements SettingModeSelectee, ItemTouchHelperAdapter {
 
     private final MenuOptionSelectListener menuOptionSelectListener;
-    final private List<Runnable> modeUpdateOperationPool;
-    final private List<CheckBox> checkBoxSet;
-    private SettingMode settingMode = SettingMode.NONE;
-    private List<MenuOption> menuOptionList;
+    private final List<Runnable> modeUpdateOperationPool;
+    private final List<CheckBox> checkBoxSet;
+    private final List<MenuOption> menuOptionList;
 
-    MenuOptionSettingOptionDetailListAdapter(@NonNull MenuOptionSelectListener menuOptionSelectListener) {
+    private OnStartDragListener onStartDragListener;
+
+    private SettingMode settingMode = SettingMode.NONE;
+
+    MenuOptionSettingOptionDetailListAdapter(@NonNull final MenuOptionSelectListener menuOptionSelectListener) {
         this.menuOptionSelectListener = menuOptionSelectListener;
 
         menuOptionList = new ArrayList<>();
         modeUpdateOperationPool = new CopyOnWriteArrayList<>();
         checkBoxSet = new CopyOnWriteArrayList<>();
+    }
+
+    void setOnStartDragListener(final OnStartDragListener onStartDragListener) {
+        this.onStartDragListener = onStartDragListener;
     }
 
     void setMenuOptionList(final List<MenuOption> menuOptionList) {
@@ -80,6 +92,7 @@ class MenuOptionSettingOptionDetailListAdapter extends RecyclerView.Adapter<Menu
         return new ViewHolder(view);
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     public void onBindViewHolder(@NonNull final ViewHolder holder, final int position) {
         MenuOption menuOption = menuOptionList.get(position);
@@ -87,6 +100,17 @@ class MenuOptionSettingOptionDetailListAdapter extends RecyclerView.Adapter<Menu
         holder.price.setText(NumberFormat.getCurrencyInstance().format(menuOption.price));
 
         holder.itemView.setOnClickListener(v -> onClickItemView(holder, menuOption));
+
+        holder.reorder.setOnTouchListener((v, event) -> {
+            int action = event.getAction();
+            switch (action) {
+                case MotionEvent.ACTION_DOWN:
+                    onStartDragListener.onStartDrag(holder);
+                    break;
+            }
+            return false;
+        });
+
         Runnable runnable = () -> {
             holder.checkBox.setVisibility(settingMode.isDeleteMode() ? View.VISIBLE : View.GONE);
             holder.reorder.setVisibility(settingMode.isReorderMode() ? View.VISIBLE : View.GONE);
@@ -152,11 +176,36 @@ class MenuOptionSettingOptionDetailListAdapter extends RecyclerView.Adapter<Menu
     }
 
     void onMenuOptionListRemoved(List<MenuOption> removedMenuOptionList) {
-
+        for (MenuOption removedMenuOption : removedMenuOptionList) {
+            List<MenuOption> tmpMenuOptionList = new ArrayList<>(this.menuOptionList);
+            for (int i = 0; i < tmpMenuOptionList.size(); i++) {
+                if (this.menuOptionList.get(i).uuid.equals(removedMenuOption.uuid)) {
+                    this.menuOptionList.remove(i);
+                    notifyItemRemoved(i);
+                    break;
+                }
+            }
+        }
     }
 
-    void onMenuOptionListUpdated(List<MenuOption> updatedMenuOptionList) {
+    @Override
+    public void onItemMove(final int fromPosition, final int toPosition) {
+        Collections.swap(menuOptionList, fromPosition, toPosition);
+        notifyItemMoved(fromPosition, toPosition);
+    }
 
+    @Override
+    public void onItemDismiss(final int position) {
+        //Empty body
+    }
+
+    @Override
+    public void onDrop() {
+        for (MenuOption menuOption : menuOptionList) {
+            menuOption.seqNum = menuOptionList.indexOf(menuOption);
+        }
+
+        menuOptionSelectListener.onReorderMenuOption(menuOptionList);
     }
 
     interface MenuOptionSelectListener {

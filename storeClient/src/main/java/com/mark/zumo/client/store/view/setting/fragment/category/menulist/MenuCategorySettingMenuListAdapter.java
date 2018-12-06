@@ -48,11 +48,10 @@ public class MenuCategorySettingMenuListAdapter extends RecyclerView.Adapter<Men
 
     private final SelectMenuListener listener;
     private final OnStartDragListener dragStartListener;
+    private final List<Menu> menuList;
 
     private SettingMode settingMode = SettingMode.NONE;
     private HashSet<Runnable> modeUpdateOperationPool;
-
-    private List<Menu> menuList;
 
     MenuCategorySettingMenuListAdapter(final SelectMenuListener listener,
                                        final OnStartDragListener dragStartListener) {
@@ -67,7 +66,8 @@ public class MenuCategorySettingMenuListAdapter extends RecyclerView.Adapter<Men
     }
 
     void setMenuList(final List<Menu> menuList) {
-        this.menuList = menuList;
+        this.menuList.clear();
+        this.menuList.addAll(menuList);
         notifyDataSetChanged();
     }
 

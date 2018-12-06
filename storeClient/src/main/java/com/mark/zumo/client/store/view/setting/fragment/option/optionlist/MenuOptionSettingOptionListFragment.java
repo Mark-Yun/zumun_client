@@ -53,7 +53,9 @@ import com.mark.zumo.client.store.view.util.draghelper.reorder.OnStartDragListen
 import com.mark.zumo.client.store.viewmodel.MenuOptionSettingViewModel;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -79,6 +81,7 @@ public class MenuOptionSettingOptionListFragment extends Fragment implements OnS
     private MenuOptionSettingOptionListAdapter menuOptionSettingOptionListAdapter;
 
     private List<MenuOption> selectedMenuOptionList;
+    private Map<String, MenuOption> reorderedMenuOptionMap;
     private List<MenuOptionCategory> selectedMenuOptionCategoryList;
     private SelectMenuOptionCategoryLister selectMenuOptionCategoryListener;
 
@@ -95,6 +98,7 @@ public class MenuOptionSettingOptionListFragment extends Fragment implements OnS
         menuOptionSettingViewModel = ViewModelProviders.of(this).get(MenuOptionSettingViewModel.class);
         selectedMenuOptionList = new ArrayList<>();
         selectedMenuOptionCategoryList = new ArrayList<>();
+        reorderedMenuOptionMap = new HashMap<>();
     }
 
     @Nullable
@@ -172,7 +176,9 @@ public class MenuOptionSettingOptionListFragment extends Fragment implements OnS
 
             @Override
             public void onReorderMenuOption(final List<MenuOption> menuOptionList) {
-
+                for (MenuOption menuOption : menuOptionList) {
+                    reorderedMenuOptionMap.put(menuOption.uuid, menuOption);
+                }
             }
         };
     }
@@ -277,21 +283,29 @@ public class MenuOptionSettingOptionListFragment extends Fragment implements OnS
                             .observe(this, menuOptionSettingOptionListAdapter::setMenuOptionCategoryList);
                     break;
             }
+            selectedMenuOptionCategoryList.clear();
         }
 
         Log.d(TAG, "onClickModeConfirmButton: selectedMenuOptionList=" + selectedMenuOptionList);
-        if (!selectedMenuOptionList.isEmpty()) {
-            switch (menuOptionSettingOptionListAdapter.getMode()) {
-                case DELETE_MODE:
+        Log.d(TAG, "onClickModeConfirmButton: reorderedMenuOptionMap=" + reorderedMenuOptionMap);
+
+        switch (menuOptionSettingOptionListAdapter.getMode()) {
+            case DELETE_MODE:
+                if (!selectedMenuOptionList.isEmpty()) {
                     menuOptionSettingViewModel.removeMenuOption(new ArrayList<>(selectedMenuOptionList))
                             .observe(this, menuOptionSettingOptionListAdapter::onMenuOptionListRemoved);
-                    break;
-                case REORDER_MODE:
-                    menuOptionSettingViewModel.reorderMenuOption(new ArrayList<>(selectedMenuOptionList))
+                }
+                break;
+            case REORDER_MODE:
+                if (!reorderedMenuOptionMap.isEmpty()) {
+                    menuOptionSettingViewModel.reorderMenuOption(new ArrayList<>(reorderedMenuOptionMap.values()))
                             .observe(this, menuOptionSettingOptionListAdapter::onMenuOptionListUpdated);
-                    break;
-            }
+                }
+                break;
         }
+
+        selectedMenuOptionList.clear();
+        reorderedMenuOptionMap.clear();
 
         menuOptionSettingOptionListAdapter.setMode(SettingModeSelectee.SettingMode.NONE);
         startAnyMode();

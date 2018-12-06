@@ -32,6 +32,7 @@
         android:id="@+id/category_recycler_view"
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:scrollbars="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/menu_category_setting_header"
         app:layout_constraintVertical_weight="1" />

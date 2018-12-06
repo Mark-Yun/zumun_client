@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "adcefcc45dedd377786eb73d72959f1c",
+    "identityHash": "fd796db8ed8318811845671de2e33459",
     "entities": [
       {
         "tableName": "menu",
@@ -274,7 +274,7 @@
       },
       {
         "tableName": "menu_option",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`menu_option_uuid` TEXT NOT NULL, `store_uuid` TEXT, `menu_option_category_uuid` TEXT, `menu_option_name` TEXT, `menu_option_value` TEXT, `menu_option_price` INTEGER NOT NULL, PRIMARY KEY(`menu_option_uuid`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`menu_option_uuid` TEXT NOT NULL, `store_uuid` TEXT, `menu_option_category_uuid` TEXT, `menu_option_name` TEXT, `menu_option_value` TEXT, `menu_option_price` INTEGER NOT NULL, `menu_option_value_seq_num` INTEGER NOT NULL, PRIMARY KEY(`menu_option_uuid`))",
         "fields": [
           {
             "fieldPath": "uuid",
@@ -309,6 +309,12 @@
           {
             "fieldPath": "price",
             "columnName": "menu_option_price",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "seqNum",
+            "columnName": "menu_option_value_seq_num",
             "affinity": "INTEGER",
             "notNull": true
           }
@@ -406,7 +412,7 @@
       },
       {
         "tableName": "menu_category",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`menu_category_uuid` TEXT NOT NULL, `menu_category_name` TEXT, `store_uuid` TEXT, `menu_option_value_seq_num` INTEGER NOT NULL, PRIMARY KEY(`menu_category_uuid`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`menu_category_uuid` TEXT NOT NULL, `menu_category_name` TEXT, `store_uuid` TEXT, `menu_category_seq_num` INTEGER NOT NULL, PRIMARY KEY(`menu_category_uuid`))",
         "fields": [
           {
             "fieldPath": "uuid",
@@ -428,7 +434,7 @@
           },
           {
             "fieldPath": "seqNum",
-            "columnName": "menu_option_value_seq_num",
+            "columnName": "menu_category_seq_num",
             "affinity": "INTEGER",
             "notNull": true
           }
@@ -603,7 +609,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"adcefcc45dedd377786eb73d72959f1c\")"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"fd796db8ed8318811845671de2e33459\")"
     ]
   }
 }
