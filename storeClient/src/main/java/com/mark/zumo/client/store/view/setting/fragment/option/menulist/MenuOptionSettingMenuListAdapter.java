@@ -113,6 +113,8 @@ public class MenuOptionSettingMenuListAdapter extends RecyclerView.Adapter<MenuO
             return false;
         });
 
+        holder.itemView.setOnClickListener(v -> onClickItemView(menu, holder));
+
         Runnable modeUpdateOperation = () -> {
             holder.reorder.setVisibility(settingMode.isReorderMode() ? View.VISIBLE : View.GONE);
             holder.checkBox.setVisibility(settingMode.isDeleteMode() ? View.VISIBLE : View.GONE);
@@ -122,6 +124,14 @@ public class MenuOptionSettingMenuListAdapter extends RecyclerView.Adapter<MenuO
         modeUpdateOperationPool.add(modeUpdateOperation);
 
         holder.checkBox.setOnCheckedChangeListener((buttonView, isChecked) -> listener.onSelectMenuList(menu, isChecked));
+    }
+
+    private void onClickItemView(final Menu menu, final ViewHolder holder) {
+        if (settingMode.isDeleteMode()) {
+            holder.checkBox.performClick();
+        } else if (settingMode.isEditMode()) {
+            listener.onModifyMenu(menu);
+        }
     }
 
     @Override
@@ -150,7 +160,7 @@ public class MenuOptionSettingMenuListAdapter extends RecyclerView.Adapter<MenuO
 
     @Override
     public void onItemDismiss(final int position) {
-
+        //Empty Body
     }
 
     @Override
@@ -184,7 +194,7 @@ public class MenuOptionSettingMenuListAdapter extends RecyclerView.Adapter<MenuO
 
     interface SelectMenuListener {
         void onReorderMenuList(List<Menu> menu);
-        void onDeleteMenuList(List<Menu> menuList);
+        void onModifyMenu(Menu menu);
         void onSelectMenuList(Menu menu, boolean isChecked);
     }
 

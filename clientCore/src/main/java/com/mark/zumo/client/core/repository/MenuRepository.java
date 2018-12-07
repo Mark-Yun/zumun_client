@@ -76,7 +76,6 @@ public class MenuRepository {
     public Observable<List<MenuOption>> getMenuOptionListByMenuOptionCategoryUuid(String menuUuid) {
         Maybe<List<MenuOption>> menuOptionListDB = diskRepository.getMenuOptionListByMenuOptionCategoryUuid(menuUuid);
         Maybe<List<MenuOption>> menuOptionListApi = networkRepository.getMenuOptionListByMenuOptionCategoryUuid(menuUuid)
-                .doOnSuccess(x -> diskRepository.deleteMenuOptionDetailOfMenu(menuUuid))
                 .doOnSuccess(diskRepository::insertMenuOptionList)
                 .doOnSuccess(list -> Log.d(TAG, "getMenuOptionListByMenuOptionCategoryUuid: " + list));
 
@@ -88,12 +87,25 @@ public class MenuRepository {
     public Observable<List<MenuOptionDetail>> getMenuOptionDetailListByMenuOptionUuid(String menuOptionUuid) {
         Maybe<List<MenuOptionDetail>> menuOptionListDB = diskRepository.getMenuOptionDetailListByMenuOptionByStoreUuid(menuOptionUuid);
         Maybe<List<MenuOptionDetail>> menuOptionListApi = networkRepository.getMenuOptionDetailListByMenuOptionByStoreUuid(menuOptionUuid)
-                .doOnSuccess(x -> diskRepository.deleteMenuOptionDetailOfMenu(menuOptionUuid))
+                .doOnSuccess(x -> diskRepository.deleteMenuOptionDetailOfMenuOptionCategory(menuOptionUuid))
                 .doOnSuccess(diskRepository::insertMenuOptionDetailList);
 
         return Maybe.merge(menuOptionListDB, menuOptionListApi)
                 .toObservable()
                 .distinctUntilChanged();
+    }
+
+    public Maybe<MenuOptionDetail> getMenuOptionDetailFromDisk(final String menuOptionCategoryUuid,
+                                                               final String menuUuid) {
+        Log.d(TAG, "getMenuOptionDetailFromDisk: menuOptionCategoryUuid=" + menuOptionCategoryUuid + " menuUuid=" + menuUuid);
+        return diskRepository.getMenuOptionDetail(menuOptionCategoryUuid, menuUuid)
+                .doOnSuccess(menuOptionDetail -> Log.d(TAG, "getMenuOptionDetailFromDisk: " + menuOptionDetail));
+    }
+
+    public Maybe<MenuOptionDetail> deleteMenuOptionDetail(final MenuOptionDetail menuOptionDetail) {
+        Log.d(TAG, "deleteMenuOptionDetail: " + menuOptionDetail);
+        return networkRepository.deleteMenuOptionDetail(menuOptionDetail.id)
+                .doOnSuccess(diskRepository::deleteMenuOptionDetail);
     }
 
     public Maybe<MenuOptionCategory> createMenuOptionCategory(MenuOptionCategory menuOptionCategory) {
@@ -106,11 +118,17 @@ public class MenuRepository {
                 .doOnSuccess(diskRepository::insertMenuOptionDetailList);
     }
 
+    public Maybe<List<MenuOption>> createMenuOptionList(List<MenuOption> menuOptionList) {
+        return networkRepository.createMenuOptionList(menuOptionList)
+                .doOnSuccess(diskRepository::insertMenuOptionList);
+    }
+
     public Observable<GroupedObservable<String, MenuOptionDetail>> getMenuOptionDetailListByStoreUuid(String storeUuid) {
         Maybe<List<MenuOptionDetail>> menuOptionListDB = diskRepository.getMenuOptionDetailListByMenuOptionByStoreUuid(storeUuid);
         Maybe<List<MenuOptionDetail>> menuOptionListApi = networkRepository.getMenuOptionDetailListByMenuOptionByStoreUuid(storeUuid)
-                .doOnSuccess(x -> diskRepository.deleteMenuOptionDetailOfMenu(storeUuid))
-                .doOnSuccess(diskRepository::insertMenuOptionDetailList);
+                .doOnSuccess(x -> diskRepository.deleteMenuOptionDetailOfStore(storeUuid))
+                .doOnSuccess(diskRepository::insertMenuOptionDetailList)
+                .doOnSuccess(menuOptionDetailList -> Log.d(TAG, "getMenuOptionDetailFromDisk: " + menuOptionDetailList));
 
         return Observable.merge(
                 menuOptionListDB.flatMapObservable(Observable::fromIterable)

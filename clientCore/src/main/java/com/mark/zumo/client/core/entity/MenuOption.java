@@ -31,13 +31,13 @@ public class MenuOption implements Serializable {
     @SerializedName(Schema.storeUuid) @ColumnInfo(name = Schema.storeUuid)
     public final String storeUuid;
     @SerializedName(Schema.menuOptionCategoryUuid) @ColumnInfo(name = Schema.menuOptionCategoryUuid)
-    public final String menuOptionCategoryUuid;
+    public String menuOptionCategoryUuid;
     @SerializedName(Schema.name) @ColumnInfo(name = Schema.name)
-    public final String name;
+    public String name;
     @SerializedName(Schema.value) @ColumnInfo(name = Schema.value)
-    public final String value;
+    public String value;
     @SerializedName(Schema.price) @ColumnInfo(name = Schema.price)
-    public final int price;
+    public int price;
     @SerializedName(Schema.seqNum) @ColumnInfo(name = Schema.seqNum)
     public int seqNum;
 
@@ -49,6 +49,14 @@ public class MenuOption implements Serializable {
         this.value = value;
         this.price = price;
         this.seqNum = seqNum;
+    }
+
+    public static MenuOption create(String value, int price) {
+        return new MenuOption("", "", "", "", value, price, 0);
+    }
+
+    public static MenuOption createEmptyMenuOption() {
+        return new MenuOption("", "", "", "", "", -1, -1);
     }
 
     @Override

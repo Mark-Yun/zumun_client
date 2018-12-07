@@ -25,14 +25,12 @@
 package com.mark.zumo.client.store.view.setting.fragment.option.optionlist;
 
 import android.arch.lifecycle.ViewModelProviders;
-import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.AppCompatButton;
-import android.support.v7.widget.AppCompatEditText;
 import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.AppCompatTextView;
 import android.support.v7.widget.LinearLayoutManager;
@@ -48,6 +46,7 @@ import com.mark.zumo.client.core.entity.MenuOption;
 import com.mark.zumo.client.core.entity.MenuOptionCategory;
 import com.mark.zumo.client.store.R;
 import com.mark.zumo.client.store.view.setting.SettingModeSelectee;
+import com.mark.zumo.client.store.view.setting.fragment.option.optionlist.dialog.create.MenuOptionCategoryCreateDialogFragment;
 import com.mark.zumo.client.store.view.util.draghelper.reorder.DragNDropReorderHelperCallback;
 import com.mark.zumo.client.store.view.util.draghelper.reorder.OnStartDragListener;
 import com.mark.zumo.client.store.viewmodel.MenuOptionSettingViewModel;
@@ -232,22 +231,9 @@ public class MenuOptionSettingOptionListFragment extends Fragment implements OnS
 
     @OnClick(R.id.add)
     void addClick() {
-        Context context = getContext();
-        AppCompatEditText editText = new AppCompatEditText(context);
-
-        new android.app.AlertDialog.Builder(context)
-                .setTitle(R.string.menu_category_setting_add_new_category_dialog_title)
-                .setMessage(R.string.menu_category_setting_add_new_category_dialog_message)
-                .setView(editText)
-                .setCancelable(true)
-                .setNegativeButton(R.string.button_text_cancel, (dialog, which) -> dialog.dismiss())
-                .setPositiveButton(R.string.button_text_apply, (dialog, which) -> {
-                    menuOptionSettingViewModel.createMenuOptionCategory(editText.getText().toString())
-                            .observe(this, menuOptionSettingOptionListAdapter::onCreateMenuCategory);
-                    dialog.dismiss();
-                })
-                .create()
-                .show();
+        MenuOptionCategoryCreateDialogFragment.newInstance()
+                .onCreateMenuOptionCategory(menuOptionSettingOptionListAdapter::onMenuOptionCategoryCreated)
+                .show(getFragmentManager(), TAG);
     }
 
     @OnClick(R.id.reorder)

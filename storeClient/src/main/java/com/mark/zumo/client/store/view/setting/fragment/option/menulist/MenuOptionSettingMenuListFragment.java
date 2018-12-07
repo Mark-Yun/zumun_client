@@ -44,7 +44,6 @@ import com.mark.zumo.client.store.view.setting.fragment.menu.selector.MenuSelect
 import com.mark.zumo.client.store.view.util.draghelper.reorder.DragNDropReorderHelperCallback;
 import com.mark.zumo.client.store.view.util.draghelper.reorder.OnStartDragListener;
 import com.mark.zumo.client.store.viewmodel.MenuOptionSettingViewModel;
-import com.mark.zumo.client.store.viewmodel.MenuSettingViewModel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -67,7 +66,6 @@ public class MenuOptionSettingMenuListFragment extends Fragment implements OnSta
     @BindView(R.id.mode_confirm_button) AppCompatButton modeConfirmButton;
     @BindView(R.id.mode_description_layout) ConstraintLayout modeDescriptionLayout;
 
-    private MenuSettingViewModel menuSettingViewModel;
     private MenuOptionSettingViewModel menuOptionSettingViewModel;
     private ItemTouchHelper itemTouchHelper;
     private MenuOptionSettingMenuListAdapter menuListAdapter;
@@ -79,7 +77,6 @@ public class MenuOptionSettingMenuListFragment extends Fragment implements OnSta
     public void onCreate(@Nullable final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        menuSettingViewModel = ViewModelProviders.of(this).get(MenuSettingViewModel.class);
         menuOptionSettingViewModel = ViewModelProviders.of(this).get(MenuOptionSettingViewModel.class);
         selectedMenuList = new ArrayList<>();
     }
@@ -169,7 +166,7 @@ public class MenuOptionSettingMenuListFragment extends Fragment implements OnSta
             }
 
             @Override
-            public void onDeleteMenuList(final List<Menu> menuList) {
+            public void onModifyMenu(final Menu menu) {
 
             }
 
@@ -234,14 +231,10 @@ public class MenuOptionSettingMenuListFragment extends Fragment implements OnSta
         Log.d(TAG, "onClickModeConfirmButton: selectedMenuList=" + selectedMenuList);
         if (!selectedMenuList.isEmpty()) {
             switch (menuListAdapter.getMode()) {
-//                case DELETE_MODE:
-//                    menuSettingViewModel.removeMenuDetailList(selectedMenuOptionCategory, new ArrayList<>(selectedMenuList))
-//                            .observe(this, menuListAdapter::onRemoveMenuList);
-//                    break;
-//                case REORDER_MODE:
-//                    menuSettingViewModel.updateMenuDetailSequence(selectedMenuOptionCategory, new ArrayList<>(selectedMenuList))
-//                            .observe(this, this::onReorderMenuList);
-//                    break;
+                case DELETE_MODE:
+                    menuOptionSettingViewModel.removeMenuOptionDetail(selectedMenuOptionCategory, new ArrayList<>(selectedMenuList))
+                            .observe(this, menuListAdapter::onRemoveMenuList);
+                    break;
             }
         }
         menuListAdapter.setMode(SettingModeSelectee.SettingMode.NONE);

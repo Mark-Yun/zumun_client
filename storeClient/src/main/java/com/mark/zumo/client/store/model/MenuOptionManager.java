@@ -211,6 +211,23 @@ public enum MenuOptionManager {
                 .subscribeOn(Schedulers.io());
     }
 
+    public Maybe<MenuOptionCategory> createMenuOptionCategory(String storeUuid, String name,
+                                                              List<MenuOption> menuOptionList) {
+        return createMenuOptionCategory(storeUuid, name)
+                .flatMap(menuOptionCategory -> createMenuOptionList(menuOptionCategory, menuOptionList)
+                        .doOnSuccess(createdMenuOptionList -> menuOptionCategory.menuOptionList = createdMenuOptionList)
+                        .map(x -> menuOptionCategory))
+                .subscribeOn(Schedulers.io());
+    }
+
+    public Maybe<List<MenuOption>> createMenuOptionList(MenuOptionCategory menuOptionCategory, List<MenuOption> menuOptionList) {
+        for (MenuOption menuOption : menuOptionList) {
+            menuOption.menuOptionCategoryUuid = menuOptionCategory.uuid;
+        }
+        return menuRepositoryMaybe.flatMap(menuRepository -> menuRepository.createMenuOptionList(menuOptionList))
+                .subscribeOn(Schedulers.io());
+    }
+
     public Maybe<List<MenuOptionCategory>> deleteMenuOptionCategories(List<MenuOptionCategory> menuOptionCategoryList) {
         return menuRepositoryMaybe.flatMap(menuRepository -> menuRepository.deleteMenuOptionCategories(menuOptionCategoryList))
                 .subscribeOn(Schedulers.io());
@@ -224,6 +241,18 @@ public enum MenuOptionManager {
     public Maybe<List<MenuOption>> deleteMenuOptions(List<MenuOption> menuOptionList) {
         return menuRepositoryMaybe.flatMap(menuRepository -> menuRepository.deleteMenuOptions(menuOptionList))
                 .subscribeOn(Schedulers.io());
+    }
+
+    public Maybe<List<Menu>> deleteMenuOptionDetails(String menuOptionCategoryUuid, List<Menu> menuList) {
+        return menuRepositoryMaybe.flatMap(menuRepository ->
+                Observable.fromIterable(menuList)
+                        .map(menu -> menu.uuid)
+                        .flatMapMaybe(menuUuid -> menuRepository.getMenuOptionDetailFromDisk(menuOptionCategoryUuid, menuUuid))
+                        .flatMapMaybe(menuRepository::deleteMenuOptionDetail)
+                        .map(menuOptionDetail -> menuOptionDetail.menuUuid)
+                        .flatMapMaybe(menuRepository::getMenuFromDisk)
+                        .toList().toMaybe()
+        ).subscribeOn(Schedulers.io());
     }
 
     public Maybe<List<MenuOption>> updateMenuOptions(List<MenuOption> menuOptionList) {

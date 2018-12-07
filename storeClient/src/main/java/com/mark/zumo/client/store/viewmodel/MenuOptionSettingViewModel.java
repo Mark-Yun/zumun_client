@@ -127,6 +127,16 @@ public class MenuOptionSettingViewModel extends AndroidViewModel {
         return liveData;
     }
 
+    public LiveData<List<Menu>> removeMenuOptionDetail(MenuOptionCategory menuOptionCategory, List<Menu> menuList) {
+        MutableLiveData<List<Menu>> liveData = new MutableLiveData<>();
+        menuOptionManager.deleteMenuOptionDetails(menuOptionCategory.uuid, menuList)
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnSubscribe(disposables::add)
+                .doOnSuccess(liveData::setValue)
+                .subscribe();
+        return liveData;
+    }
+
     public LiveData<List<MenuOption>> reorderMenuOption(List<MenuOption> menuOptionList) {
         MutableLiveData<List<MenuOption>> liveData = new MutableLiveData<>();
         menuOptionManager.updateMenuOptions(menuOptionList)
@@ -161,6 +171,22 @@ public class MenuOptionSettingViewModel extends AndroidViewModel {
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSubscribe(disposables::add)
                 .doOnNext(liveData::setValue)
+                .subscribe();
+
+        return liveData;
+    }
+
+    public LiveData<MenuOptionCategory> createMenuOptionCategory(String menuOptionCategoryName,
+                                                                 List<MenuOption> menuOptionList) {
+
+        MutableLiveData<MenuOptionCategory> liveData = new MutableLiveData<>();
+
+        sessionManager.getSessionStore()
+                .map(store -> store.uuid)
+                .flatMap(storeUuid -> menuOptionManager.createMenuOptionCategory(storeUuid, menuOptionCategoryName, menuOptionList))
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnSubscribe(disposables::add)
+                .doOnSuccess(liveData::setValue)
                 .subscribe();
 
         return liveData;

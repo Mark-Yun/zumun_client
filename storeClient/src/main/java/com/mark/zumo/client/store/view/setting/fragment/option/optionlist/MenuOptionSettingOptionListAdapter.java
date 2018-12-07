@@ -86,6 +86,11 @@ class MenuOptionSettingOptionListAdapter extends RecyclerView.Adapter<MenuOption
         notifyModeChange();
     }
 
+    void onMenuOptionCategoryCreated(final MenuOptionCategory menuOptionCategory) {
+        menuOptionCategoryList.add(menuOptionCategory);
+        notifyItemInserted(menuOptionCategoryList.size() - 1);
+    }
+
     private void notifyModeChange() {
         Iterator<Runnable> iterator = modeUpdateOperationPool.iterator();
         if (iterator == null) {
