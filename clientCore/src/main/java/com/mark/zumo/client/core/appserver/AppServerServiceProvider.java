@@ -115,6 +115,7 @@ public enum AppServerServiceProvider {
     private static Bundle buildDefaultHeader() {
         Bundle bundle = new Bundle();
         bundle.putString(AndroidSdk.KEY, String.valueOf(Build.VERSION.SDK_INT));
+        bundle.putString(ApiKey.KEY, BuildConfig.BUILD_TYPE.appServerApiKey);
         bundle.putString(Model.KEY, Build.MODEL);
         bundle.putString(Manufacturer.KEY, Build.MANUFACTURER);
         bundle.putString(AppVersion.KEY, getAppVersion());
@@ -184,6 +185,10 @@ public enum AppServerServiceProvider {
     private interface ContentType {
         String KEY = "Content-type";
         String VALUE = "application/json";
+    }
+
+    private interface ApiKey {
+        String KEY = "x-api-key";
     }
 
     private interface AndroidSdk {

@@ -34,7 +34,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
-import android.widget.Toast;
 
 import com.mark.zumo.client.core.entity.Menu;
 import com.mark.zumo.client.core.entity.MenuOptionCategory;
@@ -239,9 +238,5 @@ public class MenuOptionSettingMenuListFragment extends Fragment implements OnSta
         }
         menuListAdapter.setMode(SettingModeSelectee.SettingMode.NONE);
         startAnyMode();
-    }
-
-    private void onReorderMenuList(List<Menu> reorderedMenuList) {
-        Toast.makeText(getActivity(), "Updated", Toast.LENGTH_SHORT).show();
     }
 }

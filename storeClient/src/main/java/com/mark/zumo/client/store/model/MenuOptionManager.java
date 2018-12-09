@@ -7,6 +7,7 @@
 package com.mark.zumo.client.store.model;
 
 import android.support.annotation.NonNull;
+import android.util.Log;
 
 import com.mark.zumo.client.core.entity.Menu;
 import com.mark.zumo.client.core.entity.MenuOption;
@@ -251,6 +252,7 @@ public enum MenuOptionManager {
                         .flatMapMaybe(menuRepository::deleteMenuOptionDetail)
                         .map(menuOptionDetail -> menuOptionDetail.menuUuid)
                         .flatMapMaybe(menuRepository::getMenuFromDisk)
+                        .doOnNext(menu -> Log.d(TAG, "deleteMenuOptionDetails: " + menu))
                         .toList().toMaybe()
         ).subscribeOn(Schedulers.io());
     }

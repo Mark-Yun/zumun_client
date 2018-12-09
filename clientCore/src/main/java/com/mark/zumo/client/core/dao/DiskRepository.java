@@ -94,6 +94,10 @@ public interface DiskRepository {
             " AND menu_uuid LIKE :menuUuid")
     Maybe<MenuOptionDetail> getMenuOptionDetail(String menuOptionCategoryUuid, String menuUuid);
 
+    @Query("SELECT * FROM " + MenuOptionDetail.Schema.table +
+            " WHERE menu_option_detail_uuid LIKE :menuOptionDetailUuid")
+    Maybe<MenuOptionDetail> getMenuOptionDetail(String menuOptionDetailUuid);
+
     @Query("DELETE FROM " + MenuOptionDetail.Schema.table + " WHERE menu_option_category_uuid LIKE :menuOptionCategoryUuid")
     void deleteMenuOptionDetailOfMenuOptionCategory(String menuOptionCategoryUuid);
 

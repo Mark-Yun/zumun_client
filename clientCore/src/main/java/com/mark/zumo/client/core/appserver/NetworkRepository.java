@@ -126,8 +126,8 @@ public interface NetworkRepository {
     @PUT("menu/option/detail")
     Maybe<List<MenuOptionDetail>> updateMenuOptionDetailList(@Body List<MenuOptionDetail> menuOptionDetailList);
 
-    @DELETE("menu/option/detail/{" + MenuOptionDetail.Schema.id + "}")
-    Maybe<MenuOptionDetail> deleteMenuOptionDetail(@Path(MenuOptionDetail.Schema.id) long id);
+    @DELETE("menu/option/detail/{" + MenuOptionDetail.Schema.uuid + "}")
+    Maybe<MenuOptionDetail> deleteMenuOptionDetail(@Path(MenuOptionDetail.Schema.uuid) String menuOptionDetailUuid);
 
 
     @POST("menu/option/category")

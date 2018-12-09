@@ -8,6 +8,7 @@ package com.mark.zumo.client.core.entity;
 import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
+import android.support.annotation.NonNull;
 
 import com.google.gson.annotations.SerializedName;
 import com.mark.zumo.client.core.entity.util.EntityComparator;
@@ -24,8 +25,8 @@ import static com.mark.zumo.client.core.entity.MenuOptionDetail.Schema.table;
 @Entity(tableName = table)
 public class MenuOptionDetail implements Serializable {
 
-    @PrimaryKey @SerializedName(Schema.id) @ColumnInfo(name = Schema.id)
-    public final long id;
+    @PrimaryKey @NonNull @SerializedName(Schema.uuid) @ColumnInfo(name = Schema.uuid)
+    public final String uuid;
     @SerializedName(Schema.menuUuid) @ColumnInfo(name = Schema.menuUuid)
     public final String menuUuid;
     @SerializedName(Schema.menuOptionCategoryUuid) @ColumnInfo(name = Schema.menuOptionCategoryUuid)
@@ -35,8 +36,8 @@ public class MenuOptionDetail implements Serializable {
     @SerializedName(Schema.seqNum) @ColumnInfo(name = Schema.seqNum)
     public final int seqNum;
 
-    public MenuOptionDetail(final long id, final String menuUuid, final String menuOptionCategoryUuid, final String storeUuid, final int seqNum) {
-        this.id = id;
+    public MenuOptionDetail(@NonNull final String uuid, final String menuUuid, final String menuOptionCategoryUuid, final String storeUuid, final int seqNum) {
+        this.uuid = uuid;
         this.menuUuid = menuUuid;
         this.menuOptionCategoryUuid = menuOptionCategoryUuid;
         this.storeUuid = storeUuid;
@@ -44,7 +45,7 @@ public class MenuOptionDetail implements Serializable {
     }
 
     public static MenuOptionDetail create(final String storeUuid, final String menuOptionCategoryUuid, final String menuUuid) {
-        return new MenuOptionDetail(0, menuUuid, menuOptionCategoryUuid, storeUuid, 0);
+        return new MenuOptionDetail("", menuUuid, menuOptionCategoryUuid, storeUuid, 0);
     }
 
     @Override
@@ -59,7 +60,7 @@ public class MenuOptionDetail implements Serializable {
 
     public interface Schema {
         String table = "menu_option_detail";
-        String id = "id";
+        String uuid = "menu_option_detail_uuid";
         String menuOptionCategoryUuid = "menu_option_category_uuid";
         String menuUuid = "menu_uuid";
         String storeUuid = "store_uuid";

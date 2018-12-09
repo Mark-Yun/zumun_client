@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "fd796db8ed8318811845671de2e33459",
+    "identityHash": "02abb220d612ddb0e85e1ce1422de107",
     "entities": [
       {
         "tableName": "menu",
@@ -330,12 +330,12 @@
       },
       {
         "tableName": "menu_option_detail",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `menu_uuid` TEXT, `menu_option_category_uuid` TEXT, `store_uuid` TEXT, `menu_option_seq_num` INTEGER NOT NULL, PRIMARY KEY(`id`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`menu_option_detail_uuid` TEXT NOT NULL, `menu_uuid` TEXT, `menu_option_category_uuid` TEXT, `store_uuid` TEXT, `menu_option_seq_num` INTEGER NOT NULL, PRIMARY KEY(`menu_option_detail_uuid`))",
         "fields": [
           {
-            "fieldPath": "id",
-            "columnName": "id",
-            "affinity": "INTEGER",
+            "fieldPath": "uuid",
+            "columnName": "menu_option_detail_uuid",
+            "affinity": "TEXT",
             "notNull": true
           },
           {
@@ -365,7 +365,7 @@
         ],
         "primaryKey": {
           "columnNames": [
-            "id"
+            "menu_option_detail_uuid"
           ],
           "autoGenerate": false
         },
@@ -609,7 +609,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"fd796db8ed8318811845671de2e33459\")"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"02abb220d612ddb0e85e1ce1422de107\")"
     ]
   }
 }

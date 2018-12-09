@@ -97,15 +97,17 @@ public class MenuRepository {
 
     public Maybe<MenuOptionDetail> getMenuOptionDetailFromDisk(final String menuOptionCategoryUuid,
                                                                final String menuUuid) {
-        Log.d(TAG, "getMenuOptionDetailFromDisk: menuOptionCategoryUuid=" + menuOptionCategoryUuid + " menuUuid=" + menuUuid);
-        return diskRepository.getMenuOptionDetail(menuOptionCategoryUuid, menuUuid)
-                .doOnSuccess(menuOptionDetail -> Log.d(TAG, "getMenuOptionDetailFromDisk: " + menuOptionDetail));
+        return diskRepository.getMenuOptionDetail(menuOptionCategoryUuid, menuUuid);
+    }
+
+    public Maybe<MenuOptionDetail> getMenuOptionDetailFromDisk(final String menuOptionDetailUuid) {
+        return diskRepository.getMenuOptionDetail(menuOptionDetailUuid);
     }
 
     public Maybe<MenuOptionDetail> deleteMenuOptionDetail(final MenuOptionDetail menuOptionDetail) {
-        Log.d(TAG, "deleteMenuOptionDetail: " + menuOptionDetail);
-        return networkRepository.deleteMenuOptionDetail(menuOptionDetail.id)
-                .doOnSuccess(diskRepository::deleteMenuOptionDetail);
+        return networkRepository.deleteMenuOptionDetail(menuOptionDetail.uuid)
+                .doOnSuccess(diskRepository::deleteMenuOptionDetail)
+                .map(x -> menuOptionDetail);
     }
 
     public Maybe<MenuOptionCategory> createMenuOptionCategory(MenuOptionCategory menuOptionCategory) {
@@ -115,7 +117,8 @@ public class MenuRepository {
 
     public Maybe<List<MenuOptionDetail>> createMenuOptionDetailList(List<MenuOptionDetail> menuOptionDetailList) {
         return networkRepository.createMenuOptionDetailList(menuOptionDetailList)
-                .doOnSuccess(diskRepository::insertMenuOptionDetailList);
+                .doOnSuccess(diskRepository::insertMenuOptionDetailList)
+                .doOnSuccess(list -> Log.d(TAG, "createMenuOptionDetailList: " + list));
     }
 
     public Maybe<List<MenuOption>> createMenuOptionList(List<MenuOption> menuOptionList) {
