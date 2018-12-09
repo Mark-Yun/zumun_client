@@ -46,6 +46,22 @@ public enum S3TransferManager {
         context = ContextHolder.getContext();
     }
 
+    private static String getThumbnailImageDirPath(String sessionId) {
+        return "public/store/" + sessionId + "/thumbnail_image/" + UUID.randomUUID() + ".jpg";
+    }
+
+    private static String getCoverImageDirPath(String sessionId) {
+        return "public/store/" + sessionId + "/cover_image/" + UUID.randomUUID() + ".jpg";
+    }
+
+    private static String getMenuImageDirPath(String sessionId) {
+        return "public/store/" + sessionId + "/menu_image/" + UUID.randomUUID() + ".jpg";
+    }
+
+    private static String getBankAccountScanDirPath() {
+        return "public/store/bank_scan_url/" + UUID.randomUUID() + ".jpg";
+    }
+
     private Maybe<AWSMobileClient> awsMobileClient(Activity activity) {
         return Maybe.create(e -> {
             if (awsMobileClient != null) {
@@ -94,7 +110,7 @@ public enum S3TransferManager {
         }
     }
 
-    public Maybe<String> uploadFile(Activity activity, String s3Path, Uri target) {
+    private Maybe<String> uploadFile(Activity activity, String s3Path, Uri target) {
         return Maybe.create(e ->
                 awsMobileClient(activity)
                         .map(this::prepareTransfer)
@@ -136,15 +152,23 @@ public enum S3TransferManager {
                         }).subscribe());
     }
 
-    public String getThumbnailImageDirPath(String sessionId) {
-        return "public/store/" + sessionId + "/thumbnail_image/" + UUID.randomUUID() + ".jpg";
+    public Maybe<String> uploadThumbnailImage(Activity activity, String storeUuid, Uri target) {
+        return Maybe.fromCallable(() -> getThumbnailImageDirPath(storeUuid))
+                .flatMap(s3Path -> uploadFile(activity, s3Path, target));
     }
 
-    public String getCoverImageDirPath(String sessionId) {
-        return "public/store/" + sessionId + "/cover_image/" + UUID.randomUUID() + ".jpg";
+    public Maybe<String> uploadCoverImage(Activity activity, String storeUuid, Uri target) {
+        return Maybe.fromCallable(() -> getCoverImageDirPath(storeUuid))
+                .flatMap(s3Path -> uploadFile(activity, s3Path, target));
     }
 
-    public String getMenuImageDirPath(String sessionId) {
-        return "public/store/" + sessionId + "/menu_image/" + UUID.randomUUID() + ".jpg";
+    public Maybe<String> uploadMenuImage(Activity activity, String menuUuid, Uri target) {
+        return Maybe.fromCallable(() -> getMenuImageDirPath(menuUuid))
+                .flatMap(s3Path -> uploadFile(activity, s3Path, target));
+    }
+
+    public Maybe<String> uploadBankScanImage(Activity activity, Uri target) {
+        return Maybe.fromCallable(S3TransferManager::getBankAccountScanDirPath)
+                .flatMap(s3Path -> uploadFile(activity, s3Path, target));
     }
 }

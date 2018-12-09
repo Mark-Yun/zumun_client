@@ -6,9 +6,14 @@
 
 package com.mark.zumo.client.store.model;
 
+import com.mark.zumo.client.core.appserver.NetworkRepository;
+
 /**
  * Created by mark on 18. 4. 30.
  */
 
-public class UserManager {
+public enum UserManager {
+    INSTANCE;
+
+    private NetworkRepository networkRepository;
 }

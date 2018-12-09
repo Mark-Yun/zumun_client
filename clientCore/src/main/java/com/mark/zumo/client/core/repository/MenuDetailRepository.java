@@ -50,6 +50,7 @@ public class MenuDetailRepository {
 
         return sInstance;
     }
+
     public Observable<GroupedObservable<String, MenuDetail>> getMenuDetailListOfStore(String storeUuid) {
         Maybe<List<MenuDetail>> menuListDB = diskRepository.getMenuDetailByStoreUuid(storeUuid);
         Maybe<List<MenuDetail>> menuListApi = networkRepository.getMenuDetailByStoreUuid(storeUuid)
@@ -60,11 +61,38 @@ public class MenuDetailRepository {
                 menuListDB.flatMapObservable(Observable::fromIterable)
                         .groupBy(menuDetail -> menuDetail.menuCategoryUuid),
                 menuListApi.flatMapObservable(Observable::fromIterable)
-                        .groupBy(menuDetail -> menuDetail.menuCategoryUuid));
+                        .groupBy(menuDetail -> menuDetail.menuCategoryUuid))
+                .distinctUntilChanged();
+    }
+
+    public Maybe<List<MenuDetail>> createMenuDetailList(List<MenuDetail> menuDetailList) {
+        return networkRepository.createMenuDetailList(menuDetailList)
+                .doOnSuccess(diskRepository::insertMenuDetailList);
     }
 
     public Maybe<List<MenuDetail>> getMenuDetailListFromDisk(final String storeUuid) {
         return diskRepository.getMenuDetailByStoreUuid(storeUuid);
+    }
+
+    public Maybe<MenuDetail> getMenuDetailByCategoryUuidAndMenuUuidFromDisk(final String categoryUuid,
+                                                                            final String menuUuid) {
+        return diskRepository.getMenuDetailByCategoryUuidAndMenuUuid(categoryUuid, menuUuid);
+    }
+
+    public Maybe<List<MenuDetail>> removeMenuDetailList(final List<MenuDetail> menuDetailList) {
+        return Observable.fromIterable(menuDetailList)
+                .map(menuDetail -> menuDetail.uuid)
+                .flatMapMaybe(menuDetail -> networkRepository.deleteMenuDetail(menuDetail)
+                        .map(menuDetail1 -> menuDetail1.uuid)
+                        .flatMap(diskRepository::getMenuDetail))
+                .toList().toMaybe()
+                .doOnSuccess(diskRepository::deleteMenuDetailList);
+    }
+
+    public Maybe<List<MenuDetail>> updateMenuDetailSequence(final String menuCategoryUuid,
+                                                            final List<MenuDetail> menuDetailList) {
+        return networkRepository.updateMenusOfCategory(menuCategoryUuid, menuDetailList)
+                .doOnSuccess(diskRepository::insertMenuDetailList);
     }
 
     public Observable<List<MenuDetail>> getMenuDetailListByCategoryUuid(final String categoryUuid) {
@@ -73,11 +101,12 @@ public class MenuDetailRepository {
                 .doOnSuccess(x -> diskRepository.deleteMenuDetailListByCategoryUuid(categoryUuid))
                 .doOnSuccess(diskRepository::insertMenuDetailList);
         return Maybe.merge(menuDetailListDB, menuDetailListApi)
-                .toObservable();
+                .toObservable()
+                .distinctUntilChanged();
     }
 
     public Maybe<List<MenuDetail>> getMenuDetailListFromDiskByMenuUuid(final String storeUuid, final String menuUuid) {
-        return diskRepository.getMenuDetailByStringMenuUuidFromDisk(storeUuid, menuUuid);
+        return diskRepository.getMenuDetailByStringMenuUuid(storeUuid, menuUuid);
     }
 
     public Maybe<List<MenuDetail>> updateCategoriesOfMenu(final String menuUuid,

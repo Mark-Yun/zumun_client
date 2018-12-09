@@ -40,6 +40,8 @@ public class MenuDetailPreferenceFragment extends PreferenceFragmentCompat {
 
     private MenuSettingViewModel menuSettingViewModel;
     private String menuUuid;
+    private EditTextPreference menuPricePreference;
+    private EditTextPreference menuNamePreference;
 
     @Override
     public void onCreatePreferences(final Bundle savedInstanceState, final String rootKey) {
@@ -66,14 +68,14 @@ public class MenuDetailPreferenceFragment extends PreferenceFragmentCompat {
     }
 
     private void onLoadMenu(Menu menu) {
-        EditTextPreference menuName = (EditTextPreference) findPreference(getString(R.string.preference_key_menu_detail_menu_name));
-        EditTextPreference menuPrice = (EditTextPreference) findPreference(getString(R.string.preference_key_menu_detail_menu_price));
+        menuNamePreference = (EditTextPreference) findPreference(getString(R.string.preference_key_menu_detail_menu_name));
+        menuPricePreference = (EditTextPreference) findPreference(getString(R.string.preference_key_menu_detail_menu_price));
 
-        menuName.setSummary(menu.name);
-        menuName.setOnPreferenceChangeListener(this::onMenuNameChanged);
+        menuPricePreference.setOnPreferenceChangeListener(this::onMenuPriceChanged);
+        menuNamePreference.setOnPreferenceChangeListener(this::onMenuNameChanged);
 
-        menuPrice.setSummary(String.valueOf(menu.price));
-        menuPrice.setOnPreferenceChangeListener(this::onMenuPriceChanged);
+        menuNamePreference.setSummary(menu.name);
+        menuPricePreference.setSummary(String.valueOf(menu.price));
     }
 
     private void onLoadMenuCategory(List<MenuCategory> categoryList) {
@@ -130,13 +132,12 @@ public class MenuDetailPreferenceFragment extends PreferenceFragmentCompat {
     private boolean onMenuCategoryChanged(final Preference preference, final Object newValue) {
         Set<String> newCategorySet = (Set<String>) newValue;
         Log.d(TAG, "onMenuCategoryChanged: " + newCategorySet);
-        menuSettingViewModel.updateMenuCategoriesOfMenu(menuUuid, newCategorySet).observe(this, this::onLoadMenuCategoryUpdated);
+        menuSettingViewModel.updateMenuCategoriesOfMenu(menuUuid, newCategorySet).observe(this, this::onLoadMenuCategory);
         return true;
     }
 
 
-    private void onLoadMenuCategoryUpdated(List<MenuCategory> categoryList) {
-        onLoadMenuCategory(categoryList);
-        menuSettingViewModel.getMenuListByCategory();
+    private void refreshCategoryList() {
+        menuSettingViewModel.loadMenuListByCategory();
     }
 }

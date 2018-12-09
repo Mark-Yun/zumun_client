@@ -28,30 +28,35 @@ public class MenuOption implements Serializable {
 
     @PrimaryKey @NonNull @SerializedName(Schema.uuid) @ColumnInfo(name = Schema.uuid)
     public final String uuid;
-    @SerializedName(Schema.menuUuid) @ColumnInfo(name = Schema.menuUuid)
-    public final String menuUuid;
+    @SerializedName(Schema.storeUuid) @ColumnInfo(name = Schema.storeUuid)
+    public final String storeUuid;
+    @SerializedName(Schema.menuOptionCategoryUuid) @ColumnInfo(name = Schema.menuOptionCategoryUuid)
+    public String menuOptionCategoryUuid;
     @SerializedName(Schema.name) @ColumnInfo(name = Schema.name)
-    public final String name;
+    public String name;
     @SerializedName(Schema.value) @ColumnInfo(name = Schema.value)
-    public final String value;
+    public String value;
     @SerializedName(Schema.price) @ColumnInfo(name = Schema.price)
-    public final int price;
+    public int price;
+    @SerializedName(Schema.seqNum) @ColumnInfo(name = Schema.seqNum)
+    public int seqNum;
 
-    public MenuOption(@NonNull final String uuid, final String menuUuid, final String name, final String value, final int price) {
+    public MenuOption(@NonNull final String uuid, final String storeUuid, final String menuOptionCategoryUuid, final String name, final String value, final int price, final int seqNum) {
         this.uuid = uuid;
-        this.menuUuid = menuUuid;
+        this.storeUuid = storeUuid;
+        this.menuOptionCategoryUuid = menuOptionCategoryUuid;
         this.name = name;
         this.value = value;
         this.price = price;
+        this.seqNum = seqNum;
     }
 
-    public interface Schema {
-        String table = "menu_option";
-        String uuid = "menu_option_uuid";
-        String menuUuid = "menu_uuid";
-        String name = "option_name";
-        String value = "option_value";
-        String price = "option_price";
+    public static MenuOption create(String value, int price) {
+        return new MenuOption("", "", "", "", value, price, 0);
+    }
+
+    public static MenuOption createEmptyMenuOption() {
+        return new MenuOption("", "", "", "", "", -1, -1);
     }
 
     @Override
@@ -62,5 +67,16 @@ public class MenuOption implements Serializable {
     @Override
     public boolean equals(final Object obj) {
         return new EntityComparator<>().test(this, obj);
+    }
+
+    public interface Schema {
+        String table = "menu_option";
+        String uuid = "menu_option_uuid";
+        String storeUuid = "store_uuid";
+        String menuOptionCategoryUuid = "menu_option_category_uuid";
+        String name = "menu_option_name";
+        String value = "menu_option_value";
+        String price = "menu_option_price";
+        String seqNum = "menu_option_value_seq_num";
     }
 }

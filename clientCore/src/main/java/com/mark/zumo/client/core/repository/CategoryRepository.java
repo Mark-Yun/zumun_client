@@ -26,10 +26,9 @@ import io.reactivex.Observable;
 public class CategoryRepository {
 
     private static final String TAG = "CategoryRepository";
-
-    private final DiskRepository diskRepository;
     private static Bundle session;
     private static CategoryRepository sInstance;
+    private final DiskRepository diskRepository;
     private final NetworkRepository networkRepository;
 
     private CategoryRepository(final Bundle session) {
@@ -53,6 +52,7 @@ public class CategoryRepository {
     public Observable<List<MenuCategory>> getMenuCategoryList(final String storeUuid) {
         Maybe<List<MenuCategory>> menuCategoryListDB = diskRepository.getMenuCategoryList(storeUuid);
         Maybe<List<MenuCategory>> menuCategoryListApi = networkRepository.getMenuCategoryListByStoreUuid(storeUuid)
+                .doOnSuccess(categoryList -> diskRepository.deleteCategoriesOfStore(storeUuid))
                 .doOnSuccess(diskRepository::insertMenuCategoryList);
 
         return Maybe.merge(menuCategoryListDB, menuCategoryListApi)
@@ -82,5 +82,17 @@ public class CategoryRepository {
 
     public Maybe<MenuCategory> getMenuCategoryFromDisk(final String categoryUuid) {
         return diskRepository.getMenuCategory(categoryUuid);
+    }
+
+    public Maybe<List<MenuCategory>> deleteCategories(final List<MenuCategory> menuCategoryList) {
+        return Observable.fromIterable(menuCategoryList)
+                .map(menuCategory -> menuCategory.uuid)
+                .flatMapMaybe(networkRepository::deleteCategory)
+                .toList().toMaybe();
+    }
+
+    public Maybe<MenuCategory> deleteCategory(final String categoryUuid) {
+        return networkRepository.deleteCategory(categoryUuid)
+                .doOnSuccess(diskRepository::deleteMenuCategory);
     }
 }

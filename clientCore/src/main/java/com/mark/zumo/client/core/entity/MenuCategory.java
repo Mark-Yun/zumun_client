@@ -8,11 +8,16 @@ package com.mark.zumo.client.core.entity;
 
 import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
 import android.support.annotation.NonNull;
 
+import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import com.mark.zumo.client.core.entity.util.EntityComparator;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static com.mark.zumo.client.core.entity.MenuCategory.Schema.table;
 
@@ -31,12 +36,23 @@ public class MenuCategory {
     public final String storeUuid;
     @ColumnInfo(name = Schema.seqNum) @SerializedName(Schema.seqNum)
     public int seqNum;
+    @Ignore @Expose(deserialize = false, serialize = false)
+    public List<Menu> menuList;
 
     public MenuCategory(@NonNull final String uuid, final String name, final String storeUuid, final int seqNum) {
         this.uuid = uuid;
         this.name = name;
         this.storeUuid = storeUuid;
         this.seqNum = seqNum;
+        menuList = new ArrayList<>();
+    }
+
+    public MenuCategory(@NonNull final String uuid, final String name, final String storeUuid, final int seqNum, final List<Menu> menuList) {
+        this.uuid = uuid;
+        this.name = name;
+        this.storeUuid = storeUuid;
+        this.seqNum = seqNum;
+        this.menuList = menuList;
     }
 
     public interface Schema {

@@ -11,7 +11,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 
-import com.mark.zumo.client.core.app.BaseActivity;
+import com.mark.zumo.client.core.view.BaseActivity;
 import com.mark.zumo.client.customer.R;
 import com.mark.zumo.client.customer.view.signup.fragment.SignUpButtonFragment;
 import com.mark.zumo.client.customer.viewmodel.SignUpViewModel;

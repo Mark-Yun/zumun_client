@@ -13,16 +13,23 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.AppCompatImageView;
+import android.support.v7.widget.AppCompatTextView;
 import android.support.v7.widget.Toolbar;
 import android.util.AttributeSet;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
+import com.bumptech.glide.request.RequestOptions;
 import com.mark.zumo.client.core.entity.Store;
+import com.mark.zumo.client.core.util.glide.GlideApp;
+import com.mark.zumo.client.core.util.glide.LinearGradientTransformation;
+import com.mark.zumo.client.core.view.BaseActivity;
 import com.mark.zumo.client.store.R;
 import com.mark.zumo.client.store.view.order.OrderFragment;
 import com.mark.zumo.client.store.view.setting.fragment.SettingMainFragment;
@@ -34,7 +41,7 @@ import butterknife.ButterKnife;
 /**
  * Created by mark on 18. 7. 1.
  */
-public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class MainActivity extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener {
     @BindView(R.id.toolbar) Toolbar toolbar;
     @BindView(R.id.nav_view) NavigationView navView;
     @BindView(R.id.drawer_layout) DrawerLayout drawer;
@@ -73,6 +80,26 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     private void onLoadStore(Store store) {
         setTitle(store.name);
+
+        AppCompatTextView name = navView.findViewById(R.id.name);
+        AppCompatTextView address = navView.findViewById(R.id.address);
+        AppCompatImageView coverImage = navView.findViewById(R.id.cover_image);
+        AppCompatImageView thumbnailImage = navView.findViewById(R.id.thumbnail_image);
+
+        name.setText(store.name);
+        address.setText(store.address);
+        GlideApp.with(this)
+                .load(store.thumbnailUrl)
+                .apply(RequestOptions.circleCropTransform())
+                .transition(DrawableTransitionOptions.withCrossFade())
+                .into(thumbnailImage);
+
+        GlideApp.with(this)
+                .load(store.coverImageUrl)
+                .apply(RequestOptions.centerCropTransform())
+                .transform(new LinearGradientTransformation(this))
+                .transition(DrawableTransitionOptions.withCrossFade())
+                .into(coverImage);
     }
 
     @Override
@@ -89,20 +116,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.menu_order) {
+        if (id == R.id.nav_menu_order) {
             Fragment fragment = Fragment.instantiate(this, OrderFragment.class.getName());
-            getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.main_fragment, fragment)
-                    .commit();
-        } else if (id == R.id.nav_gallery) {
-
-        } else if (id == R.id.nav_slideshow) {
-
-        } else if (id == R.id.nav_manage) {
+            updateMainFragment(fragment);
+        } else if (id == R.id.nav_setting) {
             Fragment fragment = Fragment.instantiate(this, SettingMainFragment.class.getName());
-            getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.main_fragment, fragment)
-                    .commit();
+            updateMainFragment(fragment);
         } else if (id == R.id.nav_share) {
 
         } else if (id == R.id.nav_send) {
@@ -111,5 +130,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    private void updateMainFragment(final Fragment fragment) {
+        getSupportFragmentManager().beginTransaction()
+                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+                .replace(R.id.main_fragment, fragment)
+                .commit();
     }
 }

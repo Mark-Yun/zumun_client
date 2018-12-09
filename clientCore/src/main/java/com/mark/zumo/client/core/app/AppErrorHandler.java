@@ -49,7 +49,9 @@ public class AppErrorHandler {
     public static void setup() {
         RxJavaPlugins.setErrorHandler(e -> {
             e.printStackTrace();
-            if (e instanceof UndeliverableException || e instanceof OnErrorNotImplementedException) {
+            if (e instanceof UndeliverableException ||
+                    e instanceof OnErrorNotImplementedException ||
+                    e instanceof NullPointerException) {
                 e = e.getCause();
             }
 

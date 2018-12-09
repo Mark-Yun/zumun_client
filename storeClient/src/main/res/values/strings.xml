@@ -67,12 +67,19 @@
     <string name="button_text_cancel">Cancel</string>
 
     <string name="menu_category_setting_add_new_category">Add new category</string>
+    <string name="menu_category_setting_add_new_menu">Add new menu</string>
+    <string name="menu_category_setting_link_menu">Link menu</string>
+    <string name="menu_category_setting_add_new_option">Add new option</string>
+    <string name="menu_category_setting_select_menu_to_apply_option">Select menu to apply</string>
 
     <string name="menu_category_setting_add_new_category_dialog_title">Create new category</string>
     <string name="menu_category_setting_add_new_category_dialog_message">Insert new category name</string>
 
     <string name="menu_category_setting_update_category_dialog_title">Update category</string>
     <string name="menu_category_setting_update_category_dialog_message">Insert new category name</string>
+
+    <string name="menu_category_setting_remove_category_dialog_title">Remove category</string>
+    <string name="menu_category_setting_remove_category_dialog_message">Remove %s category?</string>
 
     <string name="content_desc_navigation_drawer_open">Open navigation drawer</string>
     <string name="content_desc_navigation_drawer_close">Close navigation drawer</string>
@@ -92,4 +99,30 @@
 
     <string name="error_message_insert_as_number">Insert as number</string>
     <string name="number_of_orders">(%s)</string>
+    <string name="store_name_preference_title">Store Name Setting</string>
+    <string name="store_thumbnail_image_preference_title">Store Logo Image Setting</string>
+    <string name="store_cover_image_preference_title">Store Cover Image Setting</string>
+    <string name="store_address_preference_title">Store Address Setting</string>
+    <string name="store_name_preference_key" translatable="false">store_profile_store_name_key</string>
+    <string name="store_thumbnail_image_preference_key" translatable="false">store_profile_store_thumbnail_key</string>
+    <string name="store_cover_image_preference_key" translatable="false">store_profile_store_image_key</string>
+    <string name="store_address_preference_key" translatable="false">store_profile_store_address_key</string>
+
+    <string name="store_owner_name">Store Owner Name</string>
+    <string name="store_owner_password">Password</string>
+    <string name="store_owner_password_confirm">Password Confirm</string>
+    <string name="store_owner_phone_number">Store Owner Phone Number</string>
+    <string name="store_owner_email">Store Owner Email</string>
+    <string name="store_owner_bank_name">Store Owner Back Name</string>
+    <string name="store_owner_bank_account">Store Owner Back Account</string>
+    <string name="store_owner_bank_account_scan">Store Owner Back Account Scan</string>
+
+    <string name="menu_title_widthdraw">Withdraw</string>
+
+    <string name="option_setting_mode_description_edit">Select an option to edit</string>
+    <string name="option_setting_mode_description_delete">Select options to delete</string>
+    <string name="option_setting_mode_description_reorder">Reorder options by dragging</string>
+
+    <string name="un_categorized_menu_category_title">Not Categorized Menus</string>
+    <string name="menu_selector_title_to_select_menus_to_add_into_category">Select menus to add into %s category</string>
 </resources>

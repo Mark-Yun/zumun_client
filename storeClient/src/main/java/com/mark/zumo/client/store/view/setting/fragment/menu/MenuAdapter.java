@@ -11,12 +11,12 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.AppCompatImageView;
+import android.support.v7.widget.AppCompatTextView;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import com.mark.zumo.client.core.entity.Menu;
 import com.mark.zumo.client.core.util.glide.GlideApp;
@@ -46,9 +46,14 @@ class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.ViewHolder> {
         menuList = new ArrayList<>();
     }
 
-    public void setMenuList(final List<Menu> menuList) {
+    boolean setMenuList(final List<Menu> menuList) {
         this.menuList = menuList;
+        if (this.menuList.equals(menuList)) {
+            return false;
+        }
+
         notifyDataSetChanged();
+        return true;
     }
 
     @NonNull
@@ -64,13 +69,13 @@ class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.ViewHolder> {
         viewHolder.name.setText(menu.name);
         viewHolder.price.setText(NumberFormat.getCurrencyInstance().format(menu.price));
 
-        if (!TextUtils.isEmpty(menu.imageUrl)) {
-            GlideApp.with(viewHolder.itemView.getContext())
-                    .load(menu.imageUrl)
-                    .apply(GlideUtils.menuImageOptions())
-                    .transition(GlideUtils.menuTransitionOptions())
-                    .into(viewHolder.image);
-        }
+        viewHolder.image.setVisibility(TextUtils.isEmpty(menu.imageUrl) ? View.GONE : View.VISIBLE);
+
+        GlideApp.with(viewHolder.itemView.getContext())
+                .load(menu.imageUrl)
+                .apply(GlideUtils.menuImageOptions())
+                .transition(GlideUtils.menuTransitionOptions())
+                .into(viewHolder.image);
 
         viewHolder.itemView.setOnClickListener(v -> onClickMenu(v, menu));
     }
@@ -94,8 +99,8 @@ class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.ViewHolder> {
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {
-        @BindView(R.id.name) TextView name;
-        @BindView(R.id.price) TextView price;
+        @BindView(R.id.name) AppCompatTextView name;
+        @BindView(R.id.price) AppCompatTextView price;
         @BindView(R.id.image) AppCompatImageView image;
 
         ViewHolder(final View itemView) {

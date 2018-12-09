@@ -63,9 +63,7 @@ public class MenuSettingFragment extends Fragment {
 
         CategoryAdapter categoryAdapter = new CategoryAdapter(this, menuSettingViewModel, getFragmentManager());
         recyclerView.setAdapter(categoryAdapter);
-
-        menuSettingViewModel.loadMenuCategoryList().observe(this, categoryAdapter::setCategoryList);
-        menuSettingViewModel.getMenuListByCategory().observe(this, categoryAdapter::setMenuListMap);
+        menuSettingViewModel.getCombinedMenuCategoryList().observe(this, categoryAdapter::setCategoryList);
     }
 
     @OnClick(R.id.add_menu)

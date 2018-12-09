@@ -8,6 +8,7 @@ package com.mark.zumo.client.store.view.setting.fragment;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.preference.Preference;
 import android.support.v7.preference.PreferenceFragmentCompat;
 
@@ -34,7 +35,9 @@ public class SettingPreferenceFragment extends PreferenceFragmentCompat {
         String fragmentName = preference.getFragment();
         Fragment fragment = Fragment.instantiate(getContext(), fragmentName);
 
-        Objects.requireNonNull(getFragmentManager()).beginTransaction()
+        Objects.requireNonNull(getFragmentManager())
+                .beginTransaction()
+                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
                 .replace(R.id.setting_main_fragment, fragment)
                 .commit();
 

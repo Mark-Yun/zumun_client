@@ -14,6 +14,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -24,6 +25,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.mark.zumo.client.core.entity.Menu;
 import com.mark.zumo.client.core.entity.Store;
 import com.mark.zumo.client.core.util.glide.GlideApp;
 import com.mark.zumo.client.core.util.glide.GlideUtils;
@@ -90,11 +92,16 @@ public class MenuFragment extends Fragment {
         recyclerView.setHasFixedSize(true);
         recyclerView.setNestedScrollingEnabled(false);
 
-        categoryAdapter = new CategoryAdapter(this, menuViewModel);
+        categoryAdapter = new CategoryAdapter(this);
         recyclerView.setAdapter(categoryAdapter);
+        categoryAdapter.setMenuSelectListener(this::onSelectMenu);
 
-        menuViewModel.loadMenuCategoryList(storeUuid).observe(this, categoryAdapter::setCategoryList);
-        menuViewModel.loadMenuByCategory(storeUuid).observe(this, categoryAdapter::setMenuListMap);
+        menuViewModel.loadCombinedMenuCategoryList(storeUuid).observe(this, categoryAdapter::setCategoryList);
+    }
+
+    private void onSelectMenu(Menu menu) {
+        menuViewModel.addMenuToCart(menu);
+        onAddCartComplete(getView(), menu);
     }
 
     private void inflateCartBadge() {
@@ -106,6 +113,10 @@ public class MenuFragment extends Fragment {
         menuViewModel.getStore(storeUuid).observe(this, this::onLoadStore);
     }
 
+    private void onAddCartComplete(final View itemView, final Menu menu) {
+        String text = itemView.getContext().getString(R.string.added_to_cart, menu.name);
+        Snackbar.make(itemView, text, Snackbar.LENGTH_LONG).show();
+    }
 
     private void onLoadStore(Store store) {
         GlideApp.with(this)

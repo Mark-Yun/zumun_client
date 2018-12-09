@@ -11,11 +11,14 @@ import android.arch.persistence.room.Delete;
 import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.OnConflictStrategy;
 import android.arch.persistence.room.Query;
+import android.arch.persistence.room.RoomWarnings;
 
 import com.mark.zumo.client.core.entity.Menu;
 import com.mark.zumo.client.core.entity.MenuCategory;
 import com.mark.zumo.client.core.entity.MenuDetail;
 import com.mark.zumo.client.core.entity.MenuOption;
+import com.mark.zumo.client.core.entity.MenuOptionCategory;
+import com.mark.zumo.client.core.entity.MenuOptionDetail;
 import com.mark.zumo.client.core.entity.MenuOrder;
 import com.mark.zumo.client.core.entity.OrderDetail;
 import com.mark.zumo.client.core.entity.SnsToken;
@@ -41,9 +44,6 @@ public interface DiskRepository {
     Maybe<Store> getStore(String uuid);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    void insertStoreList(List<Store> stores);
-
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertStore(Store store);
 
 
@@ -55,9 +55,6 @@ public interface DiskRepository {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertOrderDetailList(List<OrderDetail> orderDetailList);
-
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    void insertOrderDetail(OrderDetail orderDetailList);
 
 
     @Query("SELECT * FROM " + MenuOrder.TABLE + " WHERE menu_order_uuid LIKE :menuOrderUuid LIMIT 1")
@@ -82,9 +79,30 @@ public interface DiskRepository {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertMenuOrderList(List<MenuOrder> menuOrderList);
 
+    @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
+    @Query("SELECT * FROM " + MenuOption.Schema.table + " WHERE menu_option_category_uuid LIKE :menuOptionCategoryUuid")
+    Maybe<List<MenuOption>> getMenuOptionListByMenuOptionCategoryUuid(String menuOptionCategoryUuid);
 
-    @Query("SELECT * FROM " + MenuOption.Schema.table + " WHERE menu_uuid LIKE :menuUuid")
-    Maybe<List<MenuOption>> getMenuOptionListByMenuUuid(String menuUuid);
+    @Query("SELECT * FROM " + MenuOption.Schema.table + " WHERE store_uuid LIKE :storeUuid")
+    Maybe<List<MenuOption>> getMenuOptionListByStoreUuid(String storeUuid);
+
+    @Query("SELECT * FROM " + MenuOptionDetail.Schema.table + " WHERE store_uuid LIKE :storeUuid")
+    Maybe<List<MenuOptionDetail>> getMenuOptionDetailListByMenuOptionByStoreUuid(String storeUuid);
+
+    @Query("SELECT * FROM " + MenuOptionDetail.Schema.table +
+            " WHERE menu_option_category_uuid LIKE :menuOptionCategoryUuid" +
+            " AND menu_uuid LIKE :menuUuid")
+    Maybe<MenuOptionDetail> getMenuOptionDetail(String menuOptionCategoryUuid, String menuUuid);
+
+    @Query("SELECT * FROM " + MenuOptionDetail.Schema.table +
+            " WHERE menu_option_detail_uuid LIKE :menuOptionDetailUuid")
+    Maybe<MenuOptionDetail> getMenuOptionDetail(String menuOptionDetailUuid);
+
+    @Query("DELETE FROM " + MenuOptionDetail.Schema.table + " WHERE menu_option_category_uuid LIKE :menuOptionCategoryUuid")
+    void deleteMenuOptionDetailOfMenuOptionCategory(String menuOptionCategoryUuid);
+
+    @Query("DELETE FROM " + MenuOptionDetail.Schema.table + " WHERE store_uuid LIKE :storeUuid")
+    void deleteMenuOptionDetailOfStore(String storeUuid);
 
     @Query("SELECT * FROM " + MenuOption.Schema.table + " WHERE menu_option_uuid LIKE :menuOptionUuid LIMIT 1")
     Maybe<MenuOption> getMenuOption(String menuOptionUuid);
@@ -93,7 +111,34 @@ public interface DiskRepository {
     void insertMenuOptionList(List<MenuOption> menuOptions);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
+    void insertMenuOptionCategoryList(List<MenuOptionCategory> menuOptionCategoryList);
+
+    @Query("DELETE FROM " + MenuOptionCategory.Schema.table + " WHERE store_uuid LIKE :storeUuid")
+    void deleteMenuOptionCategoryListByStoreUuid(String storeUuid);
+
+    @Delete
+    void deleteMenuOptionCategoryList(List<MenuOptionCategory> menuOptionCategoryList);
+
+    @Delete
+    void deleteMenuOptionList(List<MenuOption> menuOptionList);
+
+    @Delete
+    void deleteMenuOptionDetail(MenuOptionDetail menuOptionDetail);
+
+    @Query("SELECT * FROM " + MenuOptionCategory.Schema.table + " WHERE store_uuid LIKE :storeUuid")
+    Maybe<List<MenuOptionCategory>> getMenuOptionCategoryListByStoreUuid(String storeUuid);
+
+    @Query("SELECT * FROM " + MenuOptionCategory.Schema.table + " WHERE menu_option_category_uuid LIKE :menuOptionCategoryUuid")
+    Maybe<MenuOptionCategory> getMenuOptionCategory(String menuOptionCategoryUuid);
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    void insertMenuOptionDetailList(List<MenuOptionDetail> menuOptionDetails);
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertMenuOption(MenuOption menuOption);
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    void insertMenuOptionCategory(MenuOptionCategory menuOptionCategory);
 
 
     @Query("SELECT * FROM " + Menu.MENU_TABLE + " WHERE menu_uuid LIKE :uuid LIMIT 1")
@@ -101,6 +146,9 @@ public interface DiskRepository {
 
     @Query("SELECT * FROM " + Menu.MENU_TABLE + " WHERE store_uuid LIKE :storeUuid")
     Maybe<List<Menu>> getMenuList(String storeUuid);
+
+    @Query("DELETE FROM " + Menu.MENU_TABLE + " WHERE store_uuid LIKE :storeUuid")
+    void deleteMenuOfStore(String storeUuid);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertMenuList(List<Menu> menus);
@@ -116,6 +164,9 @@ public interface DiskRepository {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertMenuCategory(MenuCategory menuCategory);
 
+    @Query("DELETE FROM " + MenuCategory.Schema.table + " WHERE store_uuid LIKE :storeUuid")
+    void deleteCategoriesOfStore(String storeUuid);
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertMenuCategoryList(List<MenuCategory> menuCategoryList);
 
@@ -124,6 +175,10 @@ public interface DiskRepository {
 
     @Query("SELECT * FROM " + MenuCategory.Schema.table + " WHERE menu_category_uuid LIKE :menu_category_uuid LIMIT 1")
     Maybe<MenuCategory> getMenuCategory(String menu_category_uuid);
+
+    @Delete
+    void deleteMenuCategory(MenuCategory menuCategory);
+
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertPaymentToken(PaymentToken paymentToken);
@@ -147,13 +202,24 @@ public interface DiskRepository {
     @Query("SELECT * FROM " + MenuDetail.Schema.TABLE + " WHERE menu_category_uuid LIKE :categoryUuid")
     Maybe<List<MenuDetail>> getMenuDetailByCategoryUuid(String categoryUuid);
 
+    @Query("SELECT * FROM " + MenuDetail.Schema.TABLE + " WHERE menu_detail_uuid LIKE :menuDetailUuid")
+    Maybe<MenuDetail> getMenuDetail(String menuDetailUuid);
+
     @Query("DELETE FROM " + MenuDetail.Schema.TABLE + " WHERE menu_category_uuid LIKE :categoryUuid")
     void deleteMenuDetailListByCategoryUuid(String categoryUuid);
+
+    @Delete
+    void deleteMenuDetailList(List<MenuDetail> menuDetailList);
 
     @Query("SELECT * FROM " + MenuDetail.Schema.TABLE +
             " WHERE store_uuid LIKE :storeUuid" +
             " AND menu_uuid LIKE :menuUuid")
-    Maybe<List<MenuDetail>> getMenuDetailByStringMenuUuidFromDisk(String storeUuid, String menuUuid);
+    Maybe<List<MenuDetail>> getMenuDetailByStringMenuUuid(String storeUuid, String menuUuid);
+
+    @Query("SELECT * FROM " + MenuDetail.Schema.TABLE +
+            " WHERE menu_category_uuid LIKE :categoryUuid" +
+            " AND menu_uuid LIKE :menuUuid LIMIT 1")
+    Maybe<MenuDetail> getMenuDetailByCategoryUuidAndMenuUuid(String categoryUuid, String menuUuid);
 
     @Query("DELETE FROM " + MenuDetail.Schema.TABLE + " WHERE menu_uuid LIKE :menuUuid")
     void deleteMenuDetailListByMenuUuid(String menuUuid);

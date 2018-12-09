@@ -23,8 +23,8 @@ import java.io.Serializable;
 @Entity(tableName = MenuDetail.Schema.TABLE)
 public class MenuDetail implements Serializable {
 
-    @PrimaryKey @NonNull @SerializedName(Schema.id) @ColumnInfo(name = Schema.id)
-    public long id;
+    @PrimaryKey @NonNull @SerializedName(Schema.uuid) @ColumnInfo(name = Schema.uuid)
+    public String uuid;
     @SerializedName(Schema.menuUuid) @ColumnInfo(name = Schema.menuUuid)
     public String menuUuid;
     @SerializedName(Schema.menuCategoryUuid) @ColumnInfo(name = Schema.menuCategoryUuid)
@@ -34,23 +34,42 @@ public class MenuDetail implements Serializable {
     @SerializedName(Schema.storeUuid) @ColumnInfo(name = Schema.storeUuid)
     public String storeUuid;
 
-    public MenuDetail(@NonNull final long id, final String menuUuid, final String menuCategoryUuid, final int menuSeqNum, final String storeUuid) {
-        this.id = id;
+    public MenuDetail(@NonNull final String uuid, final String menuUuid, final String menuCategoryUuid, final int menuSeqNum, final String storeUuid) {
+        this.uuid = uuid;
         this.menuUuid = menuUuid;
         this.menuCategoryUuid = menuCategoryUuid;
         this.menuSeqNum = menuSeqNum;
         this.storeUuid = storeUuid;
     }
 
+    @Override
+    public String toString() {
+        return EntityHelper.toString(this);
+    }
+
+    @Override
+    public boolean equals(final Object obj) {
+        return new EntityComparator<>().test(this, obj);
+    }
+
+    public interface Schema {
+        String TABLE = "menu_detail";
+        String uuid = "menu_detail_uuid";
+        String menuUuid = "menu_uuid";
+        String menuCategoryUuid = "menu_category_uuid";
+        String menuSeqNum = "menu_seq_num";
+        String storeUuid = "store_uuid";
+    }
+
     public static class Builder {
-        private long id;
+        private String uuid;
         private String menuUuid;
         private String menuCategoryUuid;
         private int menuSeqNum;
         private String storeUuid;
 
-        public Builder setId(final long id) {
-            this.id = id;
+        public Builder setId(final String uuid) {
+            this.uuid = uuid;
             return this;
         }
 
@@ -75,26 +94,7 @@ public class MenuDetail implements Serializable {
         }
 
         public MenuDetail build() {
-            return new MenuDetail(id, menuUuid, menuCategoryUuid, menuSeqNum, storeUuid);
+            return new MenuDetail(uuid, menuUuid, menuCategoryUuid, menuSeqNum, storeUuid);
         }
-    }
-
-    @Override
-    public String toString() {
-        return EntityHelper.toString(this);
-    }
-
-    public interface Schema {
-        String TABLE = "menu_detail";
-        String id = "id";
-        String menuUuid = "menu_uuid";
-        String menuCategoryUuid = "menu_category_uuid";
-        String menuSeqNum = "menu_seq_num";
-        String storeUuid = "store_uuid";
-    }
-
-    @Override
-    public boolean equals(final Object obj) {
-        return new EntityComparator<>().test(this, obj);
     }
 }
