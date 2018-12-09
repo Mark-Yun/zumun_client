@@ -28,7 +28,7 @@ public enum AppConfig {
     ),
     RELEASE(
             ConfigConstant.APP_SERVER_PRD_URL,
-            ConfigConstant.APP_SERVER_DEV_API_KEY,//TODO
+            ConfigConstant.APP_SERVER_PRD_API_KEY,
             ConfigConstant.PAYMENT_SERVICE_PRD_URL,
             ConfigConstant.KAKAO_PAY_TEST_CID,
             ConfigConstant.LOGGER_LEVEL_NONE
