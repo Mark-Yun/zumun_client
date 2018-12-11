@@ -125,4 +125,5 @@
 
     <string name="un_categorized_menu_category_title">Not Categorized Menus</string>
     <string name="menu_selector_title_to_select_menus_to_add_into_category">Select menus to add into %s category</string>
+    <string name="sign_up_description_title">Make Your Order Easier</string>
 </resources>

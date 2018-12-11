@@ -28,7 +28,7 @@ import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.bumptech.glide.request.RequestOptions;
 import com.mark.zumo.client.core.entity.Store;
 import com.mark.zumo.client.core.util.glide.GlideApp;
-import com.mark.zumo.client.core.util.glide.LinearGradientTransformation;
+import com.mark.zumo.client.core.util.glide.transformation.LinearGradientTransformation;
 import com.mark.zumo.client.core.view.BaseActivity;
 import com.mark.zumo.client.store.R;
 import com.mark.zumo.client.store.view.order.OrderFragment;
