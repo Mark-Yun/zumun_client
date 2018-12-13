@@ -18,14 +18,14 @@ import io.reactivex.schedulers.Schedulers;
  * Created by mark on 18. 4. 30.
  */
 
-public enum StoreManager {
+public enum StoreStoreManager {
 
     INSTANCE;
 
     private final SessionRepository sessionRepository;
     private final Maybe<StoreRepository> storeRepositoryMaybe;
 
-    StoreManager() {
+    StoreStoreManager() {
         sessionRepository = SessionRepository.INSTANCE;
         storeRepositoryMaybe = sessionRepository.getStoreSession()
                 .map(StoreRepository::getInstance);

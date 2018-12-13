@@ -12,12 +12,15 @@ import android.arch.lifecycle.AndroidViewModel;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.net.Uri;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.annotation.NonNull;
 
 import com.mark.zumo.client.core.appserver.request.signup.StoreOwnerSignUpRequest;
 import com.mark.zumo.client.core.appserver.request.signup.StoreUserSignupException;
 import com.mark.zumo.client.store.model.S3TransferManager;
-import com.mark.zumo.client.store.model.SessionManager;
+import com.mark.zumo.client.store.model.StoreSessionManager;
+import com.mark.zumo.client.store.model.StoreUserManager;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
@@ -28,14 +31,16 @@ import io.reactivex.disposables.CompositeDisposable;
 
 public class SignUpViewModel extends AndroidViewModel {
 
-    private final SessionManager sessionManager;
+    private final StoreSessionManager storeSessionManager;
+    private final StoreUserManager storeUserManager;
     private final S3TransferManager s3TransferManager;
 
     private final CompositeDisposable disposables;
 
     public SignUpViewModel(@NonNull Application application) {
         super(application);
-        sessionManager = SessionManager.INSTANCE;
+        storeSessionManager = StoreSessionManager.INSTANCE;
+        storeUserManager = StoreUserManager.INSTANCE;
         s3TransferManager = S3TransferManager.INSTANCE;
 
         disposables = new CompositeDisposable();
@@ -63,8 +68,14 @@ public class SignUpViewModel extends AndroidViewModel {
                     .setBankAccount(backAccount)
                     .setBankAccountScanUrl(backAccountUrl)
                     .build();
+
+            storeUserManager.signup(request)
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .doOnSuccess(liveData::setValue)
+                    .doOnSubscribe(disposables::add)
+                    .subscribe();
         } catch (StoreUserSignupException e) {
-            liveData.setValue(e);
+            new Handler(Looper.getMainLooper()).post(() -> liveData.setValue(e));
         }
 
         return liveData;

@@ -19,7 +19,7 @@ import android.arch.lifecycle.MutableLiveData;
 import android.support.annotation.NonNull;
 
 import com.mark.zumo.client.core.payment.kakao.entity.PaymentReadyResponse;
-import com.mark.zumo.client.customer.model.OrderManager;
+import com.mark.zumo.client.customer.model.CustomerOrderManager;
 import com.mark.zumo.client.customer.model.payment.KakaoPaymentManager;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -31,7 +31,7 @@ import io.reactivex.disposables.CompositeDisposable;
 public class KakaoPayViewModel extends AndroidViewModel {
 
     private final KakaoPaymentManager kakaoPaymentManager;
-    private final OrderManager orderManager;
+    private final CustomerOrderManager customerOrderManager;
 
     private final CompositeDisposable compositeDisposable;
 
@@ -39,7 +39,7 @@ public class KakaoPayViewModel extends AndroidViewModel {
         super(application);
 
         kakaoPaymentManager = KakaoPaymentManager.INSTANCE;
-        orderManager = OrderManager.INSTANCE;
+        customerOrderManager = CustomerOrderManager.INSTANCE;
         compositeDisposable = new CompositeDisposable();
     }
 
@@ -49,7 +49,7 @@ public class KakaoPayViewModel extends AndroidViewModel {
 
         MutableLiveData<PaymentReadyResponse> liveData = new MutableLiveData<>();
 
-        orderManager.getMenuOrderFromDisk(orderUuid)
+        customerOrderManager.getMenuOrderFromDisk(orderUuid)
                 .flatMap(kakaoPaymentManager::preparePayment)
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSuccess(liveData::setValue)

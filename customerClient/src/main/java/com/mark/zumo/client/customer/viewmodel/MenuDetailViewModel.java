@@ -21,9 +21,9 @@ import com.mark.zumo.client.core.entity.OrderDetail;
 import com.mark.zumo.client.core.util.context.ContextHolder;
 import com.mark.zumo.client.customer.R;
 import com.mark.zumo.client.customer.model.CartManager;
-import com.mark.zumo.client.customer.model.MenuManager;
-import com.mark.zumo.client.customer.model.OrderManager;
-import com.mark.zumo.client.customer.model.SessionManager;
+import com.mark.zumo.client.customer.model.CustomerMenuManager;
+import com.mark.zumo.client.customer.model.CustomerOrderManager;
+import com.mark.zumo.client.customer.model.CustomerSessionManager;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -42,10 +42,10 @@ public class MenuDetailViewModel extends AndroidViewModel {
 
     private static final String TAG = "MenuDetailViewModel";
 
-    private final MenuManager menuManager;
+    private final CustomerMenuManager customerMenuManager;
     private final CartManager cartManager;
-    private final OrderManager orderManager;
-    private final SessionManager sessionManager;
+    private final CustomerOrderManager customerOrderManager;
+    private final CustomerSessionManager customerSessionManager;
 
     private final Map<String, List<MenuOption>> menuOptionMap;
     private final Map<String, MenuOption> selectedOptionMap;
@@ -57,10 +57,10 @@ public class MenuDetailViewModel extends AndroidViewModel {
 
     public MenuDetailViewModel(@NonNull final Application application) {
         super(application);
-        menuManager = MenuManager.INSTANCE;
+        customerMenuManager = CustomerMenuManager.INSTANCE;
         cartManager = CartManager.INSTANCE;
-        orderManager = OrderManager.INSTANCE;
-        sessionManager = SessionManager.INSTANCE;
+        customerOrderManager = CustomerOrderManager.INSTANCE;
+        customerSessionManager = CustomerSessionManager.INSTANCE;
 
         menuOptionMap = new LinkedHashMap<>();
         selectedOptionMap = new HashMap<>();
@@ -72,7 +72,7 @@ public class MenuDetailViewModel extends AndroidViewModel {
     public LiveData<Menu> getMenu(String uuid) {
         MutableLiveData<Menu> liveData = new MutableLiveData<>();
 
-        menuManager.getMenuFromDisk(uuid)
+        customerMenuManager.getMenuFromDisk(uuid)
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSuccess(liveData::setValue)
                 .doOnSubscribe(disposables::add)
@@ -109,7 +109,7 @@ public class MenuDetailViewModel extends AndroidViewModel {
         menuOptionMap.clear();
         selectedOptionMap.clear();
 
-        menuManager.getMenuOptionList(menuUuid)
+        customerMenuManager.getMenuOptionList(menuUuid)
                 .flatMapSingle(Observable::toList)
                 .doOnNext(list -> Log.d(TAG, "loadMenuOptions: " + list))
                 .observeOn(AndroidSchedulers.mainThread())
@@ -148,7 +148,7 @@ public class MenuDetailViewModel extends AndroidViewModel {
     }
 
     private void selectMenuOption(String menuOptionUuid) {
-        menuManager.getMenuOptionFromDisk(menuOptionUuid)
+        customerMenuManager.getMenuOptionFromDisk(menuOptionUuid)
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSuccess(this::selectMenuOption)
                 .doOnSubscribe(disposables::add)
@@ -224,7 +224,7 @@ public class MenuDetailViewModel extends AndroidViewModel {
         OrderDetail orderDetail = new OrderDetail("", storeUuid, menu.uuid, menu.name, "", menuOptionUuidList, amountLiveData.getValue(), price);
         orderDetail.menuOrderName = menu.name;
 
-        orderManager.createMenuOrder(orderDetail)
+        customerOrderManager.createMenuOrder(orderDetail)
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSuccess(unused -> selectedOptionMap.clear())
                 .doOnSuccess(unused -> selectedOptionLiveDataMap.clear())

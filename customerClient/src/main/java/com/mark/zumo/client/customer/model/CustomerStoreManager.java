@@ -21,15 +21,15 @@ import io.reactivex.schedulers.Schedulers;
  * Created by mark on 18. 4. 30.
  */
 
-public enum StoreManager {
+public enum CustomerStoreManager {
     INSTANCE;
 
-    private static final String TAG = "StoreManager";
+    private static final String TAG = "CustomerStoreManager";
 
     private final SessionRepository sessionRepository;
     private final Maybe<StoreRepository> storeRepositoryMaybe;
 
-    StoreManager() {
+    CustomerStoreManager() {
         sessionRepository = SessionRepository.INSTANCE;
         storeRepositoryMaybe = sessionRepository.getCustomerSession()
                 .map(StoreRepository::getInstance);

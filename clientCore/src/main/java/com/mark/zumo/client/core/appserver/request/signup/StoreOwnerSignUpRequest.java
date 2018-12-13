@@ -73,6 +73,21 @@ public class StoreOwnerSignUpRequest {
         return EntityHelper.toString(this);
     }
 
+    public String toJson() {
+        return "{" +
+                "\"" + Schema.id + "\":" + id + "," +
+                "\"" + Schema.password + "\":\"" + password + "\"," +
+                "\"" + Schema.name + "\":\"" + name + "\"," +
+                "\"" + Schema.phoneNumber + "\":\"" + phoneNumber + "\"," +
+                "\"" + Schema.email + "\":\"" + email + "\"," +
+                "\"" + Schema.bankName + "\":\"" + bankName + "\"," +
+                "\"" + Schema.bankAccount + "\":\"" + bankAccount + "\"," +
+                "\"" + Schema.bankAccountScanUrl + "\":\"" + bankAccountScanUrl + "\"," +
+                "\"" + Schema.authType + "\":\"" + authType + "\"," +
+                "\"" + Schema.authToken + "\":\"" + authToken + "\","
+                + "}";
+    }
+
     public interface Schema {
         String id = "id";
         String password = "password";

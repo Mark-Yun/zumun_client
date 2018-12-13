@@ -20,7 +20,7 @@ import com.kakao.auth.KakaoSDK;
 import com.mark.zumo.client.core.app.AppErrorHandler;
 import com.mark.zumo.client.core.util.context.ContextHolder;
 import com.mark.zumo.client.core.util.context.ContextInjector;
-import com.mark.zumo.client.customer.model.SessionManager;
+import com.mark.zumo.client.customer.model.CustomerSessionManager;
 import com.wonderkiln.blurkit.BlurKit;
 
 /**
@@ -38,7 +38,7 @@ public class CustomerClientApp extends Application {
     }
 
     private void initApplication() {
-        SessionManager instance = SessionManager.INSTANCE;
+        CustomerSessionManager instance = CustomerSessionManager.INSTANCE;
         BlurKit.init(this);
         AppErrorHandler.setup();
     }

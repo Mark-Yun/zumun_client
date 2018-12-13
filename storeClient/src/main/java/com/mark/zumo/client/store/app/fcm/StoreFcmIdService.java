@@ -17,7 +17,7 @@ import android.util.Log;
 
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.FirebaseInstanceIdService;
-import com.mark.zumo.client.store.model.SessionManager;
+import com.mark.zumo.client.store.model.StoreSessionManager;
 
 /**
  * Created by mark on 18. 6. 8.
@@ -25,13 +25,13 @@ import com.mark.zumo.client.store.model.SessionManager;
 public class StoreFcmIdService extends FirebaseInstanceIdService {
     private static final String TAG = "StoreFcmIdService";
 
-    private SessionManager sessionManager;
+    private StoreSessionManager storeSessionManager;
 
     @Override
     public void onCreate() {
         super.onCreate();
 
-        sessionManager = SessionManager.INSTANCE;
+        storeSessionManager = StoreSessionManager.INSTANCE;
 
         String refreshedToken = FirebaseInstanceId.getInstance().getToken();
         Log.d(TAG, "Refreshed token: " + refreshedToken);
@@ -56,8 +56,8 @@ public class StoreFcmIdService extends FirebaseInstanceIdService {
             return;
         }
 
-        sessionManager.getSessionStore()
-                .flatMap(store -> sessionManager.registerTokenOnRefresh(store, refreshedToken))
+        storeSessionManager.getSessionStore()
+                .flatMap(store -> storeSessionManager.registerTokenOnRefresh(store, refreshedToken))
                 .doOnSuccess(snsToken -> Log.d(TAG, "onTokenRefresh: updated Success-" + snsToken))
                 .subscribe();
     }

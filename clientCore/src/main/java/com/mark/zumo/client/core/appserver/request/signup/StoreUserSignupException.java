@@ -25,7 +25,7 @@ public class StoreUserSignupException extends Throwable {
     public final StoreUserSignupErrorCode storeUserSignupErrorCode;
     public final String message;
 
-    StoreUserSignupException(final StoreUserSignupErrorCode storeUserSignupErrorCode) {
+    public StoreUserSignupException(final StoreUserSignupErrorCode storeUserSignupErrorCode) {
         super(storeUserSignupErrorCode.message);
 
         this.storeUserSignupErrorCode = storeUserSignupErrorCode;

@@ -18,10 +18,10 @@ import com.mark.zumo.client.core.entity.MenuOrder;
 import com.mark.zumo.client.core.entity.OrderDetail;
 import com.mark.zumo.client.core.entity.Store;
 import com.mark.zumo.client.customer.model.CartManager;
-import com.mark.zumo.client.customer.model.MenuManager;
-import com.mark.zumo.client.customer.model.OrderManager;
-import com.mark.zumo.client.customer.model.SessionManager;
-import com.mark.zumo.client.customer.model.StoreManager;
+import com.mark.zumo.client.customer.model.CustomerMenuManager;
+import com.mark.zumo.client.customer.model.CustomerOrderManager;
+import com.mark.zumo.client.customer.model.CustomerSessionManager;
+import com.mark.zumo.client.customer.model.CustomerStoreManager;
 import com.mark.zumo.client.customer.model.entity.Cart;
 
 import java.text.NumberFormat;
@@ -41,10 +41,10 @@ public class CartViewModel extends AndroidViewModel {
     private static final String TAG = "CartViewModel";
 
     private final CartManager cartManager;
-    private final StoreManager storeManager;
-    private final MenuManager menuManager;
-    private final OrderManager orderManager;
-    private final SessionManager sessionManager;
+    private final CustomerStoreManager customerStoreManager;
+    private final CustomerMenuManager customerMenuManager;
+    private final CustomerOrderManager customerOrderManager;
+    private final CustomerSessionManager customerSessionManager;
 
     private final CompositeDisposable disposables;
 
@@ -52,10 +52,10 @@ public class CartViewModel extends AndroidViewModel {
         super(application);
 
         cartManager = CartManager.INSTANCE;
-        storeManager = StoreManager.INSTANCE;
-        menuManager = MenuManager.INSTANCE;
-        orderManager = OrderManager.INSTANCE;
-        sessionManager = SessionManager.INSTANCE;
+        customerStoreManager = CustomerStoreManager.INSTANCE;
+        customerMenuManager = CustomerMenuManager.INSTANCE;
+        customerOrderManager = CustomerOrderManager.INSTANCE;
+        customerSessionManager = CustomerSessionManager.INSTANCE;
 
         disposables = new CompositeDisposable();
     }
@@ -88,7 +88,7 @@ public class CartViewModel extends AndroidViewModel {
     public LiveData<Store> getStore(String storeUuid) {
         MutableLiveData<Store> storeLiveData = new MutableLiveData<>();
 
-        storeManager.getStoreFromDisk(storeUuid)
+        customerStoreManager.getStoreFromDisk(storeUuid)
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSuccess(storeLiveData::setValue)
                 .doOnSubscribe(disposables::add)
@@ -100,7 +100,7 @@ public class CartViewModel extends AndroidViewModel {
     public LiveData<Menu> getMenu(String menuUuid) {
         MutableLiveData<Menu> menuLiveData = new MutableLiveData<>();
 
-        menuManager.getMenuFromDisk(menuUuid)
+        customerMenuManager.getMenuFromDisk(menuUuid)
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSuccess(menuLiveData::setValue)
                 .doOnSubscribe(disposables::add)
@@ -112,7 +112,7 @@ public class CartViewModel extends AndroidViewModel {
     public LiveData<MenuOption> getMenuOption(String menuOptionUuid) {
         MutableLiveData<MenuOption> menuOptionLiveData = new MutableLiveData<>();
 
-        menuManager.getMenuOptionFromDisk(menuOptionUuid)
+        customerMenuManager.getMenuOptionFromDisk(menuOptionUuid)
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSuccess(menuOptionLiveData::setValue)
                 .doOnSubscribe(disposables::add)
@@ -150,7 +150,7 @@ public class CartViewModel extends AndroidViewModel {
 
     private Maybe<Integer> getOptionListPrice(OrderDetail orderDetail) {
         return Observable.fromIterable(orderDetail.menuOptionUuidList)
-                .flatMapMaybe(menuManager::getMenuOptionFromDisk)
+                .flatMapMaybe(customerMenuManager::getMenuOptionFromDisk)
                 .map(menuOption -> menuOption.price)
                 .reduce((integer, integer2) -> integer + integer2)
                 .doOnSubscribe(disposables::add)
@@ -158,7 +158,7 @@ public class CartViewModel extends AndroidViewModel {
     }
 
     private Maybe<Integer> getMenuPrice(OrderDetail orderDetail) {
-        return menuManager.getMenuFromDisk(orderDetail.menuUuid)
+        return customerMenuManager.getMenuFromDisk(orderDetail.menuUuid)
                 .map(menu -> menu.price)
                 .subscribeOn(Schedulers.io());
     }
@@ -195,12 +195,12 @@ public class CartViewModel extends AndroidViewModel {
     public LiveData<MenuOrder> placeOrder(String storeUuid) {
         MutableLiveData<MenuOrder> liveData = new MutableLiveData<>();
 
-        sessionManager.getSessionUser()
+        customerSessionManager.getSessionUser()
                 .flatMapObservable(ignored -> cartManager.getCart(storeUuid))
                 .firstElement()
                 .filter(cart -> cart.getTotalAmount() > 0)
                 .map(Cart::getOrderDetailList)
-                .flatMap(orderManager::createMenuOrder)
+                .flatMap(customerOrderManager::createMenuOrder)
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSuccess(liveData::setValue)
                 .doOnSubscribe(disposables::add)

@@ -38,11 +38,11 @@ import io.reactivex.schedulers.Schedulers;
  * Created by mark on 18. 4. 30.
  */
 
-public enum MenuManager {
+public enum StoreMenuManager {
 
     INSTANCE;
 
-    private final static String TAG = "MenuManager";
+    private final static String TAG = "StoreMenuManager";
 
     private final Maybe<MenuRepository> menuRepositoryMaybe;
     private final Maybe<CategoryRepository> categoryRepositoryMaybe;
@@ -50,7 +50,7 @@ public enum MenuManager {
 
     private final SessionRepository sessionRepository;
 
-    MenuManager() {
+    StoreMenuManager() {
         sessionRepository = SessionRepository.INSTANCE;
 
         menuRepositoryMaybe = sessionRepository.getStoreSession()

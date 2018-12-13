@@ -16,7 +16,7 @@ import android.util.Log;
 
 import com.mark.zumo.client.core.entity.Store;
 import com.mark.zumo.client.core.p2p.P2pServer;
-import com.mark.zumo.client.store.model.SessionManager;
+import com.mark.zumo.client.store.model.StoreSessionManager;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
@@ -29,21 +29,21 @@ public class MainViewModel extends AndroidViewModel {
 
     private static final String TAG = "MainViewModel";
 
-    private final SessionManager sessionManager;
+    private final StoreSessionManager storeSessionManager;
     private final CompositeDisposable compositeDisposable;
     private P2pServer p2pServer;
 
     public MainViewModel(@NonNull final Application application) {
         super(application);
 
-        sessionManager = SessionManager.INSTANCE;
+        storeSessionManager = StoreSessionManager.INSTANCE;
 
         compositeDisposable = new CompositeDisposable();
     }
 
     public LiveData<Store> loadSessionStore() {
         MutableLiveData<Store> liveData = new MutableLiveData<>();
-        sessionManager.getSessionStore()
+        storeSessionManager.getSessionStore()
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSuccess(liveData::setValue)
                 .doOnSubscribe(compositeDisposable::add)
@@ -52,7 +52,7 @@ public class MainViewModel extends AndroidViewModel {
     }
 
     public void findCustomer(Activity activity) {
-        sessionManager.getSessionStore()
+        storeSessionManager.getSessionStore()
                 .map(store -> p2pServer = new P2pServer(activity, store))
                 .flatMapObservable(P2pServer::findCustomer)
                 .doOnSubscribe(compositeDisposable::add)

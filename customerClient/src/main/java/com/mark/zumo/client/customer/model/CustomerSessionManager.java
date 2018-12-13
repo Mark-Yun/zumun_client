@@ -17,15 +17,15 @@ import io.reactivex.schedulers.Schedulers;
  * Created by mark on 18. 4. 30.
  */
 
-public enum SessionManager {
+public enum CustomerSessionManager {
 
     INSTANCE;
 
-    private static final String TAG = "SessionManager";
+    private static final String TAG = "CustomerSessionManager";
 
     private final SessionRepository sessionRepository;
 
-    SessionManager() {
+    CustomerSessionManager() {
         sessionRepository = SessionRepository.INSTANCE;
     }
 

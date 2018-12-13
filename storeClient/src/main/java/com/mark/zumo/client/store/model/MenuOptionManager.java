@@ -38,7 +38,7 @@ public enum MenuOptionManager {
     INSTANCE;
 
 
-    private final static String TAG = "MenuManager";
+    private final static String TAG = "StoreMenuManager";
 
     private final Maybe<MenuRepository> menuRepositoryMaybe;
     private final Maybe<CategoryRepository> categoryRepositoryMaybe;

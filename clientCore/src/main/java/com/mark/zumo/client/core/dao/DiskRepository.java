@@ -24,6 +24,7 @@ import com.mark.zumo.client.core.entity.OrderDetail;
 import com.mark.zumo.client.core.entity.SnsToken;
 import com.mark.zumo.client.core.entity.Store;
 import com.mark.zumo.client.core.entity.user.GuestUser;
+import com.mark.zumo.client.core.entity.user.store.StoreOwner;
 import com.mark.zumo.client.core.payment.kakao.entity.PaymentToken;
 
 import java.util.List;
@@ -39,6 +40,8 @@ public interface DiskRepository {
     @Query("SELECT * FROM " + GuestUser.TABLE + " WHERE uuid LIKE :uuid LIMIT 1")
     Maybe<GuestUser> getGuestUser(String uuid);
 
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    void insertStoreOwner(StoreOwner storeOwner);
 
     @Query("SELECT * FROM " + Store.TABLE + " WHERE store_uuid LIKE :uuid LIMIT 1")
     Maybe<Store> getStore(String uuid);

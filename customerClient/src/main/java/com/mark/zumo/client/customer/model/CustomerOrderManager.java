@@ -24,18 +24,18 @@ import io.reactivex.schedulers.Schedulers;
  * Created by mark on 18. 4. 30.
  */
 
-public enum OrderManager {
+public enum CustomerOrderManager {
     INSTANCE;
 
     private final Maybe<OrderRepository> orderRepositoryMaybe;
     private final Maybe<MessageHandler> messageHandlerMaybe;
 
-    private final SessionManager sessionManager;
+    private final CustomerSessionManager customerSessionManager;
     private final SessionRepository sessionRepository;
 
-    OrderManager() {
+    CustomerOrderManager() {
         sessionRepository = SessionRepository.INSTANCE;
-        sessionManager = SessionManager.INSTANCE;
+        customerSessionManager = CustomerSessionManager.INSTANCE;
 
         orderRepositoryMaybe = sessionRepository.getCustomerSession()
                 .map(OrderRepository::getInstance);

@@ -9,7 +9,7 @@ package com.mark.zumo.client.store.app.fcm;
 import com.mark.zumo.client.core.appserver.request.message.MessageFactory;
 import com.mark.zumo.client.core.appserver.request.message.OrderCreatedMessage;
 import com.mark.zumo.client.core.appserver.request.message.SnsMessage;
-import com.mark.zumo.client.store.model.OrderManager;
+import com.mark.zumo.client.store.model.StoreOrderManager;
 
 import java.util.Map;
 
@@ -19,10 +19,10 @@ import java.util.Map;
 enum StoreMessageHandler {
     INSTANCE;
 
-    private OrderManager orderManager;
+    private StoreOrderManager storeOrderManager;
 
     StoreMessageHandler() {
-        orderManager = OrderManager.INSTANCE;
+        storeOrderManager = StoreOrderManager.INSTANCE;
     }
 
     void handleMessage(Map<String, String> data) {
@@ -34,6 +34,6 @@ enum StoreMessageHandler {
     }
 
     private void onOrderCreated(OrderCreatedMessage message) {
-        orderManager.putRequestedOrderBucket(message.orderUuid);
+        storeOrderManager.putRequestedOrderBucket(message.orderUuid);
     }
 }

@@ -27,10 +27,10 @@ import io.reactivex.schedulers.Schedulers;
  * Created by mark on 18. 4. 30.
  */
 
-public enum OrderManager {
+public enum StoreOrderManager {
     INSTANCE;
 
-    private static final String TAG = "OrderManager";
+    private static final String TAG = "StoreOrderManager";
 
     private final SessionRepository sessionRepository;
 
@@ -41,7 +41,7 @@ public enum OrderManager {
     private OrderBucket requestedOrderBucket;
     private OrderBucket completeOrderBucket;
 
-    OrderManager() {
+    StoreOrderManager() {
         sessionRepository = SessionRepository.INSTANCE;
 
         orderRepositoryMaybe = sessionRepository.getStoreSession()

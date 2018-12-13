@@ -18,6 +18,7 @@ import com.mark.zumo.client.core.entity.OrderDetail;
 import com.mark.zumo.client.core.entity.SnsToken;
 import com.mark.zumo.client.core.entity.Store;
 import com.mark.zumo.client.core.entity.user.GuestUser;
+import com.mark.zumo.client.core.entity.user.store.StoreOwner;
 
 import java.util.List;
 
@@ -39,6 +40,11 @@ public interface NetworkRepository {
     @POST("users/customer/guest")
     Maybe<GuestUser> createGuestUser();
 
+    @GET("users/store/handshake")
+    Maybe<String> handShake();
+
+    @POST("users/store")
+    Maybe<StoreOwner> createStoreOwner(@Body String hashedString);
 
     @PUT("store/{" + Store.Schema.uuid + "}")
     Maybe<Store> updateStore(@Path(Store.Schema.uuid) String storeUuid,

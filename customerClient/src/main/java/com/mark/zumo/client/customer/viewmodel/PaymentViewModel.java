@@ -12,7 +12,7 @@ import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.support.annotation.NonNull;
 
-import com.mark.zumo.client.customer.model.OrderManager;
+import com.mark.zumo.client.customer.model.CustomerOrderManager;
 import com.mark.zumo.client.customer.model.payment.KakaoPaymentManager;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -22,22 +22,22 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
  */
 public class PaymentViewModel extends AndroidViewModel {
     private final KakaoPaymentManager kakaoPaymentManager;
-    private final OrderManager orderManager;
+    private final CustomerOrderManager customerOrderManager;
 
     public PaymentViewModel(@NonNull final Application application) {
         super(application);
         kakaoPaymentManager = KakaoPaymentManager.INSTANCE;
-        orderManager = OrderManager.INSTANCE;
+        customerOrderManager = CustomerOrderManager.INSTANCE;
     }
 
     public LiveData<String> approvePayment(String menuOrderUuid, String tid, String pgToken) {
         MutableLiveData<String> liveData = new MutableLiveData<>();
 
-        orderManager.getMenuOrderFromDisk(menuOrderUuid)
+        customerOrderManager.getMenuOrderFromDisk(menuOrderUuid)
                 .flatMap(order -> kakaoPaymentManager.approvalPayment(order, pgToken, tid))
                 .map(paymentApprovalResponse -> paymentApprovalResponse.partnerOrderId)
-                .flatMap(orderManager::updateMenuOrderStateRequested)
-                .flatMap(orderManager::sendOrderCreateMessage)
+                .flatMap(customerOrderManager::updateMenuOrderStateRequested)
+                .flatMap(customerOrderManager::sendOrderCreateMessage)
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSuccess(x -> liveData.setValue(menuOrderUuid))
                 .subscribe();
