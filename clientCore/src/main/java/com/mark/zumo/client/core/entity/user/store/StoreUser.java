@@ -58,7 +58,7 @@ public class StoreUser {
         String name = "store_user_name";
         String phoneNumber = "store_user_phone_number";
         String email = "store_user_email";
-        String auth_type = "auth_type";
-        String auth_token = "auth_token";
+        String auth_type = "authType";
+        String auth_token = "authToken";
     }
 }

@@ -23,7 +23,9 @@
  */
 package com.mark.zumo.client.core.appserver.request.signup;
 
+import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+import com.mark.zumo.client.core.entity.user.store.StoreOwner;
 import com.mark.zumo.client.core.entity.util.EntityHelper;
 
 /**
@@ -35,26 +37,28 @@ public class StoreOwnerSignUpRequest {
     public final long id;
     @SerializedName(Schema.name)
     public final String name;
-    @SerializedName(Schema.password)
-    public final String password;
-    @SerializedName(Schema.passwordConfirm)
+    @Expose
     public final String passwordConfirm;
+    @SerializedName(Schema.bankAccountNumber)
+    public final String bankAccountNumber;
     @SerializedName(Schema.phoneNumber)
     public final String phoneNumber;
     @SerializedName(Schema.email)
     public final String email;
     @SerializedName(Schema.bankName)
     public final String bankName;
-    @SerializedName(Schema.bankAccount)
-    public final String bankAccount;
+    @SerializedName(Schema.storePermission)
+    public final String storePermission;
     @SerializedName(Schema.authType)
     public final String authType;
     @SerializedName(Schema.bankAccountScanUrl)
     public final String bankAccountScanUrl;
     @SerializedName(Schema.authToken)
     public final String authToken;
+    @SerializedName(Schema.password)
+    public String password;
 
-    private StoreOwnerSignUpRequest(final long id, final String name, final String password, final String passwordConfirm, final String phoneNumber, final String email, final String bankName, final String bankAccount, final String authType, final String bankAccountScanUrl, final String authToken) {
+    private StoreOwnerSignUpRequest(final long id, final String name, final String password, final String passwordConfirm, final String phoneNumber, final String email, final String bankName, final String bankAccountNumber, final String authType, final String bankAccountScanUrl, final String authToken) {
         this.id = id;
         this.name = name;
         this.password = password;
@@ -62,10 +66,11 @@ public class StoreOwnerSignUpRequest {
         this.phoneNumber = phoneNumber;
         this.email = email;
         this.bankName = bankName;
-        this.bankAccount = bankAccount;
+        this.bankAccountNumber = bankAccountNumber;
         this.authType = authType;
         this.bankAccountScanUrl = bankAccountScanUrl;
         this.authToken = authToken;
+        this.storePermission = StoreOwner.Permission.OWNER.name();
     }
 
     @Override
@@ -73,33 +78,18 @@ public class StoreOwnerSignUpRequest {
         return EntityHelper.toString(this);
     }
 
-    public String toJson() {
-        return "{" +
-                "\"" + Schema.id + "\":" + id + "," +
-                "\"" + Schema.password + "\":\"" + password + "\"," +
-                "\"" + Schema.name + "\":\"" + name + "\"," +
-                "\"" + Schema.phoneNumber + "\":\"" + phoneNumber + "\"," +
-                "\"" + Schema.email + "\":\"" + email + "\"," +
-                "\"" + Schema.bankName + "\":\"" + bankName + "\"," +
-                "\"" + Schema.bankAccount + "\":\"" + bankAccount + "\"," +
-                "\"" + Schema.bankAccountScanUrl + "\":\"" + bankAccountScanUrl + "\"," +
-                "\"" + Schema.authType + "\":\"" + authType + "\"," +
-                "\"" + Schema.authToken + "\":\"" + authToken + "\","
-                + "}";
-    }
-
     public interface Schema {
         String id = "id";
-        String password = "password";
-        String passwordConfirm = "password_confirm";
-        String name = "store_owner_name";
-        String phoneNumber = "store_owner_phone_number";
-        String email = "store_owner_email";
+        String password = "store_user_password";
+        String name = "store_user_name";
+        String phoneNumber = "store_user_phone_number";
+        String email = "store_user_email";
         String bankName = "bank_name";
-        String bankAccount = "bank_account";
+        String bankAccountNumber = "bank_account_number";
         String bankAccountScanUrl = "bank_account_scan_url";
         String authType = "auth_type";
         String authToken = "auth_token";
+        String storePermission = "store_permission";
     }
 
     public static class Builder {
@@ -178,7 +168,6 @@ public class StoreOwnerSignUpRequest {
             StoreOwnerSignUpRequest storeOwnerSignUpRequest = new StoreOwnerSignUpRequest(id,
                     name, password, passwordConfirm, phoneNumber, email, bankName, bankAccount,
                     authType, bankAccountScanUrl, authToken);
-
 
             for (Validator validator : Validator.values()) {
                 if (!validator.verify(storeOwnerSignUpRequest)) {

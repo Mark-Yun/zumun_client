@@ -36,23 +36,20 @@ import butterknife.ButterKnife;
 /**
  * Created by mark on 18. 8. 7.
  */
-public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHolder> {
+public class MenuCategoryAdapter extends RecyclerView.Adapter<MenuCategoryAdapter.ViewHolder> {
 
     private static final int ANIM_DURATION = 300;
-    private List<MenuCategory> categoryList;
 
-    private LifecycleOwner lifecycleOwner;
+    private final List<MenuCategory> categoryList;
+    private final LifecycleOwner lifecycleOwner;
+    private final MenuAdapter.MenuSelectListener listener;
 
-    private MenuAdapter.MenuSelectListener listener;
+    MenuCategoryAdapter(final LifecycleOwner lifecycleOwner, final MenuAdapter.MenuSelectListener listener) {
 
-    CategoryAdapter(final LifecycleOwner lifecycleOwner) {
         this.lifecycleOwner = lifecycleOwner;
+        this.listener = listener;
 
         categoryList = new ArrayList<>();
-    }
-
-    void setMenuSelectListener(final MenuAdapter.MenuSelectListener listener) {
-        this.listener = listener;
     }
 
     @NonNull
@@ -65,7 +62,8 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHo
     }
 
     void setCategoryList(final List<MenuCategory> categoryList) {
-        this.categoryList = categoryList;
+        this.categoryList.clear();
+        this.categoryList.addAll(categoryList);
         notifyDataSetChanged();
     }
 
@@ -85,8 +83,7 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHo
         final LayoutAnimationController controller = AnimationUtils.loadLayoutAnimation(context, R.anim.layout_animation_fall_down);
         recyclerView.setLayoutAnimation(controller);
 
-        MenuAdapter menuAdapter = new MenuAdapter(lifecycleOwner);
-        menuAdapter.setListener(listener);
+        MenuAdapter menuAdapter = new MenuAdapter(lifecycleOwner, listener);
         recyclerView.setAdapter(menuAdapter);
         menuAdapter.setMenuList(menuCategory.menuList);
         recyclerView.scheduleLayoutAnimation();

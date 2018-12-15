@@ -8,6 +8,8 @@ package com.mark.zumo.client.core.repository;
 
 import com.mark.zumo.client.core.appserver.AppServerServiceProvider;
 import com.mark.zumo.client.core.appserver.NetworkRepository;
+import com.mark.zumo.client.core.appserver.request.signup.StoreOwnerSignUpRequest;
+import com.mark.zumo.client.core.appserver.request.signup.StoreUserHandShakeRequest;
 import com.mark.zumo.client.core.dao.AppDatabaseProvider;
 import com.mark.zumo.client.core.dao.DiskRepository;
 import com.mark.zumo.client.core.entity.user.store.StoreOwner;
@@ -31,12 +33,13 @@ public enum UserRepository {
         diskRepository = AppDatabaseProvider.INSTANCE.diskRepository;
     }
 
-    public Maybe<String> getLoginToken() {
-        return networkRepository.handShake();
+    public Maybe<String> getLoginToken(String email) {
+        return networkRepository.handShake(new StoreUserHandShakeRequest(email))
+                .map(storeUserHandShakeResponse -> storeUserHandShakeResponse.publicKey);
     }
 
-    public Maybe<StoreOwner> creteStoreOwner(String hashedString) {
-        return networkRepository.createStoreOwner(hashedString)
+    public Maybe<StoreOwner> creteStoreOwner(StoreOwnerSignUpRequest request) {
+        return networkRepository.createStoreOwner(request)
                 .doOnSuccess(diskRepository::insertStoreOwner);
     }
 }

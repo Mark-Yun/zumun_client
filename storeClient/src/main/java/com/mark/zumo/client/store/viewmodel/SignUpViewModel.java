@@ -68,6 +68,7 @@ public class SignUpViewModel extends AndroidViewModel {
                     .setBankAccount(backAccount)
                     .setBankAccountScanUrl(backAccountUrl)
                     .build();
+//            StoreOwnerSignUpRequest request = DebugUtil.storeOwnerSignUpRequest();
 
             storeUserManager.signup(request)
                     .observeOn(AndroidSchedulers.mainThread())

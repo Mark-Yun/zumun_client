@@ -7,6 +7,9 @@
 package com.mark.zumo.client.core.appserver;
 
 import com.mark.zumo.client.core.appserver.request.RequestUpdateCategoriesOfMenu;
+import com.mark.zumo.client.core.appserver.request.signup.StoreOwnerSignUpRequest;
+import com.mark.zumo.client.core.appserver.request.signup.StoreUserHandShakeRequest;
+import com.mark.zumo.client.core.appserver.response.StoreUserHandShakeResponse;
 import com.mark.zumo.client.core.entity.Menu;
 import com.mark.zumo.client.core.entity.MenuCategory;
 import com.mark.zumo.client.core.entity.MenuDetail;
@@ -40,11 +43,11 @@ public interface NetworkRepository {
     @POST("users/customer/guest")
     Maybe<GuestUser> createGuestUser();
 
-    @GET("users/store/handshake")
-    Maybe<String> handShake();
+    @POST("users/store/handshake")
+    Maybe<StoreUserHandShakeResponse> handShake(@Body StoreUserHandShakeRequest request);
 
     @POST("users/store")
-    Maybe<StoreOwner> createStoreOwner(@Body String hashedString);
+    Maybe<StoreOwner> createStoreOwner(@Body StoreOwnerSignUpRequest request);
 
     @PUT("store/{" + Store.Schema.uuid + "}")
     Maybe<Store> updateStore(@Path(Store.Schema.uuid) String storeUuid,
@@ -124,10 +127,10 @@ public interface NetworkRepository {
     Maybe<List<MenuOptionDetail>> createMenuOptionDetailList(@Body List<MenuOptionDetail> menuOptionDetailList);
 
     @GET("menu/option/detail")
-    Maybe<List<MenuOptionDetail>> getMenuOptionDetailListByMenuOptionByStoreUuid(@Query(MenuOptionDetail.Schema.storeUuid) String storeUuid);
+    Maybe<List<MenuOptionDetail>> getMenuOptionDetailListByStoreUuid(@Query(MenuOptionDetail.Schema.storeUuid) String storeUuid);
 
     @GET("menu/option/detail")
-    Maybe<List<MenuOptionDetail>> getMenuOptionDetailListByStoreUuid(@Query(MenuOptionDetail.Schema.storeUuid) String storeUuid);
+    Maybe<List<MenuOptionDetail>> getMenuOptionDetailListByMenuUuid(@Query(MenuOptionDetail.Schema.menuUuid) String menuUuid);
 
     @PUT("menu/option/detail")
     Maybe<List<MenuOptionDetail>> updateMenuOptionDetailList(@Body List<MenuOptionDetail> menuOptionDetailList);
@@ -141,6 +144,9 @@ public interface NetworkRepository {
 
     @GET("menu/option/category")
     Maybe<List<MenuOptionCategory>> getMenuOptionCategoryListByStoreUuid(final @Query(MenuOptionCategory.Schema.storeUuid) String storeUuid);
+
+    @GET("menu/option/category/{" + MenuOptionCategory.Schema.uuid + "}")
+    Maybe<MenuOptionCategory> getMenuOptionCategory(final @Path(MenuOptionCategory.Schema.uuid) String menuOptionCategoryUuid);
 
     @PUT("menu/option/category/{" + MenuOptionCategory.Schema.uuid + "}")
     Maybe<MenuOptionCategory> updateMenuOptionCategory(final @Path(MenuOptionCategory.Schema.uuid) String menuOptionCategoryUuid,

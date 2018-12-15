@@ -90,7 +90,10 @@ public interface DiskRepository {
     Maybe<List<MenuOption>> getMenuOptionListByStoreUuid(String storeUuid);
 
     @Query("SELECT * FROM " + MenuOptionDetail.Schema.table + " WHERE store_uuid LIKE :storeUuid")
-    Maybe<List<MenuOptionDetail>> getMenuOptionDetailListByMenuOptionByStoreUuid(String storeUuid);
+    Maybe<List<MenuOptionDetail>> getMenuOptionDetailListByStoreUuid(String storeUuid);
+
+    @Query("SELECT * FROM " + MenuOptionDetail.Schema.table + " WHERE menu_uuid LIKE :menuUuid")
+    Maybe<List<MenuOptionDetail>> getMenuOptionDetailListByMenuUuid(String menuUuid);
 
     @Query("SELECT * FROM " + MenuOptionDetail.Schema.table +
             " WHERE menu_option_category_uuid LIKE :menuOptionCategoryUuid" +
@@ -103,6 +106,9 @@ public interface DiskRepository {
 
     @Query("DELETE FROM " + MenuOptionDetail.Schema.table + " WHERE menu_option_category_uuid LIKE :menuOptionCategoryUuid")
     void deleteMenuOptionDetailOfMenuOptionCategory(String menuOptionCategoryUuid);
+
+    @Query("DELETE FROM " + MenuOptionDetail.Schema.table + " WHERE menu_uuid LIKE :menuUuid")
+    void deleteMenuOptionDetailByMenuUuid(String menuUuid);
 
     @Query("DELETE FROM " + MenuOptionDetail.Schema.table + " WHERE store_uuid LIKE :storeUuid")
     void deleteMenuOptionDetailOfStore(String storeUuid);

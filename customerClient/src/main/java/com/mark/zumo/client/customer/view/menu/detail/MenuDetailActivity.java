@@ -14,9 +14,10 @@ import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatButton;
 import android.view.View;
+import android.widget.Toast;
 
-import com.mark.zumo.client.core.entity.Menu;
 import com.mark.zumo.client.core.entity.MenuOrder;
+import com.mark.zumo.client.core.util.context.ContextHolder;
 import com.mark.zumo.client.core.view.Navigator;
 import com.mark.zumo.client.core.view.RapidClickGuard;
 import com.mark.zumo.client.core.view.TouchResponse;
@@ -25,6 +26,8 @@ import com.mark.zumo.client.customer.view.menu.detail.fragment.MenuInfoFragment;
 import com.mark.zumo.client.customer.view.menu.detail.fragment.MenuOptionFragment;
 import com.mark.zumo.client.customer.view.payment.PaymentActivity;
 import com.mark.zumo.client.customer.viewmodel.MenuDetailViewModel;
+
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -48,11 +51,9 @@ public class MenuDetailActivity extends AppCompatActivity {
     @BindView(R.id.place_order) AppCompatButton placeOrder;
 
     private MenuDetailViewModel menuDetailViewModel;
-
-    private Menu menu;
-
-    private String storeUuid;
     private int cartIndex;
+    private MenuOptionFragment menuOptionFragment;
+    private String menuUuid;
 
     @Override
     protected void onCreate(@Nullable final Bundle savedInstanceState) {
@@ -61,21 +62,16 @@ public class MenuDetailActivity extends AppCompatActivity {
         ButterKnife.bind(this);
 
         menuDetailViewModel = ViewModelProviders.of(this).get(MenuDetailViewModel.class);
-
-        String menuUuid = getIntent().getStringExtra(KEY_MENU_UUID);
-        menuDetailViewModel.getMenu(menuUuid).observe(this, menu -> this.menu = menu);
-
-        storeUuid = getIntent().getStringExtra(KEY_MENU_STORE_UUID);
+        menuUuid = getIntent().getStringExtra(KEY_MENU_UUID);
         cartIndex = getIntent().getIntExtra(KEY_CART_INDEX, -1);
 
         inflateViews();
-
         overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
     }
 
     private void inflateViews() {
         Fragment menuInfoFragment = Fragment.instantiate(this, MenuInfoFragment.class.getName(), getIntent().getExtras());
-        Fragment menuOptionFragment = Fragment.instantiate(this, MenuOptionFragment.class.getName(), getIntent().getExtras());
+        menuOptionFragment = (MenuOptionFragment) Fragment.instantiate(this, MenuOptionFragment.class.getName(), getIntent().getExtras());
 
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.menu_info_fragment, menuInfoFragment)
@@ -98,7 +94,9 @@ public class MenuDetailActivity extends AppCompatActivity {
     public void finish() {
         super.finish();
         if (cartIndex > -1) {
-            menuDetailViewModel.updateToCartCurrentItems(storeUuid, menu, cartIndex);
+            List<String> selectMenuOptionUuidList = menuOptionFragment.getSelectMenuOptionUuidList();
+            int amount = menuOptionFragment.getAmount();
+            menuDetailViewModel.updateToCartCurrentItems(menuUuid, selectMenuOptionUuidList, amount, cartIndex);
         }
         Navigator.setBlurLayoutVisible(false);
         overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
@@ -107,9 +105,17 @@ public class MenuDetailActivity extends AppCompatActivity {
     @OnClick(R.id.add_to_cart_button)
     void onClickAddToCart() {
         TouchResponse.big();
-        menuDetailViewModel.addToCartCurrentItems(storeUuid, menu);
+        List<String> selectMenuOptionUuidList = menuOptionFragment.getSelectMenuOptionUuidList();
+        int amount = menuOptionFragment.getAmount();
+        menuDetailViewModel.addToCartCurrentItems(menuUuid, selectMenuOptionUuidList, amount)
+                .observe(this, orderDetail -> onSuccessAddMenuInCart());
+    }
+
+    private void onSuccessAddMenuInCart() {
+        Toast.makeText(ContextHolder.getContext(), R.string.toast_add_to_cart_item_succeed, Toast.LENGTH_SHORT).show();
         finish();
     }
+
 
     @OnClick(R.id.place_order)
     void onClickPlaceOrder() {
@@ -117,7 +123,9 @@ public class MenuDetailActivity extends AppCompatActivity {
             return;
         }
         TouchResponse.medium();
-        menuDetailViewModel.placeOrder(storeUuid, menu).observe(this, this::onSuccessCreateOrder);
+        List<String> selectMenuOptionUuidList = menuOptionFragment.getSelectMenuOptionUuidList();
+        int amount = menuOptionFragment.getAmount();
+        menuDetailViewModel.placeOrder(menuUuid, selectMenuOptionUuidList, amount).observe(this, this::onSuccessCreateOrder);
     }
 
     @OnClick(R.id.back_button)

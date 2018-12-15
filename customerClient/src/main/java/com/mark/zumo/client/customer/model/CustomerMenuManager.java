@@ -6,12 +6,16 @@
 
 package com.mark.zumo.client.customer.model;
 
+import android.support.annotation.NonNull;
+
 import com.mark.zumo.client.core.entity.Menu;
 import com.mark.zumo.client.core.entity.MenuCategory;
 import com.mark.zumo.client.core.entity.MenuDetail;
 import com.mark.zumo.client.core.entity.MenuOption;
+import com.mark.zumo.client.core.entity.MenuOptionCategory;
+import com.mark.zumo.client.core.entity.MenuOptionDetail;
+import com.mark.zumo.client.core.entity.OrderDetail;
 import com.mark.zumo.client.core.p2p.P2pClient;
-import com.mark.zumo.client.core.p2p.packet.CombinedResult;
 import com.mark.zumo.client.core.repository.CategoryRepository;
 import com.mark.zumo.client.core.repository.MenuDetailRepository;
 import com.mark.zumo.client.core.repository.MenuRepository;
@@ -19,14 +23,17 @@ import com.mark.zumo.client.core.repository.SessionRepository;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Deque;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.ConcurrentLinkedDeque;
+import java.util.concurrent.CopyOnWriteArraySet;
 
 import io.reactivex.Maybe;
+import io.reactivex.MaybeOnSubscribe;
 import io.reactivex.Observable;
-import io.reactivex.Single;
-import io.reactivex.observables.GroupedObservable;
 import io.reactivex.schedulers.Schedulers;
 
 /**
@@ -71,51 +78,39 @@ public enum CustomerMenuManager {
         p2pClient = null;
     }
 
-    public Observable<GroupedObservable<String, MenuOption>> getMenuOptionList(String menuUuid) {
-        return menuRepositoryMaybe.flatMapObservable(
-                menuRepository -> menuRepository.getMenuOptionListByMenuOptionCategoryUuid(menuUuid)
-                        .distinctUntilChanged()
-                        .flatMap(Observable::fromIterable)
-                        .groupBy(menuOption -> menuOption.name)
-        ).subscribeOn(Schedulers.computation());
-    }
-
-    public Maybe<Map<String, List<Menu>>> getMenuListByCategory(String storeUuid) {
-        return menuRepositoryMaybe.flatMapObservable(menuRepository -> menuRepository.getMenuListOfStore(storeUuid))
-                .filter(menuList -> menuList.size() > 0)
-                .flatMap(x -> menuDetailRepositoryMaybe.flatMapObservable(a -> a.getMenuDetailListOfStore(storeUuid)))
-                .flatMapSingle(groupedObservable ->
-                        Single.zip(
-                                Single.just(groupedObservable.getKey()),
-                                groupedObservable.sorted((d1, d2) -> d1.menuSeqNum - d2.menuSeqNum)
-                                        .map(menuDetail -> menuDetail.menuUuid)
-                                        .map(uuid -> menuRepositoryMaybe.blockingGet().getMenuFromDisk(uuid).blockingGet())
-                                        .toList(),
-                                CombinedResult::new
-                        )
-                ).toMap(combinedResult -> combinedResult.t, combinedResult -> combinedResult.r)
-                .toMaybe()
-                .subscribeOn(Schedulers.computation());
-    }
-
     public Observable<List<MenuCategory>> getCombinedMenuCategoryList(String storeUuid) {
         return Observable.create(e -> {
             List<MenuCategory> menuCategoryList = new ArrayList<>();
             List<Menu> menuList = new ArrayList<>();
             Map<String, List<MenuDetail>> menuDetailMap = new HashMap<>();
 
+            Set<Class> loadingToken = new CopyOnWriteArraySet<>();
+            Set<Class> completeToken = new CopyOnWriteArraySet<>();
+
+            loadingToken.add(MenuCategory.class);
+            completeToken.add(MenuCategory.class);
             getMenuCategoryList(storeUuid)
                     .subscribeOn(Schedulers.newThread())
                     .doOnNext(menuCategories -> {
                         menuCategoryList.clear();
                         menuCategoryList.addAll(menuCategories);
-                        if (!menuCategoryList.isEmpty() && !menuList.isEmpty() && !menuDetailMap.isEmpty()) {
+
+                        loadingToken.remove(MenuCategory.class);
+                        if (loadingToken.isEmpty()) {
                             List<MenuCategory> mappedCategoryList = mapCategoryWithMenu(menuCategoryList, menuList, menuDetailMap);
                             e.onNext(mappedCategoryList);
                         }
                     })
+                    .doOnComplete(() -> {
+                        completeToken.remove(MenuCategory.class);
+                        if (completeToken.isEmpty()) {
+                            e.onComplete();
+                        }
+                    })
                     .subscribe();
 
+            loadingToken.add(MenuDetail.class);
+            completeToken.add(MenuDetail.class);
             menuDetailRepositoryMaybe.flatMapSingle(menuDetailRepository ->
                     menuDetailRepository.getMenuDetailListOfStore(storeUuid)
                             .subscribeOn(Schedulers.newThread())
@@ -124,22 +119,39 @@ public enum CustomerMenuManager {
                     .doOnSuccess(createdMenuDetailMap -> {
                         menuDetailMap.clear();
                         menuDetailMap.putAll(createdMenuDetailMap);
-                        if (!menuCategoryList.isEmpty() && !menuList.isEmpty() && !menuDetailMap.isEmpty()) {
+                        loadingToken.remove(MenuDetail.class);
+
+                        if (loadingToken.isEmpty()) {
                             List<MenuCategory> mappedCategoryList = mapCategoryWithMenu(menuCategoryList, menuList, menuDetailMap);
                             e.onNext(mappedCategoryList);
+                        }
+
+                        completeToken.remove(MenuCategory.class);
+                        if (completeToken.isEmpty()) {
+                            e.onComplete();
                         }
                     })
                     .subscribeOn(Schedulers.newThread())
                     .subscribe();
 
+            loadingToken.add(Menu.class);
+            completeToken.add(Menu.class);
             menuRepositoryMaybe.flatMapObservable(menuRepository -> menuRepository.getMenuListOfStore(storeUuid))
                     .subscribeOn(Schedulers.newThread())
                     .doOnNext(menus -> {
                         menuList.clear();
                         menuList.addAll(menus);
-                        if (!menuCategoryList.isEmpty() && !menuList.isEmpty() && !menuDetailMap.isEmpty()) {
+                        loadingToken.remove(Menu.class);
+
+                        if (loadingToken.isEmpty()) {
                             List<MenuCategory> mappedCategoryList = mapCategoryWithMenu(menuCategoryList, menuList, menuDetailMap);
                             e.onNext(mappedCategoryList);
+                        }
+                    })
+                    .doOnComplete(() -> {
+                        completeToken.remove(Menu.class);
+                        if (completeToken.isEmpty()) {
+                            e.onComplete();
                         }
                     })
                     .subscribe();
@@ -196,7 +208,7 @@ public enum CustomerMenuManager {
                 .subscribeOn(Schedulers.io());
     }
 
-    public Observable<List<MenuCategory>> getMenuCategoryList(String storeUuid) {
+    private Observable<List<MenuCategory>> getMenuCategoryList(String storeUuid) {
         return sessionRepository.getCustomerSession()
                 .map(CategoryRepository::getInstance)
                 .flatMapObservable(categoryRepository -> categoryRepository.getMenuCategoryList(storeUuid))
@@ -207,5 +219,110 @@ public enum CustomerMenuManager {
                 )
                 .distinctUntilChanged()
                 .subscribeOn(Schedulers.io());
+    }
+
+
+    public Observable<List<MenuOptionCategory>> getCombinedMenuOptionCategoryListByMenuUuid(String menuUuid) {
+        return menuRepositoryMaybe.flatMapObservable(menuRepository ->
+                menuRepository.getMenuOptionDetailListByMenuUuid(menuUuid)
+                        .flatMapMaybe(menuOptionDetailList ->
+                                Observable.fromIterable(menuOptionDetailList)
+                                        .sorted((o1, o2) -> o1.seqNum - o2.seqNum)
+                                        .map(menuOptionDetail -> menuOptionDetail.menuOptionCategoryUuid)
+                                        .flatMapMaybe(this::getCombinedMenuOptionCategory)
+                                        .toList().toMaybe()
+                        ).subscribeOn(Schedulers.io())
+        );
+    }
+
+    public Maybe<MenuOptionCategory> getCombinedMenuOptionCategory(String menuOptionCategoryUuid) {
+        return Maybe.create((MaybeOnSubscribe<MenuOptionCategory>) e -> {
+            final List<MenuOptionCategory> menuOptionCategoryList = new ArrayList<>();
+            final List<MenuOption> menuOptionList = new ArrayList<>();
+
+            final Deque<Object> loadingToken = new ConcurrentLinkedDeque<>();
+
+            menuRepositoryMaybe.flatMap(menuRepository ->
+                    menuRepository.getMenuOptionCategory(menuOptionCategoryUuid)
+                            .lastElement()
+                            .doOnSuccess(menuOptionCategoryList::add)
+                            .doOnSuccess(x -> loadingToken.pop())
+                            .doOnSuccess(x -> {
+                                if (loadingToken.isEmpty()) {
+                                    MenuOptionCategory menuOptionCategory = menuOptionCategoryList.get(0);
+                                    menuOptionCategory.menuOptionList = new ArrayList<>(menuOptionList);
+                                    e.onSuccess(menuOptionCategory);
+                                    e.onComplete();
+                                }
+                            }))
+                    .subscribeOn(Schedulers.newThread())
+                    .doOnSubscribe(x -> loadingToken.add(new Object()))
+                    .subscribe();
+
+            menuRepositoryMaybe.flatMap(menuRepository ->
+                    menuRepository.getMenuOptionListByMenuOptionCategoryUuid(menuOptionCategoryUuid)
+                            .lastElement()
+                            .doOnSuccess(menuOptionList::addAll)
+                            .doOnSuccess(x -> loadingToken.pop())
+                            .doOnSuccess(x -> {
+                                if (loadingToken.isEmpty()) {
+                                    MenuOptionCategory menuOptionCategory = menuOptionCategoryList.get(0);
+                                    menuOptionCategory.menuOptionList = new ArrayList<>(menuOptionList);
+                                    e.onSuccess(menuOptionCategory);
+                                    e.onComplete();
+                                }
+                            }))
+                    .subscribeOn(Schedulers.newThread())
+                    .doOnSubscribe(x -> loadingToken.add(new Object()))
+                    .subscribe();
+        }).subscribeOn(Schedulers.io());
+    }
+
+    private List<MenuOptionCategory> mapMenuOptionCategoryWithMenuOption(@NonNull final List<MenuOptionCategory> menuOptionCategoryList,
+                                                                         @NonNull final Map<String, List<MenuOption>> menuOptionMap,
+                                                                         @NonNull final List<Menu> menuList,
+                                                                         @NonNull final Map<String, List<MenuOptionDetail>> menuOptionDetailMap) {
+        final List<MenuOptionCategory> resultMenuOptionCategoryList = new ArrayList<>(menuOptionCategoryList);
+        final Map<String, Menu> menuMap = new HashMap<>();
+        for (Menu menu : menuList) {
+            menuMap.put(menu.uuid, menu);
+        }
+
+        for (MenuOptionCategory menuOptionCategory : resultMenuOptionCategoryList) {
+            if (menuOptionMap.containsKey(menuOptionCategory.uuid)) {
+                menuOptionCategory.menuOptionList = new ArrayList<>();
+                menuOptionCategory.menuOptionList.addAll(menuOptionMap.get(menuOptionCategory.uuid));
+                Collections.sort(menuOptionCategory.menuOptionList, (o1, o2) -> o1.seqNum - o2.seqNum);
+            }
+
+            if (menuOptionDetailMap.containsKey(menuOptionCategory.uuid)) {
+                List<Menu> includedMenuList = new ArrayList<>();
+                for (MenuOptionDetail menuOptionDetail : menuOptionDetailMap.get(menuOptionCategory.uuid)) {
+                    if (!menuMap.containsKey(menuOptionDetail.menuUuid)) {
+                        continue;
+                    }
+
+                    includedMenuList.add(menuMap.get(menuOptionDetail.menuUuid));
+                }
+                menuOptionCategory.menuList = new ArrayList<>();
+                menuOptionCategory.menuList.addAll(includedMenuList);
+            }
+        }
+
+        return resultMenuOptionCategoryList;
+    }
+
+    public Maybe<OrderDetail> createOrderDetail(String menuUuid, List<String> menuOptionUuidList, int amount) {
+        return menuRepositoryMaybe.flatMap(menuRepository ->
+                getMenuFromDisk(menuUuid)
+                        .flatMap(menu -> Observable.fromIterable(menuOptionUuidList)
+                                .flatMapMaybe(menuRepository::getMenuOptionFromDisk)
+                                .map(menuOption -> menuOption.price)
+                                .reduce((i, i2) -> i + i2)
+                                .map(optionPrice -> menu.price + optionPrice)
+                                .map(singlePrice -> singlePrice * amount)
+                                .map(totalPrice -> new OrderDetail("", menu.storeUuid, menu.uuid, menu.name, "", menuOptionUuidList, amount, totalPrice))
+                        )
+        );
     }
 }

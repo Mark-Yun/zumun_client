@@ -22,12 +22,11 @@ import com.mark.zumo.client.store.R;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Deque;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.ConcurrentLinkedDeque;
+import java.util.concurrent.CopyOnWriteArraySet;
 
 import io.reactivex.Maybe;
 import io.reactivex.Observable;
@@ -85,24 +84,32 @@ public enum StoreMenuManager {
             List<Menu> menuList = new ArrayList<>();
             Map<String, List<MenuDetail>> menuDetailMap = new HashMap<>();
 
-            Deque<Object> loadingToken = new ConcurrentLinkedDeque<>();
+            Set<Class> nextToken = new CopyOnWriteArraySet<>();
+            Set<Class> completeToken = new CopyOnWriteArraySet<>();
 
-            loadingToken.add(new Object());
+            nextToken.add(MenuCategory.class);
+            completeToken.add(MenuCategory.class);
             getMenuCategoryList(storeUuid)
                     .subscribeOn(Schedulers.newThread())
-                    .lastElement()
-                    .doOnSuccess(menuCategories -> {
+                    .doOnNext(menuCategories -> {
                         menuCategoryList.clear();
                         menuCategoryList.addAll(menuCategories);
-                        loadingToken.pop();
-                        if (loadingToken.isEmpty()) {
+                        nextToken.remove(MenuCategory.class);
+                        if (nextToken.isEmpty()) {
                             List<MenuCategory> mappedCategoryList = mapCategoryWithMenu(menuCategoryList, menuList, menuDetailMap);
                             e.onNext(mappedCategoryList);
                         }
                     })
+                    .doOnComplete(() -> {
+                        completeToken.remove(MenuCategory.class);
+                        if (completeToken.isEmpty()) {
+                            e.onComplete();
+                        }
+                    })
                     .subscribe();
 
-            loadingToken.add(new Object());
+            nextToken.add(MenuDetail.class);
+            completeToken.add(MenuDetail.class);
             menuDetailRepositoryMaybe.flatMapSingle(menuDetailRepository ->
                     menuDetailRepository.getMenuDetailListOfStore(storeUuid)
                             .subscribeOn(Schedulers.newThread())
@@ -111,29 +118,39 @@ public enum StoreMenuManager {
                     .doOnSuccess(createdMenuDetailMap -> {
                         menuDetailMap.clear();
                         menuDetailMap.putAll(createdMenuDetailMap);
-                        loadingToken.pop();
-                        if (loadingToken.isEmpty()) {
+                        nextToken.remove(MenuDetail.class);
+                        if (nextToken.isEmpty()) {
                             List<MenuCategory> mappedCategoryList = mapCategoryWithMenu(menuCategoryList, menuList, menuDetailMap);
                             e.onNext(mappedCategoryList);
+                        }
+
+                        completeToken.remove(MenuCategory.class);
+                        if (completeToken.isEmpty()) {
+                            e.onComplete();
                         }
                     })
                     .subscribeOn(Schedulers.newThread())
                     .subscribe();
 
-            loadingToken.add(new Object());
+            nextToken.add(Menu.class);
+            completeToken.add(Menu.class);
             getMenuList(storeUuid)
                     .subscribeOn(Schedulers.newThread())
-                    .lastElement()
-                    .doOnSuccess(menus -> {
+                    .doOnNext(menus -> {
                         menuList.clear();
                         menuList.addAll(menus);
-                        loadingToken.pop();
-                        if (loadingToken.isEmpty()) {
+                        nextToken.remove(Menu.class);
+                        if (nextToken.isEmpty()) {
                             List<MenuCategory> mappedCategoryList = mapCategoryWithMenu(menuCategoryList, menuList, menuDetailMap);
                             e.onNext(mappedCategoryList);
                         }
-                    })
-                    .subscribe();
+                    }).doOnComplete(() -> {
+                        completeToken.remove(MenuCategory.class);
+                        if (completeToken.isEmpty()) {
+                            e.onComplete();
+                        }
+                    }
+            ).subscribe();
         }).subscribeOn(Schedulers.io());
     }
 

@@ -30,10 +30,10 @@ enum Validator {
     EMPTY_NAME(StoreUserSignupErrorCode.EMPTY_NAME, request -> !TextUtils.isEmpty(request.name)),
     EMPTY_PHONE_NUMBER(StoreUserSignupErrorCode.EMPTY_PHONE_NUMBER, request -> !TextUtils.isEmpty(request.phoneNumber)),
     EMPTY_BANK_NAME(StoreUserSignupErrorCode.EMPTY_BANK_NAME, request -> !TextUtils.isEmpty(request.bankName)),
-    EMPTY_BANK_ACCOUNT(StoreUserSignupErrorCode.EMPTY_BANK_ACCOUNT, request -> !TextUtils.isEmpty(request.bankAccount)),
+    EMPTY_BANK_ACCOUNT(StoreUserSignupErrorCode.EMPTY_BANK_ACCOUNT, request -> !TextUtils.isEmpty(request.bankAccountNumber)),
     EMPTY_BANK_ACCOUNT_URL(StoreUserSignupErrorCode.EMPTY_BANK_ACCOUNT_URL, request -> !TextUtils.isEmpty(request.bankAccountScanUrl)),
-    PASSWORD_DISCORD(StoreUserSignupErrorCode.PASSWORD_DISCORD, request -> !request.password.equals(request.passwordConfirm)),
-    EMAIL_INCORRECT(StoreUserSignupErrorCode.EMAIL_INCORRECT, request -> !request.email.matches(Validator.emailPattern));
+    PASSWORD_DISCORD(StoreUserSignupErrorCode.PASSWORD_DISCORD, request -> TextUtils.equals(request.password, request.passwordConfirm)),
+    EMAIL_INCORRECT(StoreUserSignupErrorCode.EMAIL_INCORRECT, request -> request.email.matches(Validator.emailPattern));
 
     private final static String emailPattern = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+";
     private final AssertConsumer assertConsumer;

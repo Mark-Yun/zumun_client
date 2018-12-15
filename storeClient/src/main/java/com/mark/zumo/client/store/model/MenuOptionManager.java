@@ -20,11 +20,11 @@ import com.mark.zumo.client.core.repository.SessionRepository;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Deque;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ConcurrentLinkedDeque;
+import java.util.Set;
+import java.util.concurrent.CopyOnWriteArraySet;
 
 import io.reactivex.Maybe;
 import io.reactivex.Observable;
@@ -69,26 +69,34 @@ public enum MenuOptionManager {
             List<Menu> menuList = new ArrayList<>();
             Map<String, List<MenuOptionDetail>> menuOptionDetailMap = new HashMap<>();
 
-            Deque<Object> loadingToken = new ConcurrentLinkedDeque<>();
+            Set<Class> nextToken = new CopyOnWriteArraySet<>();
+            Set<Class> completeToken = new CopyOnWriteArraySet<>();
 
-            loadingToken.add(new Object());
+            nextToken.add(MenuOptionCategory.class);
+            completeToken.add(MenuOptionCategory.class);
             menuRepositoryMaybe.flatMapObservable(menuRepository -> menuRepository.getMenuOptionCategoryListByStoreUuid(storeUuid))
-                    .lastElement()
-                    .doOnSuccess(menuOptionCategories -> {
+                    .doOnNext(menuOptionCategories -> {
                         menuOptionCategoryList.clear();
                         menuOptionCategoryList.addAll(menuOptionCategories);
-                        loadingToken.pop();
-                        if (loadingToken.isEmpty()) {
+                        nextToken.remove(MenuOptionCategory.class);
+                        if (nextToken.isEmpty()) {
                             List<MenuOptionCategory> combinedMenuOptionCategory = mapMenuOptionCategoryWithMenuOption(menuOptionCategoryList, menuOptionMap, menuList, menuOptionDetailMap);
                             if (!combinedMenuOptionCategory.isEmpty()) {
                                 e.onNext(combinedMenuOptionCategory);
-                                e.onComplete();
                             }
                         }
-                    }).subscribeOn(Schedulers.newThread())
+                    })
+                    .doOnComplete(() -> {
+                        completeToken.remove(MenuOptionCategory.class);
+                        if (completeToken.isEmpty()) {
+                            e.onComplete();
+                        }
+                    })
+                    .subscribeOn(Schedulers.newThread())
                     .subscribe();
 
-            loadingToken.add(new Object());
+            nextToken.add(MenuOption.class);
+            completeToken.add(MenuOption.class);
             menuRepositoryMaybe.flatMapSingle(menuRepository ->
                     menuRepository.getGroupedMenuOptionListByStoreUuid(storeUuid)
                             .subscribeOn(Schedulers.newThread())
@@ -97,35 +105,45 @@ public enum MenuOptionManager {
                     .doOnSuccess(menuOptions -> {
                         menuOptionMap.clear();
                         menuOptionMap.putAll(menuOptions);
-                        loadingToken.pop();
-                        if (loadingToken.isEmpty()) {
+                        nextToken.remove(MenuOption.class);
+                        if (nextToken.isEmpty()) {
                             List<MenuOptionCategory> combinedMenuOptionCategory = mapMenuOptionCategoryWithMenuOption(menuOptionCategoryList, menuOptionMap, menuList, menuOptionDetailMap);
                             if (!combinedMenuOptionCategory.isEmpty()) {
                                 e.onNext(combinedMenuOptionCategory);
-                                e.onComplete();
                             }
+                        }
+                        completeToken.remove(MenuOption.class);
+                        if (completeToken.isEmpty()) {
+                            e.onComplete();
                         }
                     }).subscribeOn(Schedulers.newThread())
                     .subscribe();
 
-            loadingToken.add(new Object());
+            nextToken.add(Menu.class);
+            completeToken.add(Menu.class);
             menuRepositoryMaybe.flatMapObservable(menuRepository -> menuRepository.getMenuListOfStore(storeUuid))
-                    .lastElement()
-                    .doOnSuccess(menus -> {
+                    .doOnNext(menus -> {
                         menuList.clear();
                         menuList.addAll(menus);
-                        loadingToken.pop();
-                        if (loadingToken.isEmpty()) {
+                        nextToken.remove(Menu.class);
+                        if (nextToken.isEmpty()) {
                             List<MenuOptionCategory> combinedMenuOptionCategory = mapMenuOptionCategoryWithMenuOption(menuOptionCategoryList, menuOptionMap, menuList, menuOptionDetailMap);
                             if (!combinedMenuOptionCategory.isEmpty()) {
                                 e.onNext(combinedMenuOptionCategory);
-                                e.onComplete();
                             }
                         }
-                    }).subscribeOn(Schedulers.newThread())
+                    })
+                    .doOnComplete(() -> {
+                        completeToken.remove(Menu.class);
+                        if (completeToken.isEmpty()) {
+                            e.onComplete();
+                        }
+                    })
+                    .subscribeOn(Schedulers.newThread())
                     .subscribe();
 
-            loadingToken.add(new Object());
+            nextToken.add(MenuOptionDetail.class);
+            completeToken.add(MenuOptionDetail.class);
             menuRepositoryMaybe.flatMapSingle(menuRepository ->
                     menuRepository.getMenuOptionDetailListByStoreUuid(storeUuid)
                             .subscribeOn(Schedulers.newThread())
@@ -134,13 +152,16 @@ public enum MenuOptionManager {
             ).doOnSuccess(menuOptionDetails -> {
                 menuOptionDetailMap.clear();
                 menuOptionDetailMap.putAll(menuOptionDetails);
-                loadingToken.pop();
-                if (loadingToken.isEmpty()) {
+                nextToken.remove(MenuOptionDetail.class);
+                if (nextToken.isEmpty()) {
                     List<MenuOptionCategory> combinedMenuOptionCategory = mapMenuOptionCategoryWithMenuOption(menuOptionCategoryList, menuOptionMap, menuList, menuOptionDetailMap);
                     if (!combinedMenuOptionCategory.isEmpty()) {
                         e.onNext(combinedMenuOptionCategory);
-                        e.onComplete();
                     }
+                }
+                completeToken.remove(MenuOptionDetail.class);
+                if (completeToken.isEmpty()) {
+                    e.onComplete();
                 }
             }).subscribeOn(Schedulers.newThread())
                     .subscribe();

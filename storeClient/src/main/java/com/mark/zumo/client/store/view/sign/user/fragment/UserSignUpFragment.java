@@ -65,6 +65,7 @@ public class UserSignUpFragment extends Fragment {
     @BindView(R.id.bank_account_scan_image_description) ConstraintLayout bankAccountScanImageDescription;
 
     private SignUpViewModel signUpViewModel;
+    private String bankAccountScanUrl;
 
     @Override
     public void onCreate(@Nullable final Bundle savedInstanceState) {
@@ -89,8 +90,7 @@ public class UserSignUpFragment extends Fragment {
         String phoneNumber = inputLayoutPhoneNumber.getEditText() == null ? "" : inputLayoutPhoneNumber.getEditText().getText().toString();
         String bankName = inputBankName.getSelectedItem() == null ? "" : inputBankName.getSelectedItem().toString();
         String bankAccount = inputLayoutBank.getEditText() == null ? "" : inputLayoutBank.getEditText().getText().toString();
-        String bankAccountUrl = "";
-        signUpViewModel.signUp(email, password, passwordConfirm, name, phoneNumber, bankName, bankAccount, bankAccountUrl)
+        signUpViewModel.signUp(email, password, passwordConfirm, name, phoneNumber, bankName, bankAccount, bankAccountScanUrl)
                 .observe(this, this::onSignUpRequest);
     }
 
@@ -197,6 +197,8 @@ public class UserSignUpFragment extends Fragment {
                 .load(url)
                 .transition(DrawableTransitionOptions.withCrossFade())
                 .into(bankAccountScanImage);
+
+        bankAccountScanUrl = url;
 
         bankAccountScanImageDescription.setVisibility(View.GONE);
     }
