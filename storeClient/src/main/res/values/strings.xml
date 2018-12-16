@@ -9,11 +9,17 @@
 
     <!--sign up-->
     <string name="edit_text_hint_email">E-mail</string>
+    <string name="edit_text_hint_password">Password</string>
+    <string name="sign_in_slogan_text">Make order easier with ZUMUN</string>
+    <string name="auto_login">Sign in automatically</string>
     <string name="button_sign_in">SIGN IN</string>
     <string name="button_sign_up">SIGN UP</string>
+    <string name="find_my_email_title">Authenticate by your Phone Number</string>
+    <string name="find_my_password_title">Authenticate by your Email</string>
     <string name="text_view_go_to_sign_up">Go To Sign Up >></string>
     <string name="text_view_back_to_sign_in">&lt;&lt;Back To Sign In</string>
-
+    <string name="find_my_email">Missed Email</string>
+    <string name="find_my_password">Missed Password</string>
     <string name="order_title_description">Order number</string>
     <string name="order_date_description">Date:&#160;</string>
     <string name="order_time_description">Time:&#160;</string>

@@ -6,10 +6,9 @@
 
 package com.mark.zumo.client.store.view.sign.user.fragment;
 
-import android.support.v4.app.Fragment;
-
 /**
- * Created by mark on 18. 12. 11.
+ * Created by mark on 18. 12. 16.
  */
-public class FindIDFragment extends Fragment {
+public interface BackPressedInterceptor {
+    void onClickedBackButton();
 }

@@ -23,7 +23,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.mark.zumo.client.core.appserver.request.signup.StoreUserSignupErrorCode;
@@ -36,7 +35,6 @@ import com.tangxiaolv.telegramgallery.GalleryActivity;
 
 import java.io.Serializable;
 import java.util.List;
-import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -45,12 +43,11 @@ import butterknife.OnClick;
 /**
  * Created by mark on 18. 5. 13.
  */
-public class UserSignUpFragment extends Fragment {
+public class UserSignUpFragment extends Fragment implements BackPressedInterceptor {
 
     private static final String TAG = "UserSignUpFragment";
     private static final int BANK_SCAN_IMAGE_PICKER_REQUEST_CODE = 22;
 
-    @BindView(R.id.back_to_sign_in) TextView backToSignIn;
     @BindView(R.id.input_layout_email) TextInputLayout inputLayoutEmail;
     @BindView(R.id.input_layout_password) TextInputLayout inputLayoutPassword;
     @BindView(R.id.input_layout_confirm_password) TextInputLayout inputLayoutConfirmPassword;
@@ -66,6 +63,7 @@ public class UserSignUpFragment extends Fragment {
 
     private SignUpViewModel signUpViewModel;
     private String bankAccountScanUrl;
+    private Runnable onBackPressedAction;
 
     @Override
     public void onCreate(@Nullable final Bundle savedInstanceState) {
@@ -144,11 +142,10 @@ public class UserSignUpFragment extends Fragment {
         }
     }
 
-    @OnClick(R.id.back_to_sign_in)
-    void backToSignIn() {
-        Objects.requireNonNull(getFragmentManager()).beginTransaction()
-                .replace(R.id.console_fragment, Fragment.instantiate(getActivity(), UserSignInFragment.class.getName()))
-                .commit();
+    @Override
+    @OnClick(R.id.back)
+    public void onClickedBackButton() {
+        onBackPressedAction.run();
     }
 
     @OnClick(R.id.bank_account_scan_image)
@@ -201,5 +198,10 @@ public class UserSignUpFragment extends Fragment {
         bankAccountScanUrl = url;
 
         bankAccountScanImageDescription.setVisibility(View.GONE);
+    }
+
+    public UserSignUpFragment doOnBackPressured(Runnable runnable) {
+        onBackPressedAction = runnable;
+        return this;
     }
 }

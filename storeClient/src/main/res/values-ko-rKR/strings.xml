@@ -7,8 +7,15 @@
 <resources>
     <string name="app_name">Zumun Store</string>
     <string name="edit_text_hint_email">이메일</string>
+    <string name="edit_text_hint_password">비밀번호</string>
+    <string name="sign_in_slogan_text">Make order easier with ZUMUN</string>
+    <string name="auto_login">자동 로그인</string>
     <string name="button_sign_in">로그인</string>
     <string name="button_sign_up">회원 가입</string>
+    <string name="find_my_email_title">본인 명의 휴대전화로 인증</string>
+    <string name="find_my_password_title">본인 이메일 주소로 인증</string>
+    <string name="find_my_email">이메일 찾기</string>
+    <string name="find_my_password">비밀번호 찾기</string>
     <string name="text_view_go_to_sign_up">회원 가입 >></string>
     <string name="text_view_back_to_sign_in">&lt;&lt; 로그인</string>
     <string name="order_title_description">주문 번호</string>

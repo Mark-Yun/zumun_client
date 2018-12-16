@@ -18,7 +18,6 @@
 
 package com.mark.zumo.client.core.util.glide.transformation;
 
-import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.LinearGradient;
@@ -36,13 +35,7 @@ import java.security.MessageDigest;
 /**
  * Created by mark on 18. 11. 5.
  */
-public class LinearGradientTransformation0To180 extends BitmapTransformation {
-    private Context context;
-
-    public LinearGradientTransformation0To180(Context context) {
-        super();
-        this.context = context;
-    }
+public class StoreSignUpFragmentBackground extends BitmapTransformation {
 
     @Override
     protected Bitmap transform(@NonNull BitmapPool pool, @NonNull Bitmap toTransform, int outWidth, int outHeight) {
@@ -56,7 +49,7 @@ public class LinearGradientTransformation0To180 extends BitmapTransformation {
 
         Paint paint = new Paint();
 
-        LinearGradient shader = new LinearGradient(width, 0, 0, height, 0x00000000, 0xE6263238, Shader.TileMode.CLAMP);
+        LinearGradient shader = new LinearGradient(width, 0, 0, height, 0xE6FFFFFF, 0xE6263238, Shader.TileMode.CLAMP);
         paint.setShader(shader);
         paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.DARKEN));
         canvas.drawRect(0, 0, width, height, paint);

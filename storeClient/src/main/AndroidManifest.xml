@@ -38,7 +38,9 @@
             android:name="com.amazonaws.mobileconnectors.s3.transferutility.TransferService"
             android:enabled="true" />
 
-        <activity android:name="com.mark.zumo.client.store.view.sign.user.UserSignUpActivity" />
+        <activity
+            android:name="com.mark.zumo.client.store.view.sign.user.UserSignUpActivity"
+            android:windowSoftInputMode="stateHidden|adjustResize" />
 
         <activity android:name="com.tangxiaolv.telegramgallery.GalleryActivity" />
 

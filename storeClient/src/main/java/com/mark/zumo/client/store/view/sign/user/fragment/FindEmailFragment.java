@@ -22,8 +22,7 @@ import butterknife.OnClick;
 /**
  * Created by mark on 18. 12. 11.
  */
-public class FindPasswordFragment extends Fragment implements BackPressedInterceptor {
-
+public class FindEmailFragment extends Fragment implements BackPressedInterceptor {
     private Runnable onBackPressedAction;
 
     @Override
@@ -34,7 +33,7 @@ public class FindPasswordFragment extends Fragment implements BackPressedInterce
     @Nullable
     @Override
     public View onCreateView(@NonNull final LayoutInflater inflater, @Nullable final ViewGroup container, @Nullable final Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_store_user_find_my_password, container, false);
+        View view = inflater.inflate(R.layout.fragment_store_user_find_my_email, container, false);
         ButterKnife.bind(this, view);
         return view;
     }
@@ -45,7 +44,7 @@ public class FindPasswordFragment extends Fragment implements BackPressedInterce
         onBackPressedAction.run();
     }
 
-    public FindPasswordFragment doOnBackPressured(Runnable runnable) {
+    public FindEmailFragment doOnBackPressured(Runnable runnable) {
         onBackPressedAction = runnable;
         return this;
     }

@@ -30,10 +30,11 @@ import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.bumptech.glide.request.RequestOptions;
 import com.mark.zumo.client.core.util.context.ContextHolder;
 import com.mark.zumo.client.core.util.glide.GlideApp;
-import com.mark.zumo.client.core.util.glide.transformation.LinearGradientTransformation0To180;
+import com.mark.zumo.client.core.util.glide.transformation.StoreSignUpFragmentBackground;
 import com.mark.zumo.client.core.view.BaseActivity;
 import com.mark.zumo.client.store.R;
-import com.mark.zumo.client.store.view.sign.user.fragment.UserSignInFragment;
+import com.mark.zumo.client.store.view.sign.user.fragment.BackPressedInterceptor;
+import com.mark.zumo.client.store.view.sign.user.fragment.UserSignMainFragment;
 import com.mark.zumo.client.store.viewmodel.SignUpViewModel;
 
 import butterknife.BindView;
@@ -74,13 +75,13 @@ public class UserSignUpActivity extends BaseActivity {
 
         getSupportFragmentManager().beginTransaction()
                 .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
-                .replace(R.id.console_fragment, Fragment.instantiate(this, UserSignInFragment.class.getName()))
+                .replace(R.id.console_fragment, Fragment.instantiate(this, UserSignMainFragment.class.getName()))
                 .commit();
 
         GlideApp.with(this)
                 .load(R.drawable.background_image_sign_up_coffeehouse)
                 .apply(RequestOptions.centerCropTransform())
-                .transform(new LinearGradientTransformation0To180(this))
+                .transform(new StoreSignUpFragmentBackground())
                 .transition(DrawableTransitionOptions.withCrossFade())
                 .into(backgroundImageView);
 
@@ -112,6 +113,25 @@ public class UserSignUpActivity extends BaseActivity {
             winParams.flags &= ~bits;
         }
         window.setAttributes(winParams);
+    }
+
+    private boolean fragmentsBackKeyIntercept() {
+        for (Fragment fragment : getSupportFragmentManager().getFragments()) {
+            if (fragment instanceof BackPressedInterceptor) {
+                ((BackPressedInterceptor) fragment).onClickedBackButton();
+                return true;
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (fragmentsBackKeyIntercept()) {
+            return;
+        }
+
+        super.onBackPressed();
     }
 
     @Override
