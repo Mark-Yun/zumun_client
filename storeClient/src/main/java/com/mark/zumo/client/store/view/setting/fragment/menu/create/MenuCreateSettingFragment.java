@@ -10,7 +10,13 @@
  * Proprietary and confidential
  */
 
-package com.mark.zumo.client.store.view.setting.fragment.menu.detail;
+/*
+ * Copyright (c) 2018. Mark Soft - All Rights Reserved
+ * Unauthorized copying of this file, via any medium is strictly prohibited
+ * Proprietary and confidential
+ */
+
+package com.mark.zumo.client.store.view.setting.fragment.menu.create;
 
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
@@ -47,16 +53,21 @@ import butterknife.OnClick;
 /**
  * Created by mark on 18. 7. 31.
  */
-public class MenuDetailSettingFragment extends Fragment {
+public class MenuCreateSettingFragment extends Fragment {
 
     public final static String KEY_MENU_UUID = "menu_uuid";
 
     private static final int REQUEST_CODE_IMAGE_PICKER = 101;
-    private static final String TAG = "MenuDetailSettingFragment";
+    private static final String TAG = "MenuCreateSettingFragment";
 
     @BindView(R.id.image) AppCompatImageView image;
 
     private MenuSettingViewModel menuSettingViewModel;
+
+    private MenuCreationListener menuCreationListener;
+    private Runnable cancelListener;
+
+    private Uri menuImageUri;
 
     @Override
     public void onCreate(@Nullable final Bundle savedInstanceState) {
@@ -67,32 +78,28 @@ public class MenuDetailSettingFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull final LayoutInflater inflater, @Nullable final ViewGroup container, @Nullable final Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_setting_menu_detail, container, false);
+        View view = inflater.inflate(R.layout.fragment_setting_menu_create, container, false);
         ButterKnife.bind(this, view);
 
         inflatePreferenceFragment();
-        inflateMenuImage();
-
         return view;
     }
 
+    public MenuCreateSettingFragment onCreateMenu(MenuCreationListener menuCreationListener) {
+        this.menuCreationListener = menuCreationListener;
+        return this;
+    }
+
+    public MenuCreateSettingFragment onCancel(Runnable cancelListener) {
+        this.cancelListener = cancelListener;
+        return this;
+    }
+
     private void inflatePreferenceFragment() {
-        Fragment fragment = PreferenceFragmentCompat.instantiate(getActivity(), MenuDetailPreferenceFragment.class.getName(), getArguments());
+        Fragment fragment = PreferenceFragmentCompat.instantiate(getActivity(), MenuCreatePreferenceFragment.class.getName(), getArguments());
         getFragmentManager().beginTransaction()
                 .replace(R.id.menu_detail_preference_fragment, fragment)
                 .commit();
-    }
-
-    private void inflateMenuImage() {
-        String menuUuid = getArguments().getString(KEY_MENU_UUID);
-        menuSettingViewModel.menuFromDisk(menuUuid).observe(this, this::onLoadMenu);
-    }
-
-    private void onLoadMenu(Menu menu) {
-        GlideApp.with(this)
-                .load(menu.imageUrl)
-                .transition(DrawableTransitionOptions.withCrossFade())
-                .into(image);
     }
 
     @OnClick(R.id.image)
@@ -123,13 +130,12 @@ public class MenuDetailSettingFragment extends Fragment {
             return;
         }
 
-        String menuUuid = getArguments().getString(KEY_MENU_UUID);
-        Uri resultUri = result.getUri();
-        menuSettingViewModel.uploadUncreatedMenuImage(getActivity(), menuUuid, resultUri).observe(this, this::onSuccessMenuUpdate);
-    }
+        menuImageUri = result.getUri();
 
-    private void onSuccessMenuUpdate(Menu menu) {
-        getFragmentManager().popBackStack();
+        GlideApp.with(this)
+                .load(menuImageUri)
+                .transition(DrawableTransitionOptions.withCrossFade())
+                .into(image);
     }
 
     @Override
@@ -148,5 +154,9 @@ public class MenuDetailSettingFragment extends Fragment {
                 onImageCopped(resultCode, data);
                 break;
         }
+    }
+
+    public interface MenuCreationListener {
+        void onMenuCreate(Menu menu);
     }
 }

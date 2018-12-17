@@ -66,6 +66,9 @@
     <string name="preference_title_menu_detail_menu_category">Menu Category</string>
     <string name="preference_key_menu_detail_menu_category" translatable="false">menu_detail_menu_category</string>
 
+    <string name="preference_title_menu_detail_menu_option">Menu Option</string>
+    <string name="preference_key_menu_detail_menu_option" translatable="false">menu_detail_menu_option</string>
+
     <string name="store_profile_name_editor_title">Store Name</string>
     <string name="store_profile_name_editor_message">Insert new store name</string>
 
@@ -132,4 +135,5 @@
     <string name="un_categorized_menu_category_title">Not Categorized Menus</string>
     <string name="menu_selector_title_to_select_menus_to_add_into_category">Select menus to add into %s category</string>
     <string name="sign_up_description_title">Make Your Order Easier</string>
+    <string name="menu_creator_title">Create New Menu</string>
 </resources>

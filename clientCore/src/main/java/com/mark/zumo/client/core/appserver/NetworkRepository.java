@@ -135,6 +135,10 @@ public interface NetworkRepository {
     @PUT("menu/option/detail")
     Maybe<List<MenuOptionDetail>> updateMenuOptionDetailList(@Body List<MenuOptionDetail> menuOptionDetailList);
 
+    @PUT("menu/detail/")
+    Maybe<List<MenuOptionDetail>> updateMenuOptionCategoriesOfMenu(@Query(MenuOptionDetail.Schema.menuUuid) String menuUuid,
+                                                                   @Body List<MenuOptionDetail> menuOptionDetailList);
+
     @DELETE("menu/option/detail/{" + MenuOptionDetail.Schema.uuid + "}")
     Maybe<MenuOptionDetail> deleteMenuOptionDetail(@Path(MenuOptionDetail.Schema.uuid) String menuOptionDetailUuid);
 
@@ -159,7 +163,6 @@ public interface NetworkRepository {
     Maybe<MenuOptionCategory> deleteMenuOptionCategory(final @Path(MenuOptionCategory.Schema.uuid) String menuOptionCategoryUuid);
 
 
-
     @GET("category")
     Maybe<List<MenuCategory>> getMenuCategoryListByStoreUuid(@Query(MenuCategory.Schema.storeUuid) String storeUuid);
 
@@ -167,8 +170,8 @@ public interface NetworkRepository {
     Maybe<MenuCategory> deleteCategory(@Path(MenuCategory.Schema.uuid) String categoryUuid);
 
     @PUT("category/{" + MenuCategory.Schema.uuid + "}")
-    Maybe<MenuCategory> updateCategoriesOfMenu(@Path(MenuCategory.Schema.uuid) final String menuCategoryUuid,
-                                               @Body final MenuCategory menuCategory);
+    Maybe<MenuCategory> updateMenuCategory(@Path(MenuCategory.Schema.uuid) final String menuCategoryUuid,
+                                           @Body final MenuCategory menuCategory);
 
     @PUT("category")
     Maybe<List<MenuCategory>> updateMenuCategoryList(@Body final List<MenuCategory> menuCategoryList);
@@ -178,7 +181,6 @@ public interface NetworkRepository {
 
     @POST("category")
     Maybe<MenuCategory> createMenuCategory(@Body MenuCategory menuCategory);
-
 
 
     @POST("order")

@@ -77,7 +77,7 @@ public class MenuOptionCategoryCreateDialogFragment extends DialogFragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull final LayoutInflater inflater, @Nullable final ViewGroup container, @Nullable final Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_dialog_create_menu_option, container, false);
+        View view = inflater.inflate(R.layout.dialog_fragment_create_menu_option, container, false);
         ButterKnife.bind(this, view);
         inflateView();
         return view;

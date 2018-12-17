@@ -12,61 +12,72 @@
 
 package com.mark.zumo.client.store.view.setting.fragment.menu;
 
-import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.mark.zumo.client.core.entity.Menu;
 import com.mark.zumo.client.store.R;
-import com.mark.zumo.client.store.viewmodel.MenuSettingViewModel;
+import com.mark.zumo.client.store.view.setting.fragment.menu.create.MenuCreateSettingFragment;
+import com.mark.zumo.client.store.view.setting.fragment.menu.detail.MenuDetailSettingFragment;
+import com.mark.zumo.client.store.view.setting.fragment.menu.menulist.MenuSettingMenuListFragment;
 
-import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 
 /**
  * Created by mark on 18. 6. 25.
  */
 public class MenuSettingFragment extends Fragment {
 
-    @BindView(R.id.recycler_view) RecyclerView recyclerView;
-
-    private MenuSettingViewModel menuSettingViewModel;
-
-    @Override
-    public void onCreate(@Nullable final Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        menuSettingViewModel = ViewModelProviders.of(getActivity()).get(MenuSettingViewModel.class);
-    }
+    private static final String TAG = "MenuSettingFragment";
 
     @Nullable
     @Override
     public View onCreateView(@NonNull final LayoutInflater inflater, @Nullable final ViewGroup container, @Nullable final Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_setting_menu, container, false);
         ButterKnife.bind(this, view);
-
-        inflateRecyclerView();
+        inflateView();
         return view;
     }
 
-    private void inflateRecyclerView() {
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
-        recyclerView.setLayoutManager(layoutManager);
-        recyclerView.setHasFixedSize(true);
-        recyclerView.setNestedScrollingEnabled(false);
+    private void inflateView() {
+        MenuSettingMenuListFragment menuSettingMenuListFragment = ((MenuSettingMenuListFragment) Fragment.instantiate(getContext(), MenuSettingMenuListFragment.class.getName()))
+                .onMenuSelect(this::onSelectMenu)
+                .onMenuCreateRequest(this::onRequestedMenuCreation);
 
-        CategoryAdapter categoryAdapter = new CategoryAdapter(this, menuSettingViewModel, getFragmentManager());
-        recyclerView.setAdapter(categoryAdapter);
-        menuSettingViewModel.getCombinedMenuCategoryList().observe(this, categoryAdapter::setCategoryList);
+        getFragmentManager().beginTransaction()
+                .replace(R.id.menu_list_fragment, menuSettingMenuListFragment)
+                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+                .commit();
     }
 
-    @OnClick(R.id.add_menu)
-    public void onViewClicked() {
+    private void onSelectMenu(Menu menu) {
+        Bundle bundle = new Bundle();
+        bundle.putString(MenuDetailSettingFragment.KEY_MENU_UUID, menu.uuid);
+        MenuDetailSettingFragment menuDetailSettingFragment = (MenuDetailSettingFragment) Fragment.instantiate(getContext(), MenuDetailSettingFragment.class.getName(), bundle);
+
+        getFragmentManager().beginTransaction()
+                .replace(R.id.menu_detail_fragment, menuDetailSettingFragment)
+                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+                .commit();
+    }
+
+    private void onRequestedMenuCreation() {
+        MenuCreateSettingFragment menuDetailSettingFragment = ((MenuCreateSettingFragment) Fragment.instantiate(getContext(), MenuCreateSettingFragment.class.getName()))
+                .onCreateMenu(this::onCreateMenu);
+
+        getFragmentManager().beginTransaction()
+                .replace(R.id.menu_detail_fragment, menuDetailSettingFragment)
+                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+                .commit();
+    }
+
+    private void onCreateMenu(Menu menu) {
+
     }
 }

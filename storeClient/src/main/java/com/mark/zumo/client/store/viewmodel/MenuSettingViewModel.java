@@ -16,7 +16,6 @@ import android.support.annotation.NonNull;
 
 import com.mark.zumo.client.core.entity.Menu;
 import com.mark.zumo.client.core.entity.MenuCategory;
-import com.mark.zumo.client.core.entity.MenuDetail;
 import com.mark.zumo.client.store.model.S3TransferManager;
 import com.mark.zumo.client.store.model.StoreMenuManager;
 import com.mark.zumo.client.store.model.StoreSessionManager;
@@ -123,16 +122,6 @@ public class MenuSettingViewModel extends AndroidViewModel {
         return liveData;
     }
 
-    public LiveData<List<MenuDetail>> menuDetailList(String categoryUuid) {
-        MutableLiveData<List<MenuDetail>> liveData = new MutableLiveData<>();
-        storeMenuManager.getMenuDetailListByCategoryUuid(categoryUuid)
-                .observeOn(AndroidSchedulers.mainThread())
-                .doOnSubscribe(disposables::add)
-                .doOnNext(liveData::setValue)
-                .subscribe();
-        return liveData;
-    }
-
     public MutableLiveData<List<Menu>> loadUnCategorizedMenu() {
         MutableLiveData<List<Menu>> liveData = new MutableLiveData<>();
         storeSessionManager.getSessionStore()
@@ -159,13 +148,6 @@ public class MenuSettingViewModel extends AndroidViewModel {
                 .subscribe();
 
         return liveData;
-    }
-
-    private MutableLiveData<List<MenuCategory>> getCategoryListLiveData() {
-        if (categoryListLiveData == null) {
-            categoryListLiveData = new MutableLiveData<>();
-        }
-        return categoryListLiveData;
     }
 
     public void loadMenuListByCategory() {
@@ -197,6 +179,7 @@ public class MenuSettingViewModel extends AndroidViewModel {
                 .subscribe();
         return liveData;
     }
+
 
     public LiveData<List<MenuCategory>> getCombinedMenuCategoryList() {
         loadMenuListByCategory();
@@ -245,7 +228,7 @@ public class MenuSettingViewModel extends AndroidViewModel {
         return liveData;
     }
 
-    public LiveData<Menu> uploadMenuImage(Activity activity, String menuUuid, Uri uri) {
+    public LiveData<Menu> uploadUncreatedMenuImage(Activity activity, String menuUuid, Uri uri) {
         MutableLiveData<Menu> liveData = new MutableLiveData<>();
 
         s3TransferManager.uploadMenuImage(activity, menuUuid, uri)

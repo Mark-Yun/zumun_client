@@ -31,14 +31,12 @@ public class SettingPreferenceFragment extends PreferenceFragmentCompat {
     @Override
     public boolean onPreferenceTreeClick(final Preference preference) {
         selectedPreference = preference;
-
-        String fragmentName = preference.getFragment();
-        Fragment fragment = Fragment.instantiate(getContext(), fragmentName);
+        Fragment fragment = Fragment.instantiate(getContext(), preference.getFragment());
 
         Objects.requireNonNull(getFragmentManager())
                 .beginTransaction()
-                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
                 .replace(R.id.setting_main_fragment, fragment)
+                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
                 .commit();
 
         return super.onPreferenceTreeClick(preference);

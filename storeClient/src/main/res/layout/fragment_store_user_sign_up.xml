@@ -38,8 +38,8 @@
         android:id="@+id/sign_up_input_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
         android:layout_marginTop="@dimen/big_margin"
+        android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -189,8 +189,11 @@
             android:id="@+id/button_sign_up"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/small_margin"
-            android:text="@string/button_sign_up" />
+            android:layout_margin="@dimen/small_margin"
+            android:background="@color/button_color"
+            android:text="@android:string/ok"
+            android:textColor="@color/colorTextDark"
+            android:textSize="24sp" />
     </LinearLayout>
 
 </android.support.constraint.ConstraintLayout>

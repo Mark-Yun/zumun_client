@@ -21,6 +21,16 @@ import com.tangxiaolv.telegramgallery.GalleryConfig;
  * Created by mark on 18. 6. 26.
  */
 public class ImagePickerUtils {
+
+    public static void showMenuImagePicker(FragmentActivity activity, int requestCode) {
+        GalleryConfig config = new GalleryConfig.Build()
+                .singlePhoto(true)
+                .hintOfPick("this is pick hint")
+                .filterMimeTypes(new String[]{"image"})
+                .build();
+        GalleryActivity.openActivity(activity, requestCode, config);
+    }
+
     public static void showImagePickerStoreThumbnail(FragmentActivity activity, int requestCode) {
         GalleryConfig config = new GalleryConfig.Build()
                 .singlePhoto(true)

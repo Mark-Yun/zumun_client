@@ -4,12 +4,15 @@
  * Proprietary and confidential
  */
 
-package com.mark.zumo.client.store.view.setting.fragment.menu;
+/*
+ * Copyright (c) 2018. Mark Soft - All Rights Reserved
+ * Unauthorized copying of this file, via any medium is strictly prohibited
+ * Proprietary and confidential
+ */
 
-import android.os.Bundle;
+package com.mark.zumo.client.store.view.setting.fragment.menu.menulist;
+
 import android.support.annotation.NonNull;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.AppCompatTextView;
 import android.support.v7.widget.RecyclerView;
@@ -23,11 +26,10 @@ import com.mark.zumo.client.core.util.glide.GlideApp;
 import com.mark.zumo.client.core.util.glide.GlideUtils;
 import com.mark.zumo.client.core.view.TouchResponse;
 import com.mark.zumo.client.store.R;
-import com.mark.zumo.client.store.view.setting.fragment.menu.detail.MenuDetailSettingFragment;
 
 import java.text.NumberFormat;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -37,20 +39,21 @@ import butterknife.ButterKnife;
  */
 class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.ViewHolder> {
 
-    private final FragmentManager fragmentManager;
+    private final List<Menu> menuList;
+    private final MenuSelectListener menuSelectListener;
 
-    private List<Menu> menuList;
-
-    MenuAdapter(final FragmentManager fragmentManager) {
-        this.fragmentManager = fragmentManager;
-        menuList = new ArrayList<>();
+    MenuAdapter(MenuSelectListener menuSelectListener) {
+        this.menuSelectListener = menuSelectListener;
+        menuList = new CopyOnWriteArrayList<>();
     }
 
     boolean setMenuList(final List<Menu> menuList) {
-        this.menuList = menuList;
         if (this.menuList.equals(menuList)) {
             return false;
         }
+
+        this.menuList.clear();
+        this.menuList.addAll(menuList);
 
         notifyDataSetChanged();
         return true;
@@ -82,15 +85,7 @@ class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.ViewHolder> {
 
     private void onClickMenu(final View itemView, final Menu menu) {
         TouchResponse.big();
-
-        Bundle bundle = new Bundle();
-        bundle.putString(MenuDetailSettingFragment.KEY_MENU_UUID, menu.uuid);
-
-        Fragment fragment = Fragment.instantiate(itemView.getContext(), MenuDetailSettingFragment.class.getName(), bundle);
-
-        fragmentManager.beginTransaction()
-                .replace(R.id.menu_detail_fragment, fragment)
-                .commit();
+        menuSelectListener.onSelectMenu(menu);
     }
 
     @Override
@@ -107,5 +102,9 @@ class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.ViewHolder> {
             super(itemView);
             ButterKnife.bind(this, itemView);
         }
+    }
+
+    interface MenuSelectListener {
+        void onSelectMenu(Menu menu);
     }
 }

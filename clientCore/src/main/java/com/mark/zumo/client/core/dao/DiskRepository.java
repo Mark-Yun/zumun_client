@@ -113,6 +113,9 @@ public interface DiskRepository {
     @Query("DELETE FROM " + MenuOptionDetail.Schema.table + " WHERE store_uuid LIKE :storeUuid")
     void deleteMenuOptionDetailOfStore(String storeUuid);
 
+    @Query("DELETE FROM " + MenuOptionDetail.Schema.table + " WHERE menu_uuid LIKE :menuUuid")
+    void deleteMenuOptionDetailOfMenu(String menuUuid);
+
     @Query("SELECT * FROM " + MenuOption.Schema.table + " WHERE menu_option_uuid LIKE :menuOptionUuid LIMIT 1")
     Maybe<MenuOption> getMenuOption(String menuOptionUuid);
 
