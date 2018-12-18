@@ -121,6 +121,11 @@ public class MenuRepository {
                 .doOnSuccess(list -> Log.d(TAG, "createMenuOptionDetailList: " + list));
     }
 
+    public Maybe<Menu> createMenu(Menu menu) {
+        return networkRepository.createMenu(menu)
+                .doOnSuccess(diskRepository::insertMenu);
+    }
+
     public Maybe<List<MenuOption>> createMenuOptionList(List<MenuOption> menuOptionList) {
         return networkRepository.createMenuOptionList(menuOptionList)
                 .doOnSuccess(diskRepository::insertMenuOptionList);

@@ -88,7 +88,7 @@ public class MenuOptionSettingViewModel extends AndroidViewModel {
 
         storeSessionManager.getSessionStore()
                 .map(store -> store.uuid)
-                .flatMap(storeUuid -> menuOptionManager.createMenuOptionDetailListAsMenu(storeUuid, menuOptionCategoryUuid, menuList))
+                .flatMap(storeUuid -> menuOptionManager.createMenuOptionDetailListAsMenuOptionCategory(storeUuid, menuOptionCategoryUuid, menuList))
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSubscribe(disposables::add)
                 .doOnSuccess(liveData::setValue)

@@ -85,7 +85,7 @@ public class MenuDetailSettingFragment extends Fragment {
 
     private void inflateMenuImage() {
         String menuUuid = getArguments().getString(KEY_MENU_UUID);
-        menuSettingViewModel.menuFromDisk(menuUuid).observe(this, this::onLoadMenu);
+        menuSettingViewModel.getMenuFromDisk(menuUuid).observe(this, this::onLoadMenu);
     }
 
     private void onLoadMenu(Menu menu) {
@@ -125,7 +125,7 @@ public class MenuDetailSettingFragment extends Fragment {
 
         String menuUuid = getArguments().getString(KEY_MENU_UUID);
         Uri resultUri = result.getUri();
-        menuSettingViewModel.uploadUncreatedMenuImage(getActivity(), menuUuid, resultUri).observe(this, this::onSuccessMenuUpdate);
+        menuSettingViewModel.uploadAndUpdateMenuImage(getActivity(), menuUuid, resultUri).observe(this, this::onSuccessMenuUpdate);
     }
 
     private void onSuccessMenuUpdate(Menu menu) {

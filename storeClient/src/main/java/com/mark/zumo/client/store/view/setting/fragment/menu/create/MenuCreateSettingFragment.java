@@ -45,6 +45,7 @@ import com.theartofdev.edmodo.cropper.CropImage;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Set;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -63,11 +64,11 @@ public class MenuCreateSettingFragment extends Fragment {
     @BindView(R.id.image) AppCompatImageView image;
 
     private MenuSettingViewModel menuSettingViewModel;
-
     private MenuCreationListener menuCreationListener;
     private Runnable cancelListener;
 
     private Uri menuImageUri;
+    private MenuCreatePreferenceFragment menuCreatePreferenceFragment;
 
     @Override
     public void onCreate(@Nullable final Bundle savedInstanceState) {
@@ -96,9 +97,10 @@ public class MenuCreateSettingFragment extends Fragment {
     }
 
     private void inflatePreferenceFragment() {
-        Fragment fragment = PreferenceFragmentCompat.instantiate(getActivity(), MenuCreatePreferenceFragment.class.getName(), getArguments());
+        menuCreatePreferenceFragment = (MenuCreatePreferenceFragment) PreferenceFragmentCompat.instantiate(getActivity(), MenuCreatePreferenceFragment.class.getName(), getArguments());
+
         getFragmentManager().beginTransaction()
-                .replace(R.id.menu_detail_preference_fragment, fragment)
+                .replace(R.id.menu_detail_preference_fragment, menuCreatePreferenceFragment)
                 .commit();
     }
 
@@ -154,6 +156,29 @@ public class MenuCreateSettingFragment extends Fragment {
                 onImageCopped(resultCode, data);
                 break;
         }
+    }
+
+    @OnClick(R.id.ok)
+    void onClickOK() {
+        Menu preparedMenu = menuCreatePreferenceFragment.getMenuBuilder()
+                .setImageUrl(menuImageUri != null ? menuImageUri.toString() : "")
+                .build();
+
+        Set<String> selectedMenuCategoryUuid = menuCreatePreferenceFragment.getSelectedMenuCategoryUuid();
+        Set<String> selectedMenuOptionCategoryUuid = menuCreatePreferenceFragment.getSelectedMenuOptionCategoryUuid();
+
+        getFragmentManager().popBackStack();
+
+        menuSettingViewModel.createMenu(getActivity(), preparedMenu, selectedMenuCategoryUuid, selectedMenuOptionCategoryUuid)
+                .observe(getActivity(), menuCreationListener::onMenuCreate);
+    }
+
+    @OnClick(R.id.cancel)
+    void onClickCancel() {
+//        cancelListener.run();
+        getFragmentManager().beginTransaction()
+                .remove(this)
+                .commit();
     }
 
     public interface MenuCreationListener {

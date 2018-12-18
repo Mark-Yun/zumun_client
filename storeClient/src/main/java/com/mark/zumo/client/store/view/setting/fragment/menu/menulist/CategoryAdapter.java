@@ -105,7 +105,8 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHo
         }
 
         holder.categoryName.setText(categoryName + " (" + menuCategory.menuList.size() + ")");
-        holder.categoryHeader.setOnClickListener(RecyclerUtils.recyclerViewExpandButton(recyclerView, holder.categoryHeader));
+        holder.expandButton.setOnClickListener(RecyclerUtils.recyclerViewExpandButton(recyclerView, holder.categoryHeader));
+        holder.categoryHeader.setOnClickListener(v -> holder.expandButton.performClick());
     }
 
     private MenuAdapter getMenuAdapter(final MenuCategory menuCategory) {

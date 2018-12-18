@@ -44,10 +44,6 @@ public class MenuOptionDetail implements Serializable {
         this.seqNum = seqNum;
     }
 
-    public static MenuOptionDetail create(final String storeUuid, final String menuOptionCategoryUuid, final String menuUuid) {
-        return new MenuOptionDetail("", menuUuid, menuOptionCategoryUuid, storeUuid, 0);
-    }
-
     @Override
     public String toString() {
         return EntityHelper.toString(this);
@@ -58,6 +54,42 @@ public class MenuOptionDetail implements Serializable {
         return new EntityComparator<>().test(this, obj);
     }
 
+    public static class Builder {
+        private String uuid;
+        private String menuUuid;
+        private String menuOptionCategoryUuid;
+        private String storeUuid;
+        private int seqNum;
+
+        public Builder setUuid(final String uuid) {
+            this.uuid = uuid;
+            return this;
+        }
+
+        public Builder setMenuUuid(final String menuUuid) {
+            this.menuUuid = menuUuid;
+            return this;
+        }
+
+        public Builder setMenuOptionCategoryUuid(final String menuOptionCategoryUuid) {
+            this.menuOptionCategoryUuid = menuOptionCategoryUuid;
+            return this;
+        }
+
+        public Builder setStoreUuid(final String storeUuid) {
+            this.storeUuid = storeUuid;
+            return this;
+        }
+
+        public Builder setSeqNum(final int seqNum) {
+            this.seqNum = seqNum;
+            return this;
+        }
+
+        public MenuOptionDetail build() {
+            return new MenuOptionDetail(uuid, menuUuid, menuOptionCategoryUuid, storeUuid, seqNum);
+        }
+    }
     public interface Schema {
         String table = "menu_option_detail";
         String uuid = "menu_option_detail_uuid";

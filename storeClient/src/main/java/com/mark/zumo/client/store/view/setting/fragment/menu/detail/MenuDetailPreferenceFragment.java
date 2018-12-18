@@ -69,9 +69,9 @@ public class MenuDetailPreferenceFragment extends PreferenceFragmentCompat {
         menuCategoryPreference = (MultiSelectListPreference) findPreference(getString(R.string.preference_key_menu_detail_menu_category));
         menuOptionCategoryPreference = (MultiSelectListPreference) findPreference(getString(R.string.preference_key_menu_detail_menu_option));
 
-        menuSettingViewModel.menuFromDisk(menuUuid).observe(this, this::onLoadMenu);
-        menuSettingViewModel.categoryList().observe(this, this::onLoadWholeMenuCategory);
-        menuSettingViewModel.categoryListByMenuUuid(menuUuid).observe(this, this::onLoadSelectedMenuCategory);
+        menuSettingViewModel.getMenuFromDisk(menuUuid).observe(this, this::onLoadMenu);
+        menuSettingViewModel.getMenuCategoryList().observe(this, this::onLoadWholeMenuCategory);
+        menuSettingViewModel.getMenuCategoryListByMenuUuid(menuUuid).observe(this, this::onLoadSelectedMenuCategory);
         menuOptionSettingViewModel.getMenuOptionCategoryList().observe(this, this::onLoadSelectedMenuOptionCategoryList);
         menuOptionSettingViewModel.getMenuOptionCategoryListByMenuUuid(menuUuid).observe(this, this::onLoadWholeMenuOptionCategoryList);
     }

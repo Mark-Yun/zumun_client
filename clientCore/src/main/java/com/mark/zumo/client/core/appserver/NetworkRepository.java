@@ -62,6 +62,9 @@ public interface NetworkRepository {
                                       @Query("distance") final double distanceKm);
 
 
+    @POST("menu")
+    Maybe<Menu> createMenu(@Body Menu menu);
+
     @GET("menu")
     Maybe<List<Menu>> getMenuList(@Query(Menu.Schema.storeUuid) String storeUuid);
 

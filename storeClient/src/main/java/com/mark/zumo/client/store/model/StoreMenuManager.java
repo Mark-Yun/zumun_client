@@ -286,7 +286,10 @@ public enum StoreMenuManager {
 
     public Maybe<Menu> updateMenuName(final String menuUuid, final String menuName) {
         return menuRepositoryMaybe.flatMap(menuRepository -> menuRepository.getMenuFromDisk(menuUuid)
-                .doOnSuccess(menu -> menu.name = menuName)
+                .map(menu ->
+                        new Menu.Builder(menu)
+                                .setName(menuName)
+                                .build())
                 .flatMap(menuRepository::updateMenu)
         ).subscribeOn(Schedulers.io());
     }
@@ -294,14 +297,20 @@ public enum StoreMenuManager {
     public Maybe<Menu> updateMenuPrice(final String menuUuid, final int price) {
         return menuRepositoryMaybe.flatMap(menuRepository ->
                 menuRepository.getMenuFromDisk(menuUuid)
-                        .doOnSuccess(menu -> menu.price = price)
+                        .map(menu ->
+                                new Menu.Builder(menu)
+                                        .setPrice(price)
+                                        .build())
                         .flatMap(menuRepository::updateMenu)
         ).subscribeOn(Schedulers.io());
     }
 
     public Maybe<Menu> updateMenuImageUrl(final String menuUuid, final String imageUrl) {
         return menuRepositoryMaybe.flatMap(menuRepository -> menuRepository.getMenuFromDisk(menuUuid)
-                .doOnSuccess(menu -> menu.imageUrl = imageUrl)
+                .map(menu ->
+                        new Menu.Builder(menu)
+                                .setImageUrl(imageUrl)
+                                .build())
                 .flatMap(menuRepository::updateMenu)
         ).subscribeOn(Schedulers.io());
     }
@@ -309,6 +318,12 @@ public enum StoreMenuManager {
     public Maybe<MenuCategory> createMenuCategory(final String name, final String storeUuid, final int seqNum) {
         return categoryRepositoryMaybe.flatMap(categoryRepository ->
                 categoryRepository.createMenuCategory(new MenuCategory("", name, storeUuid, seqNum))
+        ).subscribeOn(Schedulers.io());
+    }
+
+    public Maybe<Menu> createMenu(final Menu menu) {
+        return menuRepositoryMaybe.flatMap(menuRepository ->
+                menuRepository.createMenu(menu)
         ).subscribeOn(Schedulers.io());
     }
 
@@ -322,8 +337,30 @@ public enum StoreMenuManager {
                                                             final List<Menu> menuList) {
         return menuDetailRepositoryMaybe.flatMap(menuDetailRepository ->
                 Observable.fromIterable(menuList)
-                        .map(menu -> menu.uuid)
-                        .map(menuUuid -> new MenuDetail("", menuUuid, menuCategory.uuid, 0, menuCategory.storeUuid))
+                        .map(menu -> new MenuDetail.Builder()
+                                .setMenuUuid(menu.uuid)
+                                .setMenuCategoryUuid(menuCategory.uuid)
+                                .setStoreUuid(menu.storeUuid)
+                                .build())
+                        .toList().toMaybe()
+                        .flatMap(menuDetailList -> menuDetailRepository.createMenuDetailList(menuDetailList)
+                                .flatMapObservable(Observable::fromIterable)
+                                .map(menuDetail -> menuDetail.menuUuid)
+                                .flatMapMaybe(this::getMenuFromApi)
+                                .toList().toMaybe()
+                        )
+        ).subscribeOn(Schedulers.io());
+    }
+
+    public Maybe<List<Menu>> createMenuDetailListAsMenuList(final String storeUuid,
+                                                            final String menuUuid, final Set<String> menuCategoryUuidList) {
+        return menuDetailRepositoryMaybe.flatMap(menuDetailRepository ->
+                Observable.fromIterable(menuCategoryUuidList)
+                        .map(menuCategoryUuid -> new MenuDetail.Builder()
+                                .setMenuUuid(menuUuid)
+                                .setMenuCategoryUuid(menuCategoryUuid)
+                                .setStoreUuid(storeUuid)
+                                .build())
                         .toList().toMaybe()
                         .flatMap(menuDetailList -> menuDetailRepository.createMenuDetailList(menuDetailList)
                                 .flatMapObservable(Observable::fromIterable)

@@ -169,7 +169,7 @@ public class MenuCategorySettingCategoryListFragment extends Fragment implements
 //
 //                MenuCategorySettingMenuListAdapter adapter = new MenuCategorySettingMenuListAdapter(getSelectMenuListener());
 //                menuRecyclerView.setAdapter(adapter);
-//                adapter.setMenuList(menuCategory.menuList);
+//                adapter.setMenuList(menuCategory.getMenuList);
                 if (selectMenuCategoryLister != null) {
                     selectMenuCategoryLister.onClickMenuCategory(menuCategory);
                 }
@@ -185,7 +185,7 @@ public class MenuCategorySettingCategoryListFragment extends Fragment implements
                         .setCancelable(true)
                         .setNegativeButton(R.string.button_text_cancel, (dialog, which) -> dialog.dismiss())
                         .setPositiveButton(R.string.button_text_apply, (dialog, which) -> {
-                            menuSettingViewModel.updateCategoryName(menuCategory, editText.getText().toString())
+                            menuSettingViewModel.updateMenuCategoryName(menuCategory, editText.getText().toString())
                                     .observe(MenuCategorySettingCategoryListFragment.this, listener::onMenuCategoryUpdated);
                             dialog.dismiss();
                         })
@@ -234,7 +234,7 @@ public class MenuCategorySettingCategoryListFragment extends Fragment implements
                 .setCancelable(true)
                 .setNegativeButton(R.string.button_text_cancel, (dialog, which) -> dialog.dismiss())
                 .setPositiveButton(R.string.button_text_apply, (dialog, which) -> {
-                    menuSettingViewModel.createCategory(editText.getText().toString(), -1)
+                    menuSettingViewModel.createMenuCategory(editText.getText().toString(), -1)
                             .observe(this, menuCategoryMenuCategorySettingCategoryListAdapter::onCreateMenuCategory);
                     dialog.dismiss();
                 })
@@ -266,10 +266,10 @@ public class MenuCategorySettingCategoryListFragment extends Fragment implements
         if (!selectedMenuCategoryList.isEmpty()) {
             switch (menuCategoryMenuCategorySettingCategoryListAdapter.getMode()) {
                 case DELETE_MODE:
-                    menuSettingViewModel.removeCategory(new ArrayList<>(selectedMenuCategoryList)).observe(this, menuCategoryMenuCategorySettingCategoryListAdapter::onRemoveCategory);
+                    menuSettingViewModel.removeMenuCategory(new ArrayList<>(selectedMenuCategoryList)).observe(this, menuCategoryMenuCategorySettingCategoryListAdapter::onRemoveCategory);
                     break;
                 case REORDER_MODE:
-                    menuSettingViewModel.updateCategorySeqNum(new ArrayList<>(selectedMenuCategoryList)).observe(this, this::onUpdateMenuCategories);
+                    menuSettingViewModel.updateMenuCategorySeqNum(new ArrayList<>(selectedMenuCategoryList)).observe(this, this::onUpdateMenuCategories);
                     break;
             }
         }
