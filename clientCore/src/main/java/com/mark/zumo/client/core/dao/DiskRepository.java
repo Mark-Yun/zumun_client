@@ -25,6 +25,7 @@ import com.mark.zumo.client.core.entity.SnsToken;
 import com.mark.zumo.client.core.entity.Store;
 import com.mark.zumo.client.core.entity.user.GuestUser;
 import com.mark.zumo.client.core.entity.user.store.StoreOwner;
+import com.mark.zumo.client.core.entity.user.store.StoreUserSession;
 import com.mark.zumo.client.core.payment.kakao.entity.PaymentToken;
 
 import java.util.List;
@@ -115,6 +116,12 @@ public interface DiskRepository {
 
     @Query("DELETE FROM " + MenuOptionDetail.Schema.table + " WHERE menu_uuid LIKE :menuUuid")
     void deleteMenuOptionDetailOfMenu(String menuUuid);
+
+    @Insert
+    void insertStoreUserSession(StoreUserSession storeUserSession);
+
+    @Query("SELECT * FROM " + StoreUserSession.Schema.table + " ORDER BY " + StoreUserSession.Schema.createdDate + " DESC LIMIT 1")
+    Maybe<StoreUserSession> getStoreUserSession();
 
     @Query("SELECT * FROM " + MenuOption.Schema.table + " WHERE menu_option_uuid LIKE :menuOptionUuid LIMIT 1")
     Maybe<MenuOption> getMenuOption(String menuOptionUuid);

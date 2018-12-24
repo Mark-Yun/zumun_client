@@ -15,9 +15,11 @@ import android.net.Uri;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import com.mark.zumo.client.core.appserver.request.signup.StoreOwnerSignUpRequest;
 import com.mark.zumo.client.core.appserver.request.signup.StoreUserSignupException;
+import com.mark.zumo.client.core.entity.user.store.StoreUserSession;
 import com.mark.zumo.client.store.model.S3TransferManager;
 import com.mark.zumo.client.store.model.StoreSessionManager;
 import com.mark.zumo.client.store.model.StoreUserManager;
@@ -29,7 +31,7 @@ import io.reactivex.disposables.CompositeDisposable;
  * Created by mark on 18. 5. 7.
  */
 
-public class SignUpViewModel extends AndroidViewModel {
+public class StoreUserSignViewModel extends AndroidViewModel {
 
     private final StoreSessionManager storeSessionManager;
     private final StoreUserManager storeUserManager;
@@ -37,7 +39,7 @@ public class SignUpViewModel extends AndroidViewModel {
 
     private final CompositeDisposable disposables;
 
-    public SignUpViewModel(@NonNull Application application) {
+    public StoreUserSignViewModel(@NonNull Application application) {
         super(application);
         storeSessionManager = StoreSessionManager.INSTANCE;
         storeUserManager = StoreUserManager.INSTANCE;
@@ -93,5 +95,33 @@ public class SignUpViewModel extends AndroidViewModel {
                 .subscribe();
 
         return liveData;
+    }
+
+    public LiveData<StoreUserSession> loginStoreUser(final String email, final String password,
+                                                     final boolean isAutoLogin) {
+        MutableLiveData<StoreUserSession> liveData = new MutableLiveData<>();
+
+        storeUserManager.login(email, password, isAutoLogin)
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnSuccess(liveData::setValue)
+                .doOnSubscribe(disposables::add)
+                .subscribe();
+
+        return liveData;
+    }
+
+    public LiveData<Boolean> hasStoreUserSessionAsync() {
+        MutableLiveData<Boolean> liveData = new MutableLiveData<>();
+        storeUserManager.getStoreUserSessionAsync()
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnSuccess(storeUserSession -> liveData.setValue(storeUserSession != null))
+                .doOnSubscribe(disposables::add)
+                .subscribe();
+        return liveData;
+    }
+
+    @Nullable
+    public boolean hasStoreUserSessionSync() {
+        return storeUserManager.getStoreUserSessionSync() != null;
     }
 }

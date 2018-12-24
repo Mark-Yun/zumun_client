@@ -35,6 +35,7 @@ import butterknife.ButterKnife;
 public class MenuSettingFragment extends Fragment {
 
     private static final String TAG = "MenuSettingFragment";
+    private MenuSettingMenuListFragment menuSettingMenuListFragment;
 
     @Nullable
     @Override
@@ -46,7 +47,7 @@ public class MenuSettingFragment extends Fragment {
     }
 
     private void inflateView() {
-        MenuSettingMenuListFragment menuSettingMenuListFragment = ((MenuSettingMenuListFragment) Fragment.instantiate(getContext(), MenuSettingMenuListFragment.class.getName()))
+        menuSettingMenuListFragment = ((MenuSettingMenuListFragment) Fragment.instantiate(getContext(), MenuSettingMenuListFragment.class.getName()))
                 .onMenuSelect(this::onSelectMenu)
                 .onMenuCreateRequest(this::onRequestedMenuCreation);
 
@@ -78,6 +79,6 @@ public class MenuSettingFragment extends Fragment {
     }
 
     private void onCreateMenu(Menu menu) {
-
+        menuSettingMenuListFragment.onMenuCreateComplete(menu);
     }
 }

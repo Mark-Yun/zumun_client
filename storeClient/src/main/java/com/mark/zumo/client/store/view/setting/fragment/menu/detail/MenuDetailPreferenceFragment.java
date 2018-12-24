@@ -192,6 +192,6 @@ public class MenuDetailPreferenceFragment extends PreferenceFragmentCompat {
     }
 
     private void refreshCategoryList() {
-        menuSettingViewModel.loadMenuListByCategory();
+        menuSettingViewModel.loadCombinedMenuCategoryList();
     }
 }

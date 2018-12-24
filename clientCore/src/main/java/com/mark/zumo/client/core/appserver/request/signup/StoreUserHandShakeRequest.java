@@ -20,7 +20,7 @@ public class StoreUserHandShakeRequest {
         this.email = email;
     }
 
-    interface Schema {
+    public interface Schema {
         String email = "store_user_email";
     }
 }

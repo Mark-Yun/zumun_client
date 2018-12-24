@@ -8,8 +8,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/activity_layout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:fitsSystemWindows="true">
+    android:layout_height="match_parent">
 
     <android.support.v7.widget.AppCompatImageView
         android:id="@+id/background_image_view"
@@ -23,7 +22,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/big_margin"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/console_fragment_container"
+        app:layout_constraintEnd_toStartOf="@+id/console_fragment"
         app:layout_constraintHorizontal_bias="0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -39,8 +38,8 @@
             android:textStyle="bold" />
     </android.support.constraint.ConstraintLayout>
 
-    <ScrollView
-        android:id="@+id/console_fragment_container"
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/console_fragment"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -48,12 +47,6 @@
         app:layout_constraintHorizontal_bias="0.9"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintWidth_percent="0.35">
-
-        <android.support.constraint.ConstraintLayout
-            android:id="@+id/console_fragment"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-    </ScrollView>
+        app:layout_constraintWidth_percent="0.35" />
 
 </android.support.constraint.ConstraintLayout>

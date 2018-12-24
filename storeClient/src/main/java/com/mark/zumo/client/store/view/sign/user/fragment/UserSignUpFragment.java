@@ -30,7 +30,7 @@ import com.mark.zumo.client.core.appserver.request.signup.StoreUserSignupExcepti
 import com.mark.zumo.client.core.util.glide.GlideApp;
 import com.mark.zumo.client.store.R;
 import com.mark.zumo.client.store.view.util.ImagePickerUtils;
-import com.mark.zumo.client.store.viewmodel.SignUpViewModel;
+import com.mark.zumo.client.store.viewmodel.StoreUserSignViewModel;
 import com.tangxiaolv.telegramgallery.GalleryActivity;
 
 import java.io.Serializable;
@@ -61,14 +61,14 @@ public class UserSignUpFragment extends Fragment implements BackPressedIntercept
     @BindView(R.id.bank_account_scan_image) AppCompatImageView bankAccountScanImage;
     @BindView(R.id.bank_account_scan_image_description) ConstraintLayout bankAccountScanImageDescription;
 
-    private SignUpViewModel signUpViewModel;
+    private StoreUserSignViewModel storeUserSignViewModel;
     private String bankAccountScanUrl;
     private Runnable onBackPressedAction;
 
     @Override
     public void onCreate(@Nullable final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        signUpViewModel = ViewModelProviders.of(this).get(SignUpViewModel.class);
+        storeUserSignViewModel = ViewModelProviders.of(this).get(StoreUserSignViewModel.class);
     }
 
     @Nullable
@@ -88,7 +88,7 @@ public class UserSignUpFragment extends Fragment implements BackPressedIntercept
         String phoneNumber = inputLayoutPhoneNumber.getEditText() == null ? "" : inputLayoutPhoneNumber.getEditText().getText().toString();
         String bankName = inputBankName.getSelectedItem() == null ? "" : inputBankName.getSelectedItem().toString();
         String bankAccount = inputLayoutBank.getEditText() == null ? "" : inputLayoutBank.getEditText().getText().toString();
-        signUpViewModel.signUp(email, password, passwordConfirm, name, phoneNumber, bankName, bankAccount, bankAccountScanUrl)
+        storeUserSignViewModel.signUp(email, password, passwordConfirm, name, phoneNumber, bankName, bankAccount, bankAccountScanUrl)
                 .observe(this, this::onSignUpRequest);
     }
 
@@ -186,7 +186,7 @@ public class UserSignUpFragment extends Fragment implements BackPressedIntercept
         }
 
         Uri selectedPath = Uri.parse(photoList.get(0));
-        signUpViewModel.uploadBankAccountScanImage(getActivity(), selectedPath).observe(this, this::onUploadBankAccountScanImage);
+        storeUserSignViewModel.uploadBankAccountScanImage(getActivity(), selectedPath).observe(this, this::onUploadBankAccountScanImage);
     }
 
     private void onUploadBankAccountScanImage(String url) {

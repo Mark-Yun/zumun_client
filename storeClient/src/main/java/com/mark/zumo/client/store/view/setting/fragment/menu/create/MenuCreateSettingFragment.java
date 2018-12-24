@@ -65,7 +65,6 @@ public class MenuCreateSettingFragment extends Fragment {
 
     private MenuSettingViewModel menuSettingViewModel;
     private MenuCreationListener menuCreationListener;
-    private Runnable cancelListener;
 
     private Uri menuImageUri;
     private MenuCreatePreferenceFragment menuCreatePreferenceFragment;
@@ -73,7 +72,7 @@ public class MenuCreateSettingFragment extends Fragment {
     @Override
     public void onCreate(@Nullable final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        menuSettingViewModel = ViewModelProviders.of(this).get(MenuSettingViewModel.class);
+        menuSettingViewModel = ViewModelProviders.of(getActivity()).get(MenuSettingViewModel.class);
     }
 
     @Nullable
@@ -88,11 +87,6 @@ public class MenuCreateSettingFragment extends Fragment {
 
     public MenuCreateSettingFragment onCreateMenu(MenuCreationListener menuCreationListener) {
         this.menuCreationListener = menuCreationListener;
-        return this;
-    }
-
-    public MenuCreateSettingFragment onCancel(Runnable cancelListener) {
-        this.cancelListener = cancelListener;
         return this;
     }
 
@@ -171,11 +165,14 @@ public class MenuCreateSettingFragment extends Fragment {
 
         menuSettingViewModel.createMenu(getActivity(), preparedMenu, selectedMenuCategoryUuid, selectedMenuOptionCategoryUuid)
                 .observe(getActivity(), menuCreationListener::onMenuCreate);
+
+        getFragmentManager().beginTransaction()
+                .remove(this)
+                .commit();
     }
 
     @OnClick(R.id.cancel)
     void onClickCancel() {
-//        cancelListener.run();
         getFragmentManager().beginTransaction()
                 .remove(this)
                 .commit();

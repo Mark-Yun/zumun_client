@@ -40,7 +40,7 @@
 
         <activity
             android:name="com.mark.zumo.client.store.view.sign.user.UserSignUpActivity"
-            android:windowSoftInputMode="stateHidden|adjustResize" />
+            android:windowSoftInputMode="adjustResize" />
 
         <activity android:name="com.tangxiaolv.telegramgallery.GalleryActivity" />
 

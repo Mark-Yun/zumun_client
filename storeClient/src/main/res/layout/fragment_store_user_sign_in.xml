@@ -7,7 +7,7 @@
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     android:focusableInTouchMode="true">
 
     <android.support.v7.widget.AppCompatImageView
@@ -15,6 +15,7 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:src="@drawable/store_sign_in_logo_image"
+        app:layout_constraintBottom_toTopOf="@+id/slogan"
         app:layout_constraintDimensionRatio="H, 1:1"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -29,6 +30,7 @@
         android:text="@string/sign_in_slogan_text"
         android:textColor="@color/color_900"
         android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/input_layout_email"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/logo" />
@@ -40,6 +42,7 @@
         android:layout_marginStart="@dimen/small_margin"
         android:layout_marginTop="@dimen/big_margin"
         android:layout_marginEnd="@dimen/small_margin"
+        app:layout_constraintBottom_toTopOf="@+id/input_layout_password"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/slogan">
@@ -48,7 +51,8 @@
             android:id="@+id/input_email"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/edit_text_hint_email" />
+            android:hint="@string/edit_text_hint_email"
+            android:inputType="textEmailAddress" />
     </android.support.design.widget.TextInputLayout>
 
     <android.support.design.widget.TextInputLayout
@@ -58,6 +62,7 @@
         android:layout_marginStart="@dimen/small_margin"
         android:layout_marginTop="@dimen/small_margin"
         android:layout_marginEnd="@dimen/small_margin"
+        app:layout_constraintBottom_toTopOf="@+id/button_sign_in"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/input_layout_email">
@@ -67,7 +72,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/edit_text_hint_password"
-            android:inputType="textVisiblePassword" />
+            android:inputType="textPassword" />
     </android.support.design.widget.TextInputLayout>
 
     <android.support.v7.widget.AppCompatButton
@@ -81,6 +86,7 @@
         android:text="@string/button_sign_in"
         android:textColor="@color/colorTextDark"
         android:textSize="24sp"
+        app:layout_constraintBottom_toTopOf="@+id/auto_login"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/input_layout_password" />
@@ -90,7 +96,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/small_margin"
+        android:checked="true"
         android:text="@string/auto_login"
+        app:layout_constraintBottom_toTopOf="@+id/button_box"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/button_sign_in"
         app:switchPadding="@dimen/small_margin" />

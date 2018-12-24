@@ -153,7 +153,7 @@ public class MenuSettingViewModel extends AndroidViewModel {
         return liveData;
     }
 
-    public void loadMenuListByCategory() {
+    public void loadCombinedMenuCategoryList() {
         if (categoryListLiveData == null) {
             categoryListLiveData = new MutableLiveData<>();
         }
@@ -185,7 +185,7 @@ public class MenuSettingViewModel extends AndroidViewModel {
 
 
     public LiveData<List<MenuCategory>> getCombinedMenuCategoryList() {
-        loadMenuListByCategory();
+        loadCombinedMenuCategoryList();
         return categoryListLiveData;
     }
 

@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "b13b932d052e1546962ee493609cc448",
+    "identityHash": "c16f0950f1e6489cac5880f23070813a",
     "entities": [
       {
         "tableName": "menu",
@@ -532,36 +532,36 @@
       },
       {
         "tableName": "store_user_session",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`store_user_session_uuid` TEXT NOT NULL, `store_user_uuid` TEXT, `store_uuid` TEXT, `store_permission` INTEGER NOT NULL, PRIMARY KEY(`store_user_session_uuid`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`store_user_email` TEXT NOT NULL, `store_user_session_token` TEXT, `store_user_password` TEXT, `created_date` INTEGER NOT NULL, PRIMARY KEY(`store_user_email`))",
         "fields": [
           {
-            "fieldPath": "storeUserSessionUuid",
-            "columnName": "store_user_session_uuid",
+            "fieldPath": "email",
+            "columnName": "store_user_email",
             "affinity": "TEXT",
             "notNull": true
           },
           {
-            "fieldPath": "storeUserUuid",
-            "columnName": "store_user_uuid",
+            "fieldPath": "token",
+            "columnName": "store_user_session_token",
             "affinity": "TEXT",
             "notNull": false
           },
           {
-            "fieldPath": "storeUuid",
-            "columnName": "store_uuid",
+            "fieldPath": "password",
+            "columnName": "store_user_password",
             "affinity": "TEXT",
             "notNull": false
           },
           {
-            "fieldPath": "storePermission",
-            "columnName": "store_permission",
+            "fieldPath": "createdDate",
+            "columnName": "created_date",
             "affinity": "INTEGER",
             "notNull": true
           }
         ],
         "primaryKey": {
           "columnNames": [
-            "store_user_session_uuid"
+            "store_user_email"
           ],
           "autoGenerate": false
         },
@@ -763,7 +763,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"b13b932d052e1546962ee493609cc448\")"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"c16f0950f1e6489cac5880f23070813a\")"
     ]
   }
 }

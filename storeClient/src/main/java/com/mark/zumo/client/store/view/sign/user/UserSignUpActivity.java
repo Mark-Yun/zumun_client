@@ -12,8 +12,9 @@
 
 package com.mark.zumo.client.store.view.sign.user;
 
+import android.app.Activity;
 import android.arch.lifecycle.ViewModelProviders;
-import android.graphics.Color;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
@@ -21,8 +22,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.AppCompatTextView;
-import android.view.Window;
-import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 
@@ -33,9 +32,10 @@ import com.mark.zumo.client.core.util.glide.GlideApp;
 import com.mark.zumo.client.core.util.glide.transformation.StoreSignUpFragmentBackground;
 import com.mark.zumo.client.core.view.BaseActivity;
 import com.mark.zumo.client.store.R;
+import com.mark.zumo.client.store.view.main.MainActivity;
 import com.mark.zumo.client.store.view.sign.user.fragment.BackPressedInterceptor;
 import com.mark.zumo.client.store.view.sign.user.fragment.UserSignMainFragment;
-import com.mark.zumo.client.store.viewmodel.SignUpViewModel;
+import com.mark.zumo.client.store.viewmodel.StoreUserSignViewModel;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -45,17 +45,34 @@ import butterknife.ButterKnife;
  */
 
 public class UserSignUpActivity extends BaseActivity {
+
     @BindView(R.id.description_title) AppCompatTextView descriptionTitle;
     @BindView(R.id.mode_description_layout) ConstraintLayout modeDescriptionLayout;
     @BindView(R.id.console_fragment) ConstraintLayout consoleFragment;
     @BindView(R.id.activity_layout) ConstraintLayout activityLayout;
     @BindView(R.id.background_image_view) AppCompatImageView backgroundImageView;
-    private SignUpViewModel signUpViewModel;
+
+    private StoreUserSignViewModel storeUserSignViewModel;
+
+    public static void start(Activity activity) {
+        Intent intent = new Intent(activity, UserSignUpActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        activity.startActivity(intent);
+        activity.overridePendingTransition(R.anim.icon_anim_fade_in, R.anim.icon_anim_fade_out);
+    }
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        signUpViewModel = ViewModelProviders.of(this).get(SignUpViewModel.class);
+
+        storeUserSignViewModel = ViewModelProviders.of(this).get(StoreUserSignViewModel.class);
+        if (storeUserSignViewModel.hasStoreUserSessionSync()) {
+            MainActivity.start(this);
+            return;
+        }
+
+        storeUserSignViewModel.hasStoreUserSessionAsync().observe(this, this::onSessionLoaded);
+
         setContentView(R.layout.activity_sign_up);
         ButterKnife.bind(this);
 
@@ -63,16 +80,6 @@ public class UserSignUpActivity extends BaseActivity {
     }
 
     private void inflateView() {
-        setWindowFlag(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS
-                | WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION, false);
-        getWindow().setFlags(
-                WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,
-                WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS
-        );
-
-        getWindow().setStatusBarColor(Color.TRANSPARENT);
-        getWindow().setNavigationBarColor(Color.TRANSPARENT);
-
         getSupportFragmentManager().beginTransaction()
                 .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
                 .replace(R.id.console_fragment, Fragment.instantiate(this, UserSignMainFragment.class.getName()))
@@ -104,17 +111,6 @@ public class UserSignUpActivity extends BaseActivity {
         descriptionTitle.startAnimation(animationFade);
     }
 
-    private void setWindowFlag(final int bits, boolean on) {
-        Window window = getWindow();
-        WindowManager.LayoutParams winParams = window.getAttributes();
-        if (on) {
-            winParams.flags |= bits;
-        } else {
-            winParams.flags &= ~bits;
-        }
-        window.setAttributes(winParams);
-    }
-
     private boolean fragmentsBackKeyIntercept() {
         for (Fragment fragment : getSupportFragmentManager().getFragments()) {
             if (fragment instanceof BackPressedInterceptor) {
@@ -125,12 +121,17 @@ public class UserSignUpActivity extends BaseActivity {
         return false;
     }
 
+    private void onSessionLoaded(boolean hasSession) {
+        if (hasSession) {
+            MainActivity.start(this);
+        }
+    }
+
     @Override
     public void onBackPressed() {
         if (fragmentsBackKeyIntercept()) {
             return;
         }
-
         super.onBackPressed();
     }
 

@@ -6,8 +6,9 @@
 
 package com.mark.zumo.client.store.view.main;
 
+import android.app.Activity;
 import android.arch.lifecycle.ViewModelProviders;
-import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -20,9 +21,8 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.AppCompatTextView;
 import android.support.v7.widget.Toolbar;
-import android.util.AttributeSet;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
-import android.view.View;
 
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.bumptech.glide.request.RequestOptions;
@@ -48,6 +48,13 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 
     private MainViewModel mainViewModel;
 
+    public static void start(Activity activity) {
+        Intent intent = new Intent(activity, MainActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        activity.startActivity(intent);
+        activity.overridePendingTransition(R.anim.icon_anim_fade_in, R.anim.icon_anim_fade_out);
+    }
+
     @Override
     protected void onCreate(@Nullable final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,22 +63,16 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
+        LayoutInflater.from(this).inflate(R.layout.nav_header_main, navView);
 
         setSupportActionBar(toolbar);
 
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.content_desc_navigation_drawer_open, R.string.content_desc_navigation_drawer_close);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.content_desc_navigation_drawer_open, R.string.content_desc_navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
         navView.setNavigationItemSelectedListener(this);
         mainViewModel.findCustomer(this);
-    }
-
-    @Override
-    public View onCreateView(final String name, final Context context, final AttributeSet attrs) {
-        inflateStoreInformation();
-        return super.onCreateView(name, context, attrs);
     }
 
     private void inflateStoreInformation() {
@@ -137,5 +138,11 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                 .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
                 .replace(R.id.main_fragment, fragment)
                 .commit();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        inflateStoreInformation();
     }
 }
