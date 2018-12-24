@@ -17,6 +17,7 @@ import android.util.Log;
 import com.mark.zumo.client.core.entity.Store;
 import com.mark.zumo.client.core.p2p.P2pServer;
 import com.mark.zumo.client.store.model.StoreSessionManager;
+import com.mark.zumo.client.store.model.StoreUserManager;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
@@ -30,6 +31,7 @@ public class MainViewModel extends AndroidViewModel {
     private static final String TAG = "MainViewModel";
 
     private final StoreSessionManager storeSessionManager;
+    private final StoreUserManager storeUserManager;
     private final CompositeDisposable compositeDisposable;
     private P2pServer p2pServer;
 
@@ -37,6 +39,7 @@ public class MainViewModel extends AndroidViewModel {
         super(application);
 
         storeSessionManager = StoreSessionManager.INSTANCE;
+        storeUserManager = StoreUserManager.INSTANCE;
 
         compositeDisposable = new CompositeDisposable();
     }
@@ -58,6 +61,17 @@ public class MainViewModel extends AndroidViewModel {
                 .doOnSubscribe(compositeDisposable::add)
                 .doOnNext(customerUuid -> Log.d(TAG, "findCustomer: " + customerUuid))
                 .subscribe();
+    }
+
+    public LiveData<Object> signOut() {
+        MutableLiveData<Object> liveData = new MutableLiveData<>();
+        storeUserManager.signOut()
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnComplete(() -> liveData.setValue(new Object()))
+                .doOnSubscribe(compositeDisposable::add)
+                .subscribe();
+
+        return liveData;
     }
 
     @Override

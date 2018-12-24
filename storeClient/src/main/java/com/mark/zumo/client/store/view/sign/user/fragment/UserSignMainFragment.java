@@ -9,6 +9,7 @@ package com.mark.zumo.client.store.view.sign.user.fragment;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
@@ -17,12 +18,15 @@ import android.view.ViewGroup;
 
 import com.mark.zumo.client.store.R;
 
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 /**
  * Created by mark on 18. 12. 16.
  */
 public class UserSignMainFragment extends Fragment {
+
+    @BindView(R.id.progress_bar_container) ConstraintLayout progressBarContainer;
 
     private UserSignInFragment signInFragment;
     private UserSignUpFragment signUpFragment;
@@ -66,6 +70,14 @@ public class UserSignMainFragment extends Fragment {
         updateConsoleFragment(findPasswordFragment);
     }
 
+    private void onStartLoading() {
+        progressBarContainer.setVisibility(View.VISIBLE);
+    }
+
+    private void onStopLoading() {
+        progressBarContainer.setVisibility(View.GONE);
+    }
+
     private void onSignUp() {
         if (signUpFragment == null) {
             signUpFragment = createSignUpFragment();
@@ -74,6 +86,10 @@ public class UserSignMainFragment extends Fragment {
     }
 
     private void onBackPressured() {
+        if (progressBarContainer.getVisibility() == View.VISIBLE) {
+            return;
+        }
+
         if (signInFragment == null) {
             signInFragment = createSignInFragment();
         }
@@ -83,13 +99,17 @@ public class UserSignMainFragment extends Fragment {
 
     private UserSignUpFragment createSignUpFragment() {
         UserSignUpFragment userSignUpFragment = (UserSignUpFragment) Fragment.instantiate(getActivity(), UserSignUpFragment.class.getName());
-        return userSignUpFragment.doOnBackPressured(this::onBackPressured);
+        return userSignUpFragment.doOnBackPressured(this::onBackPressured)
+                .doOnStartLoading(this::onStartLoading)
+                .doOnStopLoading(this::onStopLoading);
     }
 
     private UserSignInFragment createSignInFragment() {
         UserSignInFragment userSignInFragment = (UserSignInFragment) Fragment.instantiate(getContext(), UserSignInFragment.class.getName());
         return userSignInFragment.doOnFindMyEmail(this::onFindMyEmail)
                 .doOnFindMyPassword(this::onFindMyPassword)
+                .doOnStartLoading(this::onStartLoading)
+                .doOnStopLoading(this::onStopLoading)
                 .doOnSignup(this::onSignUp);
     }
 

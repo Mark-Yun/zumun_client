@@ -136,4 +136,11 @@
     <string name="menu_selector_title_to_select_menus_to_add_into_category">Select menus to add into %s category</string>
     <string name="sign_up_description_title">Make Your Order Easier</string>
     <string name="menu_creator_title">Create New Menu</string>
+
+    <string name="main_activity_sign_out_title">Sign Out</string>
+    <string name="sign_out_dialog_title">Sign Out</string>
+    <string name="sign_out_dialog_message">Sign out from current user</string>
+
+    <string name="sign_up_success_dialog_title">Sign Up Success</string>
+    <string name="sign_up_success_dialog_message">Welcome! Sign in and make order easier with ZUMUN</string>
 </resources>

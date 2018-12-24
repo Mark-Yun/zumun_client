@@ -96,4 +96,9 @@
     <string name="menu_selector_title_to_select_menus_to_add_into_category">%s 카테고리에 추가할 메뉴를 선택하세요</string>
     <string name="sign_up_description_title">Make Your Order Easier</string>
     <string name="menu_creator_title">새 메뉴 만들기</string>
+    <string name="main_activity_sign_out_title">로그 아웃</string>
+    <string name="sign_out_dialog_title">로그 아웃</string>
+    <string name="sign_out_dialog_message">로그 아웃 합니다</string>
+    <string name="sign_up_success_dialog_title">회원 가입 완료</string>
+    <string name="sign_up_success_dialog_message">환영합니다. 로그인 후 ZUMUN과 함께 편하게 주문하세요!</string>
 </resources>

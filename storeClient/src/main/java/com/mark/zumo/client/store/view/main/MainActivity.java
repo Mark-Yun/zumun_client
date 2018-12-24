@@ -18,10 +18,13 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.AppCompatTextView;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
@@ -33,6 +36,7 @@ import com.mark.zumo.client.core.view.BaseActivity;
 import com.mark.zumo.client.store.R;
 import com.mark.zumo.client.store.view.order.OrderFragment;
 import com.mark.zumo.client.store.view.setting.fragment.SettingMainFragment;
+import com.mark.zumo.client.store.view.sign.user.UserSignUpActivity;
 import com.mark.zumo.client.store.viewmodel.MainViewModel;
 
 import butterknife.BindView;
@@ -144,5 +148,41 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     protected void onStart() {
         super.onStart();
         inflateStoreInformation();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.activity_main_option, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle item selection
+        switch (item.getItemId()) {
+            case R.id.sign_out:
+                onSelectSignOutOption();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    private void onSelectSignOutOption() {
+        new AlertDialog.Builder(this)
+                .setTitle(R.string.sign_out_dialog_title)
+                .setMessage(R.string.sign_out_dialog_message)
+                .setPositiveButton(android.R.string.ok, (dialog, which) -> signOut())
+                .setNegativeButton(android.R.string.cancel, (dialog, which) -> dialog.cancel())
+                .create().show();
+    }
+
+    private void signOut() {
+        mainViewModel.signOut().observe(this, this::onCompleteSignOut);
+    }
+
+    private void onCompleteSignOut(Object x) {
+        UserSignUpActivity.start(this);
     }
 }

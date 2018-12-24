@@ -43,12 +43,16 @@ public enum StoreUserRepository {
         return diskRepository.getStoreUserSession();
     }
 
+    public void clearStoreUserSession() {
+        diskRepository.storeUserSession();
+    }
+
     public Maybe<StoreOwner> creteStoreOwner(StoreOwnerSignUpRequest request) {
         return networkRepository.createStoreOwner(request)
                 .doOnSuccess(diskRepository::insertStoreOwner);
     }
 
-    public Maybe<StoreUserSession> loginStoreUser(StoreUserLoginRequest request) {
+    public Maybe<StoreUserSession> loginStoreUser(final StoreUserLoginRequest request) {
         return networkRepository.storeUserLogin(request)
                 .map(storeUserLoginResponse -> storeUserLoginResponse.sessionToken)
                 .map(sessionToken -> new StoreUserSession.Builder()

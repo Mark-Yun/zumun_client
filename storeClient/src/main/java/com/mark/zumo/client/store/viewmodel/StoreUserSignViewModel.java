@@ -50,12 +50,7 @@ public class StoreUserSignViewModel extends AndroidViewModel {
 
     public LiveData<StoreUserSignupException> signUp(final String email,
                                                      final String password,
-                                                     final String passwordConfirm,
-                                                     final String name,
-                                                     final String phoneNumber,
-                                                     final String bankName,
-                                                     final String backAccount,
-                                                     final String backAccountUrl) {
+                                                     final String passwordConfirm) {
 
         MutableLiveData<StoreUserSignupException> liveData = new MutableLiveData<>();
 
@@ -64,11 +59,6 @@ public class StoreUserSignViewModel extends AndroidViewModel {
                     .setEmail(email)
                     .setPassword(password)
                     .setPasswordConfirm(passwordConfirm)
-                    .setName(name)
-                    .setPhoneNumber(phoneNumber)
-                    .setBankName(bankName)
-                    .setBankAccount(backAccount)
-                    .setBankAccountScanUrl(backAccountUrl)
                     .build();
 //            StoreOwnerSignUpRequest request = DebugUtil.storeOwnerSignUpRequest();
 

@@ -27,11 +27,6 @@ enum Validator {
     EMPTY_EMAIL(StoreUserSignupErrorCode.EMPTY_EMAIL, request -> !TextUtils.isEmpty(request.email)),
     EMPTY_PASSWORD(StoreUserSignupErrorCode.EMPTY_PASSWORD, request -> !TextUtils.isEmpty(request.password)),
     EMPTY_PASSWORD_CONFIRM(StoreUserSignupErrorCode.EMPTY_PASSWORD_CONFIRM, request -> !TextUtils.isEmpty(request.passwordConfirm)),
-    EMPTY_NAME(StoreUserSignupErrorCode.EMPTY_NAME, request -> !TextUtils.isEmpty(request.name)),
-    EMPTY_PHONE_NUMBER(StoreUserSignupErrorCode.EMPTY_PHONE_NUMBER, request -> !TextUtils.isEmpty(request.phoneNumber)),
-    EMPTY_BANK_NAME(StoreUserSignupErrorCode.EMPTY_BANK_NAME, request -> !TextUtils.isEmpty(request.bankName)),
-    EMPTY_BANK_ACCOUNT(StoreUserSignupErrorCode.EMPTY_BANK_ACCOUNT, request -> !TextUtils.isEmpty(request.bankAccountNumber)),
-    EMPTY_BANK_ACCOUNT_URL(StoreUserSignupErrorCode.EMPTY_BANK_ACCOUNT_URL, request -> !TextUtils.isEmpty(request.bankAccountScanUrl)),
     PASSWORD_DISCORD(StoreUserSignupErrorCode.PASSWORD_DISCORD, request -> TextUtils.equals(request.password, request.passwordConfirm)),
     EMAIL_INCORRECT(StoreUserSignupErrorCode.EMAIL_INCORRECT, request -> request.email.matches(Validator.emailPattern));
 

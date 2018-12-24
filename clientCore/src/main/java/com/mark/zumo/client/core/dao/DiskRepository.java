@@ -117,11 +117,14 @@ public interface DiskRepository {
     @Query("DELETE FROM " + MenuOptionDetail.Schema.table + " WHERE menu_uuid LIKE :menuUuid")
     void deleteMenuOptionDetailOfMenu(String menuUuid);
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertStoreUserSession(StoreUserSession storeUserSession);
 
     @Query("SELECT * FROM " + StoreUserSession.Schema.table + " ORDER BY " + StoreUserSession.Schema.createdDate + " DESC LIMIT 1")
     Maybe<StoreUserSession> getStoreUserSession();
+
+    @Query("DELETE FROM " + StoreUserSession.Schema.table)
+    void storeUserSession();
 
     @Query("SELECT * FROM " + MenuOption.Schema.table + " WHERE menu_option_uuid LIKE :menuOptionUuid LIMIT 1")
     Maybe<MenuOption> getMenuOption(String menuOptionUuid);

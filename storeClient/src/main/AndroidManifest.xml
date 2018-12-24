@@ -40,16 +40,8 @@
 
         <activity
             android:name="com.mark.zumo.client.store.view.sign.user.UserSignUpActivity"
-            android:windowSoftInputMode="adjustResize" />
+            android:windowSoftInputMode="adjustResize">
 
-        <activity android:name="com.tangxiaolv.telegramgallery.GalleryActivity" />
-
-        <!--suppress AndroidDomInspection -->
-        <activity
-            android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
-            android:theme="@style/Base.Theme.AppCompat" />
-
-        <activity android:name=".view.main.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
             </intent-filter>
@@ -58,6 +50,15 @@
                 <action android:name="android.intent.action.MAIN" />
             </intent-filter>
         </activity>
+
+        <activity android:name="com.tangxiaolv.telegramgallery.GalleryActivity" />
+
+        <!--suppress AndroidDomInspection -->
+        <activity
+            android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
+            android:theme="@style/Base.Theme.AppCompat" />
+
+        <activity android:name=".view.main.MainActivity" />
 
     </application>
 

@@ -24,7 +24,6 @@ import android.view.ViewGroup;
 import com.mark.zumo.client.core.entity.Menu;
 import com.mark.zumo.client.core.util.glide.GlideApp;
 import com.mark.zumo.client.core.util.glide.GlideUtils;
-import com.mark.zumo.client.core.view.TouchResponse;
 import com.mark.zumo.client.store.R;
 
 import java.text.NumberFormat;
@@ -47,16 +46,15 @@ class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.ViewHolder> {
         menuList = new CopyOnWriteArrayList<>();
     }
 
-    boolean setMenuList(final List<Menu> menuList) {
+    void setMenuList(final List<Menu> menuList) {
         if (this.menuList.equals(menuList)) {
-            return false;
+            return;
         }
 
         this.menuList.clear();
         this.menuList.addAll(menuList);
 
         notifyDataSetChanged();
-        return true;
     }
 
     @NonNull
@@ -69,6 +67,10 @@ class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.ViewHolder> {
     @Override
     public void onBindViewHolder(@NonNull final ViewHolder viewHolder, final int position) {
         Menu menu = menuList.get(position);
+        if (menu == null) {
+            return;
+        }
+
         viewHolder.name.setText(menu.name);
         viewHolder.price.setText(NumberFormat.getCurrencyInstance().format(menu.price));
 
@@ -84,7 +86,6 @@ class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.ViewHolder> {
     }
 
     private void onClickMenu(final View itemView, final Menu menu) {
-        TouchResponse.big();
         menuSelectListener.onSelectMenu(menu);
     }
 

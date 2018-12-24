@@ -6,6 +6,7 @@
 
 package com.mark.zumo.client.store.view.sign.user.fragment;
 
+import android.app.Activity;
 import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -19,6 +20,7 @@ import android.support.v7.widget.SwitchCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 
 import com.mark.zumo.client.core.entity.user.store.StoreUserSession;
 import com.mark.zumo.client.store.R;
@@ -46,6 +48,8 @@ public class UserSignInFragment extends Fragment {
     private Runnable findMyEmailAction;
     private Runnable findMyPasswordAction;
     private Runnable signUpAction;
+    private Runnable startLoadingAction;
+    private Runnable stopLoadingAction;
 
     private StoreUserSignViewModel storeUserSignViewModel;
 
@@ -71,9 +75,21 @@ public class UserSignInFragment extends Fragment {
         String password = inputPassword.getText().toString();
 
         storeUserSignViewModel.loginStoreUser(email, password, isAutoLogin).observe(this, this::onLoginResult);
+
+        autoLogin.clearFocus();
+        inputEmail.clearFocus();
+        inputPassword.clearFocus();
+        buttonSignIn.clearFocus();
+
+        InputMethodManager inputMethodManager = (InputMethodManager) getContext().getSystemService(Activity.INPUT_METHOD_SERVICE);
+        inputMethodManager.hideSoftInputFromWindow(getView().getWindowToken(), 0);
+
+        startLoadingAction.run();
     }
 
     private void onLoginResult(StoreUserSession storeUserSession) {
+        stopLoadingAction.run();
+
         switch (storeUserSession.result) {
             case SUCCESS:
                 MainActivity.start(getActivity());
@@ -93,7 +109,7 @@ public class UserSignInFragment extends Fragment {
 
     @OnClick(R.id.find_my_password)
     void onClickFindMyPassword() {
-        findMyEmailAction.run();
+        findMyPasswordAction.run();
     }
 
     public UserSignInFragment doOnFindMyEmail(Runnable runnable) {
@@ -108,6 +124,16 @@ public class UserSignInFragment extends Fragment {
 
     public UserSignInFragment doOnSignup(Runnable runnable) {
         signUpAction = runnable;
+        return this;
+    }
+
+    public UserSignInFragment doOnStartLoading(final Runnable startLoadingAction) {
+        this.startLoadingAction = startLoadingAction;
+        return this;
+    }
+
+    public UserSignInFragment doOnStopLoading(final Runnable stopLoadingAction) {
+        this.stopLoadingAction = stopLoadingAction;
         return this;
     }
 }

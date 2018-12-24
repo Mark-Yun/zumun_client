@@ -123,6 +123,12 @@ public enum StoreUserManager {
                 .subscribeOn(Schedulers.io());
     }
 
+    public Maybe<Object> signOut() {
+        setStoreUserSession(null);
+        return Maybe.fromAction(storeUserRepository::clearStoreUserSession)
+                .subscribeOn(Schedulers.io());
+    }
+
     private void setStoreUserSession(final StoreUserSession storeUserSession) {
         this.storeUserSession = storeUserSession;
     }
