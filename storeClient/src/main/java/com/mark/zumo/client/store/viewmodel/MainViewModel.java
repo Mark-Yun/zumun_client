@@ -15,10 +15,15 @@ import android.support.annotation.NonNull;
 import android.util.Log;
 
 import com.mark.zumo.client.core.entity.Store;
+import com.mark.zumo.client.core.entity.user.store.StoreUserContract;
 import com.mark.zumo.client.core.p2p.P2pServer;
 import com.mark.zumo.client.store.model.StoreSessionManager;
+import com.mark.zumo.client.store.model.StoreStoreManager;
 import com.mark.zumo.client.store.model.StoreUserManager;
 
+import java.util.List;
+
+import io.reactivex.Maybe;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 
@@ -32,7 +37,10 @@ public class MainViewModel extends AndroidViewModel {
 
     private final StoreSessionManager storeSessionManager;
     private final StoreUserManager storeUserManager;
+    private final StoreStoreManager storeStoreManager;
+
     private final CompositeDisposable compositeDisposable;
+
     private P2pServer p2pServer;
 
     public MainViewModel(@NonNull final Application application) {
@@ -40,8 +48,43 @@ public class MainViewModel extends AndroidViewModel {
 
         storeSessionManager = StoreSessionManager.INSTANCE;
         storeUserManager = StoreUserManager.INSTANCE;
+        storeStoreManager = StoreStoreManager.INSTANCE;
 
         compositeDisposable = new CompositeDisposable();
+    }
+
+    public boolean hasSessionStore() {
+        return storeUserManager.getSessionStoreSync() != null;
+    }
+
+    public LiveData<Boolean> hasSessionStoreAsync() {
+        MutableLiveData<Boolean> liveData = new MutableLiveData<>();
+        storeUserManager.getSessionStoreAsync()
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnSuccess(sessionStore -> liveData.setValue(sessionStore != null))
+                .doOnSubscribe(compositeDisposable::add)
+                .subscribe();
+        return liveData;
+    }
+
+    public boolean hasStoreUserSession() {
+        return storeUserManager.getStoreUserSessionSync() != null;
+    }
+
+    public Store getSessionStore() {
+        return storeUserManager.getSessionStoreSync();
+    }
+
+    public LiveData<Store> setSessionStore(String storeUuid) {
+
+        MutableLiveData<Store> liveData = new MutableLiveData<>();
+        storeStoreManager.getStore(storeUuid)
+                .flatMapMaybe(storeUserManager::setSessionStore)
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnNext(liveData::setValue)
+                .doOnSubscribe(compositeDisposable::add)
+                .subscribe();
+        return liveData;
     }
 
     public LiveData<Store> loadSessionStore() {
@@ -51,6 +94,32 @@ public class MainViewModel extends AndroidViewModel {
                 .doOnSuccess(liveData::setValue)
                 .doOnSubscribe(compositeDisposable::add)
                 .subscribe();
+        return liveData;
+    }
+
+    public LiveData<Store> getStore(String storeUuid) {
+        MutableLiveData<Store> liveData = new MutableLiveData<>();
+        storeStoreManager.getStore(storeUuid)
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnNext(liveData::setValue)
+                .doOnSubscribe(compositeDisposable::add)
+                .subscribe();
+        return liveData;
+    }
+
+    public LiveData<List<StoreUserContract>> getStoreUserContract() {
+
+        MutableLiveData<List<StoreUserContract>> liveData = new MutableLiveData<>();
+
+        Maybe.fromCallable(storeUserManager::getStoreUserSessionSync)
+                .switchIfEmpty(storeUserManager.getStoreUserSessionAsync())
+                .map(storeUserSession -> storeUserSession.uuid)
+                .flatMapObservable(storeUserManager::getStoreUserContract)
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnNext(liveData::setValue)
+                .doOnSubscribe(compositeDisposable::add)
+                .subscribe();
+
         return liveData;
     }
 

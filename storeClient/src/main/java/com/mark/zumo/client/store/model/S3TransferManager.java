@@ -50,6 +50,10 @@ public enum S3TransferManager {
         return "public/store/" + sessionId + "/thumbnail_image/" + UUID.randomUUID() + ".jpg";
     }
 
+    private static String getCorporateScanImageDirPath(String sessionId) {
+        return "public/store/registration/" + sessionId + "/corporate_scan_image/" + UUID.randomUUID() + ".jpg";
+    }
+
     private static String getCoverImageDirPath(String sessionId) {
         return "public/store/" + sessionId + "/cover_image/" + UUID.randomUUID() + ".jpg";
     }
@@ -169,6 +173,12 @@ public enum S3TransferManager {
 
     public Maybe<String> uploadBankScanImage(Activity activity, Uri target) {
         return Maybe.fromCallable(S3TransferManager::getBankAccountScanDirPath)
+                .flatMap(s3Path -> uploadFile(activity, s3Path, target));
+    }
+
+    public Maybe<String> uploadCorporateScanImage(Activity activity, String storeUserUuid, Uri target) {
+        return Maybe.just(storeUserUuid)
+                .map(S3TransferManager::getCorporateScanImageDirPath)
                 .flatMap(s3Path -> uploadFile(activity, s3Path, target));
     }
 }

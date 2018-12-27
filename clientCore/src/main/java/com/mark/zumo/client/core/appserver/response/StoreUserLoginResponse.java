@@ -20,12 +20,16 @@ import com.google.gson.annotations.SerializedName;
 public class StoreUserLoginResponse {
     @SerializedName(Schema.sessionToken)
     public final String sessionToken;
+    @SerializedName(Schema.storeUserUuid)
+    public final String storeUserUuid;
 
-    public StoreUserLoginResponse(final String sessionToken) {
+    public StoreUserLoginResponse(final String sessionToken, final String storeUserUuid) {
         this.sessionToken = sessionToken;
+        this.storeUserUuid = storeUserUuid;
     }
 
     public interface Schema {
         String sessionToken = "store_user_session_token";
+        String storeUserUuid = "store_user_uuid";
     }
 }

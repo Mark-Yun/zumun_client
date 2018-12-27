@@ -12,6 +12,7 @@
 
 package com.mark.zumo.client.store.view.setting.fragment.profile;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.arch.lifecycle.ViewModelProviders;
 import android.location.Address;
@@ -38,6 +39,7 @@ import com.mark.zumo.client.core.entity.Store;
 import com.mark.zumo.client.core.util.glide.GlideApp;
 import com.mark.zumo.client.core.util.glide.GlideUtils;
 import com.mark.zumo.client.store.R;
+import com.mark.zumo.client.store.view.permission.PermissionFragment;
 import com.mark.zumo.client.store.viewmodel.StoreSettingViewModel;
 
 import java.io.IOException;
@@ -117,6 +119,17 @@ public class StoreProfileInfoFragment extends Fragment {
     }
 
     private void inflateMapFragment() {
+        String[] permissions = {Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION};
+        if (!PermissionFragment.isGrantedPermissions(permissions)) {
+            Fragment permissionFragment = PermissionFragment.instantiate(permissions, this::inflateMapFragment);
+
+            getFragmentManager().beginTransaction()
+                    .replace(R.id.map_fragment, permissionFragment)
+                    .commit();
+
+            return;
+        }
+
         mapFragment = new SupportMapFragment();
         FragmentManager fragmentManager = getFragmentManager();
         Objects.requireNonNull(fragmentManager).beginTransaction()

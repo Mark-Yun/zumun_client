@@ -13,6 +13,8 @@ import android.arch.persistence.room.OnConflictStrategy;
 import android.arch.persistence.room.Query;
 import android.arch.persistence.room.RoomWarnings;
 
+import com.mark.zumo.client.core.appserver.request.registration.StoreRegistrationRequest;
+import com.mark.zumo.client.core.appserver.request.registration.result.StoreRegistrationResult;
 import com.mark.zumo.client.core.entity.Menu;
 import com.mark.zumo.client.core.entity.MenuCategory;
 import com.mark.zumo.client.core.entity.MenuDetail;
@@ -21,10 +23,12 @@ import com.mark.zumo.client.core.entity.MenuOptionCategory;
 import com.mark.zumo.client.core.entity.MenuOptionDetail;
 import com.mark.zumo.client.core.entity.MenuOrder;
 import com.mark.zumo.client.core.entity.OrderDetail;
+import com.mark.zumo.client.core.entity.SessionStore;
 import com.mark.zumo.client.core.entity.SnsToken;
 import com.mark.zumo.client.core.entity.Store;
 import com.mark.zumo.client.core.entity.user.GuestUser;
 import com.mark.zumo.client.core.entity.user.store.StoreOwner;
+import com.mark.zumo.client.core.entity.user.store.StoreUserContract;
 import com.mark.zumo.client.core.entity.user.store.StoreUserSession;
 import com.mark.zumo.client.core.payment.kakao.entity.PaymentToken;
 
@@ -125,6 +129,12 @@ public interface DiskRepository {
 
     @Query("DELETE FROM " + StoreUserSession.Schema.table)
     void storeUserSession();
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    void insertSessionStore(SessionStore sessionStore);
+
+    @Query("SELECT * FROM " + SessionStore.Schema.TABLE + " ORDER BY " + StoreUserSession.Schema.createdDate + " DESC LIMIT 1")
+    Maybe<SessionStore> getSessionStore();
 
     @Query("SELECT * FROM " + MenuOption.Schema.table + " WHERE menu_option_uuid LIKE :menuOptionUuid LIMIT 1")
     Maybe<MenuOption> getMenuOption(String menuOptionUuid);
@@ -251,4 +261,19 @@ public interface DiskRepository {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertMenuDetailList(List<MenuDetail> menuDetailList);
+
+    @Query("SELECT * FROM " + StoreUserContract.Schema.table + " WHERE store_user_uuid LIKE :storeUserUuid")
+    Maybe<List<StoreUserContract>> getStoreUserContractListbyStoreUserUuid(String storeUserUuid);
+
+    @Query("SELECT * FROM " + StoreRegistrationRequest.Schema.table + " WHERE store_user_uuid LIKE :storeUserUuid")
+    Maybe<List<StoreRegistrationRequest>> getStoreRegistrationRequestListByStoreUserUuid(String storeUserUuid);
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    void insertStoreRegistrationRequest(StoreRegistrationRequest storeRegistrationRequest);
+
+    @Query("SELECT * FROM " + StoreRegistrationResult.Schema.table + " WHERE request_id LIKE :requestId")
+    Maybe<List<StoreRegistrationResult>> getStoreRegistrationResultByRequestId(long requestId);
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    void insertStoreUserConractList(List<StoreUserContract> storeUserContractList);
 }

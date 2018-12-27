@@ -34,8 +34,10 @@ import com.mark.zumo.client.core.util.glide.GlideApp;
 import com.mark.zumo.client.core.util.glide.transformation.LinearGradientTransformation;
 import com.mark.zumo.client.core.view.BaseActivity;
 import com.mark.zumo.client.store.R;
+import com.mark.zumo.client.store.view.main.fragment.storeselect.StoreSelectFragment;
 import com.mark.zumo.client.store.view.order.OrderFragment;
 import com.mark.zumo.client.store.view.setting.fragment.SettingMainFragment;
+import com.mark.zumo.client.store.view.sign.store.fragment.StoreRegistrationFragment;
 import com.mark.zumo.client.store.view.sign.user.UserSignUpActivity;
 import com.mark.zumo.client.store.viewmodel.MainViewModel;
 
@@ -76,14 +78,45 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         toggle.syncState();
 
         navView.setNavigationItemSelectedListener(this);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        checkSessionAndInflateMainFragmentIfPossible();
+    }
+
+    private void checkSessionAndInflateMainFragmentIfPossible() {
+        if (!mainViewModel.hasStoreUserSession()) { //doesn't have user session
+            UserSignUpActivity.start(this);
+        } else if (!mainViewModel.hasSessionStore()) { //doesn't have session store
+            mainViewModel.hasSessionStoreAsync().observe(this, this::onSessionStoreLoaded);
+        } else { //has session store
+            inflateMainFragment();
+        }
+    }
+
+    private void inflateMainFragment() {
+        inflateStoreInformation();
         mainViewModel.findCustomer(this);
     }
 
-    private void inflateStoreInformation() {
-        mainViewModel.loadSessionStore().observe(this, this::onLoadStore);
+    private void onSessionStoreLoaded(boolean hasSessionStore) {
+        if (!hasSessionStore) {
+            StoreSelectFragment storeSelectFragment = ((StoreSelectFragment) StoreSelectFragment.instantiate(this, StoreSelectFragment.class.getName()))
+                    .onSelectStore(this::onSelectedStore);
+            updateMainFragment(storeSelectFragment);
+        }
     }
 
-    private void onLoadStore(Store store) {
+    private void onSelectedStore(String storeUuid) {
+        mainViewModel.setSessionStore(storeUuid).observe(this, sessionStore -> inflateMainFragment());
+    }
+
+    private void inflateStoreInformation() {
+        Store store = mainViewModel.getSessionStore();
+
         setTitle(store.name);
 
         AppCompatTextView name = navView.findViewById(R.id.name);
@@ -127,6 +160,9 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         } else if (id == R.id.nav_setting) {
             Fragment fragment = Fragment.instantiate(this, SettingMainFragment.class.getName());
             updateMainFragment(fragment);
+        } else if (id == R.id.nav_store_registration) {
+            Fragment fragment = Fragment.instantiate(this, StoreRegistrationFragment.class.getName());
+            updateMainFragment(fragment);
         } else if (id == R.id.nav_share) {
 
         } else if (id == R.id.nav_send) {
@@ -142,12 +178,6 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                 .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
                 .replace(R.id.main_fragment, fragment)
                 .commit();
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        inflateStoreInformation();
     }
 
     @Override

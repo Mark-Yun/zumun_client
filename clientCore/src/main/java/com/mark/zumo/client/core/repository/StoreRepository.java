@@ -10,6 +10,8 @@ import android.os.Bundle;
 
 import com.mark.zumo.client.core.appserver.AppServerServiceProvider;
 import com.mark.zumo.client.core.appserver.NetworkRepository;
+import com.mark.zumo.client.core.appserver.request.registration.StoreRegistrationRequest;
+import com.mark.zumo.client.core.appserver.request.registration.result.StoreRegistrationResult;
 import com.mark.zumo.client.core.dao.AppDatabaseProvider;
 import com.mark.zumo.client.core.dao.DiskRepository;
 import com.mark.zumo.client.core.entity.Store;
@@ -80,5 +82,26 @@ public class StoreRepository {
     public Maybe<Store> getStoreFromApi(String storeUuid) {
         return networkRepository.getStore(storeUuid)
                 .doOnSuccess(diskRepository::insertStore);
+    }
+
+    public Observable<List<StoreRegistrationRequest>> getStoreRegistrationRequestListByStoreUserUuid(String storeUserUuid) {
+        Maybe<List<StoreRegistrationRequest>> storeRegistrationRequestListApi = networkRepository.getStoreRegistrationRequestByStoreUserUuid(storeUserUuid);
+        Maybe<List<StoreRegistrationRequest>> storeRegistrationRequestListByDB = diskRepository.getStoreRegistrationRequestListByStoreUserUuid(storeUserUuid);
+
+        return Maybe.merge(storeRegistrationRequestListByDB, storeRegistrationRequestListApi)
+                .toObservable();
+    }
+
+    public Maybe<StoreRegistrationRequest> createStoreRegistrationRequest(StoreRegistrationRequest storeRegistrationRequest) {
+        return networkRepository.createStoreRegistrationRequest(storeRegistrationRequest)
+                .doOnSuccess(diskRepository::insertStoreRegistrationRequest);
+    }
+
+    public Observable<List<StoreRegistrationResult>> getStoreRegistrationResultListByRequestId(long requestId) {
+        Maybe<List<StoreRegistrationResult>> storeRegistrationResultListApi = networkRepository.getStoreRegistraionResultByRequestId(requestId);
+        Maybe<List<StoreRegistrationResult>> storeRegistrationResultListByDB = diskRepository.getStoreRegistrationResultByRequestId(requestId);
+
+        return Maybe.merge(storeRegistrationResultListByDB, storeRegistrationResultListApi)
+                .toObservable();
     }
 }

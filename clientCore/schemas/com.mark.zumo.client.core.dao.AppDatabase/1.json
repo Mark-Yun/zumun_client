@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "c16f0950f1e6489cac5880f23070813a",
+    "identityHash": "eb98c628b7ec54cf1d1f04b61172aff9",
     "entities": [
       {
         "tableName": "menu",
@@ -532,7 +532,7 @@
       },
       {
         "tableName": "store_user_session",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`store_user_email` TEXT NOT NULL, `store_user_session_token` TEXT, `store_user_password` TEXT, `created_date` INTEGER NOT NULL, PRIMARY KEY(`store_user_email`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`store_user_email` TEXT NOT NULL, `store_user_session_token` TEXT, `store_user_uuid` TEXT, `store_user_password` TEXT, `created_date` INTEGER NOT NULL, PRIMARY KEY(`store_user_email`))",
         "fields": [
           {
             "fieldPath": "email",
@@ -543,6 +543,12 @@
           {
             "fieldPath": "token",
             "columnName": "store_user_session_token",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "uuid",
+            "columnName": "store_user_uuid",
             "affinity": "TEXT",
             "notNull": false
           },
@@ -759,11 +765,203 @@
         },
         "indices": [],
         "foreignKeys": []
+      },
+      {
+        "tableName": "store_contract",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`store_contract_uuid` TEXT NOT NULL, `store_user_uuid` TEXT, `store_uuid` TEXT, `permission` TEXT, PRIMARY KEY(`store_contract_uuid`))",
+        "fields": [
+          {
+            "fieldPath": "uuid",
+            "columnName": "store_contract_uuid",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "storeUserUuid",
+            "columnName": "store_user_uuid",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "storeUuid",
+            "columnName": "store_uuid",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "permission",
+            "columnName": "permission",
+            "affinity": "TEXT",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "store_contract_uuid"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "store_registration_result",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `request_id` INTEGER NOT NULL, `result` TEXT, `comment` TEXT, `created_date` TEXT, PRIMARY KEY(`id`))",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "requestId",
+            "columnName": "request_id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "result",
+            "columnName": "result",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "comment",
+            "columnName": "comment",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "createdDate",
+            "columnName": "created_date",
+            "affinity": "TEXT",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "id"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "store_registration_request",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `store_user_uuid` TEXT, `store_name` TEXT, `store_phone_number` TEXT, `store_type` TEXT, `corporate_registration_name` TEXT, `corporate_registration_owner_name` TEXT, `corporate_registration_number` TEXT, `corporate_registration_address` TEXT, `corporate_registration_scan_url` TEXT, `latitude` REAL NOT NULL, `longitude` REAL NOT NULL, `address` TEXT, `cover_image_url` TEXT, `thumbnail_image_url` TEXT, `create_date` INTEGER NOT NULL, PRIMARY KEY(`id`))",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "storeUserUuid",
+            "columnName": "store_user_uuid",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "storeName",
+            "columnName": "store_name",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "storePhoneNumber",
+            "columnName": "store_phone_number",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "storeType",
+            "columnName": "store_type",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "corporateRegistrationName",
+            "columnName": "corporate_registration_name",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "corporateRegistrationOwnerName",
+            "columnName": "corporate_registration_owner_name",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "corporateRegistrationNumber",
+            "columnName": "corporate_registration_number",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "corporateRegistrationAddress",
+            "columnName": "corporate_registration_address",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "corporateRegistrationScanUrl",
+            "columnName": "corporate_registration_scan_url",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "latitude",
+            "columnName": "latitude",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "longitude",
+            "columnName": "longitude",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "address",
+            "columnName": "address",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "coverImageRrl",
+            "columnName": "cover_image_url",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "thumbnailImageUrl",
+            "columnName": "thumbnail_image_url",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "createdDate",
+            "columnName": "create_date",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "id"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [],
+        "foreignKeys": []
       }
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"c16f0950f1e6489cac5880f23070813a\")"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"eb98c628b7ec54cf1d1f04b61172aff9\")"
     ]
   }
 }

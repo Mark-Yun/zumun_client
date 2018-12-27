@@ -24,6 +24,8 @@ public class StoreUserSession {
     public final String email;
     @ColumnInfo(name = Schema.token)
     public final String token;
+    @ColumnInfo(name = Schema.uuid)
+    public final String uuid;
     @ColumnInfo(name = Schema.password)
     public final String password;
     @ColumnInfo(name = Schema.createdDate)
@@ -31,17 +33,10 @@ public class StoreUserSession {
     @Ignore
     public final Result result;
 
-    public StoreUserSession(@NonNull final String email, final String token, final String password, final long createdDate) {
+    public StoreUserSession(@NonNull final String email, final String token, final String uuid, final String password, final long createdDate) {
         this.email = email;
         this.token = token;
-        this.password = password;
-        this.createdDate = createdDate;
-        result = Result.SUCCESS;
-    }
-
-    public StoreUserSession(@NonNull final String email, final String token, final String password, final long createdDate, final Result result) {
-        this.email = email;
-        this.token = token;
+        this.uuid = uuid;
         this.password = password;
         this.createdDate = createdDate;
         this.result = Result.SUCCESS;
@@ -59,6 +54,7 @@ public class StoreUserSession {
     public interface Schema {
         String table = "store_user_session";
         String email = "store_user_email";
+        String uuid = "store_user_uuid";
         String token = "store_user_session_token";
         String password = "store_user_password";
         String createdDate = "created_date";
@@ -66,6 +62,7 @@ public class StoreUserSession {
 
     public static class Builder {
         private String email;
+        private String uuid;
         private String token;
         private String password;
         private Result result;
@@ -90,8 +87,13 @@ public class StoreUserSession {
             return this;
         }
 
+        public Builder setUuid(final String uuid) {
+            this.uuid = uuid;
+            return this;
+        }
+
         public StoreUserSession build() {
-            return new StoreUserSession(email, token, password, System.currentTimeMillis(), result);
+            return new StoreUserSession(email, uuid, token, password, System.currentTimeMillis());
         }
     }
 }

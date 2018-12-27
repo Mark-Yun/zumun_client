@@ -7,6 +7,8 @@
 package com.mark.zumo.client.core.appserver;
 
 import com.mark.zumo.client.core.appserver.request.login.StoreUserLoginRequest;
+import com.mark.zumo.client.core.appserver.request.registration.StoreRegistrationRequest;
+import com.mark.zumo.client.core.appserver.request.registration.result.StoreRegistrationResult;
 import com.mark.zumo.client.core.appserver.request.signup.StoreOwnerSignUpRequest;
 import com.mark.zumo.client.core.appserver.response.StoreUserHandShakeResponse;
 import com.mark.zumo.client.core.appserver.response.StoreUserLoginResponse;
@@ -23,6 +25,7 @@ import com.mark.zumo.client.core.entity.Store;
 import com.mark.zumo.client.core.entity.user.GuestUser;
 import com.mark.zumo.client.core.entity.user.store.StoreOwner;
 import com.mark.zumo.client.core.entity.user.store.StoreUser;
+import com.mark.zumo.client.core.entity.user.store.StoreUserContract;
 
 import java.util.List;
 
@@ -47,6 +50,9 @@ public interface NetworkRepository {
     @GET("users/store/handshake")
     Maybe<StoreUserHandShakeResponse> signInHandShake(@Query(StoreUser.Schema.email) String storeUserEmail);
 
+    @GET("users/store/contract")
+    Maybe<List<StoreUserContract>> getStoreUserContractListByStoreUserUuid(@Query(StoreUser.Schema.uuid) String storeUserUuid);
+
     @POST("users/store")
     Maybe<StoreOwner> createStoreOwner(@Body StoreOwnerSignUpRequest request);
 
@@ -65,6 +71,17 @@ public interface NetworkRepository {
     Maybe<List<Store>> getNearByStore(@Query("latitude") final double latitude,
                                       @Query("longitude") final double longitude,
                                       @Query("distance") final double distanceKm);
+
+
+    @POST("store/registration")
+    Maybe<StoreRegistrationRequest> createStoreRegistrationRequest(@Body StoreRegistrationRequest storeRegistrationRequest);
+
+    @GET("store/registration")
+    Maybe<List<StoreRegistrationRequest>> getStoreRegistrationRequestByStoreUserUuid(@Query(StoreRegistrationRequest.Schema.storeUserUuid) String storeUserUuid);
+
+
+    @GET("store/registration/result")
+    Maybe<List<StoreRegistrationResult>> getStoreRegistraionResultByRequestId(@Query(StoreRegistrationResult.Schema.requestId) long requestId);
 
 
     @POST("menu")
@@ -217,4 +234,6 @@ public interface NetworkRepository {
 
     @POST("token")
     Maybe<SnsToken> createSnsToken(@Body SnsToken snsToken);
+
+
 }

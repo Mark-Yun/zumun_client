@@ -29,8 +29,6 @@ import io.reactivex.disposables.CompositeDisposable;
  */
 public class StoreSettingViewModel extends AndroidViewModel {
 
-    public final static String ACTION_STORE_INFORMATION_CHANGED = "com.mark.zumo.client.store.action.STORE_INFORMATION_CHAGED";
-
     private final StoreSessionManager storeSessionManager;
     private final StoreStoreManager storeStoreManager;
     private final S3TransferManager s3TransferManager;

@@ -18,6 +18,11 @@
             android:id="@+id/nav_withdraw"
             android:icon="@drawable/ic_attach_money_blue_grey_600_48dp"
             android:title="@string/menu_title_widthdraw" />
+
+        <item
+            android:id="@+id/nav_store_registration"
+            android:icon="@drawable/ic_store_blue_grey_600_48dp"
+            android:title="@string/menu_title_store_sign_up" />
     </group>
 
     <item android:title="Communicate">

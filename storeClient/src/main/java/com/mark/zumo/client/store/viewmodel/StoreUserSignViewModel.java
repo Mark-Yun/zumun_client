@@ -15,7 +15,6 @@ import android.net.Uri;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 
 import com.mark.zumo.client.core.appserver.request.signup.StoreOwnerSignUpRequest;
 import com.mark.zumo.client.core.appserver.request.signup.StoreUserSignupException;
@@ -110,7 +109,6 @@ public class StoreUserSignViewModel extends AndroidViewModel {
         return liveData;
     }
 
-    @Nullable
     public boolean hasStoreUserSessionSync() {
         return storeUserManager.getStoreUserSessionSync() != null;
     }

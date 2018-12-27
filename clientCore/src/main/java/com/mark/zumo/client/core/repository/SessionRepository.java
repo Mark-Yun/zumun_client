@@ -38,16 +38,20 @@ public enum SessionRepository {
 
     private static final String TAG = "SessionRepository";
     private static final Object sessionHeaderLock = new Object();
+
     private final SecurePreferences securePreferences;
     private final NetworkRepository networkRepository;
     private final DiskRepository diskRepository;
+
     private GuestUser guestUser;
     private boolean isBuiltSessionHeader;
+    private Bundle sessionHeader;
 
     SessionRepository() {
         securePreferences = SecuredRepository.INSTANCE.securePreferences();
         networkRepository = AppServerServiceProvider.INSTANCE.networkRepository;
         diskRepository = AppDatabaseProvider.INSTANCE.diskRepository;
+        sessionHeader = new Bundle();
     }
 
     private GuestUser saveGuestUser(final GuestUser guestUser) {
@@ -117,6 +121,18 @@ public enum SessionRepository {
         return new SessionBuilder()
                 .put(SessionRepository.KEY_CUSTOMER_UUID, guestUser.uuid)
                 .build();
+    }
+
+    public Bundle getSessionHeader() {
+        return this.sessionHeader;
+    }
+
+    public void putSessionHeader(Bundle bundle) {
+        this.sessionHeader.putAll(bundle);
+    }
+
+    public void clearSessionHeader(String key) {
+        this.sessionHeader.remove(key);
     }
 
     public Maybe<SnsToken> registerSnsToken(SnsToken snsToken) {
