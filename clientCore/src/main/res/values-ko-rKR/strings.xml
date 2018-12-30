@@ -4,6 +4,12 @@
   ~ Proprietary and confidential
   -->
 
+<!--
+  ~ Copyright (c) 2018. Mark Soft - All Rights Reserved
+  ~ Unauthorized copying of this file, via any medium is strictly prohibited
+  ~ Proprietary and confidential
+  -->
+
 <resources>
     <string name="order_state_accepted">접수완료</string>
     <string name="order_state_complete">완료</string>

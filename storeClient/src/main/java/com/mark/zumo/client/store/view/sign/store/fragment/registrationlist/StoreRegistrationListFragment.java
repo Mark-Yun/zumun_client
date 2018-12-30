@@ -24,6 +24,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.mark.zumo.client.core.appserver.request.registration.StoreRegistrationRequest;
 import com.mark.zumo.client.store.R;
 import com.mark.zumo.client.store.viewmodel.StoreRegistrationViewModel;
 
@@ -64,6 +65,11 @@ public class StoreRegistrationListFragment extends Fragment {
         return this;
     }
 
+    public StoreRegistrationListFragment onStoreRegistrationComplete(StoreRegistrationRequest storeRegistrationRequest) {
+        //todo
+        return this;
+    }
+
     @Nullable
     @Override
     public View onCreateView(@NonNull final LayoutInflater inflater, @Nullable final ViewGroup container, @Nullable final Bundle savedInstanceState) {
@@ -83,7 +89,7 @@ public class StoreRegistrationListFragment extends Fragment {
     }
 
     private void inflateRecyclerView() {
-        StoreRegistrationRequestAdapter adapter = new StoreRegistrationRequestAdapter(listener::onSelectStoreRegistrationRequest);
+        StoreRegistrationRequestAdapter adapter = new StoreRegistrationRequestAdapter(listener);
         storeRegistrationViewModel.getCombinedStoreRegistrationRequest().observe(this, adapter::setStoreRegistrationRequestList);
 
         recyclerView.setHasFixedSize(true);

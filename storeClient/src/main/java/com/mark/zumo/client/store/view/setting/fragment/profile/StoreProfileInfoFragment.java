@@ -121,7 +121,9 @@ public class StoreProfileInfoFragment extends Fragment {
     private void inflateMapFragment() {
         String[] permissions = {Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION};
         if (!PermissionFragment.isGrantedPermissions(permissions)) {
-            Fragment permissionFragment = PermissionFragment.instantiate(permissions, this::inflateMapFragment);
+            Fragment permissionFragment = PermissionFragment.instantiate(permissions, this::inflateMapFragment)
+                    .setTitle(R.string.permission_location_title)
+                    .setMessage(R.string.permission_location_content);
 
             getFragmentManager().beginTransaction()
                     .replace(R.id.map_fragment, permissionFragment)

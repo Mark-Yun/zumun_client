@@ -62,7 +62,7 @@ public class StoreRegistrationDetailFragment extends Fragment {
         storeName.setText(storeRegistrationRequest.storeName);
         storePhoneNumber.setText(storeRegistrationRequest.storePhoneNumber);
         storeType.setText(storeRegistrationRequest.storeType);
-        storeAddress.setText(storeRegistrationRequest.address);
+        storeAddress.setText(storeRegistrationRequest.storeAddress);
         corporateName.setText(storeRegistrationRequest.corporateRegistrationName);
         corporateOwnerName.setText(storeRegistrationRequest.corporateRegistrationOwnerName);
         corporateNumber.setText(storeRegistrationRequest.corporateRegistrationOwnerName);

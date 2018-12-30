@@ -9,6 +9,7 @@ import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
+import android.support.annotation.NonNull;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
@@ -23,8 +24,8 @@ import java.util.List;
 @Entity(tableName = StoreRegistrationRequest.Schema.table)
 public class StoreRegistrationRequest {
 
-    @PrimaryKey @SerializedName(Schema.id) @ColumnInfo(name = Schema.id)
-    public final long id;
+    @NonNull @PrimaryKey @SerializedName(Schema.uuid) @ColumnInfo(name = Schema.uuid)
+    public final String uuid;
     @SerializedName(Schema.storeUserUuid) @ColumnInfo(name = Schema.storeUserUuid)
     public final String storeUserUuid;
     @SerializedName(Schema.storeName) @ColumnInfo(name = Schema.storeName)
@@ -47,8 +48,8 @@ public class StoreRegistrationRequest {
     public final double latitude;
     @SerializedName(Schema.longitude) @ColumnInfo(name = Schema.longitude)
     public final double longitude;
-    @SerializedName(Schema.address) @ColumnInfo(name = Schema.address)
-    public final String address;
+    @SerializedName(Schema.storeAddress) @ColumnInfo(name = Schema.storeAddress)
+    public final String storeAddress;
     @SerializedName(Schema.coverImageRrl) @ColumnInfo(name = Schema.coverImageRrl)
     public final String coverImageRrl;
     @SerializedName(Schema.thumbnailImageUrl) @ColumnInfo(name = Schema.thumbnailImageUrl)
@@ -59,8 +60,8 @@ public class StoreRegistrationRequest {
     @Expose @Ignore
     public List<StoreRegistrationResult> resultList;
 
-    public StoreRegistrationRequest(final long id, final String storeUserUuid, final String storeName, final String storePhoneNumber, final String storeType, final String corporateRegistrationName, final String corporateRegistrationOwnerName, final String corporateRegistrationNumber, final String corporateRegistrationAddress, final String corporateRegistrationScanUrl, final double latitude, final double longitude, final String address, final String coverImageRrl, final String thumbnailImageUrl, final long createdDate) {
-        this.id = id;
+    public StoreRegistrationRequest(@NonNull final String uuid, final String storeUserUuid, final String storeName, final String storePhoneNumber, final String storeType, final String corporateRegistrationName, final String corporateRegistrationOwnerName, final String corporateRegistrationNumber, final String corporateRegistrationAddress, final String corporateRegistrationScanUrl, final double latitude, final double longitude, final String storeAddress, final String coverImageRrl, final String thumbnailImageUrl, final long createdDate) {
+        this.uuid = uuid;
         this.storeUserUuid = storeUserUuid;
         this.storeName = storeName;
         this.storePhoneNumber = storePhoneNumber;
@@ -72,7 +73,7 @@ public class StoreRegistrationRequest {
         this.corporateRegistrationScanUrl = corporateRegistrationScanUrl;
         this.latitude = latitude;
         this.longitude = longitude;
-        this.address = address;
+        this.storeAddress = storeAddress;
         this.coverImageRrl = coverImageRrl;
         this.thumbnailImageUrl = thumbnailImageUrl;
         this.createdDate = createdDate;
@@ -85,7 +86,7 @@ public class StoreRegistrationRequest {
 
     public interface Schema {
         String table = "store_registration_request";
-        String id = "id";
+        String uuid = "store_registration_request_uuid";
         String storeUserUuid = "store_user_uuid";
         String storeName = "store_name";
         String storePhoneNumber = "store_phone_number";
@@ -97,14 +98,14 @@ public class StoreRegistrationRequest {
         String corporateRegistrationScanUrl = "corporate_registration_scan_url";
         String latitude = "latitude";
         String longitude = "longitude";
-        String address = "address";
+        String storeAddress = "store_address";
         String coverImageRrl = "cover_image_url";
         String thumbnailImageUrl = "thumbnail_image_url";
         String createdDate = "create_date";
     }
 
     public static class Builder {
-        private long id;
+        private String uuid;
         private String storeUserUuid;
         private String storeName;
         private String storePhoneNumber;
@@ -116,7 +117,7 @@ public class StoreRegistrationRequest {
         private String corporateRegistrationScanUrl;
         private double latitude;
         private double longitude;
-        private String address;
+        private String storeAddress;
         private String coverImageRrl;
         private String thumbnailImageUrl;
         private long createdDate;
@@ -125,7 +126,7 @@ public class StoreRegistrationRequest {
         }
 
         public Builder(StoreRegistrationRequest storeRegistrationRequest) {
-            id = storeRegistrationRequest.id;
+            uuid = storeRegistrationRequest.uuid;
             storeUserUuid = storeRegistrationRequest.storeUserUuid;
             storeName = storeRegistrationRequest.storeName;
             storePhoneNumber = storeRegistrationRequest.storePhoneNumber;
@@ -134,9 +135,10 @@ public class StoreRegistrationRequest {
             corporateRegistrationOwnerName = storeRegistrationRequest.corporateRegistrationOwnerName;
             corporateRegistrationAddress = storeRegistrationRequest.corporateRegistrationAddress;
             corporateRegistrationScanUrl = storeRegistrationRequest.corporateRegistrationScanUrl;
+            corporateRegistrationNumber = storeRegistrationRequest.corporateRegistrationNumber;
             latitude = storeRegistrationRequest.latitude;
             longitude = storeRegistrationRequest.longitude;
-            address = storeRegistrationRequest.address;
+            storeAddress = storeRegistrationRequest.storeAddress;
             coverImageRrl = storeRegistrationRequest.coverImageRrl;
             thumbnailImageUrl = storeRegistrationRequest.thumbnailImageUrl;
             createdDate = storeRegistrationRequest.createdDate;
@@ -162,8 +164,8 @@ public class StoreRegistrationRequest {
             return this;
         }
 
-        public Builder setId(final long id) {
-            this.id = id;
+        public Builder setId(final String uuid) {
+            this.uuid = uuid;
             return this;
         }
 
@@ -207,8 +209,8 @@ public class StoreRegistrationRequest {
             return this;
         }
 
-        public Builder setAddress(final String address) {
-            this.address = address;
+        public Builder setStoreAddress(final String storeAddress) {
+            this.storeAddress = storeAddress;
             return this;
         }
 
@@ -224,7 +226,7 @@ public class StoreRegistrationRequest {
 
         public StoreRegistrationRequest build() {
 
-            StoreRegistrationRequest storeRegistrationRequest = new StoreRegistrationRequest(id, storeUserUuid, storeName, storePhoneNumber, storeType, corporateRegistrationName, corporateRegistrationOwnerName, corporateRegistrationNumber, corporateRegistrationAddress, corporateRegistrationScanUrl, latitude, longitude, address, coverImageRrl, thumbnailImageUrl, createdDate);
+            StoreRegistrationRequest storeRegistrationRequest = new StoreRegistrationRequest(uuid, storeUserUuid, storeName, storePhoneNumber, storeType, corporateRegistrationName, corporateRegistrationOwnerName, corporateRegistrationNumber, corporateRegistrationAddress, corporateRegistrationScanUrl, latitude, longitude, storeAddress, coverImageRrl, thumbnailImageUrl, createdDate);
 //            for (Validator validator : Validator.values()) {
 //                if (!validator.verify(storeRegistrationRequest)) {
 //                    throw new StoreRegistrationException(validator.ofErrorCode());

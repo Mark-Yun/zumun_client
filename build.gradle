@@ -61,7 +61,7 @@ ext {
     rebound = '0.3.8'
 }
 
-def applications = [project('customerClient'), project('storeClient')]
+def applications = [project('customerClient'), project('storeClient'), project('supervisorClient')]
 configure(applications) {
     apply plugin: 'com.android.application'
     apply plugin: 'com.google.gms.google-services'

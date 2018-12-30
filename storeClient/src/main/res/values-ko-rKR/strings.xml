@@ -122,4 +122,7 @@
     <string name="store_registration_request_state">상태</string>
     <string name="store_registration_request_requested_date">요청 일시</string>
     <string name="store_select_button_text">가게 선택하기</string>
+    <string name="store_select_none_session_store_title">등록된 가게가 없습니다</string>
+    <string name="store_select_none_session_store_message">아직 등록된 가게가 없으시군요! ZUMUN에서 간편하게 등록하세요</string>
+    <string name="store_select_none_session_store_button_text">신규 가게 등록 신청</string>
 </resources>

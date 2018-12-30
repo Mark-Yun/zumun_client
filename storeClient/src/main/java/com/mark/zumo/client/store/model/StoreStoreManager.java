@@ -62,16 +62,16 @@ public enum StoreStoreManager {
                 .subscribeOn(Schedulers.io());
     }
 
-    public Observable<List<StoreRegistrationRequest>> getStoreRegistrationByStoreUserUuid(String storeUserUuid) {
+    public Observable<List<StoreRegistrationRequest>> getStoreRegistrationRequestByStoreUserUuid(String storeUserUuid) {
         return storeRepositoryMaybe.flatMapObservable(storeRepository ->
                 storeRepository.getStoreRegistrationRequestListByStoreUserUuid(storeUserUuid)
-        );
+        ).subscribeOn(Schedulers.io());
     }
 
-    public Observable<List<StoreRegistrationResult>> getStoreRegistrationResultByRequestId(long requestId) {
+    public Observable<List<StoreRegistrationResult>> getStoreRegistrationResultByRequestId(String storeRegistrationRequestUuid) {
         return storeRepositoryMaybe.flatMapObservable(storeRepository ->
-                storeRepository.getStoreRegistrationResultListByRequestId(requestId)
-        );
+                storeRepository.getStoreRegistrationResultListByRequestId(storeRegistrationRequestUuid)
+        ).subscribeOn(Schedulers.io());
     }
 
     public Observable<Store> getStore(String storeUuid) {
@@ -83,6 +83,6 @@ public enum StoreStoreManager {
     public Maybe<StoreRegistrationRequest> createStoreRegistrationRequest(StoreRegistrationRequest storeRegistrationRequest) {
         return storeRepositoryMaybe.flatMap(storeRepository ->
                 storeRepository.createStoreRegistrationRequest(storeRegistrationRequest)
-        );
+        ).subscribeOn(Schedulers.io());
     }
 }

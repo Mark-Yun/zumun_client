@@ -14,6 +14,7 @@ import android.arch.lifecycle.MutableLiveData;
 import android.location.Location;
 import android.net.Uri;
 import android.support.annotation.NonNull;
+import android.util.Log;
 
 import com.mark.zumo.client.core.appserver.request.registration.StoreRegistrationRequest;
 import com.mark.zumo.client.core.appserver.request.registration.result.StoreRegistrationResult;
@@ -32,6 +33,8 @@ import io.reactivex.disposables.CompositeDisposable;
  * Created by mark on 18. 12. 26.
  */
 public class StoreRegistrationViewModel extends AndroidViewModel {
+
+    private static final String TAG = "StoreRegistrationViewModel";
 
     private final StoreUserManager storeUserManager;
     private final StoreStoreManager storeStoreManager;
@@ -56,20 +59,22 @@ public class StoreRegistrationViewModel extends AndroidViewModel {
 
         Maybe.fromCallable(storeUserManager::getStoreUserSessionSync)
                 .switchIfEmpty(storeUserManager.getStoreUserSessionAsync())
+                .doOnSuccess(a -> Log.d(TAG, "getCombinedStoreRegistrationRequest: " + a))
                 .map(storeUserSession -> storeUserSession.uuid)
-                .flatMapObservable(storeStoreManager::getStoreRegistrationByStoreUserUuid)
+                .flatMapObservable(storeStoreManager::getStoreRegistrationRequestByStoreUserUuid)
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnNext(liveData::setValue)
+                .doOnError(e -> Log.e(TAG, "getCombinedStoreRegistrationRequest: ", e))
                 .doOnSubscribe(compositeDisposable::add)
                 .subscribe();
 
         return liveData;
     }
 
-    public LiveData<List<StoreRegistrationResult>> getStoreRegistrationResult(long requestId) {
+    public LiveData<List<StoreRegistrationResult>> getStoreRegistrationResult(String storeRegistrationRequestUuid) {
         MutableLiveData<List<StoreRegistrationResult>> liveData = new MutableLiveData<>();
 
-        storeStoreManager.getStoreRegistrationResultByRequestId(requestId)
+        storeStoreManager.getStoreRegistrationResultByRequestId(storeRegistrationRequestUuid)
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnNext(liveData::setValue)
                 .doOnSubscribe(compositeDisposable::add)

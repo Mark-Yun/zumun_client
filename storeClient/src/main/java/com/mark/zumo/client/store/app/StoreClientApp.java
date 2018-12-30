@@ -23,7 +23,7 @@ import com.wonderkiln.blurkit.BlurKit;
  * Created by mark on 18. 5. 7.
  */
 
-public class StoreServerApp extends Application {
+public class StoreClientApp extends Application {
 
     @Override
     public void onCreate() {

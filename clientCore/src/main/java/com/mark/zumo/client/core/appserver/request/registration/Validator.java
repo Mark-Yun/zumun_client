@@ -18,7 +18,7 @@ enum Validator {
     EMPTY_CORPORATE_REGISTRATION_NUMBER(StoreRegistrationErrorCode.EMPTY_CORPORATE_REGISTRATION_NUMBER, request -> !TextUtils.isEmpty(request.corporateRegistrationNumber)),
     EMPTY_CORPORATE_REGISTRATION_SCAN_URL(StoreRegistrationErrorCode.EMPTY_CORPORATE_REGISTRATION_SCAN_URL, request -> !TextUtils.isEmpty(request.corporateRegistrationScanUrl)),
     EMPTY_COVER_IMAGE_URL(StoreRegistrationErrorCode.EMPTY_COVER_IMAGE_URL, request -> !TextUtils.isEmpty(request.thumbnailImageUrl)),
-    EMPTY_EMPTY_ADDRESS(StoreRegistrationErrorCode.EMPTY_EMPTY_ADDRESS, request -> !TextUtils.isEmpty(request.address)),
+    EMPTY_EMPTY_ADDRESS(StoreRegistrationErrorCode.EMPTY_EMPTY_ADDRESS, request -> !TextUtils.isEmpty(request.storeAddress)),
     EMPTY_EMPTY_LOCATION(StoreRegistrationErrorCode.EMPTY_EMPTY_LOCATION, request -> !(request.latitude < 0 || request.longitude < 0)),
     EMPTY_THUMBNAIL_IMAGE_URL(StoreRegistrationErrorCode.EMPTY_THUMBNAIL_IMAGE_URL, request -> !TextUtils.isEmpty(request.thumbnailImageUrl));
 

@@ -1,0 +1,27 @@
+<!--
+  ~ Copyright (c) 2018. Mark Soft - All Rights Reserved
+  ~ Unauthorized copying of this file, via any medium is strictly prohibited
+  ~ Proprietary and confidential
+  -->
+
+<resources>
+    <string name="app_name" translatable="false">Zumun Supervisor</string>
+    <string name="title_home" translatable="false">Home</string>
+    <string name="title_dashboard" translatable="false">Dashboard</string>
+    <string name="title_notifications" translatable="false">Notifications</string>
+
+    <string name="store_registration_hint_store_name">Store Name</string>
+    <string name="store_registration_hint_store_phone_number">Store Phone Number</string>
+    <string name="store_registration_hint_store_type">Store Type</string>
+    <string name="store_registration_hint_store_corporate_registration_name">Registration Name</string>
+    <string name="store_registration_hint_store_corporate_registration_owner_name">Registration Owner Name</string>
+    <string name="store_registration_hint_store_corporate_registration_address">Registration Address</string>
+    <string name="store_registration_hint_store_corporate_registration_number">Registration Number</string>
+    <string name="store_registration_hint_store_corporate_registration_scan">Registration Scan</string>
+    <string name="store_registration_hint_store_location">Store Location</string>
+    <string name="store_registration_hint_store_address">Store Address</string>
+    <string name="store_registration_hint_store_cover_image">Store Cover Image</string>
+    <string name="store_registration_hint_store_thumbnail_image">Store Thumbnail Image</string>
+    <string name="store_registration_category_store_info">Store Information</string>
+    <string name="store_registration_category_corporate_info">Corporate Information</string>
+</resources>

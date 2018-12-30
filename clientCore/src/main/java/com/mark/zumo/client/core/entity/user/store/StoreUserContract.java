@@ -28,7 +28,6 @@ public class StoreUserContract {
     @SerializedName(Schema.permission) @ColumnInfo(name = Schema.permission)
     public final String permission;
 
-
     public StoreUserContract(@NonNull final String uuid, final String storeUserUuid, final String storeUuid, final String permission) {
         this.uuid = uuid;
         this.storeUserUuid = storeUserUuid;

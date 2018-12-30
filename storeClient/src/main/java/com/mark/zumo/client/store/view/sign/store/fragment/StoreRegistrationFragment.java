@@ -25,6 +25,9 @@ import butterknife.ButterKnife;
  * Created by mark on 18. 12. 26.
  */
 public class StoreRegistrationFragment extends Fragment {
+
+    private StoreRegistrationListFragment storeRegistrationListFragment;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull final LayoutInflater inflater, @Nullable final ViewGroup container, @Nullable final Bundle savedInstanceState) {
@@ -35,11 +38,11 @@ public class StoreRegistrationFragment extends Fragment {
     }
 
     private void inflateView() {
-        StoreRegistrationListFragment storeRegistrationListFragment = ((StoreRegistrationListFragment) Fragment.instantiate(getContext(), StoreRegistrationListFragment.class.getName()))
+        storeRegistrationListFragment = ((StoreRegistrationListFragment) Fragment.instantiate(getContext(), StoreRegistrationListFragment.class.getName()))
                 .doOnStoreRegistrationReuqestSelected(this::onStoreRegistrationRequestSelected)
                 .doOnNewRequestClicked(this::onClickNewRequest);
 
-        StoreRegistrationCreateFragment storeRegistrationCreateFragment = (StoreRegistrationCreateFragment) Fragment.instantiate(getContext(), StoreRegistrationCreateFragment.class.getName());
+        StoreRegistrationCreateFragment storeRegistrationCreateFragment = createStoreRegistrationCreateFragment();
 
         getFragmentManager().beginTransaction()
                 .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
@@ -49,12 +52,17 @@ public class StoreRegistrationFragment extends Fragment {
     }
 
     private void onClickNewRequest() {
-        StoreRegistrationCreateFragment storeRegistrationCreateFragment = (StoreRegistrationCreateFragment) Fragment.instantiate(getContext(), StoreRegistrationCreateFragment.class.getName());
+        StoreRegistrationCreateFragment storeRegistrationCreateFragment = createStoreRegistrationCreateFragment();
 
         getFragmentManager().beginTransaction()
                 .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
                 .replace(R.id.store_registration_console_fragment, storeRegistrationCreateFragment)
                 .commit();
+    }
+
+    private StoreRegistrationCreateFragment createStoreRegistrationCreateFragment() {
+        return ((StoreRegistrationCreateFragment) Fragment.instantiate(getContext(), StoreRegistrationCreateFragment.class.getName()))
+                .doOnCreateRequestSuccess(storeRegistrationListFragment::onStoreRegistrationComplete);
     }
 
     private void onStoreRegistrationRequestSelected(StoreRegistrationRequest storeRegistrationRequest) {

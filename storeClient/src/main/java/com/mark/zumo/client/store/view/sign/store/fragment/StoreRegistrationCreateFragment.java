@@ -93,7 +93,9 @@ public class StoreRegistrationCreateFragment extends Fragment {
     private void inflateMapFragment() {
         String[] permissions = {Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION};
         if (!PermissionFragment.isGrantedPermissions(permissions)) {
-            Fragment permissionFragment = PermissionFragment.instantiate(permissions, this::inflateMapFragment);
+            Fragment permissionFragment = PermissionFragment.instantiate(permissions, this::inflateMapFragment)
+                    .setTitle(R.string.permission_location_title)
+                    .setMessage(R.string.permission_location_content);
 
             getFragmentManager().beginTransaction()
                     .replace(R.id.map_fragment, permissionFragment)
@@ -147,7 +149,7 @@ public class StoreRegistrationCreateFragment extends Fragment {
                 .setStoreName(storeName.getText().toString())
                 .setStorePhoneNumber(storePhoneNumber.getText().toString())
                 .setStoreType(storeType.getText().toString())
-                .setAddress(storeAddress.getText().toString())
+                .setStoreAddress(storeAddress.getText().toString())
                 .setLatitude(location.getLatitude())
                 .setLatitude(location.getLongitude())
                 .setCorporateRegistrationScanUrl(selectedScanImagePath)

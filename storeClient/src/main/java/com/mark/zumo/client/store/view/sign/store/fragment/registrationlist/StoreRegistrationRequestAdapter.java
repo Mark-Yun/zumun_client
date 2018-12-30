@@ -7,17 +7,20 @@
 package com.mark.zumo.client.store.view.sign.store.fragment.registrationlist;
 
 import android.support.annotation.NonNull;
+import android.support.v7.widget.AppCompatTextView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.mark.zumo.client.core.appserver.request.registration.StoreRegistrationRequest;
+import com.mark.zumo.client.core.util.DateUtil;
 import com.mark.zumo.client.store.R;
 
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 /**
@@ -49,6 +52,10 @@ class StoreRegistrationRequestAdapter extends RecyclerView.Adapter<StoreRegistra
     @Override
     public void onBindViewHolder(@NonNull final ViewHolder holder, final int position) {
         StoreRegistrationRequest storeRegistrationRequest = requestList.get(position);
+
+        holder.storeName.setText(storeRegistrationRequest.storeName);
+        holder.requestId.setText(storeRegistrationRequest.uuid);
+        holder.createdDate.setText(DateUtil.getLocalFormattedTime(storeRegistrationRequest.createdDate));
     }
 
     @Override
@@ -61,6 +68,12 @@ class StoreRegistrationRequestAdapter extends RecyclerView.Adapter<StoreRegistra
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder {
+
+        @BindView(R.id.request_id) AppCompatTextView requestId;
+        @BindView(R.id.store_name) AppCompatTextView storeName;
+        @BindView(R.id.result) AppCompatTextView result;
+        @BindView(R.id.created_date) AppCompatTextView createdDate;
+
         ViewHolder(final View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);

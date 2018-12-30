@@ -30,6 +30,7 @@ import java.io.File;
 import java.util.UUID;
 
 import io.reactivex.Maybe;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * Created by mark on 18. 7. 15.
@@ -158,27 +159,32 @@ public enum S3TransferManager {
 
     public Maybe<String> uploadThumbnailImage(Activity activity, String storeUuid, Uri target) {
         return Maybe.fromCallable(() -> getThumbnailImageDirPath(storeUuid))
-                .flatMap(s3Path -> uploadFile(activity, s3Path, target));
+                .flatMap(s3Path -> uploadFile(activity, s3Path, target))
+                .subscribeOn(Schedulers.io());
     }
 
     public Maybe<String> uploadCoverImage(Activity activity, String storeUuid, Uri target) {
         return Maybe.fromCallable(() -> getCoverImageDirPath(storeUuid))
-                .flatMap(s3Path -> uploadFile(activity, s3Path, target));
+                .flatMap(s3Path -> uploadFile(activity, s3Path, target))
+                .subscribeOn(Schedulers.io());
     }
 
     public Maybe<String> uploadMenuImage(Activity activity, String menuUuid, Uri target) {
         return Maybe.fromCallable(() -> getMenuImageDirPath(menuUuid))
-                .flatMap(s3Path -> uploadFile(activity, s3Path, target));
+                .flatMap(s3Path -> uploadFile(activity, s3Path, target))
+                .subscribeOn(Schedulers.io());
     }
 
     public Maybe<String> uploadBankScanImage(Activity activity, Uri target) {
         return Maybe.fromCallable(S3TransferManager::getBankAccountScanDirPath)
-                .flatMap(s3Path -> uploadFile(activity, s3Path, target));
+                .flatMap(s3Path -> uploadFile(activity, s3Path, target))
+                .subscribeOn(Schedulers.io());
     }
 
     public Maybe<String> uploadCorporateScanImage(Activity activity, String storeUserUuid, Uri target) {
         return Maybe.just(storeUserUuid)
                 .map(S3TransferManager::getCorporateScanImageDirPath)
-                .flatMap(s3Path -> uploadFile(activity, s3Path, target));
+                .flatMap(s3Path -> uploadFile(activity, s3Path, target))
+                .subscribeOn(Schedulers.io());
     }
 }

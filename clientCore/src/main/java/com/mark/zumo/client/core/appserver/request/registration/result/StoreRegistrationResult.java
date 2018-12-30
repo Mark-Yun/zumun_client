@@ -9,6 +9,7 @@ package com.mark.zumo.client.core.appserver.request.registration.result;
 import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
+import android.support.annotation.NonNull;
 
 import com.google.gson.annotations.SerializedName;
 
@@ -18,10 +19,10 @@ import com.google.gson.annotations.SerializedName;
 @Entity(tableName = StoreRegistrationResult.Schema.table)
 public class StoreRegistrationResult {
 
-    @PrimaryKey @SerializedName(Schema.id) @ColumnInfo(name = Schema.id)
-    public final long id;
-    @SerializedName(Schema.requestId) @ColumnInfo(name = Schema.requestId)
-    public final long requestId;
+    @NonNull @PrimaryKey @SerializedName(Schema.uuid) @ColumnInfo(name = Schema.uuid)
+    public final String uuid;
+    @SerializedName(Schema.storeRegistrationRequestUuid) @ColumnInfo(name = Schema.storeRegistrationRequestUuid)
+    public final String storeRegistrationRequestUuid;
     @SerializedName(Schema.result) @ColumnInfo(name = Schema.result)
     public final String result;
     @SerializedName(Schema.comment) @ColumnInfo(name = Schema.comment)
@@ -29,9 +30,9 @@ public class StoreRegistrationResult {
     @SerializedName(Schema.createdDate) @ColumnInfo(name = Schema.createdDate)
     public final String createdDate;
 
-    public StoreRegistrationResult(final long id, final long requestId, final String result, final String comment, final String createdDate) {
-        this.id = id;
-        this.requestId = requestId;
+    public StoreRegistrationResult(@NonNull final String uuid, final String storeRegistrationRequestUuid, final String result, final String comment, final String createdDate) {
+        this.uuid = uuid;
+        this.storeRegistrationRequestUuid = storeRegistrationRequestUuid;
         this.result = result;
         this.comment = comment;
         this.createdDate = createdDate;
@@ -39,8 +40,8 @@ public class StoreRegistrationResult {
 
     public interface Schema {
         String table = "store_registration_result";
-        String id = "id";
-        String requestId = "request_id";
+        String uuid = "store_registration_result_uuid";
+        String storeRegistrationRequestUuid = "store_registration_request_uuid";
         String result = "result";
         String comment = "comment";
         String createdDate = "created_date";

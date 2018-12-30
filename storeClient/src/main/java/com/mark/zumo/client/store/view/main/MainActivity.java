@@ -22,6 +22,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.AppCompatTextView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -48,6 +49,9 @@ import butterknife.ButterKnife;
  * Created by mark on 18. 7. 1.
  */
 public class MainActivity extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener {
+
+    private static final String TAG = MainActivity.class.getSimpleName();
+
     @BindView(R.id.toolbar) Toolbar toolbar;
     @BindView(R.id.nav_view) NavigationView navView;
     @BindView(R.id.drawer_layout) DrawerLayout drawer;
@@ -78,21 +82,19 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         toggle.syncState();
 
         navView.setNavigationItemSelectedListener(this);
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
 
         checkSessionAndInflateMainFragmentIfPossible();
     }
 
     private void checkSessionAndInflateMainFragmentIfPossible() {
         if (!mainViewModel.hasStoreUserSession()) { //doesn't have user session
+            Log.d(TAG, "checkSessionAndInflateMainFragmentIfPossible: doesn't have storeUserSession");
             UserSignUpActivity.start(this);
         } else if (!mainViewModel.hasSessionStore()) { //doesn't have session store
+            Log.d(TAG, "checkSessionAndInflateMainFragmentIfPossible: doesn't have sessionStore");
             mainViewModel.hasSessionStoreAsync().observe(this, this::onSessionStoreLoaded);
         } else { //has session store
+            Log.d(TAG, "checkSessionAndInflateMainFragmentIfPossible: session prepared. inflateMainFragment");
             inflateMainFragment();
         }
     }
@@ -103,10 +105,13 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     }
 
     private void onSessionStoreLoaded(boolean hasSessionStore) {
+        Log.d(TAG, "onSessionStoreLoaded: hasSessionStore=" + hasSessionStore);
         if (!hasSessionStore) {
             StoreSelectFragment storeSelectFragment = ((StoreSelectFragment) StoreSelectFragment.instantiate(this, StoreSelectFragment.class.getName()))
                     .onSelectStore(this::onSelectedStore);
             updateMainFragment(storeSelectFragment);
+        } else {
+
         }
     }
 

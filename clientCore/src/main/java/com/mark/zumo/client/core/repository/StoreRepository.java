@@ -92,14 +92,37 @@ public class StoreRepository {
                 .toObservable();
     }
 
+    public Observable<List<StoreRegistrationRequest>> getStoreRegistrationRequestListAll(int limit) {
+        Maybe<List<StoreRegistrationRequest>> storeRegistrationRequestListApi = networkRepository.getStoreRegistrationRequestAll(limit)
+                .doOnSuccess(diskRepository::insertStoreRegistrationRequestList);
+        Maybe<List<StoreRegistrationRequest>> storeRegistrationRequestListByDB = diskRepository.getStoreRegistrationRequestAll(limit);
+
+        return Maybe.merge(storeRegistrationRequestListByDB, storeRegistrationRequestListApi)
+                .toObservable();
+    }
+
+    public Maybe<StoreRegistrationRequest> getStoreRegistrationRequestByUuidFromDisk(String uuid) {
+        return diskRepository.getStoreRegistrationRequestByUuid(uuid);
+    }
+
+    public Maybe<StoreRegistrationResult> approveStoreRegistration(StoreRegistrationRequest storeRegistrationRequest) {
+        return networkRepository.approveStoreRegistration(storeRegistrationRequest)
+                .doOnSuccess(diskRepository::insertStoreRegistrationResult);
+    }
+
+    public Maybe<StoreRegistrationResult> rejectStoreRegistration(StoreRegistrationRequest storeRegistrationRequest) {
+        return networkRepository.rejectStoreRegistration(storeRegistrationRequest)
+                .doOnSuccess(diskRepository::insertStoreRegistrationResult);
+    }
+
     public Maybe<StoreRegistrationRequest> createStoreRegistrationRequest(StoreRegistrationRequest storeRegistrationRequest) {
         return networkRepository.createStoreRegistrationRequest(storeRegistrationRequest)
                 .doOnSuccess(diskRepository::insertStoreRegistrationRequest);
     }
 
-    public Observable<List<StoreRegistrationResult>> getStoreRegistrationResultListByRequestId(long requestId) {
-        Maybe<List<StoreRegistrationResult>> storeRegistrationResultListApi = networkRepository.getStoreRegistraionResultByRequestId(requestId);
-        Maybe<List<StoreRegistrationResult>> storeRegistrationResultListByDB = diskRepository.getStoreRegistrationResultByRequestId(requestId);
+    public Observable<List<StoreRegistrationResult>> getStoreRegistrationResultListByRequestId(String storeRegistrationRequestUuid) {
+        Maybe<List<StoreRegistrationResult>> storeRegistrationResultListApi = networkRepository.getStoreRegistrationResultByRequestUuid(storeRegistrationRequestUuid);
+        Maybe<List<StoreRegistrationResult>> storeRegistrationResultListByDB = diskRepository.getStoreRegistrationResultByRequestUuid(storeRegistrationRequestUuid);
 
         return Maybe.merge(storeRegistrationResultListByDB, storeRegistrationResultListApi)
                 .toObservable();

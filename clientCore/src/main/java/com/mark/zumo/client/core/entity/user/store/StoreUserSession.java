@@ -93,7 +93,7 @@ public class StoreUserSession {
         }
 
         public StoreUserSession build() {
-            return new StoreUserSession(email, uuid, token, password, System.currentTimeMillis());
+            return new StoreUserSession(email, token, uuid, password, System.currentTimeMillis());
         }
     }
 }

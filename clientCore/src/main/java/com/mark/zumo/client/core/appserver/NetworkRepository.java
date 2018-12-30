@@ -50,7 +50,7 @@ public interface NetworkRepository {
     @GET("users/store/handshake")
     Maybe<StoreUserHandShakeResponse> signInHandShake(@Query(StoreUser.Schema.email) String storeUserEmail);
 
-    @GET("users/store/contract")
+    @GET("store/registration/contract")
     Maybe<List<StoreUserContract>> getStoreUserContractListByStoreUserUuid(@Query(StoreUser.Schema.uuid) String storeUserUuid);
 
     @POST("users/store")
@@ -68,21 +68,28 @@ public interface NetworkRepository {
     Maybe<Store> getStore(@Path(Store.Schema.uuid) String storeUuid);
 
     @GET("store")
-    Maybe<List<Store>> getNearByStore(@Query("latitude") final double latitude,
-                                      @Query("longitude") final double longitude,
+    Maybe<List<Store>> getNearByStore(@Query(Store.Schema.latitude) final double latitude,
+                                      @Query(Store.Schema.longitude) final double longitude,
                                       @Query("distance") final double distanceKm);
 
 
-    @POST("store/registration")
+    @POST("store/registration/request")
     Maybe<StoreRegistrationRequest> createStoreRegistrationRequest(@Body StoreRegistrationRequest storeRegistrationRequest);
 
-    @GET("store/registration")
+    @GET("store/registration/request")
     Maybe<List<StoreRegistrationRequest>> getStoreRegistrationRequestByStoreUserUuid(@Query(StoreRegistrationRequest.Schema.storeUserUuid) String storeUserUuid);
 
+    @GET("store/registration/request")
+    Maybe<List<StoreRegistrationRequest>> getStoreRegistrationRequestAll(@Query("limit") int limit);
 
     @GET("store/registration/result")
-    Maybe<List<StoreRegistrationResult>> getStoreRegistraionResultByRequestId(@Query(StoreRegistrationResult.Schema.requestId) long requestId);
+    Maybe<List<StoreRegistrationResult>> getStoreRegistrationResultByRequestUuid(@Query(StoreRegistrationResult.Schema.storeRegistrationRequestUuid) String storeRegistrationRequestUuid);
 
+    @POST("store/registration/approve")
+    Maybe<StoreRegistrationResult> approveStoreRegistration(@Body StoreRegistrationRequest storeRegistrationRequest);
+
+    @POST("store/registration/reject")
+    Maybe<StoreRegistrationResult> rejectStoreRegistration(@Body StoreRegistrationRequest storeRegistrationRequest);
 
     @POST("menu")
     Maybe<Menu> createMenu(@Body Menu menu);

@@ -268,11 +268,23 @@ public interface DiskRepository {
     @Query("SELECT * FROM " + StoreRegistrationRequest.Schema.table + " WHERE store_user_uuid LIKE :storeUserUuid")
     Maybe<List<StoreRegistrationRequest>> getStoreRegistrationRequestListByStoreUserUuid(String storeUserUuid);
 
+    @Query("SELECT * FROM " + StoreRegistrationRequest.Schema.table + " ORDER BY create_date LIMIT :limit")
+    Maybe<List<StoreRegistrationRequest>> getStoreRegistrationRequestAll(int limit);
+
+    @Query("SELECT * FROM " + StoreRegistrationRequest.Schema.table + " WHERE store_registration_request_uuid = :uuid")
+    Maybe<StoreRegistrationRequest> getStoreRegistrationRequestByUuid(String uuid);
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertStoreRegistrationRequest(StoreRegistrationRequest storeRegistrationRequest);
 
-    @Query("SELECT * FROM " + StoreRegistrationResult.Schema.table + " WHERE request_id LIKE :requestId")
-    Maybe<List<StoreRegistrationResult>> getStoreRegistrationResultByRequestId(long requestId);
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    void insertStoreRegistrationRequestList(List<StoreRegistrationRequest> storeRegistrationRequestList);
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    void insertStoreRegistrationResult(StoreRegistrationResult storeRegistrationResult);
+
+    @Query("SELECT * FROM " + StoreRegistrationResult.Schema.table + " WHERE store_registration_request_uuid LIKE :storeRegistrationRequestUuid")
+    Maybe<List<StoreRegistrationResult>> getStoreRegistrationResultByRequestUuid(String storeRegistrationRequestUuid);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertStoreUserConractList(List<StoreUserContract> storeUserContractList);

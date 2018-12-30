@@ -59,9 +59,12 @@ public class MainViewModel extends AndroidViewModel {
 
     public LiveData<Boolean> hasSessionStoreAsync() {
         MutableLiveData<Boolean> liveData = new MutableLiveData<>();
+        liveData.setValue(false);
+
         storeUserManager.getSessionStoreAsync()
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSuccess(sessionStore -> liveData.setValue(sessionStore != null))
+                .doOnComplete(() -> liveData.setValue(liveData.getValue()))
                 .doOnSubscribe(compositeDisposable::add)
                 .subscribe();
         return liveData;

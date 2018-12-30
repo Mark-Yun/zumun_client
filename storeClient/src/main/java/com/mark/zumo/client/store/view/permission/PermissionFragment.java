@@ -50,10 +50,13 @@ public class PermissionFragment extends Fragment {
     @BindView(R.id.title) AppCompatTextView title;
     @BindView(R.id.content) AppCompatTextView content;
 
-    private PermissionGrantListener listener;
+    private Runnable listener;
     private String[] permissions;
 
-    public static Fragment instantiate(String[] permissions, PermissionGrantListener listener) {
+    private int titleRes;
+    private int messageRes;
+
+    public static PermissionFragment instantiate(String[] permissions, Runnable listener) {
         PermissionFragment permissionFragment = new PermissionFragment();
         permissionFragment.permissions = permissions;
         permissionFragment.listener = listener;
@@ -68,6 +71,16 @@ public class PermissionFragment extends Fragment {
         }
 
         return true;
+    }
+
+    public PermissionFragment setTitle(int titleRes) {
+        this.titleRes = titleRes;
+        return this;
+    }
+
+    public PermissionFragment setMessage(int messageRes) {
+        this.messageRes = messageRes;
+        return this;
     }
 
     @Nullable
@@ -85,10 +98,8 @@ public class PermissionFragment extends Fragment {
     }
 
     private void inflatePermissionDescription() {
-        String[] split = permissions[0].split("\\.");
-        PermissionResource permissionResource = PermissionResource.valueOf(split[split.length - 1]);
-        title.setText(permissionResource.titleRes);
-        content.setText(permissionResource.contentRes);
+        title.setText(titleRes);
+        content.setText(messageRes);
     }
 
     @OnClick(R.id.request_permission)
@@ -97,7 +108,7 @@ public class PermissionFragment extends Fragment {
         if (!isGrantedPermissions(permissions)) {
             ActivityCompat.requestPermissions(getActivity(), permissions, REQUEST_CODE);
         } else {
-            listener.onPermissionGranted();
+            listener.run();
         }
     }
 
@@ -111,7 +122,7 @@ public class PermissionFragment extends Fragment {
 
                     // permission was granted, yay! Do the
                     // contacts-related task you need to do.
-                    listener.onPermissionGranted();
+                    listener.run();
 
                 } else {
 
@@ -124,21 +135,5 @@ public class PermissionFragment extends Fragment {
             // other 'case' lines to check for other
             // permissions this app might request
         }
-    }
-
-    private enum PermissionResource {
-        ACCESS_FINE_LOCATION(R.string.permission_location_title, R.string.permission_location_content),;
-
-        private final int titleRes;
-        private final int contentRes;
-
-        PermissionResource(final int titleRes, final int contentRes) {
-            this.titleRes = titleRes;
-            this.contentRes = contentRes;
-        }
-    }
-
-    public interface PermissionGrantListener {
-        void onPermissionGranted();
     }
 }

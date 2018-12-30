@@ -17,6 +17,7 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+
     def versionPropsFile = file('version.properties')
     if (!versionPropsFile.canRead()) {
         throw new GradleException("Could not read version.properties!")
@@ -60,19 +61,6 @@ android {
             )
         }
     }
-
-    buildTypes {
-        release {
-            minifyEnabled true
-            shrinkResources true
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), '../proguard-rules.pro'
-        }
-
-        debug {
-            versionNameSuffix 'd'
-        }
-    }
-
 }
 
 private static Integer generateVersionCode(minimumSdk, major, minor, patch) {
