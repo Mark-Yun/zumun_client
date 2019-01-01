@@ -93,6 +93,7 @@
     <string name="content_desc_navigation_drawer_open">Open navigation drawer</string>
     <string name="content_desc_navigation_drawer_close">Close navigation drawer</string>
 
+    <string name="title_home">Home</string>
     <string name="title_order">Order</string>
     <string name="title_menu">Menu</string>
     <string name="title_amount">Amount</string>
@@ -139,6 +140,7 @@
     <string name="menu_creator_title">Create New Menu</string>
 
     <string name="main_activity_sign_out_title">Sign Out</string>
+    <string name="main_activity_select_store">Select Store</string>
     <string name="sign_out_dialog_title">Sign Out</string>
     <string name="sign_out_dialog_message">Sign out from current user</string>
 

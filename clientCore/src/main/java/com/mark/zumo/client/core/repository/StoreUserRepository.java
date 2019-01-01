@@ -84,6 +84,7 @@ public enum StoreUserRepository {
         Maybe<List<StoreUserContract>> storeUserContractListDB = diskRepository.getStoreUserContractListbyStoreUserUuid(storeUserUuid);
 
         return Maybe.merge(storeUserContractListDB, storeUserContractListApi)
+                .distinctUntilChanged()
                 .toObservable();
     }
 }

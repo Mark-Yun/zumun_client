@@ -72,7 +72,7 @@ public class StoreRegistrationViewModel extends AndroidViewModel {
         return liveData;
     }
 
-    public LiveData<StoreRegistrationResult> reject(String requestUuid) {
+    public LiveData<StoreRegistrationResult> reject(String requestUuid, String comment) {
         MutableLiveData<StoreRegistrationResult> liveData = new MutableLiveData<>();
 
         storeRegistrationManager.getStoreRegistrationRequestByUuidFromDisk(requestUuid)

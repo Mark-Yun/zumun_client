@@ -14,7 +14,9 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputEditText;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.AppCompatEditText;
 import android.support.v7.widget.AppCompatImageView;
 
 import com.google.android.gms.maps.CameraUpdate;
@@ -24,6 +26,7 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.mark.zumo.client.core.appserver.request.registration.StoreRegistrationRequest;
+import com.mark.zumo.client.core.appserver.request.registration.result.StoreRegistrationResult;
 import com.mark.zumo.client.core.util.glide.GlideApp;
 import com.mark.zumo.client.supervisor.R;
 import com.mark.zumo.client.supervisor.view.permission.PermissionFragment;
@@ -138,11 +141,38 @@ public class StoreRegistrationRequestDetailActivity extends AppCompatActivity {
 
     @OnClick(R.id.ok)
     void OnClickOk() {
-        storeRegistrationViewModel.approve(getIntent().getStringExtra(STORE_REGISTRATION_REQUEST_UUID_KEY));
+        final String requestUuid = getIntent().getStringExtra(STORE_REGISTRATION_REQUEST_UUID_KEY);
+        new AlertDialog.Builder(this)
+                .setTitle("Accept Request")
+                .setMessage("accept request?")
+                .setPositiveButton(android.R.string.ok, (dialog, what) -> storeRegistrationViewModel.approve(requestUuid).observe(this, this::onActionResult))
+                .setNegativeButton(android.R.string.cancel, (dialog, what) -> dialog.dismiss())
+                .create()
+                .show();
     }
 
     @OnClick(R.id.cancel)
     void OnClickCancel() {
-        storeRegistrationViewModel.reject(getIntent().getStringExtra(STORE_REGISTRATION_REQUEST_UUID_KEY));
+        final String requestUuid = getIntent().getStringExtra(STORE_REGISTRATION_REQUEST_UUID_KEY);
+        final AppCompatEditText editText = new AppCompatEditText(this);
+        new AlertDialog.Builder(this)
+                .setTitle("Reject Request")
+                .setMessage("reject request?\n Input Reject Comment")
+                .setView(editText)
+                .setPositiveButton(android.R.string.ok, (dialog, what) -> storeRegistrationViewModel.reject(requestUuid, editText.getText().toString()).observe(this, this::onActionResult))
+                .setNegativeButton(android.R.string.cancel, (dialog, what) -> dialog.dismiss())
+                .create()
+                .show();
+    }
+
+    private void onActionResult(StoreRegistrationResult storeRegistrationResult) {
+        new AlertDialog.Builder(this)
+                .setTitle("Result")
+                .setMessage(storeRegistrationResult.result)
+                .setNeutralButton(android.R.string.ok, (dialog, which) -> {
+                    dialog.dismiss();
+                    finish();
+                }).create()
+                .show();
     }
 }

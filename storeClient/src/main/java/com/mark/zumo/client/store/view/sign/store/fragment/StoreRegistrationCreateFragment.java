@@ -151,7 +151,7 @@ public class StoreRegistrationCreateFragment extends Fragment {
                 .setStoreType(storeType.getText().toString())
                 .setStoreAddress(storeAddress.getText().toString())
                 .setLatitude(location.getLatitude())
-                .setLatitude(location.getLongitude())
+                .setLongitude(location.getLongitude())
                 .setCorporateRegistrationScanUrl(selectedScanImagePath)
                 .setCorporateRegistrationName(corporateRegistrationName.getText().toString())
                 .setCorporateRegistrationOwnerName(corporateRegistrationOwnerName.getText().toString())

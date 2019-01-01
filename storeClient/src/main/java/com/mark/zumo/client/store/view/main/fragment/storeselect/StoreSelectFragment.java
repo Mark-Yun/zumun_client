@@ -20,6 +20,8 @@ import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
+import android.support.v7.widget.AppCompatButton;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,24 +34,34 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 /**
  * Created by mark on 18. 12. 27.
  */
 public class StoreSelectFragment extends Fragment {
 
+    private static final String TAG = "StoreSelectFragment";
+
     @BindView(R.id.view_pager) ViewPager viewPager;
     @BindView(R.id.tab_indicator) TabLayout tabIndicator;
     @BindView(R.id.store_select_layout) ConstraintLayout storeSelectLayout;
     @BindView(R.id.non_store_layout) ConstraintLayout nonStoreLayout;
+    @BindView(R.id.move_store_registration_up) AppCompatButton moveStoreRegistrationUp;
 
     private MainViewModel mainViewModel;
 
     private StoreSelectListener listener;
+    private Runnable storeRegistrationAction;
     private StoreSelectPagerAdapter storeSelectPagerAdapter;
 
     public StoreSelectFragment onSelectStore(final StoreSelectListener listener) {
         this.listener = listener;
+        return this;
+    }
+
+    public StoreSelectFragment onClickStoreRegistration(Runnable storeRegistrationAction) {
+        this.storeRegistrationAction = storeRegistrationAction;
         return this;
     }
 
@@ -76,7 +88,9 @@ public class StoreSelectFragment extends Fragment {
     }
 
     private void onLoadedStoreContractList(List<StoreUserContract> storeUserContractList) {
-        boolean hasStoreUserContract = storeUserContractList == null || storeUserContractList.size() < 1;
+        boolean hasStoreUserContract = storeUserContractList != null && storeUserContractList.size() > 0;
+
+        Log.d(TAG, "onLoadedStoreContractList: hasStoreUserContract=" + hasStoreUserContract);
 
         storeSelectLayout.setVisibility(hasStoreUserContract ? View.VISIBLE : View.GONE);
         nonStoreLayout.setVisibility(hasStoreUserContract ? View.GONE : View.VISIBLE);
@@ -84,6 +98,11 @@ public class StoreSelectFragment extends Fragment {
         if (hasStoreUserContract) {
             storeSelectPagerAdapter.setStoreUserContractList(storeUserContractList);
         }
+    }
+
+    @OnClick(R.id.move_store_registration_up)
+    public void onViewClicked() {
+        storeRegistrationAction.run();
     }
 
     public interface StoreSelectListener extends StoreSelectPagerAdapter.StoreSelectListener {

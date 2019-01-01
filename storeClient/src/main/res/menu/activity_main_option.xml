@@ -7,6 +7,11 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
+        android:id="@+id/select_store"
+        android:icon="@drawable/ic_store_white_48dp"
+        android:title="@string/main_activity_select_store"
+        app:showAsAction="never" />
+    <item
         android:id="@+id/sign_out"
         android:icon="@drawable/ic_exit_to_app_white_48dp"
         android:title="@string/main_activity_sign_out_title"

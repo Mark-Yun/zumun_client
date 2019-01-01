@@ -95,24 +95,30 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
             mainViewModel.hasSessionStoreAsync().observe(this, this::onSessionStoreLoaded);
         } else { //has session store
             Log.d(TAG, "checkSessionAndInflateMainFragmentIfPossible: session prepared. inflateMainFragment");
+            inflateStoreInformation();
             inflateMainFragment();
         }
     }
 
     private void inflateMainFragment() {
-        inflateStoreInformation();
         mainViewModel.findCustomer(this);
     }
 
     private void onSessionStoreLoaded(boolean hasSessionStore) {
         Log.d(TAG, "onSessionStoreLoaded: hasSessionStore=" + hasSessionStore);
-        if (!hasSessionStore) {
-            StoreSelectFragment storeSelectFragment = ((StoreSelectFragment) StoreSelectFragment.instantiate(this, StoreSelectFragment.class.getName()))
-                    .onSelectStore(this::onSelectedStore);
-            updateMainFragment(storeSelectFragment);
-        } else {
+        if (hasSessionStore) {
 
+        } else {
+            StoreSelectFragment storeSelectFragment = ((StoreSelectFragment) StoreSelectFragment.instantiate(this, StoreSelectFragment.class.getName()))
+                    .onSelectStore(this::onSelectedStore)
+                    .onClickStoreRegistration(this::onClickStoreRegistration);
+            updateMainFragment(storeSelectFragment);
         }
+    }
+
+    private void onClickStoreRegistration() {
+        Fragment fragment = Fragment.instantiate(this, StoreRegistrationFragment.class.getName());
+        updateMainFragment(fragment);
     }
 
     private void onSelectedStore(String storeUuid) {
@@ -121,6 +127,10 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 
     private void inflateStoreInformation() {
         Store store = mainViewModel.getSessionStore();
+
+        if (store == null) {
+            return;
+        }
 
         setTitle(store.name);
 
@@ -159,7 +169,9 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_menu_order) {
+        if (id == R.id.nav_home) {
+            checkSessionAndInflateMainFragmentIfPossible();
+        } else if (id == R.id.nav_menu_order) {
             Fragment fragment = Fragment.instantiate(this, OrderFragment.class.getName());
             updateMainFragment(fragment);
         } else if (id == R.id.nav_setting) {
@@ -199,6 +211,9 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
             case R.id.sign_out:
                 onSelectSignOutOption();
                 return true;
+            case R.id.select_store:
+                Fragment fragment = Fragment.instantiate(this, StoreSelectFragment.class.getName());
+                updateMainFragment(fragment);
             default:
                 return super.onOptionsItemSelected(item);
         }

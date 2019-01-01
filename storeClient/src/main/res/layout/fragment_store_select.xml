@@ -9,20 +9,11 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <android.support.v7.widget.AppCompatImageView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:scaleType="fitXY"
-        android:src="@drawable/background_image_sign_up_coffeehouse" />
-
-    <com.wonderkiln.blurkit.BlurLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
-
     <android.support.constraint.ConstraintLayout
         android:id="@+id/store_select_layout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:visibility="gone">
 
         <android.support.v4.view.ViewPager
             android:id="@+id/view_pager"
@@ -45,7 +36,8 @@
     <android.support.constraint.ConstraintLayout
         android:id="@+id/non_store_layout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:visibility="gone">
 
         <android.support.v7.widget.AppCompatTextView
             android:id="@+id/title"
