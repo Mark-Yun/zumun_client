@@ -9,11 +9,13 @@ package com.mark.zumo.client.store.view.sign.store.fragment.registrationlist;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.AppCompatTextView;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.mark.zumo.client.core.appserver.request.registration.StoreRegistrationRequest;
+import com.mark.zumo.client.core.appserver.request.registration.result.StoreRegistrationResult;
 import com.mark.zumo.client.core.util.DateUtil;
 import com.mark.zumo.client.store.R;
 
@@ -54,7 +56,19 @@ class StoreRegistrationRequestAdapter extends RecyclerView.Adapter<StoreRegistra
         StoreRegistrationRequest storeRegistrationRequest = requestList.get(position);
 
         holder.storeName.setText(storeRegistrationRequest.storeName);
-        holder.requestId.setText(storeRegistrationRequest.uuid);
+        if (!TextUtils.isEmpty(storeRegistrationRequest.uuid) && storeRegistrationRequest.uuid.length() > 5) {
+            holder.requestId.setText(storeRegistrationRequest.uuid.substring(0, 4));
+        }
+
+        int statusRes = StoreRegistrationResult.Status.REQUESTED.stringRes;
+        if (storeRegistrationRequest.resultList != null && storeRegistrationRequest.resultList.size() > 0) {
+            try {
+                statusRes = StoreRegistrationResult.Status.valueOf(storeRegistrationRequest.resultList.get(0).status).stringRes;
+            } catch (IllegalArgumentException e) {
+            }
+        }
+
+        holder.status.setText(statusRes);
         holder.createdDate.setText(DateUtil.getLocalFormattedTime(storeRegistrationRequest.createdDate));
     }
 
@@ -71,7 +85,7 @@ class StoreRegistrationRequestAdapter extends RecyclerView.Adapter<StoreRegistra
 
         @BindView(R.id.request_id) AppCompatTextView requestId;
         @BindView(R.id.store_name) AppCompatTextView storeName;
-        @BindView(R.id.result) AppCompatTextView result;
+        @BindView(R.id.status) AppCompatTextView status;
         @BindView(R.id.created_date) AppCompatTextView createdDate;
 
         ViewHolder(final View itemView) {

@@ -14,7 +14,6 @@ import android.arch.lifecycle.MutableLiveData;
 import android.location.Location;
 import android.net.Uri;
 import android.support.annotation.NonNull;
-import android.util.Log;
 
 import com.mark.zumo.client.core.appserver.request.registration.StoreRegistrationRequest;
 import com.mark.zumo.client.core.appserver.request.registration.result.StoreRegistrationResult;
@@ -26,6 +25,7 @@ import com.mark.zumo.client.store.model.StoreUserManager;
 import java.util.List;
 
 import io.reactivex.Maybe;
+import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 
@@ -59,12 +59,16 @@ public class StoreRegistrationViewModel extends AndroidViewModel {
 
         Maybe.fromCallable(storeUserManager::getStoreUserSessionSync)
                 .switchIfEmpty(storeUserManager.getStoreUserSessionAsync())
-                .doOnSuccess(a -> Log.d(TAG, "getCombinedStoreRegistrationRequest: " + a))
                 .map(storeUserSession -> storeUserSession.uuid)
                 .flatMapObservable(storeStoreManager::getStoreRegistrationRequestByStoreUserUuid)
-                .observeOn(AndroidSchedulers.mainThread())
+                .flatMapMaybe(storeRegistrationRequestList ->
+                        Observable.fromIterable(storeRegistrationRequestList)
+                                .flatMap(storeRegistrationRequest -> storeStoreManager.getStoreRegistrationResultByRequestId(storeRegistrationRequest.uuid)
+                                        .map(storeRegistrationResultList -> storeRegistrationRequest.resultList = storeRegistrationResultList)
+                                        .map(results -> storeRegistrationRequest))
+                                .toList().toMaybe()
+                ).observeOn(AndroidSchedulers.mainThread())
                 .doOnNext(liveData::setValue)
-                .doOnError(e -> Log.e(TAG, "getCombinedStoreRegistrationRequest: ", e))
                 .doOnSubscribe(compositeDisposable::add)
                 .subscribe();
 

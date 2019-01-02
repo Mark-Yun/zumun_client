@@ -40,7 +40,7 @@ public class StoreRegistrationListFragment extends Fragment {
     @BindView(R.id.recycler_view) RecyclerView recyclerView;
     @BindView(R.id.request_id) AppCompatTextView requestId;
     @BindView(R.id.store_name) AppCompatTextView storeName;
-    @BindView(R.id.result) AppCompatTextView result;
+    @BindView(R.id.status) AppCompatTextView result;
     @BindView(R.id.created_date) AppCompatTextView createdDate;
 
     private StoreRegistrationRequestSelectListener listener;
@@ -55,7 +55,7 @@ public class StoreRegistrationListFragment extends Fragment {
         storeRegistrationViewModel = ViewModelProviders.of(this).get(StoreRegistrationViewModel.class);
     }
 
-    public StoreRegistrationListFragment doOnStoreRegistrationReuqestSelected(final StoreRegistrationRequestSelectListener listener) {
+    public StoreRegistrationListFragment doOnStoreRegistrationRequestSelected(final StoreRegistrationRequestSelectListener listener) {
         this.listener = listener;
         return this;
     }

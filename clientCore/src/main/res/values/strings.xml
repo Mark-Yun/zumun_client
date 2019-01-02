@@ -54,4 +54,8 @@
     <string name="store_registration_error_message_empty_address">Address is empty</string>
     <string name="store_registration_error_message_empty_cover_image_url">Cover image is empty</string>
     <string name="store_registration_error_message_empty_thumbnail_image_url">Thumbnail image is empty</string>
+
+    <string name="store_registration_result_result_requested">Reviewing</string>
+    <string name="store_registration_result_result_approved">Approved</string>
+    <string name="store_registration_result_result_rejected">Rejected</string>
 </resources>

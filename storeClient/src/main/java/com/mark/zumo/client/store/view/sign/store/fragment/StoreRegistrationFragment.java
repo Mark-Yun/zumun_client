@@ -39,7 +39,7 @@ public class StoreRegistrationFragment extends Fragment {
 
     private void inflateView() {
         storeRegistrationListFragment = ((StoreRegistrationListFragment) Fragment.instantiate(getContext(), StoreRegistrationListFragment.class.getName()))
-                .doOnStoreRegistrationReuqestSelected(this::onStoreRegistrationRequestSelected)
+                .doOnStoreRegistrationRequestSelected(this::onStoreRegistrationRequestSelected)
                 .doOnNewRequestClicked(this::onClickNewRequest);
 
         StoreRegistrationCreateFragment storeRegistrationCreateFragment = createStoreRegistrationCreateFragment();

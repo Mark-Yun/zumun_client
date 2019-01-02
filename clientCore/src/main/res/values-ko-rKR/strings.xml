@@ -53,5 +53,9 @@
     <string name="store_registration_error_message_empty_location">위치를 입력해주세요</string>
     <string name="store_registration_error_message_empty_address">주소를 입력해주세요</string>
     <string name="store_registration_error_message_empty_cover_image_url">배경 이미지를 입력해주세요</string>
-    <string name="store_registration_error_message_empty_thumbnail_image_url">로고 이미지를 입력해주세</string>
+    <string name="store_registration_error_message_empty_thumbnail_image_url">로고 이미지를 입력해주세요</string>
+
+    <string name="store_registration_result_result_requested">심사중</string>
+    <string name="store_registration_result_result_approved">승인 완료</string>
+    <string name="store_registration_result_result_rejected">재신청 필요</string>
 </resources>

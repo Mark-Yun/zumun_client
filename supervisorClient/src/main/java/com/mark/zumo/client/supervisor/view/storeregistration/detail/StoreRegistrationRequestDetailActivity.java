@@ -168,7 +168,7 @@ public class StoreRegistrationRequestDetailActivity extends AppCompatActivity {
     private void onActionResult(StoreRegistrationResult storeRegistrationResult) {
         new AlertDialog.Builder(this)
                 .setTitle("Result")
-                .setMessage(storeRegistrationResult.result)
+                .setMessage(storeRegistrationResult.status)
                 .setNeutralButton(android.R.string.ok, (dialog, which) -> {
                     dialog.dismiss();
                     finish();
