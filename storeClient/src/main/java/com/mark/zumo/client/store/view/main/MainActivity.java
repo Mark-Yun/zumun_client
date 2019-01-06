@@ -107,7 +107,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     private void onSessionStoreLoaded(boolean hasSessionStore) {
         Log.d(TAG, "onSessionStoreLoaded: hasSessionStore=" + hasSessionStore);
         if (hasSessionStore) {
-
+            inflateStoreInformation();
         } else {
             StoreSelectFragment storeSelectFragment = ((StoreSelectFragment) StoreSelectFragment.instantiate(this, StoreSelectFragment.class.getName()))
                     .onSelectStore(this::onSelectedStore)

@@ -124,7 +124,7 @@ public class MenuFragment extends Fragment {
                 .into(storeCoverImage);
 
         storeCoverTitle.setText(store.name);
-        cartButton.setVisibility(View.VISIBLE);
+        cartButton.show();
     }
 
     private void onLoadCart(Cart cart) {

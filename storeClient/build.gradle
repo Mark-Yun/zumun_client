@@ -68,17 +68,13 @@ private static Integer generateVersionCode(minimumSdk, major, minor, patch) {
 }
 
 dependencies {
-    ext {
-        recycler_view_pager = 'v1.1.2@aar'
-        aws_android_sdk = '2.6.25'
-    }
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
-    implementation "com.github.lsjwzh.RecyclerViewPager:lib:$recycler_view_pager"
-    implementation "com.github.lsjwzh.RecyclerViewPager:tablayoutsupport:$recycler_view_pager"
+    implementation "com.github.lsjwzh.RecyclerViewPager:lib:v1.1.2@aar"
+    implementation "com.github.lsjwzh.RecyclerViewPager:tablayoutsupport:v1.1.2@aar"
 
-    implementation "com.amazonaws:aws-android-sdk-s3:$aws_android_sdk"
-    implementation "com.amazonaws:aws-android-sdk-cognito:$aws_android_sdk"
+    implementation "com.amazonaws:aws-android-sdk-s3:2.6.25"
+    implementation "com.amazonaws:aws-android-sdk-cognito:2.6.25"
     implementation('com.amazonaws:aws-android-sdk-mobile-client:2.6.+@aar') { transitive = true }
 
     implementation 'com.library.tangxiaolv:telegramgallery:1.0.5'

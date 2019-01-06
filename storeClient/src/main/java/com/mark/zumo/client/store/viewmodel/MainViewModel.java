@@ -99,13 +99,13 @@ public class MainViewModel extends AndroidViewModel {
     }
 
     public LiveData<Store> loadSessionStore() {
-        MutableLiveData<Store> liveData = new MutableLiveData<>();
-        storeSessionManager.getSessionStore()
+
+        storeUserManager.getSessionStoreAsync()
                 .observeOn(AndroidSchedulers.mainThread())
-                .doOnSuccess(liveData::setValue)
+                .doOnSuccess(sessionStoreLiveData::setValue)
                 .doOnSubscribe(compositeDisposable::add)
                 .subscribe();
-        return liveData;
+        return sessionStoreLiveData;
     }
 
     public LiveData<Store> getStore(String storeUuid) {
