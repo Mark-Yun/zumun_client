@@ -16,7 +16,6 @@ import android.app.Application;
 
 import com.mark.zumo.client.core.app.AppErrorHandler;
 import com.mark.zumo.client.core.util.context.ContextInjector;
-import com.mark.zumo.client.store.model.StoreSessionManager;
 import com.wonderkiln.blurkit.BlurKit;
 
 /**
@@ -28,10 +27,9 @@ public class StoreClientApp extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+
         ContextInjector.inject(this);
         BlurKit.init(this);
-        StoreSessionManager storeSessionManager = StoreSessionManager.INSTANCE;
-
         AppErrorHandler.setup();
     }
 }

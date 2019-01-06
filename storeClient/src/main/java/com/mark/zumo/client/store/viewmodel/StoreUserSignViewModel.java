@@ -19,7 +19,6 @@ import com.mark.zumo.client.core.appserver.request.signup.StoreUserSignupErrorCo
 import com.mark.zumo.client.core.appserver.request.signup.StoreUserSignupException;
 import com.mark.zumo.client.core.entity.user.store.StoreUserSession;
 import com.mark.zumo.client.store.model.S3TransferManager;
-import com.mark.zumo.client.store.model.StoreSessionManager;
 import com.mark.zumo.client.store.model.StoreUserManager;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -31,7 +30,6 @@ import io.reactivex.disposables.CompositeDisposable;
 
 public class StoreUserSignViewModel extends AndroidViewModel {
 
-    private final StoreSessionManager storeSessionManager;
     private final StoreUserManager storeUserManager;
     private final S3TransferManager s3TransferManager;
 
@@ -39,7 +37,7 @@ public class StoreUserSignViewModel extends AndroidViewModel {
 
     public StoreUserSignViewModel(@NonNull Application application) {
         super(application);
-        storeSessionManager = StoreSessionManager.INSTANCE;
+
         storeUserManager = StoreUserManager.INSTANCE;
         s3TransferManager = S3TransferManager.INSTANCE;
 

@@ -19,7 +19,7 @@ import com.mark.zumo.client.core.entity.OrderDetail;
 import com.mark.zumo.client.store.model.MenuOptionManager;
 import com.mark.zumo.client.store.model.StoreMenuManager;
 import com.mark.zumo.client.store.model.StoreOrderManager;
-import com.mark.zumo.client.store.model.StoreSessionManager;
+import com.mark.zumo.client.store.model.StoreUserManager;
 import com.mark.zumo.client.store.model.entity.OrderBucket;
 
 import java.util.List;
@@ -36,7 +36,7 @@ public class OrderViewModel extends AndroidViewModel {
 
     private final StoreOrderManager storeOrderManager;
     private final StoreMenuManager storeMenuManager;
-    private final StoreSessionManager storeSessionManager;
+    private final StoreUserManager storeUserManager;
     private final MenuOptionManager menuOptionManager;
 
     private final CompositeDisposable compositeDisposable;
@@ -46,7 +46,7 @@ public class OrderViewModel extends AndroidViewModel {
 
         storeOrderManager = StoreOrderManager.INSTANCE;
         storeMenuManager = StoreMenuManager.INSTANCE;
-        storeSessionManager = StoreSessionManager.INSTANCE;
+        storeUserManager = StoreUserManager.INSTANCE;
         menuOptionManager = MenuOptionManager.INSTANCE;
 
         compositeDisposable = new CompositeDisposable();
@@ -54,7 +54,7 @@ public class OrderViewModel extends AndroidViewModel {
 
     public LiveData<List<MenuOrder>> canceledMenuOrderList() {
         MutableLiveData<List<MenuOrder>> liveData = new MutableLiveData<>();
-        storeSessionManager.getSessionStore()
+        storeUserManager.getSessionStoreAsync()
                 .map(store -> store.uuid)
                 .flatMapObservable(storeOrderManager::canceledOrderBucket)
                 .map(OrderBucket::getOrderList)
@@ -67,7 +67,7 @@ public class OrderViewModel extends AndroidViewModel {
 
     public LiveData<List<MenuOrder>> completeMenuOrderList() {
         MutableLiveData<List<MenuOrder>> liveData = new MutableLiveData<>();
-        storeSessionManager.getSessionStore()
+        storeUserManager.getSessionStoreAsync()
                 .map(store -> store.uuid)
                 .flatMapObservable(storeOrderManager::completeOrderBucket)
                 .map(OrderBucket::getOrderList)
@@ -80,7 +80,7 @@ public class OrderViewModel extends AndroidViewModel {
 
     public LiveData<List<MenuOrder>> requestedMenuOrderList() {
         MutableLiveData<List<MenuOrder>> liveData = new MutableLiveData<>();
-        storeSessionManager.getSessionStore()
+        storeUserManager.getSessionStoreAsync()
                 .map(store -> store.uuid)
                 .flatMapObservable(storeOrderManager::requestedOrderBucket)
                 .map(OrderBucket::getOrderList)

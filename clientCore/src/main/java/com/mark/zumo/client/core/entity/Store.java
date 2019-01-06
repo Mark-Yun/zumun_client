@@ -11,10 +11,7 @@ import android.arch.persistence.room.PrimaryKey;
 import android.support.annotation.NonNull;
 
 import com.google.gson.annotations.SerializedName;
-import com.mark.zumo.client.core.R;
-import com.mark.zumo.client.core.entity.util.EntityComparator;
 import com.mark.zumo.client.core.entity.util.EntityHelper;
-import com.mark.zumo.client.core.util.context.ContextHolder;
 
 import static com.mark.zumo.client.core.entity.Store.TABLE;
 
@@ -72,15 +69,5 @@ public class Store {
         String phoneNumber = "store_phone_number";
         String storeType = "store_type";
         String address = "address";
-    }
-
-    public static Store emptyStore() {
-        String deletedStoreName = ContextHolder.getContext().getString(R.string.deleted_store);
-        return new Store("0", deletedStoreName, 0, 0, "", "", "", "", "");
-    }
-
-    @Override
-    public boolean equals(final Object obj) {
-        return new EntityComparator<>().test(this, obj);
     }
 }

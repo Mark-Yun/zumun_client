@@ -17,8 +17,8 @@ import android.support.annotation.NonNull;
 import com.google.android.gms.maps.model.LatLng;
 import com.mark.zumo.client.core.entity.Store;
 import com.mark.zumo.client.store.model.S3TransferManager;
-import com.mark.zumo.client.store.model.StoreSessionManager;
 import com.mark.zumo.client.store.model.StoreStoreManager;
+import com.mark.zumo.client.store.model.StoreUserManager;
 
 import io.reactivex.Maybe;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -29,7 +29,7 @@ import io.reactivex.disposables.CompositeDisposable;
  */
 public class StoreSettingViewModel extends AndroidViewModel {
 
-    private final StoreSessionManager storeSessionManager;
+    private final StoreUserManager storeUserManager;
     private final StoreStoreManager storeStoreManager;
     private final S3TransferManager s3TransferManager;
 
@@ -40,7 +40,7 @@ public class StoreSettingViewModel extends AndroidViewModel {
     public StoreSettingViewModel(@NonNull final Application application) {
         super(application);
 
-        storeSessionManager = StoreSessionManager.INSTANCE;
+        storeUserManager = StoreUserManager.INSTANCE;
         storeStoreManager = StoreStoreManager.INSTANCE;
         s3TransferManager = S3TransferManager.INSTANCE;
 
@@ -58,7 +58,7 @@ public class StoreSettingViewModel extends AndroidViewModel {
     }
 
     public void loadOnCurrentStore() {
-        storeSessionManager.getSessionStore()
+        storeUserManager.getSessionStoreAsync()
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSuccess(currentStore::setValue)
                 .doOnSubscribe(compositeDisposable::add)
@@ -67,7 +67,7 @@ public class StoreSettingViewModel extends AndroidViewModel {
 
     public LiveData<Store> updateStoreName(String newName) {
         MutableLiveData<Store> liveData = new MutableLiveData<>();
-        storeSessionManager.getSessionStore()
+        storeUserManager.getSessionStoreAsync()
                 .flatMap(store -> storeStoreManager.updateStoreName(store, newName))
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSuccess(liveData::setValue)
@@ -78,7 +78,7 @@ public class StoreSettingViewModel extends AndroidViewModel {
 
     public LiveData<Store> updateStoreLocation(LatLng latLng) {
         MutableLiveData<Store> liveData = new MutableLiveData<>();
-        storeSessionManager.getSessionStore()
+        storeUserManager.getSessionStoreAsync()
                 .flatMap(store -> storeStoreManager.updateStoreLocation(store, latLng))
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSuccess(liveData::setValue)
@@ -90,8 +90,8 @@ public class StoreSettingViewModel extends AndroidViewModel {
     public LiveData<Store> uploadCoverImage(Activity activity, Uri uri) {
         MutableLiveData<Store> liveData = new MutableLiveData<>();
         Maybe.zip(
-                storeSessionManager.getSessionStore(),
-                storeSessionManager.getSessionStore()
+                storeUserManager.getSessionStoreAsync(),
+                storeUserManager.getSessionStoreAsync()
                         .map(store -> store.uuid)
                         .flatMap(storeUuid -> s3TransferManager.uploadCoverImage(activity, storeUuid, uri)),
                 storeStoreManager::updateStoreCoverImageUrl
@@ -109,8 +109,8 @@ public class StoreSettingViewModel extends AndroidViewModel {
         MutableLiveData<Store> liveData = new MutableLiveData<>();
 
         Maybe.zip(
-                storeSessionManager.getSessionStore(),
-                storeSessionManager.getSessionStore()
+                storeUserManager.getSessionStoreAsync(),
+                storeUserManager.getSessionStoreAsync()
                         .map(store -> store.uuid)
                         .flatMap(storeUuid -> s3TransferManager.uploadThumbnailImage(activity, storeUuid, uri)),
                 storeStoreManager::updateStoreThumbnailImageUrl

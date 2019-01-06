@@ -16,6 +16,7 @@ import com.mark.zumo.client.core.appserver.request.signup.StoreOwnerSignUpReques
 import com.mark.zumo.client.core.appserver.request.signup.StoreUserSignupErrorCode;
 import com.mark.zumo.client.core.appserver.request.signup.StoreUserSignupException;
 import com.mark.zumo.client.core.entity.SessionStore;
+import com.mark.zumo.client.core.entity.SnsToken;
 import com.mark.zumo.client.core.entity.Store;
 import com.mark.zumo.client.core.entity.user.store.StoreUserContract;
 import com.mark.zumo.client.core.entity.user.store.StoreUserSession;
@@ -184,4 +185,9 @@ public enum StoreUserManager {
         return bundle;
     }
 
+    public Maybe<SnsToken> registerTokenOnRefresh(Store store, String token) {
+        SnsToken snsToken = new SnsToken(store.uuid, SnsToken.TokenType.ANDROID, token);
+        return sessionRepository.registerSnsToken(snsToken)
+                .subscribeOn(Schedulers.io());
+    }
 }

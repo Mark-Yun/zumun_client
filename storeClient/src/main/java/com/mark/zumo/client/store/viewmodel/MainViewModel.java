@@ -17,7 +17,6 @@ import android.util.Log;
 import com.mark.zumo.client.core.entity.Store;
 import com.mark.zumo.client.core.entity.user.store.StoreUserContract;
 import com.mark.zumo.client.core.p2p.P2pServer;
-import com.mark.zumo.client.store.model.StoreSessionManager;
 import com.mark.zumo.client.store.model.StoreStoreManager;
 import com.mark.zumo.client.store.model.StoreUserManager;
 
@@ -35,7 +34,6 @@ public class MainViewModel extends AndroidViewModel {
 
     private static final String TAG = "MainViewModel";
 
-    private final StoreSessionManager storeSessionManager;
     private final StoreUserManager storeUserManager;
     private final StoreStoreManager storeStoreManager;
 
@@ -48,7 +46,6 @@ public class MainViewModel extends AndroidViewModel {
     public MainViewModel(@NonNull final Application application) {
         super(application);
 
-        storeSessionManager = StoreSessionManager.INSTANCE;
         storeUserManager = StoreUserManager.INSTANCE;
         storeStoreManager = StoreStoreManager.INSTANCE;
 
@@ -80,6 +77,7 @@ public class MainViewModel extends AndroidViewModel {
     public LiveData<Store> getSessionStore() {
         Maybe.fromCallable(storeUserManager::getSessionStoreSync)
                 .switchIfEmpty(storeUserManager.getSessionStoreAsync())
+                .observeOn(AndroidSchedulers.mainThread())
                 .doOnSuccess(sessionStoreLiveData::setValue)
                 .doOnSubscribe(compositeDisposable::add)
                 .subscribe();
@@ -93,16 +91,6 @@ public class MainViewModel extends AndroidViewModel {
                 .flatMapMaybe(storeUserManager::setSessionStore)
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnNext(sessionStoreLiveData::setValue)
-                .doOnSubscribe(compositeDisposable::add)
-                .subscribe();
-        return sessionStoreLiveData;
-    }
-
-    public LiveData<Store> loadSessionStore() {
-
-        storeUserManager.getSessionStoreAsync()
-                .observeOn(AndroidSchedulers.mainThread())
-                .doOnSuccess(sessionStoreLiveData::setValue)
                 .doOnSubscribe(compositeDisposable::add)
                 .subscribe();
         return sessionStoreLiveData;
@@ -136,7 +124,7 @@ public class MainViewModel extends AndroidViewModel {
     }
 
     public void findCustomer(Activity activity) {
-        storeSessionManager.getSessionStore()
+        storeUserManager.getSessionStoreAsync()
                 .map(store -> p2pServer = new P2pServer(activity, store))
                 .flatMapObservable(P2pServer::findCustomer)
                 .doOnSubscribe(compositeDisposable::add)
