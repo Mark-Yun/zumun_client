@@ -22,7 +22,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.google.android.gms.common.util.ArrayUtils;
 import com.mark.zumo.client.core.entity.Menu;
 import com.mark.zumo.client.core.entity.MenuCategory;
 import com.mark.zumo.client.core.entity.MenuOptionCategory;
@@ -153,14 +152,14 @@ public class MenuCreatePreferenceFragment extends PreferenceFragmentCompat {
         Observable.fromIterable(menuCategoryList)
                 .map(menuCategory -> menuCategory.name)
                 .toList()
-                .map(ArrayUtils::toStringArray)
+                .map(list -> list.toArray(new String[]{}))
                 .doOnSuccess(menuCategoryPreference::setEntries)
                 .subscribe();
 
         Observable.fromIterable(menuCategoryList)
                 .map(menuCategory -> menuCategory.uuid)
                 .toList()
-                .map(ArrayUtils::toStringArray)
+                .map(list -> list.toArray(new String[]{}))
                 .doOnSuccess(menuCategoryPreference::setEntryValues)
                 .subscribe();
 
@@ -176,14 +175,14 @@ public class MenuCreatePreferenceFragment extends PreferenceFragmentCompat {
         Observable.fromIterable(menuOptionCategoryList)
                 .map(menuOptionCategory -> menuOptionCategory.name)
                 .toList()
-                .map(ArrayUtils::toStringArray)
+                .map(list -> list.toArray(new String[]{}))
                 .doOnSuccess(menuOptionCategoryPreference::setEntries)
                 .subscribe();
 
         Observable.fromIterable(menuOptionCategoryList)
                 .map(menuOptionCategory -> menuOptionCategory.uuid)
                 .toList()
-                .map(ArrayUtils::toStringArray)
+                .map(list -> list.toArray(new String[]{}))
                 .doOnSuccess(menuOptionCategoryPreference::setEntryValues)
                 .subscribe();
 

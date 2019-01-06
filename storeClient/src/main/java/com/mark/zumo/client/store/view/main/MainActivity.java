@@ -126,8 +126,10 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     }
 
     private void inflateStoreInformation() {
-        Store store = mainViewModel.getSessionStore();
+        mainViewModel.getSessionStore().observe(this, this::onStoreLoaded);
+    }
 
+    private void onStoreLoaded(Store store) {
         if (store == null) {
             return;
         }

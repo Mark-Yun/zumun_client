@@ -12,11 +12,10 @@ import android.arch.lifecycle.AndroidViewModel;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.net.Uri;
-import android.os.Handler;
-import android.os.Looper;
 import android.support.annotation.NonNull;
 
 import com.mark.zumo.client.core.appserver.request.signup.StoreOwnerSignUpRequest;
+import com.mark.zumo.client.core.appserver.request.signup.StoreUserSignupErrorCode;
 import com.mark.zumo.client.core.appserver.request.signup.StoreUserSignupException;
 import com.mark.zumo.client.core.entity.user.store.StoreUserSession;
 import com.mark.zumo.client.store.model.S3TransferManager;
@@ -47,9 +46,8 @@ public class StoreUserSignViewModel extends AndroidViewModel {
         disposables = new CompositeDisposable();
     }
 
-    public LiveData<StoreUserSignupException> signUp(final String email,
-                                                     final String password,
-                                                     final String passwordConfirm) {
+    public LiveData<StoreUserSignupException> signUp(final String email, final String password,
+                                                     final String passwordConfirm, final String phoneNumber) {
 
         MutableLiveData<StoreUserSignupException> liveData = new MutableLiveData<>();
 
@@ -57,17 +55,18 @@ public class StoreUserSignViewModel extends AndroidViewModel {
             StoreOwnerSignUpRequest request = new StoreOwnerSignUpRequest.Builder()
                     .setEmail(email)
                     .setPassword(password)
+                    .setPhoneNumber(phoneNumber)
                     .setPasswordConfirm(passwordConfirm)
                     .build();
-//            StoreOwnerSignUpRequest request = DebugUtil.storeOwnerSignUpRequest();
 
             storeUserManager.signup(request)
                     .observeOn(AndroidSchedulers.mainThread())
                     .doOnSuccess(liveData::setValue)
+                    .doOnError(throwable -> liveData.setValue(new StoreUserSignupException(StoreUserSignupErrorCode.SERVER_ERROR)))
                     .doOnSubscribe(disposables::add)
                     .subscribe();
         } catch (StoreUserSignupException e) {
-            new Handler(Looper.getMainLooper()).post(() -> liveData.setValue(e));
+            liveData.postValue(e);
         }
 
         return liveData;

@@ -43,6 +43,8 @@ public class MainViewModel extends AndroidViewModel {
 
     private P2pServer p2pServer;
 
+    private MutableLiveData<Store> sessionStoreLiveData;
+
     public MainViewModel(@NonNull final Application application) {
         super(application);
 
@@ -51,6 +53,7 @@ public class MainViewModel extends AndroidViewModel {
         storeStoreManager = StoreStoreManager.INSTANCE;
 
         compositeDisposable = new CompositeDisposable();
+        sessionStoreLiveData = new MutableLiveData<>();
     }
 
     public boolean hasSessionStore() {
@@ -74,20 +77,25 @@ public class MainViewModel extends AndroidViewModel {
         return storeUserManager.getStoreUserSessionSync() != null;
     }
 
-    public Store getSessionStore() {
-        return storeUserManager.getSessionStoreSync();
+    public LiveData<Store> getSessionStore() {
+        Maybe.fromCallable(storeUserManager::getSessionStoreSync)
+                .switchIfEmpty(storeUserManager.getSessionStoreAsync())
+                .doOnSuccess(sessionStoreLiveData::setValue)
+                .doOnSubscribe(compositeDisposable::add)
+                .subscribe();
+
+        return sessionStoreLiveData;
     }
 
     public LiveData<Store> setSessionStore(String storeUuid) {
 
-        MutableLiveData<Store> liveData = new MutableLiveData<>();
         storeStoreManager.getStore(storeUuid)
                 .flatMapMaybe(storeUserManager::setSessionStore)
                 .observeOn(AndroidSchedulers.mainThread())
-                .doOnNext(liveData::setValue)
+                .doOnNext(sessionStoreLiveData::setValue)
                 .doOnSubscribe(compositeDisposable::add)
                 .subscribe();
-        return liveData;
+        return sessionStoreLiveData;
     }
 
     public LiveData<Store> loadSessionStore() {
@@ -121,6 +129,7 @@ public class MainViewModel extends AndroidViewModel {
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnNext(liveData::setValue)
                 .doOnSubscribe(compositeDisposable::add)
+                .doOnError(throwable -> Log.e(TAG, "getStoreUserContract: not exist user session"))
                 .subscribe();
 
         return liveData;

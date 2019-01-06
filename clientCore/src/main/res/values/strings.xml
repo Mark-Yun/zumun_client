@@ -33,6 +33,7 @@
     <string name="permission_location_content">We can search store near by or, mark up the location of stores on map.</string>
 
     <string name="sign_up_error_message_success">Success</string>
+    <string name="sign_up_error_message_server_error">Network Error</string>
     <string name="sign_up_error_message_empty_email">Email is empty</string>
     <string name="sign_up_error_message_empty_password">Password is empty</string>
     <string name="sign_up_error_message_empty_password_confirm">Password confirm is empty</string>

@@ -14,6 +14,7 @@ import com.mark.zumo.client.core.util.context.ContextHolder;
  */
 public enum StoreUserSignupErrorCode {
     SUCCESS(R.string.sign_up_error_message_success),
+    SERVER_ERROR(R.string.sign_up_error_message_server_error),
     EMPTY_EMAIL(R.string.sign_up_error_message_empty_email),
     EMPTY_PASSWORD(R.string.sign_up_error_message_empty_password),
     EMPTY_PASSWORD_CONFIRM(R.string.sign_up_error_message_empty_password_confirm),

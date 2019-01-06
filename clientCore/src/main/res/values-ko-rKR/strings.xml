@@ -33,6 +33,7 @@
     <string name="permission_location_content">주변의 ZUMUN 가게를 검색하거나 지도에 ZUMUN가게의 위치를 표시할 수 있습니다.</string>
 
     <string name="sign_up_error_message_success">성공</string>
+    <string name="sign_up_error_message_server_error">네트워크 에러입니다. 잠시 후 다시 시도해주세요.</string>
     <string name="sign_up_error_message_empty_email">이메일을 입력해주세요</string>
     <string name="sign_up_error_message_empty_password">비밀번호를 입력해주세요</string>
     <string name="sign_up_error_message_empty_password_confirm">같은 비밀번호를 입력해주세요</string>

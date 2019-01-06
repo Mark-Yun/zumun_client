@@ -29,7 +29,7 @@ public enum AppDatabaseProvider {
     private static AppDatabase buildDatabase(Context context) {
         switch (BuildConfig.BUILD_TYPE) {
             case DEBUG:
-//                return Room.inMemoryDatabaseBuilder(context, AppDatabase.class).build();
+                return Room.inMemoryDatabaseBuilder(context, AppDatabase.class).build();
             case RELEASE:
                 return Room.databaseBuilder(context, AppDatabase.class, DB_NAME).build();
             default:

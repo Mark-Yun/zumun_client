@@ -47,6 +47,7 @@ public class UserSignUpFragment extends Fragment implements BackPressedIntercept
     @BindView(R.id.input_email) TextInputEditText inputEmail;
     @BindView(R.id.input_password) TextInputEditText inputPassword;
     @BindView(R.id.input_password_confirm) TextInputEditText inputPasswordConfirm;
+    @BindView(R.id.input_phone_number) TextInputEditText inputPhoneNumber;
 
     private StoreUserSignViewModel storeUserSignViewModel;
 
@@ -82,7 +83,8 @@ public class UserSignUpFragment extends Fragment implements BackPressedIntercept
         String email = inputLayoutEmail.getEditText() == null ? "" : inputLayoutEmail.getEditText().getText().toString();
         String password = inputLayoutPassword.getEditText() == null ? "" : inputLayoutPassword.getEditText().getText().toString();
         String passwordConfirm = inputLayoutConfirmPassword.getEditText() == null ? "" : inputLayoutConfirmPassword.getEditText().getText().toString();
-        storeUserSignViewModel.signUp(email, password, passwordConfirm)
+        String phoneNumber = inputPhoneNumber.getEditableText() == null ? "" : inputPhoneNumber.getEditableText().toString();
+        storeUserSignViewModel.signUp(email, password, passwordConfirm, phoneNumber)
                 .observe(this, this::onSignUpRequest);
     }
 

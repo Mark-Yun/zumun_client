@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "d820a916444bc776d1af383387587f50",
+    "identityHash": "6874032d7ac6b7506c5d74e1c24772b7",
     "entities": [
       {
         "tableName": "menu",
@@ -806,7 +806,7 @@
       },
       {
         "tableName": "store_registration_result",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`store_registration_result_uuid` TEXT NOT NULL, `store_registration_request_uuid` TEXT, `result` TEXT, `comment` TEXT, `created_date` TEXT, PRIMARY KEY(`store_registration_result_uuid`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`store_registration_result_uuid` TEXT NOT NULL, `store_registration_request_uuid` TEXT, `registration_status` TEXT, `comment` TEXT, `created_date` TEXT, PRIMARY KEY(`store_registration_result_uuid`))",
         "fields": [
           {
             "fieldPath": "uuid",
@@ -821,8 +821,8 @@
             "notNull": false
           },
           {
-            "fieldPath": "result",
-            "columnName": "result",
+            "fieldPath": "status",
+            "columnName": "registration_status",
             "affinity": "TEXT",
             "notNull": false
           },
@@ -925,7 +925,7 @@
             "notNull": true
           },
           {
-            "fieldPath": "address",
+            "fieldPath": "storeAddress",
             "columnName": "store_address",
             "affinity": "TEXT",
             "notNull": false
@@ -1035,7 +1035,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"d820a916444bc776d1af383387587f50\")"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"6874032d7ac6b7506c5d74e1c24772b7\")"
     ]
   }
 }

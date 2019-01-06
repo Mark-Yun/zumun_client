@@ -95,9 +95,17 @@ public class StoreSelectFragment extends Fragment {
         storeSelectLayout.setVisibility(hasStoreUserContract ? View.VISIBLE : View.GONE);
         nonStoreLayout.setVisibility(hasStoreUserContract ? View.GONE : View.VISIBLE);
 
-        if (hasStoreUserContract) {
-            storeSelectPagerAdapter.setStoreUserContractList(storeUserContractList);
+        if (!hasStoreUserContract) {
+            Log.i(TAG, "onLoadedStoreContractList: hasStoreUserContract=" + hasStoreUserContract);
+            return;
         }
+
+        if (storeUserContractList.size() > 1) {
+            storeSelectPagerAdapter.setStoreUserContractList(storeUserContractList);
+        } else {
+            listener.onSelectStore(storeUserContractList.get(0).storeUuid);
+        }
+
     }
 
     @OnClick(R.id.move_store_registration_up)
