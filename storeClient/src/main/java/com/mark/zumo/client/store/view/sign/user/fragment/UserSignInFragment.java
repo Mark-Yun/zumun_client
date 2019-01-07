@@ -24,7 +24,6 @@ import android.view.inputmethod.InputMethodManager;
 
 import com.mark.zumo.client.core.entity.user.store.StoreUserSession;
 import com.mark.zumo.client.store.R;
-import com.mark.zumo.client.store.view.main.MainActivity;
 import com.mark.zumo.client.store.viewmodel.StoreUserSignViewModel;
 
 import butterknife.BindView;
@@ -50,8 +49,18 @@ public class UserSignInFragment extends Fragment {
     private Runnable signUpAction;
     private Runnable startLoadingAction;
     private Runnable stopLoadingAction;
+    private Runnable signInSuccessAction;
 
     private StoreUserSignViewModel storeUserSignViewModel;
+
+    public static UserSignInFragment newInstance() {
+
+        Bundle args = new Bundle();
+
+        UserSignInFragment fragment = new UserSignInFragment();
+        fragment.setArguments(args);
+        return fragment;
+    }
 
     @Override
     public void onCreate(@Nullable final Bundle savedInstanceState) {
@@ -92,7 +101,7 @@ public class UserSignInFragment extends Fragment {
 
         switch (storeUserSession.result) {
             case SUCCESS:
-                MainActivity.start(getActivity());
+                signInSuccessAction.run();
                 break;
         }
     }
@@ -134,6 +143,11 @@ public class UserSignInFragment extends Fragment {
 
     public UserSignInFragment doOnStopLoading(final Runnable stopLoadingAction) {
         this.stopLoadingAction = stopLoadingAction;
+        return this;
+    }
+
+    public UserSignInFragment doOnSuccessSignIn(final Runnable signInSuccessAction) {
+        this.signInSuccessAction = signInSuccessAction;
         return this;
     }
 }

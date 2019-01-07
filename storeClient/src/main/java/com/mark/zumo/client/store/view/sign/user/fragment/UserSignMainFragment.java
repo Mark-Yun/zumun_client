@@ -33,6 +33,17 @@ public class UserSignMainFragment extends Fragment {
     private FindEmailFragment findEmailFragment;
     private FindPasswordFragment findPasswordFragment;
 
+    private Runnable signInSuccessAction;
+
+    public static UserSignMainFragment newInstance() {
+
+        Bundle args = new Bundle();
+
+        UserSignMainFragment fragment = new UserSignMainFragment();
+        fragment.setArguments(args);
+        return fragment;
+    }
+
     @Override
     public void onCreate(@Nullable final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,6 +58,11 @@ public class UserSignMainFragment extends Fragment {
         inflateFragment();
 
         return view;
+    }
+
+    public UserSignMainFragment doOnSuccessSignIn(Runnable signInSuccessAction) {
+        this.signInSuccessAction = signInSuccessAction;
+        return this;
     }
 
     private void inflateFragment() {
@@ -105,12 +121,13 @@ public class UserSignMainFragment extends Fragment {
     }
 
     private UserSignInFragment createSignInFragment() {
-        UserSignInFragment userSignInFragment = (UserSignInFragment) Fragment.instantiate(getContext(), UserSignInFragment.class.getName());
-        return userSignInFragment.doOnFindMyEmail(this::onFindMyEmail)
+        return UserSignInFragment.newInstance()
+                .doOnFindMyEmail(this::onFindMyEmail)
                 .doOnFindMyPassword(this::onFindMyPassword)
                 .doOnStartLoading(this::onStartLoading)
                 .doOnStopLoading(this::onStopLoading)
-                .doOnSignup(this::onSignUp);
+                .doOnSignup(this::onSignUp)
+                .doOnSuccessSignIn(signInSuccessAction);
     }
 
     private FindEmailFragment createFindMyEmailFragment() {

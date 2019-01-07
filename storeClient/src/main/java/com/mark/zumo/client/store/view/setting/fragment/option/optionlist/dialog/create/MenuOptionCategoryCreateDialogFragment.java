@@ -103,7 +103,7 @@ public class MenuOptionCategoryCreateDialogFragment extends DialogFragment {
 
     @OnClick(R.id.ok)
     void onOkClick() {
-        String menuOptionCategoryName = optionNameInputText.getText().toString();
+        String menuOptionCategoryName = optionNameInputText.getText() == null ? "" : optionNameInputText.getText().toString();
         List<MenuOption> menuOptionList = menuOptionAdapter.getMenuOptionList();
         menuOptionSettingViewModel.createMenuOptionCategory(menuOptionCategoryName, new ArrayList<>(menuOptionList))
                 .observe(this, this::onCreateMenuOptionCategoryInternal);

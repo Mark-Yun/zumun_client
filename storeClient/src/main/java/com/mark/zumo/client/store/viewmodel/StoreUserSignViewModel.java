@@ -87,7 +87,7 @@ public class StoreUserSignViewModel extends AndroidViewModel {
                                                      final boolean isAutoLogin) {
         MutableLiveData<StoreUserSession> liveData = new MutableLiveData<>();
 
-        storeUserManager.login(email, password, isAutoLogin)
+        storeUserManager.signIn(email, password, isAutoLogin)
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSuccess(liveData::setValue)
                 .doOnSubscribe(disposables::add)
@@ -101,6 +101,7 @@ public class StoreUserSignViewModel extends AndroidViewModel {
         storeUserManager.getStoreUserSessionAsync()
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSuccess(storeUserSession -> liveData.setValue(storeUserSession != null))
+                .doOnComplete(() -> liveData.setValue(liveData.getValue() != null))
                 .doOnSubscribe(disposables::add)
                 .subscribe();
         return liveData;
@@ -108,5 +109,20 @@ public class StoreUserSignViewModel extends AndroidViewModel {
 
     public boolean hasStoreUserSessionSync() {
         return storeUserManager.getStoreUserSessionSync() != null;
+    }
+
+    public LiveData<Boolean> hasSessionStoreAsync() {
+        MutableLiveData<Boolean> liveData = new MutableLiveData<>();
+        storeUserManager.getSessionStoreAsync()
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnSuccess(sessionStore -> liveData.setValue(sessionStore != null))
+                .doOnComplete(() -> liveData.setValue(liveData.getValue() != null))
+                .doOnSubscribe(disposables::add)
+                .subscribe();
+        return liveData;
+    }
+
+    public boolean hasSessionStoreSync() {
+        return storeUserManager.getSessionStoreSync() != null;
     }
 }

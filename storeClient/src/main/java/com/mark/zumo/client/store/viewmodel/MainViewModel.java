@@ -15,7 +15,6 @@ import android.support.annotation.NonNull;
 import android.util.Log;
 
 import com.mark.zumo.client.core.entity.Store;
-import com.mark.zumo.client.core.entity.user.store.StoreUserContract;
 import com.mark.zumo.client.core.p2p.P2pServer;
 import com.mark.zumo.client.store.model.StoreStoreManager;
 import com.mark.zumo.client.store.model.StoreUserManager;
@@ -23,6 +22,7 @@ import com.mark.zumo.client.store.model.StoreUserManager;
 import java.util.List;
 
 import io.reactivex.Maybe;
+import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 
@@ -88,7 +88,7 @@ public class MainViewModel extends AndroidViewModel {
     public LiveData<Store> setSessionStore(String storeUuid) {
 
         storeStoreManager.getStore(storeUuid)
-                .flatMapMaybe(storeUserManager::setSessionStore)
+                .doOnNext(storeUserManager::setSessionStore)
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnNext(sessionStoreLiveData::setValue)
                 .doOnSubscribe(compositeDisposable::add)
@@ -106,18 +106,23 @@ public class MainViewModel extends AndroidViewModel {
         return liveData;
     }
 
-    public LiveData<List<StoreUserContract>> getStoreUserContract() {
+    public LiveData<List<Store>> getStoreUserContractedStoreList() {
 
-        MutableLiveData<List<StoreUserContract>> liveData = new MutableLiveData<>();
+        MutableLiveData<List<Store>> liveData = new MutableLiveData<>();
 
         Maybe.fromCallable(storeUserManager::getStoreUserSessionSync)
                 .switchIfEmpty(storeUserManager.getStoreUserSessionAsync())
                 .map(storeUserSession -> storeUserSession.uuid)
                 .flatMapObservable(storeUserManager::getStoreUserContract)
-                .observeOn(AndroidSchedulers.mainThread())
+                .flatMapMaybe(storeUserContractList ->
+                        Observable.fromIterable(storeUserContractList)
+                                .map(storeUserContract -> storeUserContract.storeUuid)
+                                .flatMap(storeStoreManager::getStore)
+                                .toList().toMaybe()
+                ).observeOn(AndroidSchedulers.mainThread())
                 .doOnNext(liveData::setValue)
                 .doOnSubscribe(compositeDisposable::add)
-                .doOnError(throwable -> Log.e(TAG, "getStoreUserContract: not exist user session"))
+                .doOnError(throwable -> Log.e(TAG, "getStoreUserContractedStoreList: not exist user session"))
                 .subscribe();
 
         return liveData;

@@ -39,7 +39,7 @@ import com.mark.zumo.client.store.view.main.fragment.storeselect.StoreSelectFrag
 import com.mark.zumo.client.store.view.order.OrderFragment;
 import com.mark.zumo.client.store.view.setting.fragment.SettingMainFragment;
 import com.mark.zumo.client.store.view.sign.store.fragment.StoreRegistrationFragment;
-import com.mark.zumo.client.store.view.sign.user.UserSignUpActivity;
+import com.mark.zumo.client.store.view.sign.user.UserSignActivity;
 import com.mark.zumo.client.store.viewmodel.MainViewModel;
 
 import butterknife.BindView;
@@ -89,7 +89,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     private void checkSessionAndInflateMainFragmentIfPossible() {
         if (!mainViewModel.hasStoreUserSession()) { //doesn't have user session
             Log.d(TAG, "checkSessionAndInflateMainFragmentIfPossible: doesn't have storeUserSession");
-            UserSignUpActivity.start(this);
+            UserSignActivity.start(this);
         } else if (!mainViewModel.hasSessionStore()) { //doesn't have session store
             Log.d(TAG, "checkSessionAndInflateMainFragmentIfPossible: doesn't have sessionStore");
             mainViewModel.hasSessionStoreAsync().observe(this, this::onSessionStoreLoaded);
@@ -109,7 +109,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         if (hasSessionStore) {
             inflateStoreInformation();
         } else {
-            StoreSelectFragment storeSelectFragment = ((StoreSelectFragment) StoreSelectFragment.instantiate(this, StoreSelectFragment.class.getName()))
+            StoreSelectFragment storeSelectFragment = StoreSelectFragment.newInstance()
                     .onSelectStore(this::onSelectedStore)
                     .onClickStoreRegistration(this::onClickStoreRegistration);
             updateMainFragment(storeSelectFragment);
@@ -121,8 +121,8 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         updateMainFragment(fragment);
     }
 
-    private void onSelectedStore(String storeUuid) {
-        mainViewModel.setSessionStore(storeUuid).observe(this, sessionStore -> inflateMainFragment());
+    private void onSelectedStore(Store store) {
+        mainViewModel.setSessionStore(store.uuid).observe(this, sessionStore -> inflateMainFragment());
     }
 
     private void inflateStoreInformation() {
@@ -235,6 +235,6 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     }
 
     private void onCompleteSignOut(Object x) {
-        UserSignUpActivity.start(this);
+        UserSignActivity.start(this);
     }
 }

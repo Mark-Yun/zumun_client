@@ -79,4 +79,93 @@ public class MenuOption implements Serializable {
         String price = "menu_option_price";
         String seqNum = "menu_option_value_seq_num";
     }
+
+    public static class Builder {
+        private String uuid = "";
+        private String storeUuid = "";
+        private String menuOptionCategoryUuid = "";
+        private String name = "";
+        private String value = "";
+        private int price = 0;
+        private int seqNum = 0;
+
+        public static Builder from(MenuOption menuOption) {
+            Builder builder = new Builder();
+            builder.uuid = menuOption.uuid;
+            builder.storeUuid = menuOption.storeUuid;
+            builder.menuOptionCategoryUuid = menuOption.menuOptionCategoryUuid;
+            builder.name = menuOption.name;
+            builder.value = menuOption.value;
+            builder.price = menuOption.price;
+            builder.seqNum = menuOption.seqNum;
+            return builder;
+        }
+
+        public String getUuid() {
+            return uuid;
+        }
+
+        public Builder setUuid(final String uuid) {
+            this.uuid = uuid;
+            return this;
+        }
+
+        public String getStoreUuid() {
+            return storeUuid;
+        }
+
+        public Builder setStoreUuid(final String storeUuid) {
+            this.storeUuid = storeUuid;
+            return this;
+        }
+
+        public String getMenuOptionCategoryUuid() {
+            return menuOptionCategoryUuid;
+        }
+
+        public Builder setMenuOptionCategoryUuid(final String menuOptionCategoryUuid) {
+            this.menuOptionCategoryUuid = menuOptionCategoryUuid;
+            return this;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public Builder setName(final String name) {
+            this.name = name;
+            return this;
+        }
+
+        public String getValue() {
+            return value;
+        }
+
+        public Builder setValue(final String value) {
+            this.value = value;
+            return this;
+        }
+
+        public int getPrice() {
+            return price;
+        }
+
+        public Builder setPrice(final int price) {
+            this.price = price;
+            return this;
+        }
+
+        public int getSeqNum() {
+            return seqNum;
+        }
+
+        public Builder setSeqNum(final int seqNum) {
+            this.seqNum = seqNum;
+            return this;
+        }
+
+        public MenuOption build() {
+            return new MenuOption(uuid, storeUuid, menuOptionCategoryUuid, name, value, price, seqNum);
+        }
+    }
 }

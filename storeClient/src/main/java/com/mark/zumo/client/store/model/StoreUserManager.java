@@ -108,8 +108,7 @@ public enum StoreUserManager {
         }
     }
 
-    public Maybe<StoreUserSession> login(final String email, final String password,
-                                         final boolean isAutoLogin) {
+    public Maybe<StoreUserSession> signIn(final String email, final String password, final boolean isAutoLogin) {
         return storeUserRepository.storeUserHandShake(email)
                 .map(publicKey -> RSAEncrypt(publicKey, password))
                 .map(encryptedPassword -> new StoreUserLoginRequest.Builder()

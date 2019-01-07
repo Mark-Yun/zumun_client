@@ -37,28 +37,40 @@ public enum StoreStoreManager {
     }
 
     public Maybe<Store> updateStoreName(Store store, String newName) {
-        store.name = newName;
-        return storeRepositoryMaybe.flatMap(storeRepository -> storeRepository.updateStore(store))
+        Store newStore = Store.Builder.from(store)
+                .setName(newName)
+                .build();
+
+        return storeRepositoryMaybe.flatMap(storeRepository -> storeRepository.updateStore(newStore))
                 .subscribeOn(Schedulers.io());
     }
 
     public Maybe<Store> updateStoreLocation(Store store, LatLng latLng) {
-        store.latitude = latLng.latitude;
-        store.longitude = latLng.longitude;
-        return storeRepositoryMaybe.flatMap(storeRepository -> storeRepository.updateStore(store))
+        Store newStore = Store.Builder.from(store)
+                .setLatitude(latLng.latitude)
+                .setLongitude(latLng.longitude)
+                .build();
+
+        return storeRepositoryMaybe.flatMap(storeRepository -> storeRepository.updateStore(newStore))
                 .subscribeOn(Schedulers.io());
     }
 
     public Maybe<Store> updateStoreCoverImageUrl(Store store, String coverImageUrl) {
-        store.coverImageUrl = coverImageUrl;
-        return storeRepositoryMaybe.flatMap(storeRepository -> storeRepository.updateStore(store))
+        Store newStore = Store.Builder.from(store)
+                .setCoverImageUrl(coverImageUrl)
+                .build();
+
+        return storeRepositoryMaybe.flatMap(storeRepository -> storeRepository.updateStore(newStore))
                 .subscribeOn(Schedulers.io());
 
     }
 
     public Maybe<Store> updateStoreThumbnailImageUrl(Store store, String thumbnailImageUrl) {
-        store.thumbnailUrl = thumbnailImageUrl;
-        return storeRepositoryMaybe.flatMap(storeRepository -> storeRepository.updateStore(store))
+        Store newStore = Store.Builder.from(store)
+                .setThumbnailUrl(thumbnailImageUrl)
+                .build();
+
+        return storeRepositoryMaybe.flatMap(storeRepository -> storeRepository.updateStore(newStore))
                 .subscribeOn(Schedulers.io());
     }
 

@@ -39,7 +39,7 @@
             android:enabled="true" />
 
         <activity
-            android:name="com.mark.zumo.client.store.view.sign.user.UserSignUpActivity"
+            android:name="com.mark.zumo.client.store.view.sign.user.UserSignActivity"
             android:windowSoftInputMode="adjustResize">
 
             <intent-filter>

@@ -1,4 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (c) 2019. Mark Soft - All Rights Reserved
+  ~ Unauthorized copying of this file, via any medium is strictly prohibited
+  ~ Proprietary and confidential
+  -->
+
+<!--
   ~ Copyright (c) 2018. Mark Soft - All Rights Reserved
   ~ Unauthorized copying of this file, via any medium is strictly prohibited
   ~ Proprietary and confidential
@@ -9,12 +15,6 @@
     android:id="@+id/activity_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-
-    <android.support.v7.widget.AppCompatImageView
-        android:id="@+id/background_image_view"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:scaleType="fitXY" />
 
     <android.support.constraint.ConstraintLayout
         android:id="@+id/mode_description_layout"

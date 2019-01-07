@@ -16,25 +16,19 @@ import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.constraint.ConstraintLayout;
-import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
-import android.support.v4.view.ViewPager;
-import android.support.v7.widget.AppCompatButton;
-import android.util.Log;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.mark.zumo.client.core.entity.user.store.StoreUserContract;
+import com.mark.zumo.client.core.entity.Store;
 import com.mark.zumo.client.store.R;
 import com.mark.zumo.client.store.viewmodel.MainViewModel;
 
-import java.util.List;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 
 /**
  * Created by mark on 18. 12. 27.
@@ -43,17 +37,21 @@ public class StoreSelectFragment extends Fragment {
 
     private static final String TAG = "StoreSelectFragment";
 
-    @BindView(R.id.view_pager) ViewPager viewPager;
-    @BindView(R.id.tab_indicator) TabLayout tabIndicator;
-    @BindView(R.id.store_select_layout) ConstraintLayout storeSelectLayout;
-    @BindView(R.id.non_store_layout) ConstraintLayout nonStoreLayout;
-    @BindView(R.id.move_store_registration_up) AppCompatButton moveStoreRegistrationUp;
+    @BindView(R.id.recycler_view) RecyclerView recyclerView;
 
     private MainViewModel mainViewModel;
 
     private StoreSelectListener listener;
     private Runnable storeRegistrationAction;
-    private StoreSelectPagerAdapter storeSelectPagerAdapter;
+
+    public static StoreSelectFragment newInstance() {
+
+        Bundle args = new Bundle();
+
+        StoreSelectFragment fragment = new StoreSelectFragment();
+        fragment.setArguments(args);
+        return fragment;
+    }
 
     public StoreSelectFragment onSelectStore(final StoreSelectListener listener) {
         this.listener = listener;
@@ -78,41 +76,23 @@ public class StoreSelectFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_store_select, container, false);
         ButterKnife.bind(this, view);
 
-        tabIndicator.setupWithViewPager(viewPager);
-        storeSelectPagerAdapter = new StoreSelectPagerAdapter(this, listener);
-        viewPager.setAdapter(storeSelectPagerAdapter);
-        mainViewModel.getStoreUserContract().observe(this, this::onLoadedStoreContractList);
-//        viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabIndicator));
+        StoreSelectAdapter storeSelectAdapter = new StoreSelectAdapter(this::onSelectStore);
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 4));
+        recyclerView.setAdapter(storeSelectAdapter);
+        mainViewModel.getStoreUserContractedStoreList().observe(this, storeSelectAdapter::setStoreList);
 
         return view;
     }
 
-    private void onLoadedStoreContractList(List<StoreUserContract> storeUserContractList) {
-        boolean hasStoreUserContract = storeUserContractList != null && storeUserContractList.size() > 0;
-
-        Log.d(TAG, "onLoadedStoreContractList: hasStoreUserContract=" + hasStoreUserContract);
-
-        storeSelectLayout.setVisibility(hasStoreUserContract ? View.VISIBLE : View.GONE);
-        nonStoreLayout.setVisibility(hasStoreUserContract ? View.GONE : View.VISIBLE);
-
-        if (!hasStoreUserContract) {
-            Log.i(TAG, "onLoadedStoreContractList: hasStoreUserContract=" + hasStoreUserContract);
-            return;
-        }
-
-        if (storeUserContractList.size() > 1) {
-            storeSelectPagerAdapter.setStoreUserContractList(storeUserContractList);
+    private void onSelectStore(Store store) {
+        if (store == null) {
+            storeRegistrationAction.run();
         } else {
-            listener.onSelectStore(storeUserContractList.get(0).storeUuid);
+            listener.onSelectStore(store);
         }
-
     }
 
-    @OnClick(R.id.move_store_registration_up)
-    public void onViewClicked() {
-        storeRegistrationAction.run();
-    }
-
-    public interface StoreSelectListener extends StoreSelectPagerAdapter.StoreSelectListener {
+    public interface StoreSelectListener extends StoreSelectAdapter.StoreSelectListener {
     }
 }
