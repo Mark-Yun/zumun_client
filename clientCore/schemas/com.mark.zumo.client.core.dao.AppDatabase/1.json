@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "6874032d7ac6b7506c5d74e1c24772b7",
+    "identityHash": "7dfac71044863049ee5d9e9278f11b5a",
     "entities": [
       {
         "tableName": "menu",
@@ -806,13 +806,19 @@
       },
       {
         "tableName": "store_registration_result",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`store_registration_result_uuid` TEXT NOT NULL, `store_registration_request_uuid` TEXT, `registration_status` TEXT, `comment` TEXT, `created_date` TEXT, PRIMARY KEY(`store_registration_result_uuid`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`store_registration_result_uuid` TEXT NOT NULL, `store_user_uuid` TEXT, `store_registration_request_uuid` TEXT, `registration_status` TEXT, `comment` TEXT, `created_date` TEXT, PRIMARY KEY(`store_registration_result_uuid`))",
         "fields": [
           {
             "fieldPath": "uuid",
             "columnName": "store_registration_result_uuid",
             "affinity": "TEXT",
             "notNull": true
+          },
+          {
+            "fieldPath": "storeUserUuid",
+            "columnName": "store_user_uuid",
+            "affinity": "TEXT",
+            "notNull": false
           },
           {
             "fieldPath": "storeRegistrationRequestUuid",
@@ -1035,7 +1041,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"6874032d7ac6b7506c5d74e1c24772b7\")"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"7dfac71044863049ee5d9e9278f11b5a\")"
     ]
   }
 }

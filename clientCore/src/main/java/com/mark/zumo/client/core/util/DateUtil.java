@@ -6,6 +6,7 @@
 
 package com.mark.zumo.client.core.util;
 
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
@@ -37,5 +38,10 @@ public final class DateUtil {
         Date localDate = new Date(utcTimeInMills);
         SimpleDateFormat dateFormat = new SimpleDateFormat("YYYY-MM-dd a hh:mm", Locale.getDefault());
         return dateFormat.format(localDate);
+    }
+
+    public static String getLocalSimpleTime(long utcTimeInMills) {
+        Date localDate = new Date(utcTimeInMills);
+        return DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT).format(localDate);
     }
 }

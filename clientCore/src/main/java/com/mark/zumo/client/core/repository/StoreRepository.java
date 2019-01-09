@@ -120,9 +120,9 @@ public class StoreRepository {
                 .doOnSuccess(diskRepository::insertStoreRegistrationRequest);
     }
 
-    public Observable<List<StoreRegistrationResult>> getStoreRegistrationResultListByRequestId(String storeRegistrationRequestUuid) {
-        Maybe<List<StoreRegistrationResult>> storeRegistrationResultListApi = networkRepository.getStoreRegistrationResultByRequestUuid(storeRegistrationRequestUuid);
-        Maybe<List<StoreRegistrationResult>> storeRegistrationResultListByDB = diskRepository.getStoreRegistrationResultByRequestUuid(storeRegistrationRequestUuid);
+    public Observable<List<StoreRegistrationResult>> getStoreRegistrationResultListByStoreUserUuid(String storeUserUuid) {
+        Maybe<List<StoreRegistrationResult>> storeRegistrationResultListApi = networkRepository.getStoreRegistrationResultByStoreUserUuid(storeUserUuid);
+        Maybe<List<StoreRegistrationResult>> storeRegistrationResultListByDB = diskRepository.getStoreRegistrationResultByStoreUserUuid(storeUserUuid);
 
         return Maybe.merge(storeRegistrationResultListByDB, storeRegistrationResultListApi)
                 .toObservable();

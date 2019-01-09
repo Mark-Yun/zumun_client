@@ -283,8 +283,8 @@ public interface DiskRepository {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertStoreRegistrationResult(StoreRegistrationResult storeRegistrationResult);
 
-    @Query("SELECT * FROM " + StoreRegistrationResult.Schema.table + " WHERE store_registration_request_uuid LIKE :storeRegistrationRequestUuid")
-    Maybe<List<StoreRegistrationResult>> getStoreRegistrationResultByRequestUuid(String storeRegistrationRequestUuid);
+    @Query("SELECT * FROM " + StoreRegistrationResult.Schema.table + " WHERE store_user_uuid LIKE :storeUserUuid")
+    Maybe<List<StoreRegistrationResult>> getStoreRegistrationResultByStoreUserUuid(String storeUserUuid);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertStoreUserConractList(List<StoreUserContract> storeUserContractList);

@@ -60,7 +60,7 @@ public class StoreRegistrationListAdapter extends RecyclerView.Adapter<StoreRegi
         holder.storeName.setText(storeRegistrationRequest.storeName);
         holder.ownerName.setText(storeRegistrationRequest.corporateRegistrationOwnerName);
 //        holder.status.setText(storeRegistrationRequest.re);
-        holder.updatedDate.setText(DateUtil.getLocalFormattedTime(storeRegistrationRequest.createdDate));
+        holder.updatedDate.setText(DateUtil.getLocalSimpleTime(storeRegistrationRequest.createdDate));
 
         holder.itemView.setOnClickListener(v -> storeRegistrationRequestListener.onSelectStoreRegistrationRequest(storeRegistrationRequest));
     }

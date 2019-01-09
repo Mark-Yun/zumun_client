@@ -13,10 +13,17 @@ import com.mark.zumo.client.core.entity.Store;
 import com.mark.zumo.client.core.repository.SessionRepository;
 import com.mark.zumo.client.core.repository.StoreRepository;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.CopyOnWriteArraySet;
 
 import io.reactivex.Maybe;
 import io.reactivex.Observable;
+import io.reactivex.ObservableOnSubscribe;
 import io.reactivex.schedulers.Schedulers;
 
 /**
@@ -74,16 +81,81 @@ public enum StoreStoreManager {
                 .subscribeOn(Schedulers.io());
     }
 
-    public Observable<List<StoreRegistrationRequest>> getStoreRegistrationRequestByStoreUserUuid(String storeUserUuid) {
+    public Observable<List<StoreRegistrationRequest>> getCombinedStoreRegistrationRequestByStoreUserUuid(String storeUserUuid) {
         return storeRepositoryMaybe.flatMapObservable(storeRepository ->
-                storeRepository.getStoreRegistrationRequestListByStoreUserUuid(storeUserUuid)
+                Observable.create((ObservableOnSubscribe<List<StoreRegistrationRequest>>) e -> {
+                    List<StoreRegistrationRequest> requestList = new CopyOnWriteArrayList<>();
+                    List<StoreRegistrationResult> resultList = new CopyOnWriteArrayList<>();
+
+                    Set<Class> nextToken = new CopyOnWriteArraySet<>();
+                    Set<Class> completeToken = new CopyOnWriteArraySet<>();
+
+                    nextToken.add(StoreRegistrationRequest.class);
+                    completeToken.add(StoreRegistrationRequest.class);
+                    storeRepository.getStoreRegistrationRequestListByStoreUserUuid(storeUserUuid)
+                            .subscribeOn(Schedulers.newThread())
+                            .doOnNext(storeRegistrationRequests -> {
+                                requestList.clear();
+                                requestList.addAll(storeRegistrationRequests);
+                                nextToken.remove(StoreRegistrationRequest.class);
+                                if (nextToken.isEmpty()) {
+                                    List<StoreRegistrationRequest> mappedRequestList = mapStoreRegistrationRequest(requestList, resultList);
+                                    e.onNext(mappedRequestList);
+                                }
+                            })
+                            .doOnComplete(() -> {
+                                completeToken.remove(StoreRegistrationRequest.class);
+                                if (completeToken.isEmpty()) {
+                                    e.onComplete();
+                                }
+                            })
+                            .subscribe();
+
+                    nextToken.add(StoreRegistrationResult.class);
+                    completeToken.add(StoreRegistrationResult.class);
+                    storeRepository.getStoreRegistrationResultListByStoreUserUuid(storeUserUuid)
+                            .subscribeOn(Schedulers.newThread())
+                            .doOnNext(registrationResults -> {
+                                resultList.clear();
+                                resultList.addAll(registrationResults);
+                                nextToken.remove(StoreRegistrationResult.class);
+                                if (nextToken.isEmpty()) {
+                                    List<StoreRegistrationRequest> mappedRequestList = mapStoreRegistrationRequest(requestList, resultList);
+                                    e.onNext(mappedRequestList);
+                                }
+                            })
+                            .doOnComplete(() -> {
+                                completeToken.remove(StoreRegistrationResult.class);
+                                if (completeToken.isEmpty()) {
+                                    e.onComplete();
+                                }
+                            })
+                            .subscribe();
+                })
         ).distinctUntilChanged().subscribeOn(Schedulers.io());
     }
 
-    public Observable<List<StoreRegistrationResult>> getStoreRegistrationResultByRequestId(String storeRegistrationRequestUuid) {
-        return storeRepositoryMaybe.flatMapObservable(storeRepository ->
-                storeRepository.getStoreRegistrationResultListByRequestId(storeRegistrationRequestUuid)
-        ).distinctUntilChanged().subscribeOn(Schedulers.io());
+    private List<StoreRegistrationRequest> mapStoreRegistrationRequest(final List<StoreRegistrationRequest> storeRegistrationRequests,
+                                                                       final List<StoreRegistrationResult> storeRegistrationResults) {
+        List<StoreRegistrationRequest> requestList = new ArrayList<>();
+        Map<String, List<StoreRegistrationResult>> resultMap = new HashMap<>();
+        for (StoreRegistrationResult storeRegistrationResult : storeRegistrationResults) {
+            String requestUuid = storeRegistrationResult.storeRegistrationRequestUuid;
+            if (!resultMap.containsKey(requestUuid)) {
+                resultMap.put(requestUuid, new ArrayList<>());
+            }
+            resultMap.get(requestUuid).add(storeRegistrationResult);
+        }
+
+        for (StoreRegistrationRequest registrationRequest : storeRegistrationRequests) {
+            registrationRequest.resultList = new ArrayList<>();
+            if (resultMap.containsKey(registrationRequest.uuid)) {
+                registrationRequest.resultList.addAll(resultMap.get(registrationRequest.uuid));
+            }
+            requestList.add(registrationRequest);
+        }
+
+        return requestList;
     }
 
     public Observable<Store> getStore(String storeUuid) {

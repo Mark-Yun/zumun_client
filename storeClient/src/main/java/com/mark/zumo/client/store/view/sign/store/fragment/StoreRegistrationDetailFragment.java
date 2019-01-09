@@ -17,7 +17,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.android.gms.maps.CameraUpdate;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.mark.zumo.client.core.appserver.request.registration.StoreRegistrationRequest;
+import com.mark.zumo.client.core.util.glide.GlideApp;
 import com.mark.zumo.client.store.R;
 
 import butterknife.BindView;
@@ -66,5 +73,37 @@ public class StoreRegistrationDetailFragment extends Fragment {
         corporateName.setText(storeRegistrationRequest.corporateRegistrationName);
         corporateOwnerName.setText(storeRegistrationRequest.corporateRegistrationOwnerName);
         corporateNumber.setText(storeRegistrationRequest.corporateRegistrationOwnerName);
+
+        GlideApp.with(this)
+                .load(storeRegistrationRequest.corporateRegistrationScanUrl)
+                .into(corporateRegistrationScanImageView);
+
+        SupportMapFragment mapFragment = new SupportMapFragment();
+        getFragmentManager().beginTransaction()
+                .replace(R.id.map_fragment, mapFragment)
+                .commit();
+
+        mapFragment.getMapAsync(googleMap -> onReadyMap(googleMap, storeRegistrationRequest));
+    }
+
+    private void onReadyMap(GoogleMap googleMap, StoreRegistrationRequest registrationRequest) {
+        if (googleMap == null || registrationRequest == null) {
+            return;
+        }
+
+        googleMap.clear();
+
+        LatLng selectedLatLng = new LatLng(registrationRequest.latitude, registrationRequest.longitude);
+
+        MarkerOptions markerOptions = new MarkerOptions()
+                .position(selectedLatLng)
+                .title(registrationRequest.storeName);
+
+        googleMap.addMarker(markerOptions).showInfoWindow();
+        CameraUpdate locationUpdate = CameraUpdateFactory.newLatLngZoom(selectedLatLng, 15);
+
+        googleMap.setBuildingsEnabled(true);
+        googleMap.moveCamera(locationUpdate);
+        googleMap.animateCamera(locationUpdate);
     }
 }

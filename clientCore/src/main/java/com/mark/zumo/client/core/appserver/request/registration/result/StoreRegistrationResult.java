@@ -22,6 +22,8 @@ public class StoreRegistrationResult {
 
     @NonNull @PrimaryKey @SerializedName(Schema.uuid) @ColumnInfo(name = Schema.uuid)
     public final String uuid;
+    @SerializedName(Schema.storeUserUuid) @ColumnInfo(name = Schema.storeUserUuid)
+    public final String storeUserUuid;
     @SerializedName(Schema.storeRegistrationRequestUuid) @ColumnInfo(name = Schema.storeRegistrationRequestUuid)
     public final String storeRegistrationRequestUuid;
     @SerializedName(Schema.status) @ColumnInfo(name = Schema.status)
@@ -31,8 +33,9 @@ public class StoreRegistrationResult {
     @SerializedName(Schema.createdDate) @ColumnInfo(name = Schema.createdDate)
     public final String createdDate;
 
-    public StoreRegistrationResult(@NonNull final String uuid, final String storeRegistrationRequestUuid, final String status, final String comment, final String createdDate) {
+    public StoreRegistrationResult(@NonNull final String uuid, final String storeUserUuid, final String storeRegistrationRequestUuid, final String status, final String comment, final String createdDate) {
         this.uuid = uuid;
+        this.storeUserUuid = storeUserUuid;
         this.storeRegistrationRequestUuid = storeRegistrationRequestUuid;
         this.status = status;
         this.comment = comment;
@@ -41,20 +44,23 @@ public class StoreRegistrationResult {
 
     public enum Status {
 
-        REQUESTED(R.string.store_registration_result_result_requested),
-        APPROVED(R.string.store_registration_result_result_approved),
-        REJECTED(R.string.store_registration_result_result_rejected);
+        REQUESTED(R.string.store_registration_result_result_requested, R.color.store_registration_result_state_requested),
+        APPROVED(R.string.store_registration_result_result_approved, R.color.store_registration_result_state_approved),
+        REJECTED(R.string.store_registration_result_result_rejected, R.color.store_registration_result_state_rejected);
 
         public final int stringRes;
+        public final int colorRes;
 
-        Status(final int stringRes) {
+        Status(final int stringRes, final int colorRes) {
             this.stringRes = stringRes;
+            this.colorRes = colorRes;
         }
     }
 
     public interface Schema {
         String table = "store_registration_result";
         String uuid = "store_registration_result_uuid";
+        String storeUserUuid = "store_user_uuid";
         String storeRegistrationRequestUuid = "store_registration_request_uuid";
         String status = "registration_status";
         String comment = "comment";

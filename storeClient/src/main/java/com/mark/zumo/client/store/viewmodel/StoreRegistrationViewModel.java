@@ -16,7 +16,6 @@ import android.net.Uri;
 import android.support.annotation.NonNull;
 
 import com.mark.zumo.client.core.appserver.request.registration.StoreRegistrationRequest;
-import com.mark.zumo.client.core.appserver.request.registration.result.StoreRegistrationResult;
 import com.mark.zumo.client.core.provider.AppLocationProvider;
 import com.mark.zumo.client.store.model.S3TransferManager;
 import com.mark.zumo.client.store.model.StoreStoreManager;
@@ -25,7 +24,6 @@ import com.mark.zumo.client.store.model.StoreUserManager;
 import java.util.List;
 
 import io.reactivex.Maybe;
-import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 
@@ -60,25 +58,7 @@ public class StoreRegistrationViewModel extends AndroidViewModel {
         Maybe.fromCallable(storeUserManager::getStoreUserSessionSync)
                 .switchIfEmpty(storeUserManager.getStoreUserSessionAsync())
                 .map(storeUserSession -> storeUserSession.uuid)
-                .flatMapObservable(storeStoreManager::getStoreRegistrationRequestByStoreUserUuid)
-                .flatMapMaybe(storeRegistrationRequestList ->
-                        Observable.fromIterable(storeRegistrationRequestList)
-                                .flatMap(storeRegistrationRequest -> storeStoreManager.getStoreRegistrationResultByRequestId(storeRegistrationRequest.uuid)
-                                        .map(storeRegistrationResultList -> storeRegistrationRequest.resultList = storeRegistrationResultList)
-                                        .map(results -> storeRegistrationRequest))
-                                .toList().toMaybe()
-                ).observeOn(AndroidSchedulers.mainThread())
-                .doOnNext(liveData::setValue)
-                .doOnSubscribe(compositeDisposable::add)
-                .subscribe();
-
-        return liveData;
-    }
-
-    public LiveData<List<StoreRegistrationResult>> getStoreRegistrationResult(String storeRegistrationRequestUuid) {
-        MutableLiveData<List<StoreRegistrationResult>> liveData = new MutableLiveData<>();
-
-        storeStoreManager.getStoreRegistrationResultByRequestId(storeRegistrationRequestUuid)
+                .flatMapObservable(storeStoreManager::getCombinedStoreRegistrationRequestByStoreUserUuid)
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnNext(liveData::setValue)
                 .doOnSubscribe(compositeDisposable::add)

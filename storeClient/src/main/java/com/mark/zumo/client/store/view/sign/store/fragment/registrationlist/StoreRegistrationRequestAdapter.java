@@ -17,6 +17,7 @@ import android.view.ViewGroup;
 import com.mark.zumo.client.core.appserver.request.registration.StoreRegistrationRequest;
 import com.mark.zumo.client.core.appserver.request.registration.result.StoreRegistrationResult;
 import com.mark.zumo.client.core.util.DateUtil;
+import com.mark.zumo.client.core.util.context.ContextHolder;
 import com.mark.zumo.client.store.R;
 
 import java.util.List;
@@ -65,16 +66,20 @@ class StoreRegistrationRequestAdapter extends RecyclerView.Adapter<StoreRegistra
             holder.requestId.setText(storeRegistrationRequest.uuid.substring(0, 4));
         }
 
-        int statusRes = StoreRegistrationResult.Status.REQUESTED.stringRes;
+        int statusStringRes = StoreRegistrationResult.Status.REQUESTED.stringRes;
+        int statusColorRes = StoreRegistrationResult.Status.REQUESTED.colorRes;
         if (storeRegistrationRequest.resultList != null && storeRegistrationRequest.resultList.size() > 0) {
             try {
-                statusRes = StoreRegistrationResult.Status.valueOf(storeRegistrationRequest.resultList.get(0).status).stringRes;
+                StoreRegistrationResult.Status status = StoreRegistrationResult.Status.valueOf(storeRegistrationRequest.resultList.get(0).status);
+                statusStringRes = status.stringRes;
+                statusColorRes = status.colorRes;
             } catch (IllegalArgumentException e) {
             }
         }
 
-        holder.status.setText(statusRes);
-        holder.createdDate.setText(DateUtil.getLocalFormattedTime(storeRegistrationRequest.createdDate));
+        holder.status.setText(statusStringRes);
+        holder.status.setTextColor(ContextHolder.getContext().getResources().getColor(statusColorRes));
+        holder.createdDate.setText(DateUtil.getLocalSimpleTime(storeRegistrationRequest.createdDate));
     }
 
     @Override
