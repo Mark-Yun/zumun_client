@@ -74,6 +74,15 @@ public class StoreRegistrationCreateFragment extends Fragment {
     private String selectedScanImagePath;
     private Location location;
 
+    public static StoreRegistrationCreateFragment newInstance() {
+
+        Bundle args = new Bundle();
+
+        StoreRegistrationCreateFragment fragment = new StoreRegistrationCreateFragment();
+        fragment.setArguments(args);
+        return fragment;
+    }
+
     @Override
     public void onCreate(@Nullable final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

@@ -11,6 +11,8 @@ import android.arch.persistence.room.Entity;
 import android.support.annotation.NonNull;
 
 import com.google.gson.annotations.SerializedName;
+import com.mark.zumo.client.core.entity.util.EntityComparator;
+import com.mark.zumo.client.core.entity.util.EntityHelper;
 
 /**
  * Created by mark on 18. 12. 27.
@@ -28,6 +30,16 @@ public class SessionStore extends Store {
 
     public static SessionStore from(Store store) {
         return new SessionStore(store.uuid, store.name, store.latitude, store.longitude, store.coverImageUrl, store.thumbnailUrl, store.phoneNumber, store.storeType, store.address, -1);
+    }
+
+    @Override
+    public String toString() {
+        return EntityHelper.toString(this);
+    }
+
+    @Override
+    public boolean equals(final Object obj) {
+        return new EntityComparator<>().test(this, obj);
     }
 
     public interface Schema extends Store.Schema {

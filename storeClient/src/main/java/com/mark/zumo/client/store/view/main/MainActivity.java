@@ -88,7 +88,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 
     private void checkSessionAndInflateMainFragmentIfPossible() {
         if (!mainViewModel.hasStoreUserSession()) { //doesn't have user session
-            Log.d(TAG, "checkSessionAndInflateMainFragmentIfPossible: doesn't have storeUserSession");
+            Log.d(TAG, "checkSessionAndInflateMainFragmentIfPossible: doesn't have removeAllStoreUserSession");
             UserSignActivity.start(this);
         } else if (!mainViewModel.hasSessionStore()) { //doesn't have session store
             Log.d(TAG, "checkSessionAndInflateMainFragmentIfPossible: doesn't have sessionStore");
@@ -122,7 +122,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     }
 
     private void onSelectedStore(Store store) {
-        mainViewModel.setSessionStore(store.uuid).observe(this, sessionStore -> inflateMainFragment());
+        inflateMainFragment();
     }
 
     private void inflateStoreInformation() {
@@ -231,10 +231,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     }
 
     private void signOut() {
-        mainViewModel.signOut().observe(this, this::onCompleteSignOut);
-    }
-
-    private void onCompleteSignOut(Object x) {
+        mainViewModel.signOut();
         UserSignActivity.start(this);
     }
 }

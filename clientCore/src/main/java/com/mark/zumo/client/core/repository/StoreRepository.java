@@ -71,8 +71,8 @@ public class StoreRepository {
 
         return Maybe.merge(storeDB, storeApi)
                 .toObservable()
-                .subscribeOn(Schedulers.io())
-                .distinctUntilChanged();
+                .distinctUntilChanged()
+                .subscribeOn(Schedulers.io());
     }
 
     public Maybe<Store> getStoreFromDisk(String storeUuid) {

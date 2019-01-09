@@ -127,4 +127,5 @@
     <string name="store_select_none_session_store_title">등록된 가게가 없습니다</string>
     <string name="store_select_none_session_store_message">아직 등록된 가게가 없으시군요! ZUMUN에서 간편하게 등록하세요</string>
     <string name="store_select_none_session_store_button_text">신규 가게 등록 신청</string>
+    <string name="main_activity_select_store_create_store">가게를 만드세요</string>
 </resources>

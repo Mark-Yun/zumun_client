@@ -20,6 +20,7 @@ import com.mark.zumo.client.store.R;
 import com.mark.zumo.client.store.view.sign.store.fragment.registrationlist.StoreRegistrationListFragment;
 
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 /**
  * Created by mark on 18. 12. 26.
@@ -27,6 +28,15 @@ import butterknife.ButterKnife;
 public class StoreRegistrationFragment extends Fragment {
 
     private StoreRegistrationListFragment storeRegistrationListFragment;
+
+    public static StoreRegistrationFragment newInstance() {
+
+        Bundle args = new Bundle();
+
+        StoreRegistrationFragment fragment = new StoreRegistrationFragment();
+        fragment.setArguments(args);
+        return fragment;
+    }
 
     @Nullable
     @Override
@@ -38,7 +48,7 @@ public class StoreRegistrationFragment extends Fragment {
     }
 
     private void inflateView() {
-        storeRegistrationListFragment = ((StoreRegistrationListFragment) Fragment.instantiate(getContext(), StoreRegistrationListFragment.class.getName()))
+        storeRegistrationListFragment = StoreRegistrationListFragment.newInstance()
                 .doOnStoreRegistrationRequestSelected(this::onStoreRegistrationRequestSelected)
                 .doOnNewRequestClicked(this::onClickNewRequest);
 
@@ -61,7 +71,7 @@ public class StoreRegistrationFragment extends Fragment {
     }
 
     private StoreRegistrationCreateFragment createStoreRegistrationCreateFragment() {
-        return ((StoreRegistrationCreateFragment) Fragment.instantiate(getContext(), StoreRegistrationCreateFragment.class.getName()))
+        return StoreRegistrationCreateFragment.newInstance()
                 .doOnCreateRequestSuccess(storeRegistrationListFragment::onStoreRegistrationComplete);
     }
 
@@ -74,5 +84,10 @@ public class StoreRegistrationFragment extends Fragment {
                 .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
                 .replace(R.id.store_registration_console_fragment, storeRegistrationDetailFragment)
                 .commit();
+    }
+
+    @OnClick(R.id.back)
+    public void onBackClicked() {
+        getFragmentManager().popBackStack();
     }
 }

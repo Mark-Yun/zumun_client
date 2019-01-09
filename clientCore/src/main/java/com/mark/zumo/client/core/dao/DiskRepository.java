@@ -128,7 +128,7 @@ public interface DiskRepository {
     Maybe<StoreUserSession> getStoreUserSession();
 
     @Query("DELETE FROM " + StoreUserSession.Schema.table)
-    void storeUserSession();
+    void removeAllStoreUserSession();
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertSessionStore(SessionStore sessionStore);

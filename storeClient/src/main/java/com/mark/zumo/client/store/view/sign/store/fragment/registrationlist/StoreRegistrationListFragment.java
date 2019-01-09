@@ -47,6 +47,16 @@ public class StoreRegistrationListFragment extends Fragment {
     private Runnable newRequestAction;
 
     private StoreRegistrationViewModel storeRegistrationViewModel;
+    private StoreRegistrationRequestAdapter storeRegistrationRequestAdapter;
+
+    public static StoreRegistrationListFragment newInstance() {
+
+        Bundle args = new Bundle();
+
+        StoreRegistrationListFragment fragment = new StoreRegistrationListFragment();
+        fragment.setArguments(args);
+        return fragment;
+    }
 
     @Override
     public void onCreate(@Nullable final Bundle savedInstanceState) {
@@ -66,7 +76,7 @@ public class StoreRegistrationListFragment extends Fragment {
     }
 
     public StoreRegistrationListFragment onStoreRegistrationComplete(StoreRegistrationRequest storeRegistrationRequest) {
-        //todo
+        storeRegistrationRequestAdapter.onNewStoreRegistrationRequest(storeRegistrationRequest);
         return this;
     }
 
@@ -89,12 +99,12 @@ public class StoreRegistrationListFragment extends Fragment {
     }
 
     private void inflateRecyclerView() {
-        StoreRegistrationRequestAdapter adapter = new StoreRegistrationRequestAdapter(listener);
-        storeRegistrationViewModel.getCombinedStoreRegistrationRequest().observe(this, adapter::setStoreRegistrationRequestList);
+        storeRegistrationRequestAdapter = new StoreRegistrationRequestAdapter(listener);
+        storeRegistrationViewModel.getCombinedStoreRegistrationRequest().observe(this, storeRegistrationRequestAdapter::setStoreRegistrationRequestList);
 
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        recyclerView.setAdapter(adapter);
+        recyclerView.setAdapter(storeRegistrationRequestAdapter);
     }
 
     @OnClick(R.id.new_request)

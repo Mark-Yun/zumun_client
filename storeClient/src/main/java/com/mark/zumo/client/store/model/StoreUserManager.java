@@ -143,16 +143,17 @@ public enum StoreUserManager {
 
     public Maybe<? extends Store> getSessionStoreAsync() {
         return storeUserRepository.getSessionStore()
+                .doOnSuccess(sessionStore -> Log.d(TAG, "getSessionStoreAsync: " + sessionStore))
                 .subscribeOn(Schedulers.io());
     }
 
     public Maybe<? extends Store> setSessionStore(Store store) {
-        return Maybe.just(store)
-                .map(SessionStore::from)
-                .flatMap(sessionStore -> Maybe.fromAction(() -> storeUserRepository.saveSessionStore(sessionStore)))
-                .map(object -> store)
+        Log.d(TAG, "setSessionStore: " + store);
+        return Maybe.just(SessionStore.from(store))
+                .doOnSuccess(storeUserRepository::saveSessionStore)
                 .doOnSuccess(sessionStore -> this.sessionStore = sessionStore)
-                .doOnSuccess(sessionStore -> sessionRepository.putSessionHeader(buildStoreUserSessionHeader()));
+                .doOnSuccess(sessionStore -> sessionRepository.putSessionHeader(buildStoreUserSessionHeader()))
+                .subscribeOn(Schedulers.io());
     }
 
     public Observable<List<StoreUserContract>> getStoreUserContract(String storeUserUuid) {
@@ -160,26 +161,23 @@ public enum StoreUserManager {
                 .subscribeOn(Schedulers.io());
     }
 
-    public Maybe<Object> signOut() {
+    public void signOut() {
         setStoreUserSession(null);
-        return Maybe.fromAction(storeUserRepository::clearStoreUserSession)
-                .subscribeOn(Schedulers.io());
     }
 
     private void setStoreUserSession(@Nullable final StoreUserSession storeUserSession) {
         this.storeUserSession = storeUserSession;
         sessionRepository.putSessionHeader(buildStoreUserSessionHeader());
+        Maybe.fromAction(() -> storeUserRepository.saveStoreUserSession(storeUserSession))
+                .subscribeOn(Schedulers.io())
+                .subscribe();
     }
 
     private Bundle buildStoreUserSessionHeader() {
         Bundle bundle = new Bundle();
-        if (storeUserSession != null) {
-            bundle.putString(STORE_USER_SESSION_HEADER_KEY, storeUserSession.token);
-        }
 
-        if (sessionStore != null) {
-            bundle.putString(SESSION_STORE_KEY, sessionStore.uuid);
-        }
+        bundle.putString(STORE_USER_SESSION_HEADER_KEY, storeUserSession != null ? storeUserSession.token : "");
+        bundle.putString(SESSION_STORE_KEY, sessionStore != null ? sessionStore.uuid : "");
 
         return bundle;
     }

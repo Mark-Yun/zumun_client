@@ -83,7 +83,7 @@ public interface NetworkRepository {
     Maybe<List<StoreRegistrationRequest>> getStoreRegistrationRequestAll(@Query("limit") int limit);
 
     @GET("store/registration/result")
-    Maybe<List<StoreRegistrationResult>> getStoreRegistrationResultByRequestUuid(@Query(StoreRegistrationResult.Schema.storeRegistrationRequestUuid) String storeRegistrationRequestUuid);
+    Maybe<List<StoreRegistrationResult>> getStoreRegistrationResultByRequestUuid(@Query(StoreUser.Schema.uuid) String storeRegistrationRequestUuid);
 
     @POST("store/registration/approve")
     Maybe<StoreRegistrationResult> approveStoreRegistration(@Body StoreRegistrationRequest storeRegistrationRequest);

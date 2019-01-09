@@ -77,13 +77,13 @@ public enum StoreStoreManager {
     public Observable<List<StoreRegistrationRequest>> getStoreRegistrationRequestByStoreUserUuid(String storeUserUuid) {
         return storeRepositoryMaybe.flatMapObservable(storeRepository ->
                 storeRepository.getStoreRegistrationRequestListByStoreUserUuid(storeUserUuid)
-        ).subscribeOn(Schedulers.io());
+        ).distinctUntilChanged().subscribeOn(Schedulers.io());
     }
 
     public Observable<List<StoreRegistrationResult>> getStoreRegistrationResultByRequestId(String storeRegistrationRequestUuid) {
         return storeRepositoryMaybe.flatMapObservable(storeRepository ->
                 storeRepository.getStoreRegistrationResultListByRequestId(storeRegistrationRequestUuid)
-        ).subscribeOn(Schedulers.io());
+        ).distinctUntilChanged().subscribeOn(Schedulers.io());
     }
 
     public Observable<Store> getStore(String storeUuid) {

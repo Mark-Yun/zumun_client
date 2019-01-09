@@ -12,6 +12,7 @@ import android.arch.persistence.room.PrimaryKey;
 import android.support.annotation.NonNull;
 
 import com.google.gson.annotations.SerializedName;
+import com.mark.zumo.client.core.entity.util.EntityHelper;
 
 /**
  * Created by mark on 18. 12. 26.
@@ -33,6 +34,11 @@ public class StoreUserContract {
         this.storeUserUuid = storeUserUuid;
         this.storeUuid = storeUuid;
         this.permission = permission;
+    }
+
+    @Override
+    public String toString() {
+        return EntityHelper.toString(this);
     }
 
     public interface Schema {

@@ -56,10 +56,6 @@ public enum StoreUserRepository {
         diskRepository.insertSessionStore(sessionStore);
     }
 
-    public void clearStoreUserSession() {
-        diskRepository.storeUserSession();
-    }
-
     public Maybe<StoreOwner> creteStoreOwner(StoreOwnerSignUpRequest request) {
         return networkRepository.createStoreOwner(request)
                 .doOnSuccess(diskRepository::insertStoreOwner);
@@ -76,7 +72,11 @@ public enum StoreUserRepository {
     }
 
     public void saveStoreUserSession(StoreUserSession storeUserSession) {
-        diskRepository.insertStoreUserSession(storeUserSession);
+        if (storeUserSession != null) {
+            diskRepository.insertStoreUserSession(storeUserSession);
+        } else {
+            diskRepository.removeAllStoreUserSession();
+        }
     }
 
     public Observable<List<StoreUserContract>> getStoreUserContract(String storeUserUuid) {

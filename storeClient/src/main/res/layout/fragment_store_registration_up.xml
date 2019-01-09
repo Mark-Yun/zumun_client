@@ -25,6 +25,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/store_registration_category_store_info"
+                android:textSize="20sp"
                 android:textStyle="bold" />
 
             <android.support.v7.widget.LinearLayoutCompat
@@ -67,28 +68,36 @@
                         android:layout_height="wrap_content"
                         android:hint="@string/store_registration_hint_store_type" />
                 </android.support.design.widget.TextInputLayout>
+            </android.support.v7.widget.LinearLayoutCompat>
+
+            <android.support.v7.widget.AppCompatTextView
+                android:id="@+id/store_location_hint"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/store_registration_hint_store_location"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <android.support.v7.widget.LinearLayoutCompat
+                android:id="@+id/store_location_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/small_margin"
+                android:orientation="vertical">
 
                 <android.support.constraint.ConstraintLayout
                     android:id="@+id/map_fragment_layout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 
-                    <android.support.v7.widget.AppCompatTextView
-                        android:id="@+id/store_location_hint"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="@dimen/small_margin"
-                        android:text="@string/store_registration_hint_store_location"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
-
                     <android.support.constraint.ConstraintLayout
                         android:id="@+id/map_fragment"
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
                         app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintDimensionRatio="H, 2:1"
-                        app:layout_constraintTop_toBottomOf="@id/store_location_hint" />
+                        app:layout_constraintDimensionRatio="H, 2:1" />
                 </android.support.constraint.ConstraintLayout>
 
                 <android.support.design.widget.TextInputLayout
@@ -109,6 +118,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/big_margin"
                 android:text="@string/store_registration_category_corporate_info"
+                android:textSize="20sp"
                 android:textStyle="bold" />
 
             <android.support.v7.widget.LinearLayoutCompat

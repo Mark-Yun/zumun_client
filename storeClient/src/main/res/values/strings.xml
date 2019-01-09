@@ -141,6 +141,7 @@
 
     <string name="main_activity_sign_out_title">Sign Out</string>
     <string name="main_activity_select_store">Select Store</string>
+    <string name="main_activity_select_store_create_store">Create New Store</string>
     <string name="sign_out_dialog_title">Sign Out</string>
     <string name="sign_out_dialog_message">Sign out from current user</string>
 

@@ -88,11 +88,12 @@ public class MainViewModel extends AndroidViewModel {
     public LiveData<Store> setSessionStore(String storeUuid) {
 
         storeStoreManager.getStore(storeUuid)
-                .doOnNext(storeUserManager::setSessionStore)
+                .flatMapMaybe(storeUserManager::setSessionStore)
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnNext(sessionStoreLiveData::setValue)
                 .doOnSubscribe(compositeDisposable::add)
                 .subscribe();
+
         return sessionStoreLiveData;
     }
 
@@ -114,10 +115,13 @@ public class MainViewModel extends AndroidViewModel {
                 .switchIfEmpty(storeUserManager.getStoreUserSessionAsync())
                 .map(storeUserSession -> storeUserSession.uuid)
                 .flatMapObservable(storeUserManager::getStoreUserContract)
+                .doOnNext(storeUserContractList -> Log.d(TAG, "getStoreUserContractedStoreList: " + storeUserContractList))
                 .flatMapMaybe(storeUserContractList ->
                         Observable.fromIterable(storeUserContractList)
                                 .map(storeUserContract -> storeUserContract.storeUuid)
+                                .doOnNext(uuid -> Log.d(TAG, "getStoreUserContractedStoreList: " + uuid))
                                 .flatMap(storeStoreManager::getStore)
+                                .doOnNext(store -> Log.d(TAG, "getStoreUserContractedStoreList: " + store))
                                 .toList().toMaybe()
                 ).observeOn(AndroidSchedulers.mainThread())
                 .doOnNext(liveData::setValue)
@@ -137,15 +141,8 @@ public class MainViewModel extends AndroidViewModel {
                 .subscribe();
     }
 
-    public LiveData<Object> signOut() {
-        MutableLiveData<Object> liveData = new MutableLiveData<>();
-        storeUserManager.signOut()
-                .observeOn(AndroidSchedulers.mainThread())
-                .doOnComplete(() -> liveData.setValue(new Object()))
-                .doOnSubscribe(compositeDisposable::add)
-                .subscribe();
-
-        return liveData;
+    public void signOut() {
+        storeUserManager.signOut();
     }
 
     @Override

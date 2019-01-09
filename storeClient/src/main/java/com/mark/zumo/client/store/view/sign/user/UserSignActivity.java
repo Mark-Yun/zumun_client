@@ -29,6 +29,7 @@ import com.mark.zumo.client.core.view.BaseActivity;
 import com.mark.zumo.client.store.R;
 import com.mark.zumo.client.store.view.main.MainActivity;
 import com.mark.zumo.client.store.view.main.fragment.storeselect.StoreSelectFragment;
+import com.mark.zumo.client.store.view.sign.store.fragment.StoreRegistrationFragment;
 import com.mark.zumo.client.store.view.sign.user.fragment.BackPressedInterceptor;
 import com.mark.zumo.client.store.view.sign.user.fragment.SignFragment;
 import com.mark.zumo.client.store.viewmodel.StoreUserSignViewModel;
@@ -108,11 +109,21 @@ public class UserSignActivity extends BaseActivity {
 
     private void inflateStoreSelectFragment() {
         Fragment fragment = StoreSelectFragment.newInstance()
-                .onSelectStore(store -> onSessionStoreLoaded(true));
+                .onSelectStore(store -> onSessionStoreLoaded(true))
+                .onClickStoreRegistration(this::inflateStoreRegistrationFragment);
 
         getSupportFragmentManager().beginTransaction()
                 .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
                 .replace(R.id.main_fragment, fragment)
+                .commit();
+    }
+
+    private void inflateStoreRegistrationFragment() {
+        StoreRegistrationFragment storeRegistrationFragment = StoreRegistrationFragment.newInstance();
+        getSupportFragmentManager().beginTransaction()
+                .addToBackStack(null)
+                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+                .replace(R.id.main_fragment, storeRegistrationFragment)
                 .commit();
     }
 
