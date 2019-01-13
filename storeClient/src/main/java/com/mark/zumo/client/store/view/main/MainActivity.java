@@ -40,6 +40,7 @@ import com.mark.zumo.client.store.view.order.OrderFragment;
 import com.mark.zumo.client.store.view.setting.fragment.SettingMainFragment;
 import com.mark.zumo.client.store.view.sign.store.fragment.StoreRegistrationFragment;
 import com.mark.zumo.client.store.view.sign.user.UserSignActivity;
+import com.mark.zumo.client.store.view.witdraw.fragment.WithdrawMainFragment;
 import com.mark.zumo.client.store.viewmodel.MainViewModel;
 
 import butterknife.BindView;
@@ -182,6 +183,8 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         } else if (id == R.id.nav_store_registration) {
             Fragment fragment = Fragment.instantiate(this, StoreRegistrationFragment.class.getName());
             updateMainFragment(fragment);
+        } else if (id == R.id.nav_withdraw) {
+            updateMainFragment(WithdrawMainFragment.newInstance());
         } else if (id == R.id.nav_share) {
 
         } else if (id == R.id.nav_send) {

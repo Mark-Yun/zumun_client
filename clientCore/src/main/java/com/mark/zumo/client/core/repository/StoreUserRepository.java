@@ -48,6 +48,16 @@ public enum StoreUserRepository {
         return diskRepository.getStoreUserSession();
     }
 
+    public Observable<StoreOwner> getStoreOwner(String storeUserUuid) {
+        Maybe<StoreOwner> storeUserDB = diskRepository.getStoreOwner(storeUserUuid);
+        Maybe<StoreOwner> storeUserApi = networkRepository.getStoreOwner(storeUserUuid)
+                .doOnSuccess(diskRepository::insertStoreUser);
+
+        return Maybe.merge(storeUserDB, storeUserApi)
+                .distinctUntilChanged()
+                .toObservable();
+    }
+
     public Maybe<SessionStore> getSessionStore() {
         return diskRepository.getSessionStore();
     }

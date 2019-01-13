@@ -127,6 +127,12 @@ public interface DiskRepository {
     @Query("SELECT * FROM " + StoreUserSession.Schema.table + " ORDER BY " + StoreUserSession.Schema.createdDate + " DESC LIMIT 1")
     Maybe<StoreUserSession> getStoreUserSession();
 
+    @Query("SELECT * FROM " + StoreOwner.Schema.TABLE + " WHERE " + StoreOwner.Schema.uuid + " LIKE :storeUserUuid")
+    Maybe<StoreOwner> getStoreOwner(String storeUserUuid);
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    void insertStoreUser(StoreOwner storeOwner);
+
     @Query("DELETE FROM " + StoreUserSession.Schema.table)
     void removeAllStoreUserSession();
 

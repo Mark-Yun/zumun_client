@@ -6,10 +6,14 @@
 
 package com.mark.zumo.client.core.appserver;
 
+import com.mark.zumo.client.core.appserver.request.bank.DepositRequest;
+import com.mark.zumo.client.core.appserver.request.bank.InquiryAccountRequest;
 import com.mark.zumo.client.core.appserver.request.login.StoreUserLoginRequest;
 import com.mark.zumo.client.core.appserver.request.registration.StoreRegistrationRequest;
 import com.mark.zumo.client.core.appserver.request.registration.result.StoreRegistrationResult;
 import com.mark.zumo.client.core.appserver.request.signup.StoreOwnerSignUpRequest;
+import com.mark.zumo.client.core.appserver.response.DepositResponse;
+import com.mark.zumo.client.core.appserver.response.InquiryAccountResponse;
 import com.mark.zumo.client.core.appserver.response.StoreUserHandShakeResponse;
 import com.mark.zumo.client.core.appserver.response.StoreUserLoginResponse;
 import com.mark.zumo.client.core.entity.Menu;
@@ -55,6 +59,9 @@ public interface NetworkRepository {
 
     @POST("users/store")
     Maybe<StoreOwner> createStoreOwner(@Body StoreOwnerSignUpRequest request);
+
+    @GET("users/store/{" + StoreOwner.Schema.uuid + "}")
+    Maybe<StoreOwner> getStoreOwner(@Path(StoreOwner.Schema.uuid) String storeUserUuid);
 
     @POST("login/store")
     Maybe<StoreUserLoginResponse> storeUserLogin(@Body StoreUserLoginRequest request);
@@ -243,4 +250,9 @@ public interface NetworkRepository {
     Maybe<SnsToken> createSnsToken(@Body SnsToken snsToken);
 
 
+    @POST("/bank/transfer/deposit")
+    Maybe<DepositResponse> depsit(DepositRequest depositRequest);
+
+    @POST("/bank/inquiry/account")
+    Maybe<InquiryAccountResponse> inquiryBankAccount(InquiryAccountRequest inquiryAccountRequest);
 }

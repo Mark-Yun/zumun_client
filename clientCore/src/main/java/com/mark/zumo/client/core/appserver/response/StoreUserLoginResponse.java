@@ -32,4 +32,9 @@ public class StoreUserLoginResponse {
         String sessionToken = "store_user_session_token";
         String storeUserUuid = "store_user_uuid";
     }
+
+    public enum Result {
+        SIGN_IN_OK,
+        SIGN_IN_FAILED
+    }
 }

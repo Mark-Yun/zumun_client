@@ -173,4 +173,11 @@
     <string name="store_select_none_session_store_title">There is no registered Store</string>
     <string name="store_select_none_session_store_message">You do not have your store yet! Join us!</string>
     <string name="store_select_none_session_store_button_text">Request New Store</string>
+
+    <string name="withdraw_available_money_title">Available Withdraw Money</string>
+    <string name="withdraw_available_money_description">The money can be withdraw which only deposit from credit card operator</string>
+    <string name="withdraw_money_title">Withdraw Money</string>
+    <string name="withdraw_money_description">The money will deposit to %1$s %2$s</string>
+    <string name="withdraw_available_money_button_text">Withdraw</string>
+    <string name="bank_account_title">Bank Account</string>
 </resources>

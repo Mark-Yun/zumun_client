@@ -18,6 +18,7 @@ import com.mark.zumo.client.core.appserver.request.signup.StoreUserSignupExcepti
 import com.mark.zumo.client.core.entity.SessionStore;
 import com.mark.zumo.client.core.entity.SnsToken;
 import com.mark.zumo.client.core.entity.Store;
+import com.mark.zumo.client.core.entity.user.store.StoreOwner;
 import com.mark.zumo.client.core.entity.user.store.StoreUserContract;
 import com.mark.zumo.client.core.entity.user.store.StoreUserSession;
 import com.mark.zumo.client.core.repository.SessionRepository;
@@ -158,6 +159,11 @@ public enum StoreUserManager {
 
     public Observable<List<StoreUserContract>> getStoreUserContract(String storeUserUuid) {
         return storeUserRepository.getStoreUserContract(storeUserUuid)
+                .subscribeOn(Schedulers.io());
+    }
+
+    public Observable<StoreOwner> getStoreOwner(String storeUserUuid) {
+        return storeUserRepository.getStoreOwner(storeUserUuid)
                 .subscribeOn(Schedulers.io());
     }
 

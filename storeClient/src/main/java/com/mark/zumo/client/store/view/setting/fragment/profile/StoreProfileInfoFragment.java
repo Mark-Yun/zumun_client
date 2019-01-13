@@ -67,10 +67,23 @@ public class StoreProfileInfoFragment extends Fragment {
     private StoreSettingViewModel storeSettingViewModel;
     private Store store;
 
+    public static StoreProfileInfoFragment newInstance() {
+
+        Bundle args = new Bundle();
+
+        StoreProfileInfoFragment fragment = new StoreProfileInfoFragment();
+        fragment.setArguments(args);
+        return fragment;
+    }
+
+    public void updateStore(Store store) {
+        onLoadStore(store);
+    }
+
     @Override
     public void onCreate(@Nullable final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        storeSettingViewModel = ViewModelProviders.of(getActivity()).get(StoreSettingViewModel.class);
+        storeSettingViewModel = ViewModelProviders.of(this).get(StoreSettingViewModel.class);
     }
 
     @Nullable

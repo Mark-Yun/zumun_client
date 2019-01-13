@@ -41,8 +41,8 @@ public class StoreOwner {
     public final String authType;
     @SerializedName(Schema.auth_token) @ColumnInfo(name = Schema.auth_token)
     public final String authToken;
-    @SerializedName(Schema.bankName) @ColumnInfo(name = Schema.bankName)
-    public final String bankName;
+    @SerializedName(Schema.bankCode) @ColumnInfo(name = Schema.bankCode)
+    public final String bankCode;
     @SerializedName(Schema.bankAccountNumber) @ColumnInfo(name = Schema.bankAccountNumber)
     public final String bankAccountNumber;
     @SerializedName(Schema.bankAccountScanUrl) @ColumnInfo(name = Schema.bankAccountScanUrl)
@@ -56,7 +56,7 @@ public class StoreOwner {
     @SerializedName(Schema.contractVersion) @ColumnInfo(name = Schema.contractVersion)
     public final int contractVersion;
 
-    public StoreOwner(@NonNull final String uuid, final String name, final String password, final String phoneNumber, final String email, final String authType, final String authToken, final String bankName, final String bankAccountNumber, final String bankAccountScanUrl, final long requestId, final long createdDate, final String userStatus, final int contractVersion) {
+    public StoreOwner(@NonNull final String uuid, final String name, final String password, final String phoneNumber, final String email, final String authType, final String authToken, final String bankCode, final String bankAccountNumber, final String bankAccountScanUrl, final long requestId, final long createdDate, final String userStatus, final int contractVersion) {
         this.uuid = uuid;
         this.name = name;
         this.password = password;
@@ -64,7 +64,7 @@ public class StoreOwner {
         this.email = email;
         this.authType = authType;
         this.authToken = authToken;
-        this.bankName = bankName;
+        this.bankCode = bankCode;
         this.bankAccountNumber = bankAccountNumber;
         this.bankAccountScanUrl = bankAccountScanUrl;
         this.requestId = requestId;
@@ -92,7 +92,7 @@ public class StoreOwner {
         String email = "store_user_email";
         String auth_type = "authType";
         String auth_token = "authToken";
-        String bankName = "bank_name";
+        String bankCode = "bank_code";
         String bankAccountNumber = "bank_account_number";
         String bankAccountScanUrl = "bank_account_scan_url";
         String requestId = "request_id";

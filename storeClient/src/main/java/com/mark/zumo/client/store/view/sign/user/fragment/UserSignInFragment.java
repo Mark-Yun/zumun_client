@@ -17,6 +17,7 @@ import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.AppCompatTextView;
 import android.support.v7.widget.SwitchCompat;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -80,8 +81,12 @@ public class UserSignInFragment extends Fragment {
     @OnClick(R.id.button_sign_in)
     void onClickSignIn() {
         boolean isAutoLogin = autoLogin.isChecked();
-        String email = inputEmail.getText().toString();
-        String password = inputPassword.getText().toString();
+        String email = inputEmail.getText() != null ? inputEmail.getText().toString() : "";
+        String password = inputPassword.getText() != null ? inputPassword.getText().toString() : "";
+
+        if (checkErrorData(email, password)) {
+            return;
+        }
 
         storeUserSignViewModel.loginStoreUser(email, password, isAutoLogin).observe(this, this::onLoginResult);
 
@@ -94,6 +99,23 @@ public class UserSignInFragment extends Fragment {
         inputMethodManager.hideSoftInputFromWindow(getView().getWindowToken(), 0);
 
         startLoadingAction.run();
+    }
+
+    private boolean checkErrorData(final String email, final String password) {
+        inputEmail.setError(null);
+        inputPassword.setError(null);
+
+        if (TextUtils.isEmpty(email)) {
+            inputEmail.setError(getString(R.string.sign_up_error_message_empty_email));
+            return true;
+        }
+
+        if (TextUtils.isEmpty(password)) {
+            inputPassword.setError(getString(R.string.sign_up_error_message_empty_password));
+            return true;
+        }
+
+        return false;
     }
 
     private void onLoginResult(StoreUserSession storeUserSession) {

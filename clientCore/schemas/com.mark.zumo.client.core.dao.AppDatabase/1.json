@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "7dfac71044863049ee5d9e9278f11b5a",
+    "identityHash": "b37b62a62d6e24998225f6cc12874426",
     "entities": [
       {
         "tableName": "menu",
@@ -670,7 +670,7 @@
       },
       {
         "tableName": "store_owner",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`store_user_uuid` TEXT NOT NULL, `store_user_name` TEXT, `store_user_password` TEXT, `store_user_phone_number` TEXT, `store_user_email` TEXT, `authType` TEXT, `authToken` TEXT, `bank_name` TEXT, `bank_account_number` TEXT, `bank_account_scan_url` TEXT, `request_id` INTEGER NOT NULL, `created_date` INTEGER NOT NULL, `user_status` TEXT, `contract_version` INTEGER NOT NULL, PRIMARY KEY(`store_user_uuid`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`store_user_uuid` TEXT NOT NULL, `store_user_name` TEXT, `store_user_password` TEXT, `store_user_phone_number` TEXT, `store_user_email` TEXT, `authType` TEXT, `authToken` TEXT, `bank_code` TEXT, `bank_account_number` TEXT, `bank_account_scan_url` TEXT, `request_id` INTEGER NOT NULL, `created_date` INTEGER NOT NULL, `user_status` TEXT, `contract_version` INTEGER NOT NULL, PRIMARY KEY(`store_user_uuid`))",
         "fields": [
           {
             "fieldPath": "uuid",
@@ -715,8 +715,8 @@
             "notNull": false
           },
           {
-            "fieldPath": "bankName",
-            "columnName": "bank_name",
+            "fieldPath": "bankCode",
+            "columnName": "bank_code",
             "affinity": "TEXT",
             "notNull": false
           },
@@ -1041,7 +1041,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"7dfac71044863049ee5d9e9278f11b5a\")"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"b37b62a62d6e24998225f6cc12874426\")"
     ]
   }
 }
