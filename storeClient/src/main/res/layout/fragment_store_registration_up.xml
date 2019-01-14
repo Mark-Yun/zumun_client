@@ -213,7 +213,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/big_margin"
-                android:background="@color/colorAccent"
+                android:background="@drawable/background_default_button"
                 android:text="@android:string/ok"
                 android:textColor="@color/colorTextDark" />
         </android.support.v7.widget.LinearLayoutCompat>

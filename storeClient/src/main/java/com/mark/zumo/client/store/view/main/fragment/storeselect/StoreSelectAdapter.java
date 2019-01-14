@@ -96,7 +96,7 @@ public class StoreSelectAdapter extends RecyclerView.Adapter<StoreSelectAdapter.
 
         viewHolder.createStoreText.setVisibility(View.GONE);
         viewHolder.sampleImage.setVisibility(View.VISIBLE);
-        viewHolder.sampleImage.setImageResource(R.drawable.ic_store_black_48dp);
+        viewHolder.sampleImage.setImageResource(R.drawable.ic_home_black_48dp);
         viewHolder.thumbnailImage.setVisibility(View.INVISIBLE);
     }
 

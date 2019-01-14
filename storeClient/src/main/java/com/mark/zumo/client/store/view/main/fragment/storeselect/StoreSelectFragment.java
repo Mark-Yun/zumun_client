@@ -17,6 +17,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -30,6 +31,7 @@ import com.mark.zumo.client.store.viewmodel.MainViewModel;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 /**
  * Created by mark on 18. 12. 27.
@@ -39,6 +41,7 @@ public class StoreSelectFragment extends Fragment {
     private static final String TAG = "StoreSelectFragment";
 
     @BindView(R.id.recycler_view) RecyclerView recyclerView;
+    @BindView(R.id.back) AppCompatImageView back;
 
     private MainViewModel mainViewModel;
 
@@ -77,13 +80,20 @@ public class StoreSelectFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_store_select, container, false);
         ButterKnife.bind(this, view);
 
+        inflateView();
+
+        return view;
+    }
+
+    private void inflateView() {
         StoreSelectAdapter storeSelectAdapter = new StoreSelectAdapter(this::onSelectStore);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 4));
         recyclerView.setAdapter(storeSelectAdapter);
         mainViewModel.getStoreUserContractedStoreList().observe(this, storeSelectAdapter::setStoreList);
 
-        return view;
+        boolean hasBackStack = getFragmentManager().getBackStackEntryCount() > 0;
+        back.setVisibility(hasBackStack ? View.VISIBLE : View.GONE);
     }
 
     private void onSelectStore(Store store) {
@@ -92,6 +102,12 @@ public class StoreSelectFragment extends Fragment {
         } else {
             mainViewModel.setSessionStore(store.uuid).observe(this, listener::onSelectStore);
         }
+    }
+
+    @OnClick(R.id.back)
+    void onBackClicked() {
+        mainViewModel.signOut();
+        getFragmentManager().popBackStack();
     }
 
     public interface StoreSelectListener extends StoreSelectAdapter.StoreSelectListener {

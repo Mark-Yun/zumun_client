@@ -11,6 +11,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.widget.AppCompatImageView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +20,7 @@ import com.mark.zumo.client.core.appserver.request.registration.StoreRegistratio
 import com.mark.zumo.client.store.R;
 import com.mark.zumo.client.store.view.sign.store.fragment.registrationlist.StoreRegistrationListFragment;
 
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
@@ -27,6 +29,7 @@ import butterknife.OnClick;
  */
 public class StoreRegistrationFragment extends Fragment {
 
+    @BindView(R.id.back) AppCompatImageView back;
     private StoreRegistrationListFragment storeRegistrationListFragment;
 
     public static StoreRegistrationFragment newInstance() {
@@ -59,6 +62,9 @@ public class StoreRegistrationFragment extends Fragment {
                 .replace(R.id.store_registration_list_fragment, storeRegistrationListFragment)
                 .replace(R.id.store_registration_console_fragment, storeRegistrationCreateFragment)
                 .commit();
+
+        boolean hasBackStack = getFragmentManager().getBackStackEntryCount() > 0;
+        back.setVisibility(hasBackStack ? View.VISIBLE : View.GONE);
     }
 
     private void onClickNewRequest() {
