@@ -116,7 +116,8 @@ public class OrderDetailFragment extends Fragment {
     }
 
     private void onLoadMenuOrder(MenuOrder menuOrder) {
-        orderNumber.setText(menuOrder.orderNumber);
+        String orderNumber = getString(R.string.menu_order_no, menuOrder.orderNumber);
+        this.orderNumber.setText(orderNumber);
         orderDate.setText(DateUtil.getLocalDate(menuOrder.createdDate));
         orderTime.setText(DateUtil.getLocalTime(menuOrder.createdDate));
 

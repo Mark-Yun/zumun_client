@@ -89,7 +89,7 @@
     <string name="store_owner_bank_name">은행 선택</string>
     <string name="store_owner_bank_account">계좌번호</string>
     <string name="store_owner_bank_account_scan">통장 사본 업로드</string>
-    <string name="menu_title_widthdraw">출금</string>
+    <string name="menu_title_withdraw">출금 관리</string>
     <string name="menu_title_store_sign_up">신규 가게 등록</string>
     <string name="option_setting_mode_description_edit">수정할 옵션을 선택하세요</string>
     <string name="option_setting_mode_description_delete">삭제할 옵션들을 선택하세요</string>
@@ -134,4 +134,5 @@
     <string name="withdraw_money_description">%1$s %2$s으로 입금됩니다.</string>
     <string name="withdraw_available_money_button_text">출금</string>
     <string name="bank_account_title">출금 계좌</string>
+    <string name="menu_order_no">Order No.%s</string>
 </resources>

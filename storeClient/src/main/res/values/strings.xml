@@ -127,7 +127,7 @@
     <string name="store_owner_bank_account">Store Owner Back Account</string>
     <string name="store_owner_bank_account_scan">Store Owner Back Account Scan</string>
 
-    <string name="menu_title_widthdraw">Withdraw</string>
+    <string name="menu_title_withdraw">Withdraw Management</string>
     <string name="menu_title_store_sign_up">Store Registration</string>
 
     <string name="option_setting_mode_description_edit">Select an option to edit</string>
@@ -180,4 +180,6 @@
     <string name="withdraw_money_description">The money will deposit to %1$s %2$s</string>
     <string name="withdraw_available_money_button_text">Withdraw</string>
     <string name="bank_account_title">Bank Account</string>
+
+    <string name="menu_order_no">Order No.%s</string>
 </resources>

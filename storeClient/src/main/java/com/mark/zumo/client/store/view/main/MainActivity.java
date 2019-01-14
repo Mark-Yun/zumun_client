@@ -71,10 +71,11 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         super.onCreate(savedInstanceState);
 
         mainViewModel = ViewModelProviders.of(this).get(MainViewModel.class);
-
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
         LayoutInflater.from(this).inflate(R.layout.nav_header_main, navView);
+
+        checkSessionAndInflateMainFragmentIfPossible();
 
         setSupportActionBar(toolbar);
 
@@ -83,8 +84,6 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         toggle.syncState();
 
         navView.setNavigationItemSelectedListener(this);
-
-        checkSessionAndInflateMainFragmentIfPossible();
     }
 
     private void checkSessionAndInflateMainFragmentIfPossible() {
@@ -103,6 +102,18 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 
     private void inflateMainFragment() {
         mainViewModel.findCustomer(this);
+        Menu menu = navView.getMenu();
+        if (menu == null) {
+            return;
+        }
+
+        MenuItem firstItem = menu.getItem(0);
+        if (firstItem == null) {
+            return;
+        }
+
+        firstItem.setChecked(true);
+        onNavigationItemSelected(firstItem);
     }
 
     private void onSessionStoreLoaded(boolean hasSessionStore) {
@@ -172,9 +183,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_home) {
-            checkSessionAndInflateMainFragmentIfPossible();
-        } else if (id == R.id.nav_menu_order) {
+        if (id == R.id.nav_menu_order) {
             Fragment fragment = Fragment.instantiate(this, OrderFragment.class.getName());
             updateMainFragment(fragment);
         } else if (id == R.id.nav_setting) {
@@ -185,10 +194,6 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
             updateMainFragment(fragment);
         } else if (id == R.id.nav_withdraw) {
             updateMainFragment(WithdrawMainFragment.newInstance());
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
-
         }
 
         drawer.closeDrawer(GravityCompat.START);
