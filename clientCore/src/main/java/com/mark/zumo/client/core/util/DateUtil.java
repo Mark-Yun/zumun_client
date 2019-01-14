@@ -42,6 +42,6 @@ public final class DateUtil {
 
     public static String getLocalSimpleTime(long utcTimeInMills) {
         Date localDate = new Date(utcTimeInMills);
-        return DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT).format(localDate);
+        return DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT, Locale.getDefault()).format(localDate);
     }
 }

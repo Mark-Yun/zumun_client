@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "b37b62a62d6e24998225f6cc12874426",
+    "identityHash": "ce92ade3d1b93bc846e1cf7a2af8d8ce",
     "entities": [
       {
         "tableName": "menu",
@@ -856,7 +856,7 @@
       },
       {
         "tableName": "store_registration_request",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`store_registration_request_uuid` TEXT NOT NULL, `store_user_uuid` TEXT, `store_name` TEXT, `store_phone_number` TEXT, `store_type` TEXT, `corporate_registration_name` TEXT, `corporate_registration_owner_name` TEXT, `corporate_registration_number` TEXT, `corporate_registration_address` TEXT, `corporate_registration_scan_url` TEXT, `latitude` REAL NOT NULL, `longitude` REAL NOT NULL, `store_address` TEXT, `cover_image_url` TEXT, `thumbnail_image_url` TEXT, `create_date` INTEGER NOT NULL, PRIMARY KEY(`store_registration_request_uuid`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`store_registration_request_uuid` TEXT NOT NULL, `store_user_uuid` TEXT, `store_name` TEXT, `store_phone_number` TEXT, `store_type` TEXT, `corporate_registration_name` TEXT, `corporate_registration_owner_name` TEXT, `corporate_registration_number` TEXT, `corporate_registration_address` TEXT, `corporate_registration_scan_url` TEXT, `latitude` REAL NOT NULL, `longitude` REAL NOT NULL, `store_address` TEXT, `cover_image_url` TEXT, `thumbnail_image_url` TEXT, `created_date` INTEGER NOT NULL, PRIMARY KEY(`store_registration_request_uuid`))",
         "fields": [
           {
             "fieldPath": "uuid",
@@ -950,7 +950,7 @@
           },
           {
             "fieldPath": "createdDate",
-            "columnName": "create_date",
+            "columnName": "created_date",
             "affinity": "INTEGER",
             "notNull": true
           }
@@ -1041,7 +1041,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"b37b62a62d6e24998225f6cc12874426\")"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"ce92ade3d1b93bc846e1cf7a2af8d8ce\")"
     ]
   }
 }

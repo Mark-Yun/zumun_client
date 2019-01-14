@@ -101,7 +101,7 @@ public class StoreRegistrationRequest {
         String storeAddress = "store_address";
         String coverImageRrl = "cover_image_url";
         String thumbnailImageUrl = "thumbnail_image_url";
-        String createdDate = "create_date";
+        String createdDate = "created_date";
     }
 
     public static class Builder {

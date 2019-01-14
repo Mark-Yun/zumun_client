@@ -274,7 +274,7 @@ public interface DiskRepository {
     @Query("SELECT * FROM " + StoreRegistrationRequest.Schema.table + " WHERE store_user_uuid LIKE :storeUserUuid")
     Maybe<List<StoreRegistrationRequest>> getStoreRegistrationRequestListByStoreUserUuid(String storeUserUuid);
 
-    @Query("SELECT * FROM " + StoreRegistrationRequest.Schema.table + " ORDER BY create_date LIMIT :limit")
+    @Query("SELECT * FROM " + StoreRegistrationRequest.Schema.table + " ORDER BY created_date LIMIT :limit")
     Maybe<List<StoreRegistrationRequest>> getStoreRegistrationRequestAll(int limit);
 
     @Query("SELECT * FROM " + StoreRegistrationRequest.Schema.table + " WHERE store_registration_request_uuid = :uuid")
