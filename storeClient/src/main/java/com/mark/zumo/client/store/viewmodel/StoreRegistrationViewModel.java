@@ -80,7 +80,7 @@ public class StoreRegistrationViewModel extends AndroidViewModel {
                                         new StoreRegistrationRequest.Builder(storeRegistrationRequest)
                                                 .setCorporateRegistrationScanUrl(uploadedUrl)
                                                 .setStoreUserUuid(storeUserUuid)
-                                                .build())
+                                                .buildIgnoreException())
                 )
                 .flatMap(storeStoreManager::createStoreRegistrationRequest)
                 .observeOn(AndroidSchedulers.mainThread())

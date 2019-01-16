@@ -10,6 +10,7 @@ import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
 import android.support.annotation.NonNull;
+import android.util.Log;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
@@ -105,6 +106,8 @@ public class StoreRegistrationRequest {
     }
 
     public static class Builder {
+        private static final String TAG = "StoreRegistrationRequest.Builder";
+
         private String uuid;
         private String storeUserUuid;
         private String storeName;
@@ -224,15 +227,24 @@ public class StoreRegistrationRequest {
             return this;
         }
 
-        public StoreRegistrationRequest build() {
+        public StoreRegistrationRequest build() throws StoreRegistrationException {
 
             StoreRegistrationRequest storeRegistrationRequest = new StoreRegistrationRequest(uuid, storeUserUuid, storeName, storePhoneNumber, storeType, corporateRegistrationName, corporateRegistrationOwnerName, corporateRegistrationNumber, corporateRegistrationAddress, corporateRegistrationScanUrl, latitude, longitude, storeAddress, coverImageRrl, thumbnailImageUrl, createdDate);
-//            for (Validator validator : Validator.values()) {
-//                if (!validator.verify(storeRegistrationRequest)) {
-//                    throw new StoreRegistrationException(validator.ofErrorCode());
-//                }
-//            }
+            for (Validator validator : Validator.values()) {
+                if (!validator.verify(storeRegistrationRequest)) {
+                    throw new StoreRegistrationException(validator.ofErrorCode());
+                }
+            }
             return storeRegistrationRequest;
+        }
+
+        public StoreRegistrationRequest buildIgnoreException() {
+            try {
+                return build();
+            } catch (StoreRegistrationException e) {
+                Log.e(TAG, "buildIgnoreException: ", e);
+                return null;
+            }
         }
     }
 }

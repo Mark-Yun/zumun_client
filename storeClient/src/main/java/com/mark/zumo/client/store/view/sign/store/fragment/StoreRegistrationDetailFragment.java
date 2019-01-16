@@ -44,8 +44,18 @@ public class StoreRegistrationDetailFragment extends Fragment {
     @BindView(R.id.corporate_name) AppCompatTextView corporateName;
     @BindView(R.id.corporate_owner_name) AppCompatTextView corporateOwnerName;
     @BindView(R.id.corporate_number) AppCompatTextView corporateNumber;
+    @BindView(R.id.corporate_address) AppCompatTextView corporateAddress;
 
     private StoreRegistrationRequest storeRegistrationRequest;
+
+    public static StoreRegistrationDetailFragment newInstance() {
+
+        Bundle args = new Bundle();
+
+        StoreRegistrationDetailFragment fragment = new StoreRegistrationDetailFragment();
+        fragment.setArguments(args);
+        return fragment;
+    }
 
     @Nullable
     @Override
@@ -56,8 +66,8 @@ public class StoreRegistrationDetailFragment extends Fragment {
         return view;
     }
 
-    public StoreRegistrationDetailFragment setStoreRegistrationRequest(StoreRegistrationRequest storeRegistrationRequeset) {
-        this.storeRegistrationRequest = storeRegistrationRequeset;
+    public StoreRegistrationDetailFragment setStoreRegistrationRequest(StoreRegistrationRequest storeRegistrationRequest) {
+        this.storeRegistrationRequest = storeRegistrationRequest;
         return this;
     }
 
@@ -73,6 +83,7 @@ public class StoreRegistrationDetailFragment extends Fragment {
         corporateName.setText(storeRegistrationRequest.corporateRegistrationName);
         corporateOwnerName.setText(storeRegistrationRequest.corporateRegistrationOwnerName);
         corporateNumber.setText(storeRegistrationRequest.corporateRegistrationOwnerName);
+        corporateAddress.setText(storeRegistrationRequest.corporateRegistrationAddress);
 
         GlideApp.with(this)
                 .load(storeRegistrationRequest.corporateRegistrationScanUrl)

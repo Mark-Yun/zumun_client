@@ -15,13 +15,14 @@ enum Validator {
     EMPTY_STORE_NAME(StoreRegistrationErrorCode.EMPTY_STORE_NAME, request -> !TextUtils.isEmpty(request.storeName)),
     EMPTY_STORE_PHONE_NUMBER(StoreRegistrationErrorCode.EMPTY_STORE_PHONE_NUMBER, request -> !TextUtils.isEmpty(request.storePhoneNumber)),
     EMPTY_STORE_TYPE(StoreRegistrationErrorCode.EMPTY_STORE_TYPE, request -> !TextUtils.isEmpty(request.storeType)),
-    EMPTY_CORPORATE_REGISTRATION_NUMBER(StoreRegistrationErrorCode.EMPTY_CORPORATE_REGISTRATION_NUMBER, request -> !TextUtils.isEmpty(request.corporateRegistrationNumber)),
-    EMPTY_CORPORATE_REGISTRATION_SCAN_URL(StoreRegistrationErrorCode.EMPTY_CORPORATE_REGISTRATION_SCAN_URL, request -> !TextUtils.isEmpty(request.corporateRegistrationScanUrl)),
-    EMPTY_COVER_IMAGE_URL(StoreRegistrationErrorCode.EMPTY_COVER_IMAGE_URL, request -> !TextUtils.isEmpty(request.thumbnailImageUrl)),
     EMPTY_EMPTY_ADDRESS(StoreRegistrationErrorCode.EMPTY_EMPTY_ADDRESS, request -> !TextUtils.isEmpty(request.storeAddress)),
-    EMPTY_EMPTY_LOCATION(StoreRegistrationErrorCode.EMPTY_EMPTY_LOCATION, request -> !(request.latitude < 0 || request.longitude < 0)),
-    EMPTY_THUMBNAIL_IMAGE_URL(StoreRegistrationErrorCode.EMPTY_THUMBNAIL_IMAGE_URL, request -> !TextUtils.isEmpty(request.thumbnailImageUrl));
-
+    EMPTY_CORPORATE_REGISTRATION_NAME(StoreRegistrationErrorCode.EMPTY_CORPORATE_REGISTRATION_NAME, request -> !TextUtils.isEmpty(request.corporateRegistrationName)),
+    EMPTY_CORPORATE_REGISTRATION_OWNER_NAME(StoreRegistrationErrorCode.EMPTY_CORPORATE_REGISTRATION_OWNER_NAME, request -> !TextUtils.isEmpty(request.corporateRegistrationOwnerName)),
+    EMPTY_CORPORATE_REGISTRATION_NUMBER(StoreRegistrationErrorCode.EMPTY_CORPORATE_REGISTRATION_NUMBER, request -> !TextUtils.isEmpty(request.corporateRegistrationNumber)),
+    EMPTY_CORPORATE_REGISTRATION_ADDRESS(StoreRegistrationErrorCode.EMPTY_CORPORATE_REGISTRATION_ADDRESS, request -> !TextUtils.isEmpty(request.corporateRegistrationAddress)),
+    EMPTY_CORPORATE_REGISTRATION_SCAN_URL(StoreRegistrationErrorCode.EMPTY_CORPORATE_REGISTRATION_SCAN_URL, request -> !TextUtils.isEmpty(request.corporateRegistrationScanUrl)),
+    ;
+    
     private final AssertConsumer assertConsumer;
     private StoreRegistrationErrorCode storeRegistrationErrorCode;
 

@@ -139,7 +139,9 @@
                         android:clickable="true"
                         android:focusable="true"
                         android:foreground="?attr/selectableItemBackground"
-                        app:layout_constraintDimensionRatio="H, 2:1" />
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintDimensionRatio="H, 2:1"
+                        app:layout_constraintTop_toTopOf="parent" />
 
                     <android.support.v7.widget.AppCompatImageView
                         android:id="@+id/corporate_registration_scan_hint_icon"
@@ -213,10 +215,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/big_margin"
-                android:textSize="16sp"
                 android:background="@drawable/background_default_button"
                 android:text="@android:string/ok"
-                android:textColor="@color/colorTextDark" />
+                android:textColor="@color/colorTextDark"
+                android:textSize="16sp" />
         </android.support.v7.widget.LinearLayoutCompat>
     </ScrollView>
 </android.support.constraint.ConstraintLayout>

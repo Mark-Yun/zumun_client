@@ -86,8 +86,7 @@ public class WithdrawFragment extends Fragment {
             }
 
             @Override
-            public void afterTextChanged(final Editable s) {
-                setWithdrawCurrency(Integer.parseInt(s.toString()));
+            public void afterTextChanged(final Editable editable) {
             }
         });
         withdrawViewModel.getSessionStoreOwner().observe(this, this::onLoadStoreUser);
@@ -100,7 +99,7 @@ public class WithdrawFragment extends Fragment {
 
     private void setWithdrawCurrency(int amount) {
         String emptyCurrency = NumberFormat.getCurrencyInstance(Locale.getDefault()).format(amount);
-        withdrawText.setText(emptyCurrency);
+        withdrawText.setText(String.valueOf(amount));
     }
 
     @OnClick(R.id.withdraw)

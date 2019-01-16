@@ -55,12 +55,10 @@ public class StoreRegistrationFragment extends Fragment {
                 .doOnStoreRegistrationRequestSelected(this::onStoreRegistrationRequestSelected)
                 .doOnNewRequestClicked(this::onClickNewRequest);
 
-        StoreRegistrationCreateFragment storeRegistrationCreateFragment = createStoreRegistrationCreateFragment();
 
         getFragmentManager().beginTransaction()
                 .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
                 .replace(R.id.store_registration_list_fragment, storeRegistrationListFragment)
-                .replace(R.id.store_registration_console_fragment, storeRegistrationCreateFragment)
                 .commit();
 
         boolean hasBackStack = getFragmentManager().getBackStackEntryCount() > 0;
@@ -68,7 +66,8 @@ public class StoreRegistrationFragment extends Fragment {
     }
 
     private void onClickNewRequest() {
-        StoreRegistrationCreateFragment storeRegistrationCreateFragment = createStoreRegistrationCreateFragment();
+        StoreRegistrationCreateFragment storeRegistrationCreateFragment = StoreRegistrationCreateFragment.newInstance()
+                .doOnCreateRequestSuccess(this::onStoreRegistrationComplete);
 
         getFragmentManager().beginTransaction()
                 .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
@@ -76,14 +75,14 @@ public class StoreRegistrationFragment extends Fragment {
                 .commit();
     }
 
-    private StoreRegistrationCreateFragment createStoreRegistrationCreateFragment() {
-        return StoreRegistrationCreateFragment.newInstance()
-                .doOnCreateRequestSuccess(storeRegistrationListFragment::onStoreRegistrationComplete);
+    private void onStoreRegistrationComplete(StoreRegistrationRequest storeRegistrationRequest) {
+        storeRegistrationListFragment.onStoreRegistrationComplete(storeRegistrationRequest);
+        onStoreRegistrationRequestSelected(storeRegistrationRequest);
     }
 
     private void onStoreRegistrationRequestSelected(StoreRegistrationRequest storeRegistrationRequest) {
 
-        StoreRegistrationDetailFragment storeRegistrationDetailFragment = ((StoreRegistrationDetailFragment) Fragment.instantiate(getContext(), StoreRegistrationDetailFragment.class.getName()))
+        StoreRegistrationDetailFragment storeRegistrationDetailFragment = StoreRegistrationDetailFragment.newInstance()
                 .setStoreRegistrationRequest(storeRegistrationRequest);
 
         getFragmentManager().beginTransaction()

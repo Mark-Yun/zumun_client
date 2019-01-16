@@ -49,7 +49,10 @@
     <string name="store_registration_error_message_empty_store_name">Store name is empty</string>
     <string name="store_registration_error_message_empty_store_phone_number">Store phone number is empty</string>
     <string name="store_registration_error_message_empty_store_type">Store type is empty</string>
+    <string name="store_registration_error_message_empty_corporate_registration_name">Corporate registration name is empty</string>
+    <string name="store_registration_error_message_empty_corporate_registration_owner_name">Corporate registration owner name is empty</string>
     <string name="store_registration_error_message_empty_corporate_registration_number">Corporate registration number is empty</string>
+    <string name="store_registration_error_message_empty_corporate_registration_address">Corporate registration address is empty</string>
     <string name="store_registration_error_message_empty_corporate_registration_scan_url">Corporate registration scan is empty</string>
     <string name="store_registration_error_message_empty_location">Location is empty</string>
     <string name="store_registration_error_message_empty_address">Address is empty</string>

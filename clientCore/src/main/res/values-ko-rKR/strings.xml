@@ -49,8 +49,11 @@
     <string name="store_registration_error_message_empty_store_name">가게 이름을 입력해주세요</string>
     <string name="store_registration_error_message_empty_store_phone_number">가게 전화번호를 입력해주세요</string>
     <string name="store_registration_error_message_empty_store_type">가게 종류를 입력해주세요</string>
+    <string name="store_registration_error_message_empty_corporate_registration_name">상호명을 입력해주세요</string>
+    <string name="store_registration_error_message_empty_corporate_registration_owner_name">대표자 성명을 입력해주세요</string>
     <string name="store_registration_error_message_empty_corporate_registration_number">사업자 등록번호를 입력해주세요</string>
-    <string name="store_registration_error_message_empty_corporate_registration_scan_url">사업자 등록증을 입력해주세요</string>
+    <string name="store_registration_error_message_empty_corporate_registration_scan_url">사업자 등록증 촬영 이미지를 선택해주세요</string>
+    <string name="store_registration_error_message_empty_corporate_registration_address">사업자 등록 주소를 입력해주세요</string>
     <string name="store_registration_error_message_empty_location">위치를 입력해주세요</string>
     <string name="store_registration_error_message_empty_address">주소를 입력해주세요</string>
     <string name="store_registration_error_message_empty_cover_image_url">배경 이미지를 입력해주세요</string>

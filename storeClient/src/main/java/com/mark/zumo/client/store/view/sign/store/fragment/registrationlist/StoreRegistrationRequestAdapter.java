@@ -80,6 +80,7 @@ class StoreRegistrationRequestAdapter extends RecyclerView.Adapter<StoreRegistra
         holder.status.setText(statusStringRes);
         holder.status.setTextColor(ContextHolder.getContext().getResources().getColor(statusColorRes));
         holder.createdDate.setText(DateUtil.getLocalSimpleTime(storeRegistrationRequest.createdDate));
+        holder.itemView.setOnClickListener(v -> listener.onSelectStoreRegistrationRequest(storeRegistrationRequest));
     }
 
     @Override

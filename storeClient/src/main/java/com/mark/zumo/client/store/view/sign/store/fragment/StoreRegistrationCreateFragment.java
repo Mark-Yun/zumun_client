@@ -21,9 +21,11 @@ import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.AppCompatTextView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.google.android.gms.maps.CameraUpdate;
@@ -31,6 +33,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.mark.zumo.client.core.appserver.request.registration.StoreRegistrationException;
 import com.mark.zumo.client.core.appserver.request.registration.StoreRegistrationRequest;
 import com.mark.zumo.client.core.util.glide.GlideApp;
 import com.mark.zumo.client.store.R;
@@ -154,21 +157,74 @@ public class StoreRegistrationCreateFragment extends Fragment {
 
     @OnClick(R.id.ok)
     void onClickOk() {
-        StoreRegistrationRequest storeRegistrationRequest = new StoreRegistrationRequest.Builder()
-                .setStoreName(storeName.getText().toString())
-                .setStorePhoneNumber(storePhoneNumber.getText().toString())
-                .setStoreType(storeType.getText().toString())
-                .setStoreAddress(storeAddress.getText().toString())
-                .setLatitude(location.getLatitude())
-                .setLongitude(location.getLongitude())
-                .setCorporateRegistrationScanUrl(selectedScanImagePath)
-                .setCorporateRegistrationName(corporateRegistrationName.getText().toString())
-                .setCorporateRegistrationOwnerName(corporateRegistrationOwnerName.getText().toString())
-                .setCorporateRegistrationNumber(corporateRegistrationNumber.getText().toString())
-                .setCorporateRegistrationAddress(storeName.getText().toString())
-                .build();
+        clearError();
 
-        storeRegistrationViewModel.createStoreRegistrationRequest(getActivity(), storeRegistrationRequest).observe(this, listener::onSuccessCreateRequest);
+        try {
+            StoreRegistrationRequest storeRegistrationRequest = new StoreRegistrationRequest.Builder()
+                    .setStoreName(storeName.getText().toString())
+                    .setStorePhoneNumber(storePhoneNumber.getText().toString())
+                    .setStoreType(storeType.getText().toString())
+                    .setStoreAddress(storeAddress.getText().toString())
+                    .setLatitude(location.getLatitude())
+                    .setLongitude(location.getLongitude())
+                    .setCorporateRegistrationScanUrl(selectedScanImagePath)
+                    .setCorporateRegistrationName(corporateRegistrationName.getText().toString())
+                    .setCorporateRegistrationOwnerName(corporateRegistrationOwnerName.getText().toString())
+                    .setCorporateRegistrationNumber(corporateRegistrationNumber.getText().toString())
+                    .setCorporateRegistrationAddress(storeName.getText().toString())
+                    .build();
+
+            storeRegistrationViewModel.createStoreRegistrationRequest(getActivity(), storeRegistrationRequest)
+                    .observe(this, listener::onSuccessCreateRequest);
+        } catch (StoreRegistrationException e) {
+            Log.e(TAG, "onClickOk: ", e);
+            handleStoreRegistrationException(e);
+        }
+    }
+
+    private void clearError() {
+        storeName.setError(null);
+        storePhoneNumber.setError(null);
+        storeType.setError(null);
+        storeAddress.setError(null);
+        corporateRegistrationName.setError(null);
+        corporateRegistrationOwnerName.setError(null);
+        corporateRegistrationNumber.setError(null);
+        storeAddress.setError(null);
+    }
+
+    private void handleStoreRegistrationException(StoreRegistrationException e) {
+        String errorMessage = e.message;
+        switch (e.storeUserSignupErrorCode) {
+            case EMPTY_STORE_NAME:
+                storeName.setError(errorMessage);
+                break;
+            case EMPTY_STORE_PHONE_NUMBER:
+                storePhoneNumber.setError(errorMessage);
+                break;
+            case EMPTY_STORE_TYPE:
+                storeType.setError(errorMessage);
+                break;
+            case EMPTY_EMPTY_ADDRESS:
+                storeAddress.setError(errorMessage);
+                break;
+            case EMPTY_CORPORATE_REGISTRATION_NAME:
+                corporateRegistrationName.setError(errorMessage);
+                break;
+            case EMPTY_CORPORATE_REGISTRATION_OWNER_NAME:
+                corporateRegistrationOwnerName.setError(errorMessage);
+                break;
+            case EMPTY_CORPORATE_REGISTRATION_NUMBER:
+                corporateRegistrationNumber.setError(errorMessage);
+                break;
+            case EMPTY_CORPORATE_REGISTRATION_ADDRESS:
+                storeAddress.setError(errorMessage);
+                break;
+            case EMPTY_CORPORATE_REGISTRATION_SCAN_URL:
+//                storeName.setError(errorMessage);
+                Toast.makeText(getContext(), errorMessage, Toast.LENGTH_SHORT).show();
+                break;
+        }
     }
 
     public StoreRegistrationCreateFragment doOnCreateRequestSuccess(CreateRequestSuccessListener listener) {
