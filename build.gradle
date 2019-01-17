@@ -48,10 +48,6 @@ configure(applications) {
     apply plugin: 'io.fabric'
 
     android {
-        configurations.all {
-            resolutionStrategy.force 'com.google.code.findbugs:jsr305:2.0.1'
-        }
-
         lintOptions {
             disable 'LongLogTag', 'CheckResult'
             abortOnError false
@@ -85,7 +81,10 @@ configure(applications) {
 
         implementation "junit:junit:4.12"
         androidTestImplementation "com.android.support.test:runner:1.0.2"
-        androidTestImplementation "com.android.support.test.espresso:espresso-core:3.0.2"
+        androidTestImplementation("com.android.support.test.espresso:espresso-core:3.0.2", {
+            exclude group: 'com.android.support', module: 'support-annotations'
+            exclude group: 'com.google.code.findbugs'
+        })
 
         implementation "com.facebook.rebound:rebound:0.3.8"
 
@@ -140,7 +139,10 @@ configure(libraries) {
 
         implementation "junit:junit:4.12"
         androidTestImplementation "com.android.support.test:runner:1.0.2"
-        androidTestImplementation "com.android.support.test.espresso:espresso-core:3.0.2"
+        androidTestImplementation("com.android.support.test.espresso:espresso-core:3.0.2", {
+            exclude group: 'com.android.support', module: 'support-annotations'
+            exclude group: 'com.google.code.findbugs'
+        })
 
         implementation "com.google.android.gms:play-services-nearby:16.0.0"
         implementation "commons-io:commons-io:2.6"
