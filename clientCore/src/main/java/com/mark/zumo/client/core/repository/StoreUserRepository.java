@@ -8,8 +8,10 @@ package com.mark.zumo.client.core.repository;
 
 import com.mark.zumo.client.core.appserver.AppServerServiceProvider;
 import com.mark.zumo.client.core.appserver.NetworkRepository;
-import com.mark.zumo.client.core.appserver.request.login.StoreUserLoginRequest;
+import com.mark.zumo.client.core.appserver.request.login.StoreUserSignInRequest;
 import com.mark.zumo.client.core.appserver.request.signup.StoreOwnerSignUpRequest;
+import com.mark.zumo.client.core.appserver.response.store.user.signin.StoreUserSignInResponse;
+import com.mark.zumo.client.core.appserver.response.store.user.signup.StoreUserSignupErrorCode;
 import com.mark.zumo.client.core.dao.AppDatabaseProvider;
 import com.mark.zumo.client.core.dao.DiskRepository;
 import com.mark.zumo.client.core.entity.SessionStore;
@@ -66,19 +68,14 @@ public enum StoreUserRepository {
         diskRepository.insertSessionStore(sessionStore);
     }
 
-    public Maybe<StoreOwner> creteStoreOwner(StoreOwnerSignUpRequest request) {
+    public Maybe<StoreUserSignupErrorCode> creteStoreOwner(StoreOwnerSignUpRequest request) {
         return networkRepository.createStoreOwner(request)
-                .doOnSuccess(diskRepository::insertStoreOwner);
+                .map(storeOwnerSignUpResponse -> storeOwnerSignUpResponse.storeUserSignUpResponse)
+                .map(StoreUserSignupErrorCode::valueOf);
     }
 
-    public Maybe<StoreUserSession> loginStoreUser(final StoreUserLoginRequest request) {
-        return networkRepository.storeUserLogin(request)
-                .map(storeUserLoginResponse -> new StoreUserSession.Builder()
-                        .setEmail(request.email)
-                        .setPassword(request.password)
-                        .setUuid(storeUserLoginResponse.storeUserUuid)
-                        .setToken(storeUserLoginResponse.sessionToken)
-                        .build());
+    public Maybe<StoreUserSignInResponse> loginStoreUser(final StoreUserSignInRequest request) {
+        return networkRepository.storeUserLogin(request);
     }
 
     public void saveStoreUserSession(StoreUserSession storeUserSession) {

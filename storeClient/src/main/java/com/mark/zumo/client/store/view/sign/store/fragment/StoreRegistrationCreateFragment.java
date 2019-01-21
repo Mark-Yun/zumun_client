@@ -18,6 +18,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputEditText;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.AppCompatTextView;
@@ -25,7 +26,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.google.android.gms.maps.CameraUpdate;
@@ -33,8 +33,10 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
-import com.mark.zumo.client.core.appserver.request.registration.StoreRegistrationException;
 import com.mark.zumo.client.core.appserver.request.registration.StoreRegistrationRequest;
+import com.mark.zumo.client.core.appserver.response.store.registration.StoreRegistrationErrorCode;
+import com.mark.zumo.client.core.appserver.response.store.registration.StoreRegistrationException;
+import com.mark.zumo.client.core.appserver.response.store.registration.StoreRegistrationResponse;
 import com.mark.zumo.client.core.util.glide.GlideApp;
 import com.mark.zumo.client.store.R;
 import com.mark.zumo.client.store.view.permission.PermissionFragment;
@@ -175,10 +177,38 @@ public class StoreRegistrationCreateFragment extends Fragment {
                     .build();
 
             storeRegistrationViewModel.createStoreRegistrationRequest(getActivity(), storeRegistrationRequest)
-                    .observe(this, listener::onSuccessCreateRequest);
+                    .observe(this, this::onResponseStoreRegistration);
         } catch (StoreRegistrationException e) {
             Log.e(TAG, "onClickOk: ", e);
             handleStoreRegistrationException(e);
+        }
+    }
+
+    private void onResponseStoreRegistration(StoreRegistrationResponse storeRegistrationResponse) {
+        try {
+            StoreRegistrationErrorCode storeRegistrationErrorCode = StoreRegistrationErrorCode.valueOf(storeRegistrationResponse.storeRegistrationResponse);
+            switch (storeRegistrationErrorCode) {
+                case OK:
+                    listener.onResultCreateRequest(storeRegistrationResponse);
+                    return;
+
+                case DUPLICATE_CORPORATE_REGISTRATION_NUMBER:
+                    corporateRegistrationNumber.setError(storeRegistrationErrorCode.message);
+                    break;
+
+                case UNAVAILABLE_CORPORATE_REGISTRATION_NUMBER:
+                    corporateRegistrationNumber.setError(storeRegistrationErrorCode.message);
+                    break;
+            }
+
+            new AlertDialog.Builder(getActivity())
+                    .setMessage(storeRegistrationErrorCode.message)
+                    .setPositiveButton(android.R.string.ok, ((dialog, which) -> dialog.dismiss()))
+                    .setCancelable(true)
+                    .create()
+                    .show();
+        } catch (IllegalArgumentException e) {
+            Log.e(TAG, "onResponseStoreRegistration: ", e);
         }
     }
 
@@ -221,8 +251,12 @@ public class StoreRegistrationCreateFragment extends Fragment {
                 storeAddress.setError(errorMessage);
                 break;
             case EMPTY_CORPORATE_REGISTRATION_SCAN_URL:
-//                storeName.setError(errorMessage);
-                Toast.makeText(getContext(), errorMessage, Toast.LENGTH_SHORT).show();
+                new AlertDialog.Builder(getActivity())
+                        .setMessage(errorMessage)
+                        .setPositiveButton(android.R.string.ok, ((dialog, which) -> dialog.dismiss()))
+                        .setCancelable(true)
+                        .create()
+                        .show();
                 break;
         }
     }
@@ -275,6 +309,6 @@ public class StoreRegistrationCreateFragment extends Fragment {
     }
 
     public interface CreateRequestSuccessListener {
-        void onSuccessCreateRequest(StoreRegistrationRequest storeRegistrationRequest);
+        void onResultCreateRequest(StoreRegistrationResponse storeRegistrationResponse);
     }
 }

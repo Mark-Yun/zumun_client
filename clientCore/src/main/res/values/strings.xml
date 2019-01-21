@@ -44,6 +44,11 @@
     <string name="sign_up_error_message_empty_bank_account_url">Bank account scan is empty</string>
     <string name="sign_up_error_message_password_discord">Password is discord</string>
     <string name="sign_up_error_message_email_incorrect">Incorrect email</string>
+    <string name="sign_up_error_message_duplicate_email">The email has been already registered</string>
+    <string name="sign_up_error_message_duplicate_phone_number">The phone number has been already registered</string>
+
+    <string name="sign_in_error_title">Login failed</string>
+    <string name="sign_in_error_message">Login is failed</string>
 
     <string name="store_registration_error_message_success">Success</string>
     <string name="store_registration_error_message_empty_store_name">Store name is empty</string>
@@ -58,6 +63,8 @@
     <string name="store_registration_error_message_empty_address">Address is empty</string>
     <string name="store_registration_error_message_empty_cover_image_url">Cover image is empty</string>
     <string name="store_registration_error_message_empty_thumbnail_image_url">Thumbnail image is empty</string>
+    <string name="store_registration_error_message_duplicate_corporate_number">The corporate number has been already reviewed</string>
+    <string name="store_registration_error_message_unavailable_corporate_number">The corporate number is not available</string>
 
     <string name="store_registration_result_result_requested">Reviewing</string>
     <string name="store_registration_result_result_approved">Approved</string>

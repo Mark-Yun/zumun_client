@@ -135,4 +135,14 @@
     <string name="withdraw_available_money_button_text">출금</string>
     <string name="bank_account_title">출금 계좌</string>
     <string name="menu_order_no">Order No.%s</string>
+    <string name="menu_setting_menu_info_title">메뉴 정보</string>
+    <string name="menu_setting_menu_name_description">메뉴명</string>
+    <string name="menu_setting_menu_price_description">가격</string>
+    <string name="menu_setting_menu_category_title">카테고리</string>
+    <string name="menu_setting_menu_option_title">적용 옵션</string>
+    <string name="menu_name_update_dialog_title">메뉴 이름 수정하기</string>
+    <string name="menu_name_update_dialog_message">메뉴의 새 이름을 입력하세요</string>
+    <string name="menu_price_update_dialog_title">메뉴 가격 수정하기</string>
+    <string name="menu_price_update_dialog_message">메뉴의 새 가격을 입력하세요</string>
+    <string name="store_registration_complete_dialog_message">요청이 접수되었습니다. 심사가 끝날 때 까지 기다려주세요.</string>
 </resources>

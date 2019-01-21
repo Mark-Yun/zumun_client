@@ -11,12 +11,14 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.AppCompatImageView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.mark.zumo.client.core.appserver.request.registration.StoreRegistrationRequest;
+import com.mark.zumo.client.core.appserver.response.store.registration.StoreRegistrationResponse;
 import com.mark.zumo.client.store.R;
 import com.mark.zumo.client.store.view.sign.store.fragment.registrationlist.StoreRegistrationListFragment;
 
@@ -71,13 +73,21 @@ public class StoreRegistrationFragment extends Fragment {
 
         getFragmentManager().beginTransaction()
                 .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+                .addToBackStack(StoreRegistrationCreateFragment.class.getName())
                 .replace(R.id.store_registration_console_fragment, storeRegistrationCreateFragment)
                 .commit();
     }
 
-    private void onStoreRegistrationComplete(StoreRegistrationRequest storeRegistrationRequest) {
-        storeRegistrationListFragment.onStoreRegistrationComplete(storeRegistrationRequest);
-        onStoreRegistrationRequestSelected(storeRegistrationRequest);
+    private void onStoreRegistrationComplete(StoreRegistrationResponse storeRegistrationResponse) {
+        storeRegistrationListFragment.onStoreRegistrationComplete();
+        getFragmentManager().popBackStack();
+
+        new AlertDialog.Builder(getActivity())
+                .setMessage(R.string.store_registration_complete_dialog_message)
+                .setPositiveButton(android.R.string.ok, ((dialog, which) -> dialog.dismiss()))
+                .setCancelable(true)
+                .create()
+                .show();
     }
 
     private void onStoreRegistrationRequestSelected(StoreRegistrationRequest storeRegistrationRequest) {

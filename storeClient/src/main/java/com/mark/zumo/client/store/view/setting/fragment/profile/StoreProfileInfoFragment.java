@@ -112,7 +112,7 @@ public class StoreProfileInfoFragment extends Fragment {
 
         GlideApp.with(this)
                 .load(store.thumbnailUrl)
-                .apply(GlideUtils.storeImageOptions())
+                .apply(GlideUtils.storeThumbnailImageOptions())
                 .transition(DrawableTransitionOptions.withCrossFade())
                 .into(thumbnailImage);
 

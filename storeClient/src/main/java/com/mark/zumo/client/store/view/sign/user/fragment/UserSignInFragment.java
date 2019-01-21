@@ -13,6 +13,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputEditText;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.AppCompatTextView;
@@ -23,13 +24,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 
-import com.mark.zumo.client.core.entity.user.store.StoreUserSession;
+import com.mark.zumo.client.core.appserver.response.store.user.signin.StoreUserSignInErrorCode;
 import com.mark.zumo.client.store.R;
 import com.mark.zumo.client.store.viewmodel.StoreUserSignViewModel;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+
+import static com.mark.zumo.client.core.appserver.response.store.user.signin.StoreUserSignInErrorCode.FAIL;
 
 /**
  * Created by mark on 18. 5. 13.
@@ -118,12 +121,20 @@ public class UserSignInFragment extends Fragment {
         return false;
     }
 
-    private void onLoginResult(StoreUserSession storeUserSession) {
+    private void onLoginResult(StoreUserSignInErrorCode storeUserSignInErrorCode) {
         stopLoadingAction.run();
 
-        switch (storeUserSession.result) {
-            case SUCCESS:
+        switch (storeUserSignInErrorCode) {
+            case OK:
                 signInSuccessAction.run();
+                break;
+            case FAIL:
+                new AlertDialog.Builder(getActivity())
+                        .setMessage(FAIL.message)
+                        .setPositiveButton(android.R.string.ok, ((dialog, which) -> dialog.dismiss()))
+                        .setCancelable(true)
+                        .create()
+                        .show();
                 break;
         }
     }

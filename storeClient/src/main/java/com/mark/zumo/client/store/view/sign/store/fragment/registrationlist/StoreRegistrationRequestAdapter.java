@@ -45,11 +45,6 @@ class StoreRegistrationRequestAdapter extends RecyclerView.Adapter<StoreRegistra
         notifyDataSetChanged();
     }
 
-    void onNewStoreRegistrationRequest(StoreRegistrationRequest storeRegistrationRequest) {
-        this.requestList.add(storeRegistrationRequest);
-        notifyDataSetChanged();
-    }
-
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull final ViewGroup parent, final int viewType) {

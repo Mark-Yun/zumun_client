@@ -22,8 +22,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 
-import com.mark.zumo.client.core.appserver.request.signup.StoreUserSignupErrorCode;
-import com.mark.zumo.client.core.appserver.request.signup.StoreUserSignupException;
+import com.mark.zumo.client.core.appserver.response.store.user.signup.StoreUserSignupErrorCode;
+import com.mark.zumo.client.core.appserver.response.store.user.signup.StoreUserSignupException;
 import com.mark.zumo.client.store.R;
 import com.mark.zumo.client.store.viewmodel.StoreUserSignViewModel;
 
@@ -48,6 +48,7 @@ public class UserSignUpFragment extends Fragment implements BackPressedIntercept
     @BindView(R.id.input_password) TextInputEditText inputPassword;
     @BindView(R.id.input_password_confirm) TextInputEditText inputPasswordConfirm;
     @BindView(R.id.input_phone_number) TextInputEditText inputPhoneNumber;
+    @BindView(R.id.input_layout_phone_number) TextInputLayout inputLayoutPhoneNumber;
 
     private StoreUserSignViewModel storeUserSignViewModel;
 
@@ -97,7 +98,7 @@ public class UserSignUpFragment extends Fragment implements BackPressedIntercept
         String message = e.message;
         TextInputLayout targetInputLayout = null;
         switch (storeUserSignupErrorCode) {
-            case SUCCESS:
+            case OK:
                 onSuccessSignUp();
                 break;
             case EMPTY_EMAIL:
@@ -114,6 +115,12 @@ public class UserSignUpFragment extends Fragment implements BackPressedIntercept
                 break;
             case PASSWORD_DISCORD:
                 targetInputLayout = inputLayoutConfirmPassword;
+                break;
+            case DUPLICATE_EMAIL:
+                targetInputLayout = inputLayoutEmail;
+                break;
+            case DUPLICATE_PHONE_NUMBER:
+                targetInputLayout = inputLayoutPhoneNumber;
                 break;
             default:
                 Log.e(TAG, "onSignUpRequest: exception occurred!", e);

@@ -16,6 +16,7 @@ import android.net.Uri;
 import android.support.annotation.NonNull;
 
 import com.mark.zumo.client.core.appserver.request.registration.StoreRegistrationRequest;
+import com.mark.zumo.client.core.appserver.response.store.registration.StoreRegistrationResponse;
 import com.mark.zumo.client.core.provider.AppLocationProvider;
 import com.mark.zumo.client.store.model.S3TransferManager;
 import com.mark.zumo.client.store.model.StoreStoreManager;
@@ -67,9 +68,9 @@ public class StoreRegistrationViewModel extends AndroidViewModel {
         return liveData;
     }
 
-    public LiveData<StoreRegistrationRequest> createStoreRegistrationRequest(final Activity activity,
-                                                                             final StoreRegistrationRequest storeRegistrationRequest) {
-        MutableLiveData<StoreRegistrationRequest> liveData = new MutableLiveData<>();
+    public LiveData<StoreRegistrationResponse> createStoreRegistrationRequest(final Activity activity,
+                                                                              final StoreRegistrationRequest storeRegistrationRequest) {
+        MutableLiveData<StoreRegistrationResponse> liveData = new MutableLiveData<>();
 
         Maybe.fromCallable(storeUserManager::getStoreUserSessionSync)
                 .switchIfEmpty(storeUserManager.getStoreUserSessionAsync())

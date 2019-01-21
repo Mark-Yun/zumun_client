@@ -15,6 +15,7 @@ import android.util.Log;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import com.mark.zumo.client.core.appserver.request.registration.result.StoreRegistrationResult;
+import com.mark.zumo.client.core.appserver.response.store.registration.StoreRegistrationException;
 import com.mark.zumo.client.core.entity.util.EntityHelper;
 
 import java.util.List;

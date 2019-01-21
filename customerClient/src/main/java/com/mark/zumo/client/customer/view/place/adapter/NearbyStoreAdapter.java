@@ -69,8 +69,8 @@ public class NearbyStoreAdapter extends RecyclerView.Adapter<NearbyStoreAdapter.
 
         GlideApp.with(holder.itemView.getContext())
                 .load(store.thumbnailUrl)
-                .apply(GlideUtils.storeImageOptions())
-                .transition(GlideUtils.storeTransitionOptions())
+                .apply(GlideUtils.storeThumbnailImageOptions())
+                .transition(GlideUtils.storeThumbnailTransitionOptions())
                 .into(holder.image);
 
         holder.itemView.setOnClickListener(v -> {

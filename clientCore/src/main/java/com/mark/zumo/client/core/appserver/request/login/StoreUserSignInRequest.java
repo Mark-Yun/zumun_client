@@ -11,14 +11,14 @@ import com.google.gson.annotations.SerializedName;
 /**
  * Created by mark on 18. 12. 23.
  */
-public class StoreUserLoginRequest {
+public class StoreUserSignInRequest {
     @SerializedName(Schema.email)
     public final String email;
 
     @SerializedName(Schema.password)
     public final String password;
 
-    public StoreUserLoginRequest(final String email, final String password) {
+    public StoreUserSignInRequest(final String email, final String password) {
         this.email = email;
         this.password = password;
     }
@@ -42,8 +42,8 @@ public class StoreUserLoginRequest {
             return this;
         }
 
-        public StoreUserLoginRequest build() {
-            return new StoreUserLoginRequest(email, password);
+        public StoreUserSignInRequest build() {
+            return new StoreUserSignInRequest(email, password);
         }
     }
 }

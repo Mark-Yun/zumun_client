@@ -24,7 +24,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.mark.zumo.client.core.appserver.request.registration.StoreRegistrationRequest;
 import com.mark.zumo.client.store.R;
 import com.mark.zumo.client.store.viewmodel.StoreRegistrationViewModel;
 
@@ -75,8 +74,8 @@ public class StoreRegistrationListFragment extends Fragment {
         return this;
     }
 
-    public StoreRegistrationListFragment onStoreRegistrationComplete(StoreRegistrationRequest storeRegistrationRequest) {
-        storeRegistrationRequestAdapter.onNewStoreRegistrationRequest(storeRegistrationRequest);
+    public StoreRegistrationListFragment onStoreRegistrationComplete() {
+        storeRegistrationViewModel.getCombinedStoreRegistrationRequest().observe(this, storeRegistrationRequestAdapter::setStoreRegistrationRequestList);
         return this;
     }
 

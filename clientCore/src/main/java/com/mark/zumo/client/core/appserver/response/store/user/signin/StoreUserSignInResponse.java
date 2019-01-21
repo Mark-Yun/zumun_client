@@ -1,4 +1,10 @@
 /*
+ * Copyright (c) 2019. Mark Soft - All Rights Reserved
+ * Unauthorized copying of this file, via any medium is strictly prohibited
+ * Proprietary and confidential
+ */
+
+/*
  * Copyright (c) 2018. Mark Soft - All Rights Reserved
  * Unauthorized copying of this file, via any medium is strictly prohibited
  * Proprietary and confidential
@@ -10,31 +16,30 @@
  * Proprietary and confidential
  */
 
-package com.mark.zumo.client.core.appserver.response;
+package com.mark.zumo.client.core.appserver.response.store.user.signin;
 
 import com.google.gson.annotations.SerializedName;
 
 /**
  * Created by mark on 18. 12. 23.
  */
-public class StoreUserLoginResponse {
+public class StoreUserSignInResponse {
     @SerializedName(Schema.sessionToken)
     public final String sessionToken;
     @SerializedName(Schema.storeUserUuid)
     public final String storeUserUuid;
+    @SerializedName(Schema.storeUserSignInResponse)
+    public final String storeUserSignInResponse;
 
-    public StoreUserLoginResponse(final String sessionToken, final String storeUserUuid) {
+    public StoreUserSignInResponse(final String sessionToken, final String storeUserUuid, final String storeUserSignInResponse) {
         this.sessionToken = sessionToken;
         this.storeUserUuid = storeUserUuid;
+        this.storeUserSignInResponse = storeUserSignInResponse;
     }
 
     public interface Schema {
         String sessionToken = "store_user_session_token";
         String storeUserUuid = "store_user_uuid";
-    }
-
-    public enum Result {
-        SIGN_IN_OK,
-        SIGN_IN_FAILED
+        String storeUserSignInResponse = "store_user_sign_in_response";
     }
 }

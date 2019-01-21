@@ -21,11 +21,11 @@ public final class GlideUtils {
         /* Empty Body */
     }
 
-    public static RequestOptions storeImageOptions() {
+    public static RequestOptions storeThumbnailImageOptions() {
         return RequestOptions.circleCropTransform();
     }
 
-    public static DrawableTransitionOptions storeTransitionOptions() {
+    public static DrawableTransitionOptions storeThumbnailTransitionOptions() {
         return DrawableTransitionOptions.withCrossFade();
     }
 

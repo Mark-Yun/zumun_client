@@ -32,6 +32,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/small_margin"
+        android:textColor="@color/color_900"
         android:textSize="32sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
@@ -60,12 +61,14 @@
             android:id="@+id/order_date_description"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/order_date_description" />
+            android:text="@string/order_date_description"
+            android:textColor="@color/color_900" />
 
         <android.support.v7.widget.AppCompatTextView
             android:id="@+id/order_date"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:textColor="@color/color_900" />
     </android.support.v7.widget.LinearLayoutCompat>
 
     <android.support.v7.widget.LinearLayoutCompat
@@ -82,12 +85,14 @@
             android:id="@+id/order_time_description"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/order_time_description" />
+            android:text="@string/order_time_description"
+            android:textColor="@color/color_900" />
 
         <android.support.v7.widget.AppCompatTextView
             android:id="@+id/order_time"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:textColor="@color/color_900" />
     </android.support.v7.widget.LinearLayoutCompat>
 
     <android.support.v7.widget.RecyclerView

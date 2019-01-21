@@ -20,6 +20,8 @@ package com.mark.zumo.client.core.appserver.request.signup;
 
 import android.text.TextUtils;
 
+import com.mark.zumo.client.core.appserver.response.store.user.signup.StoreUserSignupErrorCode;
+
 /**
  * Created by mark on 18. 11. 4.
  */

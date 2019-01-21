@@ -9,7 +9,7 @@ package com.mark.zumo.client.core.util;
 import android.os.Build;
 
 import com.mark.zumo.client.core.appserver.request.signup.StoreOwnerSignUpRequest;
-import com.mark.zumo.client.core.appserver.request.signup.StoreUserSignupException;
+import com.mark.zumo.client.core.appserver.response.store.user.signup.StoreUserSignupException;
 import com.mark.zumo.client.core.entity.Store;
 
 import java.util.UUID;

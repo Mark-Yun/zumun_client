@@ -58,9 +58,8 @@ public class MenuSettingFragment extends Fragment {
     }
 
     private void onSelectMenu(Menu menu) {
-        Bundle bundle = new Bundle();
-        bundle.putString(MenuDetailSettingFragment.KEY_MENU_UUID, menu.uuid);
-        MenuDetailSettingFragment menuDetailSettingFragment = (MenuDetailSettingFragment) Fragment.instantiate(getContext(), MenuDetailSettingFragment.class.getName(), bundle);
+        MenuDetailSettingFragment menuDetailSettingFragment = MenuDetailSettingFragment.newInstance(menu.uuid)
+                .onMenuUpdated(this::onUpdateMenu);
 
         getFragmentManager().beginTransaction()
                 .replace(R.id.menu_detail_fragment, menuDetailSettingFragment)
@@ -80,5 +79,9 @@ public class MenuSettingFragment extends Fragment {
 
     private void onCreateMenu(Menu menu) {
         menuSettingMenuListFragment.onMenuCreateComplete(menu);
+    }
+
+    private void onUpdateMenu(Menu menu) {
+        menuSettingMenuListFragment.onMeuUpdate(menu);
     }
 }

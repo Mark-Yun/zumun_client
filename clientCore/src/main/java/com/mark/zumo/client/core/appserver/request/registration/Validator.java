@@ -8,6 +8,8 @@ package com.mark.zumo.client.core.appserver.request.registration;
 
 import android.text.TextUtils;
 
+import com.mark.zumo.client.core.appserver.response.store.registration.StoreRegistrationErrorCode;
+
 /**
  * Created by mark on 18. 11. 4.
  */

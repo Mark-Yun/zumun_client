@@ -69,6 +69,12 @@
     <string name="preference_title_menu_detail_menu_option">Menu Option</string>
     <string name="preference_key_menu_detail_menu_option" translatable="false">menu_detail_menu_option</string>
 
+    <string name="menu_setting_menu_info_title">Menu Information</string>
+    <string name="menu_setting_menu_name_description">Menu Name</string>
+    <string name="menu_setting_menu_price_description">Menu Price</string>
+    <string name="menu_setting_menu_category_title">Categories</string>
+    <string name="menu_setting_menu_option_title">Applied Options</string>
+
     <string name="store_profile_name_editor_title">Store Name</string>
     <string name="store_profile_name_editor_message">Insert new store name</string>
 
@@ -182,4 +188,11 @@
     <string name="bank_account_title">Bank Account</string>
 
     <string name="menu_order_no">Order No.%s</string>
+
+    <string name="menu_name_update_dialog_title">Modifying Menu Name</string>
+    <string name="menu_name_update_dialog_message">Insert new name of menu</string>
+    <string name="menu_price_update_dialog_title">Modifying Price Name</string>
+    <string name="menu_price_update_dialog_message">Insert new price of menu</string>
+
+    <string name="store_registration_complete_dialog_message">Your request is accepted. Please wait for reviewing of new store.</string>
 </resources>

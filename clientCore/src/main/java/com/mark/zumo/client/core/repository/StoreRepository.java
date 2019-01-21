@@ -12,6 +12,7 @@ import com.mark.zumo.client.core.appserver.AppServerServiceProvider;
 import com.mark.zumo.client.core.appserver.NetworkRepository;
 import com.mark.zumo.client.core.appserver.request.registration.StoreRegistrationRequest;
 import com.mark.zumo.client.core.appserver.request.registration.result.StoreRegistrationResult;
+import com.mark.zumo.client.core.appserver.response.store.registration.StoreRegistrationResponse;
 import com.mark.zumo.client.core.dao.AppDatabaseProvider;
 import com.mark.zumo.client.core.dao.DiskRepository;
 import com.mark.zumo.client.core.entity.Store;
@@ -115,9 +116,8 @@ public class StoreRepository {
                 .doOnSuccess(diskRepository::insertStoreRegistrationResult);
     }
 
-    public Maybe<StoreRegistrationRequest> createStoreRegistrationRequest(StoreRegistrationRequest storeRegistrationRequest) {
-        return networkRepository.createStoreRegistrationRequest(storeRegistrationRequest)
-                .doOnSuccess(diskRepository::insertStoreRegistrationRequest);
+    public Maybe<StoreRegistrationResponse> createStoreRegistrationRequest(StoreRegistrationRequest storeRegistrationRequest) {
+        return networkRepository.createStoreRegistrationRequest(storeRegistrationRequest);
     }
 
     public Observable<List<StoreRegistrationResult>> getStoreRegistrationResultListByStoreUserUuid(String storeUserUuid) {

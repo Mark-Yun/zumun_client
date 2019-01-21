@@ -15,9 +15,9 @@ import android.net.Uri;
 import android.support.annotation.NonNull;
 
 import com.mark.zumo.client.core.appserver.request.signup.StoreOwnerSignUpRequest;
-import com.mark.zumo.client.core.appserver.request.signup.StoreUserSignupErrorCode;
-import com.mark.zumo.client.core.appserver.request.signup.StoreUserSignupException;
-import com.mark.zumo.client.core.entity.user.store.StoreUserSession;
+import com.mark.zumo.client.core.appserver.response.store.user.signin.StoreUserSignInErrorCode;
+import com.mark.zumo.client.core.appserver.response.store.user.signup.StoreUserSignupErrorCode;
+import com.mark.zumo.client.core.appserver.response.store.user.signup.StoreUserSignupException;
 import com.mark.zumo.client.store.model.S3TransferManager;
 import com.mark.zumo.client.store.model.StoreUserManager;
 
@@ -83,9 +83,9 @@ public class StoreUserSignViewModel extends AndroidViewModel {
         return liveData;
     }
 
-    public LiveData<StoreUserSession> loginStoreUser(final String email, final String password,
-                                                     final boolean isAutoLogin) {
-        MutableLiveData<StoreUserSession> liveData = new MutableLiveData<>();
+    public LiveData<StoreUserSignInErrorCode> loginStoreUser(final String email, final String password,
+                                                             final boolean isAutoLogin) {
+        MutableLiveData<StoreUserSignInErrorCode> liveData = new MutableLiveData<>();
 
         storeUserManager.signIn(email, password, isAutoLogin)
                 .observeOn(AndroidSchedulers.mainThread())

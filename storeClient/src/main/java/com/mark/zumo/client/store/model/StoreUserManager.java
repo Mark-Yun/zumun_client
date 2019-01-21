@@ -11,10 +11,11 @@ import android.support.annotation.Nullable;
 import android.util.Log;
 
 import com.google.android.gms.common.util.Base64Utils;
-import com.mark.zumo.client.core.appserver.request.login.StoreUserLoginRequest;
+import com.mark.zumo.client.core.appserver.request.login.StoreUserSignInRequest;
 import com.mark.zumo.client.core.appserver.request.signup.StoreOwnerSignUpRequest;
-import com.mark.zumo.client.core.appserver.request.signup.StoreUserSignupErrorCode;
-import com.mark.zumo.client.core.appserver.request.signup.StoreUserSignupException;
+import com.mark.zumo.client.core.appserver.response.store.user.signin.StoreUserSignInErrorCode;
+import com.mark.zumo.client.core.appserver.response.store.user.signin.StoreUserSignInResponse;
+import com.mark.zumo.client.core.appserver.response.store.user.signup.StoreUserSignupException;
 import com.mark.zumo.client.core.entity.SessionStore;
 import com.mark.zumo.client.core.entity.SnsToken;
 import com.mark.zumo.client.core.entity.Store;
@@ -72,7 +73,7 @@ public enum StoreUserManager {
                     request.password = RSAEncrypt(publicKey, request.password);
                     return request;
                 }).flatMap(storeUserRepository::creteStoreOwner)
-                .map(storeOwner -> new StoreUserSignupException(StoreUserSignupErrorCode.SUCCESS))
+                .map(StoreUserSignupException::new)
                 .subscribeOn(Schedulers.io());
     }
 
@@ -109,20 +110,17 @@ public enum StoreUserManager {
         }
     }
 
-    public Maybe<StoreUserSession> signIn(final String email, final String password, final boolean isAutoLogin) {
+    public Maybe<StoreUserSignInErrorCode> signIn(final String email, final String password, final boolean isAutoLogin) {
         return storeUserRepository.storeUserHandShake(email)
                 .map(publicKey -> RSAEncrypt(publicKey, password))
-                .map(encryptedPassword -> new StoreUserLoginRequest.Builder()
+                .map(encryptedPassword -> new StoreUserSignInRequest.Builder()
                         .setEmail(email)
                         .setPassword(encryptedPassword)
                         .build())
                 .flatMap(storeUserRepository::loginStoreUser)
-                .doOnSuccess(this::setStoreUserSession)
-                .doOnSuccess(storeUserSession -> {
-                    if (isAutoLogin) {
-                        storeUserRepository.saveStoreUserSession(storeUserSession);
-                    }
-                })
+                .doOnSuccess(response -> onSignInSucceed(email, password, isAutoLogin, response))
+                .map(storeUserSignInResponse -> storeUserSignInResponse.storeUserSignInResponse)
+                .map(StoreUserSignInErrorCode::valueOf)
                 .subscribeOn(Schedulers.io());
     }
 
@@ -171,7 +169,23 @@ public enum StoreUserManager {
         setStoreUserSession(null);
     }
 
+    private void onSignInSucceed(final String email, final String password, final boolean isAutoSignIn,
+                                 final StoreUserSignInResponse storeUserSignInResponse) {
+        StoreUserSession storeUserSession = new StoreUserSession.Builder()
+                .setEmail(email)
+                .setPassword(password)
+                .setUuid(storeUserSignInResponse.storeUserUuid)
+                .setToken(storeUserSignInResponse.sessionToken)
+                .build();
+        setStoreUserSession(storeUserSession);
+
+        if (isAutoSignIn) {
+            storeUserRepository.saveStoreUserSession(storeUserSession);
+        }
+    }
+
     private void setStoreUserSession(@Nullable final StoreUserSession storeUserSession) {
+
         this.storeUserSession = storeUserSession;
         sessionRepository.putSessionHeader(buildStoreUserSessionHeader());
         Maybe.fromAction(() -> storeUserRepository.saveStoreUserSession(storeUserSession))

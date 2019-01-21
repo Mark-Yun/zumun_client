@@ -9,6 +9,7 @@ package com.mark.zumo.client.store.model;
 import com.google.android.gms.maps.model.LatLng;
 import com.mark.zumo.client.core.appserver.request.registration.StoreRegistrationRequest;
 import com.mark.zumo.client.core.appserver.request.registration.result.StoreRegistrationResult;
+import com.mark.zumo.client.core.appserver.response.store.registration.StoreRegistrationResponse;
 import com.mark.zumo.client.core.entity.Store;
 import com.mark.zumo.client.core.repository.SessionRepository;
 import com.mark.zumo.client.core.repository.StoreRepository;
@@ -164,7 +165,7 @@ public enum StoreStoreManager {
         ).subscribeOn(Schedulers.io());
     }
 
-    public Maybe<StoreRegistrationRequest> createStoreRegistrationRequest(StoreRegistrationRequest storeRegistrationRequest) {
+    public Maybe<StoreRegistrationResponse> createStoreRegistrationRequest(StoreRegistrationRequest storeRegistrationRequest) {
         return storeRepositoryMaybe.flatMap(storeRepository ->
                 storeRepository.createStoreRegistrationRequest(storeRegistrationRequest)
         ).subscribeOn(Schedulers.io());
