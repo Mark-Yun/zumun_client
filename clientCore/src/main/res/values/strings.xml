@@ -69,4 +69,6 @@
     <string name="store_registration_result_result_requested">Reviewing</string>
     <string name="store_registration_result_result_approved">Approved</string>
     <string name="store_registration_result_result_rejected">Rejected</string>
+
+    <string name="root_prevention_message">Device root is detected. Finish the app.</string>
 </resources>

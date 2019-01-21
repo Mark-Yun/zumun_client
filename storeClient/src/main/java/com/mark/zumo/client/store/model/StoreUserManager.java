@@ -27,6 +27,7 @@ import com.mark.zumo.client.core.repository.StoreUserRepository;
 
 import java.security.InvalidKeyException;
 import java.security.KeyFactory;
+import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.PublicKey;
 import java.security.spec.InvalidKeySpecException;
@@ -67,14 +68,29 @@ public enum StoreUserManager {
         sessionRepository = SessionRepository.INSTANCE;
     }
 
-    public Maybe<StoreUserSignupException> signup(StoreOwnerSignUpRequest request) {
-        return storeUserRepository.storeUserHandShake(request.email)
-                .map(publicKey -> {
-                    request.password = RSAEncrypt(publicKey, request.password);
-                    return request;
-                }).flatMap(storeUserRepository::creteStoreOwner)
-                .map(StoreUserSignupException::new)
-                .subscribeOn(Schedulers.io());
+    private static String md5(final String s) {
+        final String MD5 = "MD5";
+        try {
+            // Create MD5 Hash
+            MessageDigest digest = java.security.MessageDigest
+                    .getInstance(MD5);
+            digest.update(s.getBytes());
+            byte messageDigest[] = digest.digest();
+
+            // Create Hex String
+            StringBuilder hexString = new StringBuilder();
+            for (byte aMessageDigest : messageDigest) {
+                String hexedString = Integer.toHexString(0xFF & aMessageDigest);
+                while (hexedString.length() < 2)
+                    hexedString = "0" + hexedString;
+                hexString.append(hexedString);
+            }
+            return hexString.toString();
+
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
+        return "";
     }
 
     private PublicKey createPublicKey(final String publicKeyString) {
@@ -110,9 +126,19 @@ public enum StoreUserManager {
         }
     }
 
+    public Maybe<StoreUserSignupException> signup(StoreOwnerSignUpRequest request) {
+        return storeUserRepository.storeUserHandShake(request.email)
+                .map(publicKey -> {
+                    request.password = RSAEncrypt(publicKey, md5(request.password));
+                    return request;
+                }).flatMap(storeUserRepository::creteStoreOwner)
+                .map(StoreUserSignupException::new)
+                .subscribeOn(Schedulers.io());
+    }
+
     public Maybe<StoreUserSignInErrorCode> signIn(final String email, final String password, final boolean isAutoLogin) {
         return storeUserRepository.storeUserHandShake(email)
-                .map(publicKey -> RSAEncrypt(publicKey, password))
+                .map(publicKey -> RSAEncrypt(publicKey, md5(password)))
                 .map(encryptedPassword -> new StoreUserSignInRequest.Builder()
                         .setEmail(email)
                         .setPassword(encryptedPassword)
