@@ -12,7 +12,7 @@ import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.support.annotation.NonNull;
 
-import com.mark.zumo.client.customer.model.SessionManager;
+import com.mark.zumo.client.customer.model.CustomerSessionManager;
 
 /**
  * Created by mark on 18. 5. 7.
@@ -20,11 +20,11 @@ import com.mark.zumo.client.customer.model.SessionManager;
 
 public class SignUpViewModel extends AndroidViewModel {
 
-    private final SessionManager sessionManager;
+    private final CustomerSessionManager customerSessionManager;
 
     public SignUpViewModel(@NonNull Application application) {
         super(application);
-        sessionManager = SessionManager.INSTANCE;
+        customerSessionManager = CustomerSessionManager.INSTANCE;
     }
 
     public LiveData<Boolean> isSessionValid() {

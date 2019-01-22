@@ -29,4 +29,8 @@
     <color name="order_state_complete">@android:color/holo_green_dark</color>
     <color name="order_state_rejected">@android:color/holo_red_dark</color>
     <color name="order_state_canceled">@android:color/holo_red_dark</color>
+
+    <color name="store_registration_result_state_requested">#007D00</color>
+    <color name="store_registration_result_state_rejected">#D50000</color>
+    <color name="store_registration_result_state_approved">#5C6BC5</color>
 </resources>

@@ -17,8 +17,8 @@ import com.mark.zumo.client.core.entity.MenuCategory;
 import com.mark.zumo.client.core.entity.OrderDetail;
 import com.mark.zumo.client.core.entity.Store;
 import com.mark.zumo.client.customer.model.CartManager;
-import com.mark.zumo.client.customer.model.MenuManager;
-import com.mark.zumo.client.customer.model.StoreManager;
+import com.mark.zumo.client.customer.model.CustomerMenuManager;
+import com.mark.zumo.client.customer.model.CustomerStoreManager;
 import com.mark.zumo.client.customer.model.entity.Cart;
 
 import java.util.List;
@@ -31,9 +31,9 @@ import io.reactivex.disposables.CompositeDisposable;
  */
 public class MenuViewModel extends AndroidViewModel {
 
-    private final MenuManager menuManager;
+    private final CustomerMenuManager customerMenuManager;
     private final CartManager cartManager;
-    private final StoreManager storeManager;
+    private final CustomerStoreManager customerStoreManager;
 
     private final CompositeDisposable disposables;
 
@@ -42,9 +42,9 @@ public class MenuViewModel extends AndroidViewModel {
     public MenuViewModel(@NonNull final Application application) {
         super(application);
 
-        menuManager = MenuManager.INSTANCE;
+        customerMenuManager = CustomerMenuManager.INSTANCE;
         cartManager = CartManager.INSTANCE;
-        storeManager = StoreManager.INSTANCE;
+        customerStoreManager = CustomerStoreManager.INSTANCE;
 
         disposables = new CompositeDisposable();
     }
@@ -52,7 +52,7 @@ public class MenuViewModel extends AndroidViewModel {
     @Override
     protected void onCleared() {
         disposables.clear();
-        menuManager.clearClient();
+        customerMenuManager.clearClient();
     }
 
     public LiveData<Cart> getCart(String storeUuid) {
@@ -72,7 +72,7 @@ public class MenuViewModel extends AndroidViewModel {
     public MutableLiveData<List<MenuCategory>> loadCombinedMenuCategoryList(String storeUuid) {
         MutableLiveData<List<MenuCategory>> liveData = new MutableLiveData<>();
 
-        menuManager.getCombinedMenuCategoryList(storeUuid)
+        customerMenuManager.getCombinedMenuCategoryList(storeUuid)
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnNext(liveData::setValue)
                 .doOnSubscribe(disposables::add)
@@ -92,7 +92,7 @@ public class MenuViewModel extends AndroidViewModel {
     public LiveData<Store> getStore(String storeUuid) {
         MutableLiveData<Store> storeLiveData = new MutableLiveData<>();
 
-        storeManager.getStore(storeUuid)
+        customerStoreManager.getStore(storeUuid)
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnNext(storeLiveData::setValue)
                 .doOnSubscribe(disposables::add)

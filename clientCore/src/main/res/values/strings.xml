@@ -33,6 +33,7 @@
     <string name="permission_location_content">We can search store near by or, mark up the location of stores on map.</string>
 
     <string name="sign_up_error_message_success">Success</string>
+    <string name="sign_up_error_message_server_error">Network Error</string>
     <string name="sign_up_error_message_empty_email">Email is empty</string>
     <string name="sign_up_error_message_empty_password">Password is empty</string>
     <string name="sign_up_error_message_empty_password_confirm">Password confirm is empty</string>
@@ -43,15 +44,31 @@
     <string name="sign_up_error_message_empty_bank_account_url">Bank account scan is empty</string>
     <string name="sign_up_error_message_password_discord">Password is discord</string>
     <string name="sign_up_error_message_email_incorrect">Incorrect email</string>
+    <string name="sign_up_error_message_duplicate_email">The email has been already registered</string>
+    <string name="sign_up_error_message_duplicate_phone_number">The phone number has been already registered</string>
+
+    <string name="sign_in_error_title">Login failed</string>
+    <string name="sign_in_error_message">Login is failed</string>
 
     <string name="store_registration_error_message_success">Success</string>
     <string name="store_registration_error_message_empty_store_name">Store name is empty</string>
     <string name="store_registration_error_message_empty_store_phone_number">Store phone number is empty</string>
     <string name="store_registration_error_message_empty_store_type">Store type is empty</string>
+    <string name="store_registration_error_message_empty_corporate_registration_name">Corporate registration name is empty</string>
+    <string name="store_registration_error_message_empty_corporate_registration_owner_name">Corporate registration owner name is empty</string>
     <string name="store_registration_error_message_empty_corporate_registration_number">Corporate registration number is empty</string>
+    <string name="store_registration_error_message_empty_corporate_registration_address">Corporate registration address is empty</string>
     <string name="store_registration_error_message_empty_corporate_registration_scan_url">Corporate registration scan is empty</string>
     <string name="store_registration_error_message_empty_location">Location is empty</string>
     <string name="store_registration_error_message_empty_address">Address is empty</string>
     <string name="store_registration_error_message_empty_cover_image_url">Cover image is empty</string>
     <string name="store_registration_error_message_empty_thumbnail_image_url">Thumbnail image is empty</string>
+    <string name="store_registration_error_message_duplicate_corporate_number">The corporate number has been already reviewed</string>
+    <string name="store_registration_error_message_unavailable_corporate_number">The corporate number is not available</string>
+
+    <string name="store_registration_result_result_requested">Reviewing</string>
+    <string name="store_registration_result_result_approved">Approved</string>
+    <string name="store_registration_result_result_rejected">Rejected</string>
+
+    <string name="root_prevention_message">Device root is detected. Finish the app.</string>
 </resources>

@@ -12,6 +12,7 @@
 
 package com.mark.zumo.client.store.view.setting.fragment.profile;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.arch.lifecycle.ViewModelProviders;
 import android.location.Address;
@@ -38,6 +39,7 @@ import com.mark.zumo.client.core.entity.Store;
 import com.mark.zumo.client.core.util.glide.GlideApp;
 import com.mark.zumo.client.core.util.glide.GlideUtils;
 import com.mark.zumo.client.store.R;
+import com.mark.zumo.client.store.view.permission.PermissionFragment;
 import com.mark.zumo.client.store.viewmodel.StoreSettingViewModel;
 
 import java.io.IOException;
@@ -65,10 +67,23 @@ public class StoreProfileInfoFragment extends Fragment {
     private StoreSettingViewModel storeSettingViewModel;
     private Store store;
 
+    public static StoreProfileInfoFragment newInstance() {
+
+        Bundle args = new Bundle();
+
+        StoreProfileInfoFragment fragment = new StoreProfileInfoFragment();
+        fragment.setArguments(args);
+        return fragment;
+    }
+
+    public void updateStore(Store store) {
+        onLoadStore(store);
+    }
+
     @Override
     public void onCreate(@Nullable final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        storeSettingViewModel = ViewModelProviders.of(getActivity()).get(StoreSettingViewModel.class);
+        storeSettingViewModel = ViewModelProviders.of(this).get(StoreSettingViewModel.class);
     }
 
     @Nullable
@@ -97,7 +112,7 @@ public class StoreProfileInfoFragment extends Fragment {
 
         GlideApp.with(this)
                 .load(store.thumbnailUrl)
-                .apply(GlideUtils.storeImageOptions())
+                .apply(GlideUtils.storeThumbnailImageOptions())
                 .transition(DrawableTransitionOptions.withCrossFade())
                 .into(thumbnailImage);
 
@@ -117,6 +132,19 @@ public class StoreProfileInfoFragment extends Fragment {
     }
 
     private void inflateMapFragment() {
+        String[] permissions = {Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION};
+        if (!PermissionFragment.isGrantedPermissions(permissions)) {
+            Fragment permissionFragment = PermissionFragment.instantiate(permissions, this::inflateMapFragment)
+                    .setTitle(R.string.permission_location_title)
+                    .setMessage(R.string.permission_location_content);
+
+            getFragmentManager().beginTransaction()
+                    .replace(R.id.map_fragment, permissionFragment)
+                    .commit();
+
+            return;
+        }
+
         mapFragment = new SupportMapFragment();
         FragmentManager fragmentManager = getFragmentManager();
         Objects.requireNonNull(fragmentManager).beginTransaction()

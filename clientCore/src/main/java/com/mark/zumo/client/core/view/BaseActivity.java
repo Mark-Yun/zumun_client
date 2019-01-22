@@ -13,9 +13,15 @@
 package com.mark.zumo.client.core.view;
 
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+
+import com.mark.zumo.client.core.R;
+import com.scottyab.rootbeer.RootBeer;
 
 /**
  * Created by mark on 18. 5. 21.
@@ -23,6 +29,19 @@ import android.support.v7.app.AppCompatActivity;
 public class BaseActivity extends AppCompatActivity {
 
     public static final String TAG = "BaseActivity";
+
+    @Override
+    protected void onCreate(@Nullable final Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (new RootBeer(this).isRootedWithoutBusyBoxCheck()) {
+            new AlertDialog.Builder(this)
+                    .setCancelable(false)
+                    .setMessage(R.string.root_prevention_message)
+                    .setPositiveButton(android.R.string.ok, (dialog, which) -> finish())
+                    .create()
+                    .show();
+        }
+    }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {

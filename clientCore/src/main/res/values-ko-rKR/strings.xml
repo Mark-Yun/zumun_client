@@ -4,6 +4,12 @@
   ~ Proprietary and confidential
   -->
 
+<!--
+  ~ Copyright (c) 2018. Mark Soft - All Rights Reserved
+  ~ Unauthorized copying of this file, via any medium is strictly prohibited
+  ~ Proprietary and confidential
+  -->
+
 <resources>
     <string name="order_state_accepted">접수완료</string>
     <string name="order_state_complete">완료</string>
@@ -27,6 +33,7 @@
     <string name="permission_location_content">주변의 ZUMUN 가게를 검색하거나 지도에 ZUMUN가게의 위치를 표시할 수 있습니다.</string>
 
     <string name="sign_up_error_message_success">성공</string>
+    <string name="sign_up_error_message_server_error">네트워크 에러입니다. 잠시 후 다시 시도해주세요.</string>
     <string name="sign_up_error_message_empty_email">이메일을 입력해주세요</string>
     <string name="sign_up_error_message_empty_password">비밀번호를 입력해주세요</string>
     <string name="sign_up_error_message_empty_password_confirm">같은 비밀번호를 입력해주세요</string>
@@ -37,15 +44,31 @@
     <string name="sign_up_error_message_empty_bank_account_url">통장 사본을 선택해주세요</string>
     <string name="sign_up_error_message_password_discord">비밀번호가 일치하지 않습니다</string>
     <string name="sign_up_error_message_email_incorrect">올바르지 않은 이메일 입니다</string>
+    <string name="sign_up_error_message_duplicate_email">이미 등록된 이메일 입니다</string>
+    <string name="sign_up_error_message_duplicate_phone_number">이미 등록된 전화 번호입니다</string>
+
+    <string name="sign_in_error_title">로그인 실패</string>
+    <string name="sign_in_error_message">이메일 혹은 비밀번호가 올바르지 않습니다</string>
 
     <string name="store_registration_error_message_success">성공</string>
     <string name="store_registration_error_message_empty_store_name">가게 이름을 입력해주세요</string>
     <string name="store_registration_error_message_empty_store_phone_number">가게 전화번호를 입력해주세요</string>
     <string name="store_registration_error_message_empty_store_type">가게 종류를 입력해주세요</string>
+    <string name="store_registration_error_message_empty_corporate_registration_name">상호명을 입력해주세요</string>
+    <string name="store_registration_error_message_empty_corporate_registration_owner_name">대표자 성명을 입력해주세요</string>
     <string name="store_registration_error_message_empty_corporate_registration_number">사업자 등록번호를 입력해주세요</string>
-    <string name="store_registration_error_message_empty_corporate_registration_scan_url">사업자 등록증을 입력해주세요</string>
+    <string name="store_registration_error_message_empty_corporate_registration_scan_url">사업자 등록증 촬영 이미지를 선택해주세요</string>
+    <string name="store_registration_error_message_empty_corporate_registration_address">사업자 등록 주소를 입력해주세요</string>
     <string name="store_registration_error_message_empty_location">위치를 입력해주세요</string>
     <string name="store_registration_error_message_empty_address">주소를 입력해주세요</string>
     <string name="store_registration_error_message_empty_cover_image_url">배경 이미지를 입력해주세요</string>
-    <string name="store_registration_error_message_empty_thumbnail_image_url">로고 이미지를 입력해주세</string>
+    <string name="store_registration_error_message_empty_thumbnail_image_url">로고 이미지를 입력해주세요</string>
+    <string name="store_registration_error_message_duplicate_corporate_number">이미 심사 신청된 사업자 등록번호 입니다</string>
+    <string name="store_registration_error_message_unavailable_corporate_number">유효하지 않은 사업자 등록번호 입니다</string>
+
+    <string name="store_registration_result_result_requested">심사중</string>
+    <string name="store_registration_result_result_approved">승인 완료</string>
+    <string name="store_registration_result_result_rejected">재신청 필요</string>
+
+    <string name="root_prevention_message">디바이스 루팅이 감지되었습니다. 앱을 종료합니다.</string>
 </resources>

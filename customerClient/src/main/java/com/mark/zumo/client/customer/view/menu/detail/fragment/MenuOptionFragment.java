@@ -6,7 +6,6 @@
 
 package com.mark.zumo.client.customer.view.menu.detail.fragment;
 
-import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -20,11 +19,15 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.mark.zumo.client.core.entity.MenuOption;
+import com.mark.zumo.client.core.entity.MenuOptionCategory;
+import com.mark.zumo.client.core.entity.OrderDetail;
 import com.mark.zumo.client.core.view.TouchResponse;
 import com.mark.zumo.client.customer.R;
 import com.mark.zumo.client.customer.view.menu.detail.MenuDetailActivity;
 import com.mark.zumo.client.customer.viewmodel.MenuDetailViewModel;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -40,13 +43,18 @@ public class MenuOptionFragment extends Fragment {
 
     public static final String TAG = "MenuOptionFragment";
     @BindView(R.id.menu_option_recycler_view) RecyclerView recyclerView;
-    @BindView(R.id.amount) AppCompatTextView amount;
+    @BindView(R.id.amount) AppCompatTextView amountTextView;
+
+    private MenuDetailViewModel menuDetailViewModel;
 
     private String menuUuid;
     private String storeUuid;
     private int cartIndex;
+    private int amount;
     private boolean isModifyingCart;
-    private MenuDetailViewModel menuDetailViewModel;
+    private List<String> selectSingleMenuOptionUuidList;
+    private Map<String, String> selectMultiMenuOptionUuidMap;
+    private MenuOptionAdapter menuOptionAdapter;
 
     @Override
     public void onCreate(@Nullable final Bundle savedInstanceState) {
@@ -57,6 +65,9 @@ public class MenuOptionFragment extends Fragment {
         storeUuid = Objects.requireNonNull(getArguments()).getString(MenuDetailActivity.KEY_MENU_STORE_UUID);
         cartIndex = Objects.requireNonNull(getArguments()).getInt(MenuDetailActivity.KEY_CART_INDEX, -1);
         isModifyingCart = cartIndex > -1;
+
+        selectSingleMenuOptionUuidList = new ArrayList<>();
+        selectMultiMenuOptionUuidMap = new HashMap<>();
     }
 
     @Nullable
@@ -64,39 +75,83 @@ public class MenuOptionFragment extends Fragment {
     public View onCreateView(@NonNull final LayoutInflater inflater, @Nullable final ViewGroup container, @Nullable final Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_menu_option, container, false);
         ButterKnife.bind(this, view);
-        inflateAmount();
+        inflateAmount(1);
         inflateRecyclerView();
         if (isModifyingCart) {
-            menuDetailViewModel.insertOrderDetailFromCart(storeUuid, cartIndex);
+            menuDetailViewModel.insertOrderDetailFromCart(storeUuid, cartIndex)
+                    .observe(this, this::insertMenuOptionDataFromOrderDetail);
         }
         return view;
     }
 
-    private void inflateRecyclerView() {
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
-        recyclerView.setLayoutManager(layoutManager);
-        recyclerView.setHasFixedSize(true);
-
-        MenuOptionAdapter adapter = new MenuOptionAdapter(this, menuDetailViewModel);
-        recyclerView.setAdapter(adapter);
-
-        LiveData<Map<String, List<MenuOption>>> menuOptionMap = menuDetailViewModel.getMenuOptionMap(menuUuid);
-        menuOptionMap.observe(this, adapter::setOptionMap);
+    private void insertMenuOptionDataFromOrderDetail(OrderDetail orderDetail) {
+        inflateAmount(orderDetail.quantity);
+        selectSingleMenuOptionUuidList.addAll(orderDetail.menuOptionUuidList);
+        menuOptionAdapter.setSelectedMenuOptionUuidList(orderDetail.menuOptionUuidList);
     }
 
-    private void inflateAmount() {
-        menuDetailViewModel.menuAmount().observe(this, quantity -> amount.setText(String.valueOf(quantity)));
+    private void inflateRecyclerView() {
+        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        recyclerView.setHasFixedSize(true);
+
+        menuOptionAdapter = new MenuOptionAdapter(getMenuOptionSelectListener());
+        recyclerView.setAdapter(menuOptionAdapter);
+        menuDetailViewModel.getMenuOptionCategoryList(menuUuid).observe(this, menuOptionAdapter::setMenuOptionCategoryList);
+    }
+
+    public List<String> getSelectMenuOptionUuidList() {
+        ArrayList<String> resultList = new ArrayList<>(selectSingleMenuOptionUuidList);
+        resultList.addAll(selectMultiMenuOptionUuidMap.values());
+        return resultList;
+    }
+
+    public int getAmount() {
+        return amount;
+    }
+
+    @NonNull
+    private MenuOptionAdapter.MenuOptionSelectListener getMenuOptionSelectListener() {
+        return new MenuOptionAdapter.MenuOptionSelectListener() {
+            @Override
+            public void onSingleMenuOptionSelected(final MenuOption menuOption, final boolean isChecked) {
+                if (isChecked) {
+                    selectSingleMenuOptionUuidList.add(menuOption.uuid);
+                } else {
+                    selectSingleMenuOptionUuidList.remove(menuOption.uuid);
+                }
+            }
+
+            @Override
+            public void onMultiMenuOptionSelected(final MenuOption menuOption) {
+                selectMultiMenuOptionUuidMap.put(menuOption.menuOptionCategoryUuid, menuOption.uuid);
+            }
+
+            @Override
+            public void onMenuOptionCategoryCanceled(final MenuOptionCategory menuOptionCategory) {
+                selectMultiMenuOptionUuidMap.remove(menuOptionCategory.uuid);
+            }
+        };
+    }
+
+    private void inflateAmount(int amount) {
+        this.amount = amount;
+        amountTextView.setText(String.valueOf(this.amount));
     }
 
     @OnClick(R.id.amount_plus_button)
     void onClickAmountPlus() {
         TouchResponse.medium();
-        menuDetailViewModel.increaseAmount();
+        amountTextView.setText(String.valueOf(++amount));
     }
 
     @OnClick(R.id.amount_minus_button)
     void onClickAmountMinus() {
         TouchResponse.medium();
-        menuDetailViewModel.decreaseAmount();
+
+        if (amount <= 1) {
+            return;
+        }
+
+        amountTextView.setText(String.valueOf(--amount));
     }
 }

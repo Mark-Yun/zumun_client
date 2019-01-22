@@ -9,8 +9,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/recycler_view"
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/menu_list_fragment"
         android:layout_width="0dp"
         android:layout_height="match_parent"
         app:layout_constraintEnd_toStartOf="@+id/menu_detail_fragment"
@@ -23,16 +23,5 @@
         android:layout_height="match_parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_weight="1"
-        app:layout_constraintStart_toEndOf="@+id/recycler_view" />
-
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/add_menu"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/big_margin"
-        android:layout_marginEnd="@dimen/big_margin"
-        android:background="@color/colorAccent"
-        android:src="@drawable/ic_add_white_24dp"
-        app:layout_constraintBottom_toBottomOf="@+id/recycler_view"
-        app:layout_constraintEnd_toEndOf="@+id/recycler_view" />
+        app:layout_constraintStart_toEndOf="@+id/menu_list_fragment" />
 </android.support.constraint.ConstraintLayout>

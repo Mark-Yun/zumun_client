@@ -33,10 +33,14 @@ public class StoreProfileMainFragment extends BaseFragment {
     }
 
     private void inflateProfileMainFragment() {
+        StoreProfileInfoFragment profileInfoFragment = StoreProfileInfoFragment.newInstance();
+        StoreProfilePreferenceFragment preferenceFragment = StoreProfilePreferenceFragment.newInstance()
+                .onStoreUpdated(profileInfoFragment::updateStore);
+
         getFragmentManager().beginTransaction()
                 .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
-                .replace(R.id.left_fragment, new StoreProfileInfoFragment())
-                .replace(R.id.right_fragment, new StoreProfilePreferenceFragment())
+                .replace(R.id.left_fragment, profileInfoFragment)
+                .replace(R.id.right_fragment, preferenceFragment)
                 .commitAllowingStateLoss();
     }
 }

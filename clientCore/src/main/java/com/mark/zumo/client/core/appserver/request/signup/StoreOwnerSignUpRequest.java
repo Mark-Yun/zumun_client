@@ -23,7 +23,10 @@
  */
 package com.mark.zumo.client.core.appserver.request.signup;
 
+import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+import com.mark.zumo.client.core.appserver.response.store.user.signup.StoreUserSignupException;
+import com.mark.zumo.client.core.entity.user.store.StoreOwner;
 import com.mark.zumo.client.core.entity.util.EntityHelper;
 
 /**
@@ -31,41 +34,44 @@ import com.mark.zumo.client.core.entity.util.EntityHelper;
  */
 public class StoreOwnerSignUpRequest {
 
-    @SerializedName(Schema.id)
-    public final long id;
+    @SerializedName(Schema.uuid)
+    public final String uuid;
     @SerializedName(Schema.name)
     public final String name;
-    @SerializedName(Schema.password)
-    public final String password;
-    @SerializedName(Schema.passwordConfirm)
+    @Expose
     public final String passwordConfirm;
+    @SerializedName(Schema.bankAccountNumber)
+    public final String bankAccountNumber;
     @SerializedName(Schema.phoneNumber)
     public final String phoneNumber;
     @SerializedName(Schema.email)
     public final String email;
     @SerializedName(Schema.bankName)
     public final String bankName;
-    @SerializedName(Schema.bankAccount)
-    public final String bankAccount;
+    @SerializedName(Schema.storePermission)
+    public final String storePermission;
     @SerializedName(Schema.authType)
     public final String authType;
     @SerializedName(Schema.bankAccountScanUrl)
     public final String bankAccountScanUrl;
     @SerializedName(Schema.authToken)
     public final String authToken;
+    @SerializedName(Schema.password)
+    public String password;
 
-    private StoreOwnerSignUpRequest(final long id, final String name, final String password, final String passwordConfirm, final String phoneNumber, final String email, final String bankName, final String bankAccount, final String authType, final String bankAccountScanUrl, final String authToken) {
-        this.id = id;
+    private StoreOwnerSignUpRequest(final String uuid, final String name, final String password, final String passwordConfirm, final String phoneNumber, final String email, final String bankName, final String bankAccountNumber, final String authType, final String bankAccountScanUrl, final String authToken) {
+        this.uuid = uuid;
         this.name = name;
         this.password = password;
         this.passwordConfirm = passwordConfirm;
         this.phoneNumber = phoneNumber;
         this.email = email;
         this.bankName = bankName;
-        this.bankAccount = bankAccount;
+        this.bankAccountNumber = bankAccountNumber;
         this.authType = authType;
         this.bankAccountScanUrl = bankAccountScanUrl;
         this.authToken = authToken;
+        this.storePermission = StoreOwner.Permission.OWNER.name();
     }
 
     @Override
@@ -74,38 +80,38 @@ public class StoreOwnerSignUpRequest {
     }
 
     public interface Schema {
-        String id = "id";
-        String password = "password";
-        String passwordConfirm = "password_confirm";
-        String name = "store_owner_name";
-        String phoneNumber = "store_owner_phone_number";
-        String email = "store_owner_email";
+        String uuid = "store_user_request_uuid";
+        String password = "store_user_password";
+        String name = "store_user_name";
+        String phoneNumber = "store_user_phone_number";
+        String email = "store_user_email";
         String bankName = "bank_name";
-        String bankAccount = "bank_account";
+        String bankAccountNumber = "bank_account_number";
         String bankAccountScanUrl = "bank_account_scan_url";
         String authType = "auth_type";
         String authToken = "auth_token";
+        String storePermission = "store_permission";
     }
 
     public static class Builder {
 
-        private long id;
-        private String name;
-        private String password;
-        private String passwordConfirm;
-        private String phoneNumber;
-        private String email;
-        private String bankName;
-        private String bankAccount;
-        private String authType;
-        private String bankAccountScanUrl;
-        private String authToken;
+        private String uuid = "";
+        private String name = "";
+        private String password = "";
+        private String passwordConfirm = "";
+        private String phoneNumber = "";
+        private String email = "";
+        private String bankName = "";
+        private String bankAccount = "";
+        private String authType = "";
+        private String bankAccountScanUrl = "";
+        private String authToken = "";
 
         public Builder() {
         }
 
-        public Builder setId(final long id) {
-            this.id = id;
+        public Builder setUuid(final String uuid) {
+            this.uuid = uuid;
             return this;
         }
 
@@ -160,10 +166,9 @@ public class StoreOwnerSignUpRequest {
         }
 
         public StoreOwnerSignUpRequest build() throws StoreUserSignupException {
-            StoreOwnerSignUpRequest storeOwnerSignUpRequest = new StoreOwnerSignUpRequest(id,
+            StoreOwnerSignUpRequest storeOwnerSignUpRequest = new StoreOwnerSignUpRequest(uuid,
                     name, password, passwordConfirm, phoneNumber, email, bankName, bankAccount,
                     authType, bankAccountScanUrl, authToken);
-
 
             for (Validator validator : Validator.values()) {
                 if (!validator.verify(storeOwnerSignUpRequest)) {

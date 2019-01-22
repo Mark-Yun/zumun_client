@@ -38,7 +38,7 @@ class OrderDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private final OrderViewModel orderViewModel;
     private final LifecycleOwner lifecycleOwner;
 
-    private List<OrderDetail> orderDetailList;
+    private final List<OrderDetail> orderDetailList;
 
     OrderDetailAdapter(final OrderViewModel orderViewModel, final LifecycleOwner lifecycleOwner) {
         this.orderViewModel = orderViewModel;
@@ -48,7 +48,8 @@ class OrderDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     }
 
     void setOrderDetailList(final List<OrderDetail> orderDetailList) {
-        this.orderDetailList = orderDetailList;
+        this.orderDetailList.clear();
+        this.orderDetailList.addAll(orderDetailList);
         notifyDataSetChanged();
     }
 

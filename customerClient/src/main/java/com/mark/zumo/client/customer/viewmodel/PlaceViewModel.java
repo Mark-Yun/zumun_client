@@ -17,7 +17,7 @@ import com.mark.zumo.client.core.entity.Store;
 import com.mark.zumo.client.core.provider.AppLocationProvider;
 import com.mark.zumo.client.customer.R;
 import com.mark.zumo.client.customer.model.CustomerLocationManager;
-import com.mark.zumo.client.customer.model.StoreManager;
+import com.mark.zumo.client.customer.model.CustomerStoreManager;
 
 import java.util.List;
 import java.util.Locale;
@@ -30,7 +30,7 @@ import io.reactivex.disposables.CompositeDisposable;
  */
 public class PlaceViewModel extends AndroidViewModel {
 
-    private final StoreManager storeManager;
+    private final CustomerStoreManager customerStoreManager;
     private final CustomerLocationManager locationManager;
     private final AppLocationProvider locationProvider;
 
@@ -39,7 +39,7 @@ public class PlaceViewModel extends AndroidViewModel {
     public PlaceViewModel(@NonNull final Application application) {
         super(application);
 
-        storeManager = StoreManager.INSTANCE;
+        customerStoreManager = CustomerStoreManager.INSTANCE;
         locationManager = CustomerLocationManager.INSTANCE;
         locationProvider = AppLocationProvider.INSTANCE;
 
@@ -49,7 +49,7 @@ public class PlaceViewModel extends AndroidViewModel {
     public LiveData<List<Store>> nearByStore(LatLng latLng, double distanceKm) {
         MutableLiveData<List<Store>> nearByStore = new MutableLiveData<>();
 
-        storeManager.nearByStore(latLng, distanceKm)
+        customerStoreManager.nearByStore(latLng, distanceKm)
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSuccess(nearByStore::setValue)
                 .doOnSubscribe(disposables::add)

@@ -1,0 +1,73 @@
+/*
+ * Copyright (c) 2018. Mark Soft - All Rights Reserved
+ * Unauthorized copying of this file, via any medium is strictly prohibited
+ * Proprietary and confidential
+ */
+
+android {
+    compileSdkVersion rootProject.ext.compileSdk
+
+    signingConfigs {
+        debug {
+            storeFile file('../keystore/zumun_debug.keystore')
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    def versionPropsFile = file('version.properties')
+    if (!versionPropsFile.canRead()) {
+        throw new GradleException("Could not read version.properties!")
+    }
+
+    Properties versionProps = new Properties()
+    versionProps.load(new FileInputStream(versionPropsFile))
+
+    def minSdk = versionProps['MIN_SDK'].toString()
+    def versionMajor = versionProps['VERSION_MAJOR'].toString()
+    def versionMinor = versionProps['VERSION_MINOR'].toString()
+    def versionPatch = versionProps['VERSION_PATCH'].toString()
+
+    def finalVersionCode = generateVersionCode(rootProject.ext.minSdk, versionMajor, versionMinor, versionPatch)
+
+    defaultConfig {
+        applicationId "com.mark.zumo.client.supervisor"
+        minSdkVersion minSdk
+        targetSdkVersion rootProject.ext.targetSdk
+        versionCode finalVersionCode
+        versionName "${versionMajor}.${versionMinor}.${versionPatch}"
+    }
+
+    buildTypes {
+        release {
+            signingConfig signingConfigs.debug
+            minifyEnabled true
+            shrinkResources true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), '../proguard-rules.pro'
+        }
+        debug {
+            signingConfig signingConfigs.debug
+            versionNameSuffix 'd'
+        }
+    }
+
+    applicationVariants.all { variant ->
+        variant.outputs.all { output ->
+            outputFileName = new File(
+                    outputFileName.replace(".apk", "-${finalVersionCode}.apk")
+            )
+        }
+    }
+}
+
+private static Integer generateVersionCode(minimumSdk, major, minor, patch) {
+    return minimumSdk.toInteger() * 10000000 + major.toInteger() * 10000 + minor.toInteger() * 100 + patch.toInteger()
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation 'com.github.chrisbanes:PhotoView:2.0.0'
+}

@@ -44,11 +44,11 @@ public enum NotificationHandler {
     public static final String TAG = "NotificationHandler";
     public static final String CHANNEL_ID_ORDER_PROGRESS = "order_progress";
     private Context context;
-    private StoreManager storeManager;
+    private CustomerStoreManager customerStoreManager;
 
     NotificationHandler() {
         context = ContextHolder.getContext();
-        storeManager = StoreManager.INSTANCE;
+        customerStoreManager = CustomerStoreManager.INSTANCE;
     }
 
     public void requestOrderProgressNotification(final Context context, @NonNull MenuOrder menuOrder) {
@@ -61,7 +61,7 @@ public enum NotificationHandler {
             Objects.requireNonNull(notificationManager).createNotificationChannel(notificationChanel);
         }
 
-        storeManager.getStoreFromDisk(menuOrder.storeUuid)
+        customerStoreManager.getStoreFromDisk(menuOrder.storeUuid)
                 .map(store -> createOrderNotification(store, menuOrder))
                 .doOnSuccess(notification -> notificationManager.notify(menuOrder.uuid.hashCode(), notification))
                 .subscribe();

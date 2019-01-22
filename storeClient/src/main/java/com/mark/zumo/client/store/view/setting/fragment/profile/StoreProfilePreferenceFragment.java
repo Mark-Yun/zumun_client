@@ -15,7 +15,6 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.preference.EditTextPreference;
 import android.support.v7.preference.Preference;
-import android.support.v7.preference.PreferenceFragmentCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,6 +26,7 @@ import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlacePicker;
 import com.mark.zumo.client.core.entity.Store;
 import com.mark.zumo.client.store.R;
+import com.mark.zumo.client.store.view.setting.fragment.BasePreferenceFragmentCompat;
 import com.mark.zumo.client.store.view.util.ImageCropperUtils;
 import com.mark.zumo.client.store.view.util.ImagePickerUtils;
 import com.mark.zumo.client.store.viewmodel.StoreSettingViewModel;
@@ -42,7 +42,7 @@ import java.util.Objects;
 /**
  * Created by mark on 18. 10. 28.
  */
-public class StoreProfilePreferenceFragment extends PreferenceFragmentCompat {
+public class StoreProfilePreferenceFragment extends BasePreferenceFragmentCompat {
 
     private static final String TAG = "StoreProfilePreferenceFragment";
 
@@ -53,10 +53,30 @@ public class StoreProfilePreferenceFragment extends PreferenceFragmentCompat {
     private int requestCode;
     private StoreSettingViewModel storeSettingViewModel;
 
+    private StoreUpdateListener storeUpdateListener;
+    private EditTextPreference storeNamePreference;
+    private Preference coverImagePreference;
+    private Preference thumbnailImagePreference;
+    private Preference addressPreference;
+
+    public static StoreProfilePreferenceFragment newInstance() {
+
+        Bundle args = new Bundle();
+
+        StoreProfilePreferenceFragment fragment = new StoreProfilePreferenceFragment();
+        fragment.setArguments(args);
+        return fragment;
+    }
+
+    public StoreProfilePreferenceFragment onStoreUpdated(StoreUpdateListener storeUpdateListener) {
+        this.storeUpdateListener = storeUpdateListener;
+        return this;
+    }
+
     @Override
     public void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        storeSettingViewModel = ViewModelProviders.of(getActivity()).get(StoreSettingViewModel.class);
+        storeSettingViewModel = ViewModelProviders.of(this).get(StoreSettingViewModel.class);
     }
 
     @Override
@@ -67,23 +87,28 @@ public class StoreProfilePreferenceFragment extends PreferenceFragmentCompat {
     @Override
     public View onCreateView(final LayoutInflater inflater, final ViewGroup container, final Bundle savedInstanceState) {
         View view = super.onCreateView(inflater, container, savedInstanceState);
-        storeSettingViewModel.getCurrentStore().observe(this, this::onLoadStore);
+        inflateStore();
         return view;
     }
 
-    private void onLoadStore(Store store) {
-        EditTextPreference storeNamePreference = (EditTextPreference) findPreference(getString(R.string.store_name_preference_key));
-        storeNamePreference.setSummary(store.name);
+    private void inflateStore() {
+        storeNamePreference = (EditTextPreference) findPreference(getString(R.string.store_name_preference_key));
         storeNamePreference.setOnPreferenceChangeListener(this::onStoreNameChanged);
 
-        Preference coverImagePreference = findPreference(getString(R.string.store_cover_image_preference_key));
+        coverImagePreference = findPreference(getString(R.string.store_cover_image_preference_key));
         coverImagePreference.setOnPreferenceClickListener(this::onCoverImagePreferenceClicked);
 
-        Preference thumbnailImagePreference = findPreference(getString(R.string.store_thumbnail_image_preference_key));
+        thumbnailImagePreference = findPreference(getString(R.string.store_thumbnail_image_preference_key));
         thumbnailImagePreference.setOnPreferenceClickListener(this::onThumbnailImagePreferenceClicked);
 
-        Preference addressPreference = findPreference(getString(R.string.store_address_preference_key));
+        addressPreference = findPreference(getString(R.string.store_address_preference_key));
         addressPreference.setOnPreferenceClickListener(this::onAddressPreferenceClicked);
+
+        storeSettingViewModel.getCurrentStore().observe(this, this::onLoadStore);
+    }
+
+    private void onLoadStore(Store store) {
+        storeNamePreference.setSummary(store.name);
 
         try {
             Geocoder geocoder = new Geocoder(getActivity(), Locale.getDefault());
@@ -96,13 +121,13 @@ public class StoreProfilePreferenceFragment extends PreferenceFragmentCompat {
     }
 
     private boolean onStoreNameChanged(Preference preference, Object object) {
-        storeSettingViewModel.updateStoreName(object.toString())
-                .observe(this, x -> reloadStore());
+        storeSettingViewModel.updateStoreName(object.toString()).observe(this, this::onStoreUpdate);
         return true;
     }
 
-    private void reloadStore() {
-        storeSettingViewModel.loadOnCurrentStore();
+    private void onStoreUpdate(Store store) {
+        onLoadStore(store);
+        storeUpdateListener.onStoreUpdate(store);
     }
 
     private boolean onCoverImagePreferenceClicked(Preference preference) {
@@ -139,7 +164,7 @@ public class StoreProfilePreferenceFragment extends PreferenceFragmentCompat {
         switch (requestCode) {
             case REQUEST_CODE_PLACE_PICKER:
                 Place place = PlacePicker.getPlace(Objects.requireNonNull(getActivity()), data);
-                storeSettingViewModel.updateStoreLocation(place.getLatLng()).observe(this, x -> reloadStore());
+                storeSettingViewModel.updateStoreLocation(place.getLatLng()).observe(this, this::onStoreUpdate);
                 break;
 
             case REQUEST_CODE_COVER_IMAGE_PICKER:
@@ -168,10 +193,10 @@ public class StoreProfilePreferenceFragment extends PreferenceFragmentCompat {
         Uri resultUri = result.getUri();
         if (this.requestCode == REQUEST_CODE_THUMBNAIL_IMAGE_PICKER) {
             storeSettingViewModel.uploadThumbnailImage(getActivity(), resultUri)
-                    .observe(this, x -> reloadStore());
+                    .observe(this, this::onStoreUpdate);
         } else if (this.requestCode == REQUEST_CODE_COVER_IMAGE_PICKER) {
             storeSettingViewModel.uploadCoverImage(getActivity(), resultUri)
-                    .observe(this, x -> reloadStore());
+                    .observe(this, this::onStoreUpdate);
         }
 
     }
@@ -192,5 +217,9 @@ public class StoreProfilePreferenceFragment extends PreferenceFragmentCompat {
         } else if (requestCode == REQUEST_CODE_THUMBNAIL_IMAGE_PICKER) {
             ImageCropperUtils.showThumbnailImageCropper(getActivity(), this, selectedPath);
         }
+    }
+
+    interface StoreUpdateListener {
+        void onStoreUpdate(Store store);
     }
 }

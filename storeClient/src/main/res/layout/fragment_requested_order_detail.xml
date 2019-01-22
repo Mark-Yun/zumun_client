@@ -8,21 +8,22 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginBottom="@dimen/small_margin"
-    android:layout_marginEnd="@dimen/small_margin"
+    android:layout_marginStart="@dimen/small_margin"
     android:layout_marginTop="@dimen/small_margin"
-    android:background="@color/color_50_90"
+    android:layout_marginEnd="@dimen/small_margin"
+    android:layout_marginBottom="@dimen/small_margin"
+    android:background="@drawable/background_fragment_requested_order_detail"
     android:elevation="3dp">
 
     <android.support.v7.widget.AppCompatImageButton
         android:id="@+id/close_button"
         android:layout_width="@dimen/icon_size_big"
         android:layout_height="@dimen/icon_size_big"
-        android:layout_marginEnd="@dimen/medium_margin"
         android:layout_marginTop="@dimen/medium_margin"
+        android:layout_marginEnd="@dimen/medium_margin"
         android:background="@null"
         android:scaleType="fitXY"
-        android:src="@drawable/ic_store_app_order_spec_exit_button"
+        android:src="@drawable/ic_cancel_blue_grey_900_48dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -30,12 +31,13 @@
         android:id="@+id/order_number"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/small_margin"
         android:layout_marginTop="@dimen/small_margin"
-        android:textSize="40dp"
+        android:textColor="@color/color_900"
+        android:textSize="32sp"
         android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/close_button" />
 
     <View
         android:id="@+id/order_name_divider"
@@ -45,109 +47,126 @@
         android:background="@color/divider"
         app:layout_constraintTop_toBottomOf="@+id/order_number" />
 
-    <android.support.v7.widget.AppCompatTextView
-        android:id="@+id/order_date_description"
+    <android.support.v7.widget.LinearLayoutCompat
+        android:id="@+id/date_layout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/medium_margin"
-        android:layout_marginTop="@dimen/medium_margin"
-        android:text="@string/order_date_description"
+        android:layout_marginTop="@dimen/big_margin"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toStartOf="@+id/time_layout"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/order_name_divider" />
+        app:layout_constraintTop_toBottomOf="@+id/order_name_divider">
 
-    <android.support.v7.widget.AppCompatTextView
-        android:id="@+id/order_date"
+        <android.support.v7.widget.AppCompatTextView
+            android:id="@+id/order_date_description"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/order_date_description"
+            android:textColor="@color/color_900" />
+
+        <android.support.v7.widget.AppCompatTextView
+            android:id="@+id/order_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/color_900" />
+    </android.support.v7.widget.LinearLayoutCompat>
+
+    <android.support.v7.widget.LinearLayoutCompat
+        android:id="@+id/time_layout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="@+id/order_date_description"
-        app:layout_constraintStart_toEndOf="@+id/order_date_description" />
-
-    <android.support.v7.widget.AppCompatTextView
-        android:id="@+id/order_time_description"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/medium_margin"
-        android:layout_marginTop="@dimen/medium_margin"
-        android:text="@string/order_time_description"
-        app:layout_constraintBottom_toBottomOf="@+id/order_date_description"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="@+id/date_layout"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toEndOf="@+id/date_layout"
+        app:layout_constraintTop_toTopOf="@+id/date_layout">
 
-    <android.support.v7.widget.AppCompatTextView
-        android:id="@+id/order_time"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="@+id/order_time_description"
-        app:layout_constraintStart_toEndOf="@+id/order_time_description" />
+        <android.support.v7.widget.AppCompatTextView
+            android:id="@+id/order_time_description"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/order_time_description"
+            android:textColor="@color/color_900" />
+
+        <android.support.v7.widget.AppCompatTextView
+            android:id="@+id/order_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/color_900" />
+    </android.support.v7.widget.LinearLayoutCompat>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycler_view"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginBottom="@dimen/big_margin"
         android:layout_marginTop="@dimen/big_margin"
+        android:layout_marginBottom="@dimen/big_margin"
         app:layout_constraintBottom_toTopOf="@+id/reject"
-        app:layout_constraintTop_toBottomOf="@+id/order_date_description" />
-
-    <android.support.v7.widget.AppCompatButton
-        android:id="@+id/reject"
-        style="@style/ButtonTextDark"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:background="@color/colorTextDisable"
-        android:paddingBottom="@dimen/big_margin"
-        android:paddingTop="@dimen/big_margin"
-        android:text="@string/requested_order_reject_button_text"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/accept"
-        app:layout_constraintHorizontal_weight="1"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/date_layout" />
 
     <android.support.v7.widget.AppCompatButton
         android:id="@+id/accept"
         style="@style/ButtonTextDark"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:background="@color/colorAccent"
-        android:paddingBottom="@dimen/big_margin"
+        android:background="@drawable/background_fragment_requested_order_detail_accept_button"
         android:paddingTop="@dimen/big_margin"
+        android:paddingBottom="@dimen/big_margin"
         android:text="@string/requested_order_accept_button_text"
+        android:textSize="16sp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/reject"
+        app:layout_constraintHorizontal_weight="1"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <android.support.v7.widget.AppCompatButton
+        android:id="@+id/reject"
+        style="@style/ButtonTextDark"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/background_fragment_requested_order_detail_cancel_button"
+        android:paddingTop="@dimen/big_margin"
+        android:paddingBottom="@dimen/big_margin"
+        android:text="@string/requested_order_reject_button_text"
+        android:textSize="16sp"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_weight="1"
-        app:layout_constraintStart_toEndOf="@+id/reject" />
-
-    <android.support.v7.widget.AppCompatButton
-        android:id="@+id/refund"
-        style="@style/ButtonTextDark"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:background="@color/colorTextDisable"
-        android:paddingBottom="@dimen/big_margin"
-        android:paddingTop="@dimen/big_margin"
-        android:text="@string/requested_order_refund_button_text"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/complete"
-        app:layout_constraintHorizontal_weight="1"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toEndOf="@+id/accept" />
 
     <android.support.v7.widget.AppCompatButton
         android:id="@+id/complete"
         style="@style/ButtonTextDark"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:background="@color/colorAccent"
-        android:paddingBottom="@dimen/big_margin"
+        android:background="@drawable/background_fragment_requested_order_detail_complete_button"
         android:paddingTop="@dimen/big_margin"
+        android:paddingBottom="@dimen/big_margin"
         android:text="@string/requested_order_complete_button_text"
+        android:textSize="16sp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/refund"
+        app:layout_constraintHorizontal_weight="1"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <android.support.v7.widget.AppCompatButton
+        android:id="@+id/refund"
+        style="@style/ButtonTextDark"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/background_fragment_requested_order_detail_cancel_button"
+        android:paddingTop="@dimen/big_margin"
+        android:paddingBottom="@dimen/big_margin"
+        android:text="@string/requested_order_refund_button_text"
+        android:textSize="16sp"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_weight="1"
-        app:layout_constraintStart_toEndOf="@+id/refund" />
+        app:layout_constraintStart_toEndOf="@+id/complete" />
+
 
 </android.support.constraint.ConstraintLayout>

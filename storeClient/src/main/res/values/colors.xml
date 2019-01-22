@@ -27,4 +27,6 @@
     <color name="color_700">#455A64</color>
     <color name="color_800">#37474F</color>
     <color name="color_900">#263238</color>
+
+    <color name="button_color">#5C6BC0</color>
 </resources>

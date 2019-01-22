@@ -58,7 +58,7 @@
     </style>
 
     <style name="SecondaryLineTextLight">
-        <item name="android:textColor">@color/colorSecondaryTextLight</item>
+        <item name="android:textColor">@color/colorTextLight</item>
         <item name="android:textSize">14sp</item>
         <item name="android:fontFamily">sans-serif</item>
         <item name="android:letterSpacing">0.025</item>

@@ -5,6 +5,6 @@
   -->
 <shape xmlns:android="http://schemas.android.com/apk/res/android"
     android:shape="rectangle">
-    <solid android:color="@color/backgroundMenuTitle" />
+    <solid android:color="#c3FFFFFF" />
     <corners android:radius="@dimen/menu_round_corners" />
 </shape>

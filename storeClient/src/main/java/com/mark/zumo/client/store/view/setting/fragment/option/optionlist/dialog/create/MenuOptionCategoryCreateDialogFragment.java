@@ -77,7 +77,7 @@ public class MenuOptionCategoryCreateDialogFragment extends DialogFragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull final LayoutInflater inflater, @Nullable final ViewGroup container, @Nullable final Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_dialog_create_menu_option, container, false);
+        View view = inflater.inflate(R.layout.dialog_fragment_create_menu_option, container, false);
         ButterKnife.bind(this, view);
         inflateView();
         return view;
@@ -103,7 +103,7 @@ public class MenuOptionCategoryCreateDialogFragment extends DialogFragment {
 
     @OnClick(R.id.ok)
     void onOkClick() {
-        String menuOptionCategoryName = optionNameInputText.getText().toString();
+        String menuOptionCategoryName = optionNameInputText.getText() == null ? "" : optionNameInputText.getText().toString();
         List<MenuOption> menuOptionList = menuOptionAdapter.getMenuOptionList();
         menuOptionSettingViewModel.createMenuOptionCategory(menuOptionCategoryName, new ArrayList<>(menuOptionList))
                 .observe(this, this::onCreateMenuOptionCategoryInternal);

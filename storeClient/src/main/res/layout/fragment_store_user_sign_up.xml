@@ -7,28 +7,44 @@
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:padding="@dimen/small_margin">
 
-    <TextView
-        android:id="@+id/back_to_sign_in"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+    <android.support.v7.widget.AppCompatImageView
+        android:id="@+id/back"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         android:clickable="true"
         android:focusable="true"
-        android:text="@string/text_view_back_to_sign_in"
-        app:layout_constraintBottom_toTopOf="@+id/sign_up_input_container"
-        app:layout_constraintStart_toStartOf="@+id/sign_up_input_container" />
+        android:src="@drawable/ic_arrow_back_black_48dp"
+        app:layout_constraintBottom_toBottomOf="@+id/title"
+        app:layout_constraintDimensionRatio="H, 1:1"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/title"
+        app:layout_constraintVertical_weight="1" />
+
+    <android.support.v7.widget.AppCompatTextView
+        android:id="@+id/title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/big_margin"
+        android:text="@string/button_sign_up"
+        android:textColor="@color/colorTextLight"
+        android:textSize="24sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <LinearLayout
         android:id="@+id/sign_up_input_container"
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/big_margin"
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintWidth_percent="0.33">
+        app:layout_constraintTop_toBottomOf="@+id/title">
 
         <android.support.design.widget.TextInputLayout
             android:id="@+id/input_layout_email"
@@ -70,18 +86,6 @@
         </android.support.design.widget.TextInputLayout>
 
         <android.support.design.widget.TextInputLayout
-            android:id="@+id/input_layout_name"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <android.support.design.widget.TextInputEditText
-                android:id="@+id/input_name"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="@string/store_owner_name" />
-        </android.support.design.widget.TextInputLayout>
-
-        <android.support.design.widget.TextInputLayout
             android:id="@+id/input_layout_phone_number"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
@@ -94,86 +98,15 @@
                 android:inputType="phone" />
         </android.support.design.widget.TextInputLayout>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center_vertical"
-            android:orientation="horizontal">
-
-            <android.support.v7.widget.AppCompatSpinner
-                android:id="@+id/input_bank_name"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:entries="@array/bank_entries"
-                android:entryValues="@array/bank_codes"
-                android:prompt="@string/store_owner_bank_name" />
-
-            <android.support.design.widget.TextInputLayout
-                android:id="@+id/input_layout_bank"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <android.support.design.widget.TextInputEditText
-                    android:id="@+id/input_back_account_number"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:hint="@string/store_owner_bank_account"
-                    android:inputType="phone" />
-            </android.support.design.widget.TextInputLayout>
-        </LinearLayout>
-
-        <android.support.constraint.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <android.support.v7.widget.AppCompatImageView
-                android:id="@+id/bank_account_scan_image"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:background="@drawable/store_user_sign_up_back_scan_image_background"
-                android:clickable="true"
-                android:focusable="true"
-                android:foreground="?attr/selectableItemBackground"
-                app:layout_constraintDimensionRatio="H, 3:2" />
-
-            <android.support.constraint.ConstraintLayout
-                android:id="@+id/bank_account_scan_image_description"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:layout_constraintBottom_toBottomOf="@+id/bank_account_scan_image"
-                app:layout_constraintEnd_toEndOf="@+id/bank_account_scan_image"
-                app:layout_constraintStart_toStartOf="@+id/bank_account_scan_image"
-                app:layout_constraintTop_toTopOf="@+id/bank_account_scan_image">
-
-                <android.support.v7.widget.AppCompatImageView
-                    android:id="@+id/bank_account_scan_image_description_icon"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:scaleType="centerInside"
-                    android:src="@drawable/ic_insert_photo_blue_grey_900_48dp"
-                    app:layout_constraintEnd_toStartOf="@+id/bank_account_scan_image_description_text"
-                    app:layout_constraintHorizontal_chainStyle="packed"
-                    app:layout_constraintStart_toStartOf="parent" />
-
-                <android.support.v7.widget.AppCompatTextView
-                    android:id="@+id/bank_account_scan_image_description_text"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/store_owner_bank_account_scan"
-                    app:layout_constraintBottom_toBottomOf="@+id/bank_account_scan_image_description_icon"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/bank_account_scan_image_description_icon"
-                    app:layout_constraintTop_toTopOf="@+id/bank_account_scan_image_description_icon" />
-
-            </android.support.constraint.ConstraintLayout>
-        </android.support.constraint.ConstraintLayout>
-
         <android.support.v7.widget.AppCompatButton
             android:id="@+id/button_sign_up"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/button_sign_up" />
+            android:layout_margin="@dimen/small_margin"
+            android:background="@color/button_color"
+            android:text="@android:string/ok"
+            android:textColor="@color/colorTextDark"
+            android:textSize="24sp" />
     </LinearLayout>
 
 </android.support.constraint.ConstraintLayout>

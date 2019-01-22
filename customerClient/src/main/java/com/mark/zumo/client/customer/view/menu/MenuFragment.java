@@ -62,7 +62,6 @@ public class MenuFragment extends Fragment {
     @BindView(R.id.menu_recycler_view) RecyclerView recyclerView;
 
     private MenuViewModel menuViewModel;
-    private CategoryAdapter categoryAdapter;
 
     private String storeUuid;
 
@@ -92,11 +91,10 @@ public class MenuFragment extends Fragment {
         recyclerView.setHasFixedSize(true);
         recyclerView.setNestedScrollingEnabled(false);
 
-        categoryAdapter = new CategoryAdapter(this);
-        recyclerView.setAdapter(categoryAdapter);
-        categoryAdapter.setMenuSelectListener(this::onSelectMenu);
+        MenuCategoryAdapter menuCategoryAdapter = new MenuCategoryAdapter(this, this::onSelectMenu);
 
-        menuViewModel.loadCombinedMenuCategoryList(storeUuid).observe(this, categoryAdapter::setCategoryList);
+        recyclerView.setAdapter(menuCategoryAdapter);
+        menuViewModel.loadCombinedMenuCategoryList(storeUuid).observe(this, menuCategoryAdapter::setCategoryList);
     }
 
     private void onSelectMenu(Menu menu) {
@@ -126,7 +124,7 @@ public class MenuFragment extends Fragment {
                 .into(storeCoverImage);
 
         storeCoverTitle.setText(store.name);
-        cartButton.setVisibility(View.VISIBLE);
+        cartButton.show();
     }
 
     private void onLoadCart(Cart cart) {

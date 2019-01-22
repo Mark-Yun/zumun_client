@@ -13,6 +13,7 @@
 package com.mark.zumo.client.core.app;
 
 import android.content.Context;
+import android.database.sqlite.SQLiteConstraintException;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
@@ -60,6 +61,7 @@ public class AppErrorHandler {
                 Log.e(TAG, e.getMessage());
                 Log.e(TAG, e.getMessage());
             }
+
             if (e instanceof HttpException) {
                 if (BuildConfig.BUILD_TYPE == AppConfig.DEBUG) {
                     showDebugToast(((HttpException) e).response().errorBody().string());
@@ -73,6 +75,11 @@ public class AppErrorHandler {
             } else if (e instanceof IOException) {
                 showToast(R.string.error_message_on_io_exception);
                 return;
+            } else if (e instanceof SQLiteConstraintException) {
+                if (BuildConfig.BUILD_TYPE == AppConfig.DEBUG) {
+                    showDebugToast(e.getMessage());
+                    return;
+                }
             }
 
             if (e instanceof InterruptedException) {

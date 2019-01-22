@@ -17,16 +17,21 @@
             android:persistent="false"
             android:title="@string/preference_title_menu_detail_menu_name" />
 
+        <EditTextPreference
+            android:digits="0123456789"
+            android:inputType="number"
+            android:key="@string/preference_key_menu_detail_menu_price"
+            android:persistent="false"
+            android:title="@string/preference_title_menu_detail_menu_price" />
+
         <MultiSelectListPreference
             android:key="@string/preference_key_menu_detail_menu_category"
             android:persistent="false"
             android:title="@string/preference_title_menu_detail_menu_category" />
 
-        <EditTextPreference
-            android:digits="0123456789"
-            android:key="@string/preference_key_menu_detail_menu_price"
-            android:inputType="number"
+        <MultiSelectListPreference
+            android:key="@string/preference_key_menu_detail_menu_option"
             android:persistent="false"
-            android:title="@string/preference_title_menu_detail_menu_price" />
+            android:title="@string/preference_title_menu_detail_menu_option" />
     </PreferenceCategory>
 </PreferenceScreen>

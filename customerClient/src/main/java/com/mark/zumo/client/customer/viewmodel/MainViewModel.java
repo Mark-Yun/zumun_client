@@ -15,10 +15,10 @@ import android.support.annotation.NonNull;
 
 import com.mark.zumo.client.core.entity.Store;
 import com.mark.zumo.client.core.p2p.P2pClient;
+import com.mark.zumo.client.customer.model.CustomerOrderManager;
+import com.mark.zumo.client.customer.model.CustomerSessionManager;
+import com.mark.zumo.client.customer.model.CustomerStoreManager;
 import com.mark.zumo.client.customer.model.NotificationHandler;
-import com.mark.zumo.client.customer.model.OrderManager;
-import com.mark.zumo.client.customer.model.SessionManager;
-import com.mark.zumo.client.customer.model.StoreManager;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
@@ -29,9 +29,9 @@ import io.reactivex.disposables.CompositeDisposable;
 public class MainViewModel extends AndroidViewModel {
 
     private final P2pClient p2pClient;
-    private final SessionManager sessionManager;
-    private final StoreManager storeManager;
-    private final OrderManager orderManager;
+    private final CustomerSessionManager customerSessionManager;
+    private final CustomerStoreManager customerStoreManager;
+    private final CustomerOrderManager customerOrderManager;
     private final NotificationHandler notificationHandler;
 
     private final CompositeDisposable compositeDisposable;
@@ -40,9 +40,9 @@ public class MainViewModel extends AndroidViewModel {
         super(application);
 
         p2pClient = P2pClient.INSTANCE;
-        sessionManager = SessionManager.INSTANCE;
-        storeManager = StoreManager.INSTANCE;
-        orderManager = OrderManager.INSTANCE;
+        customerSessionManager = CustomerSessionManager.INSTANCE;
+        customerStoreManager = CustomerStoreManager.INSTANCE;
+        customerOrderManager = CustomerOrderManager.INSTANCE;
         notificationHandler = NotificationHandler.INSTANCE;
 
         compositeDisposable = new CompositeDisposable();
@@ -51,10 +51,10 @@ public class MainViewModel extends AndroidViewModel {
     public LiveData<Store> findStore(Activity activity) {
         MutableLiveData<Store> liveData = new MutableLiveData<>();
 
-        sessionManager.getSessionUser()
+        customerSessionManager.getSessionUser()
                 .map(guestUser -> guestUser.uuid)
                 .flatMap(customerUuid -> p2pClient.findStore(activity, customerUuid))
-                .flatMapObservable(storeManager::getStore)
+                .flatMapObservable(customerStoreManager::getStore)
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnNext(liveData::setValue)
                 .doOnSubscribe(compositeDisposable::add)

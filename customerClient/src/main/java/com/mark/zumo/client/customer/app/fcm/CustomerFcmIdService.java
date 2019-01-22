@@ -10,7 +10,7 @@ import android.util.Log;
 
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.FirebaseInstanceIdService;
-import com.mark.zumo.client.customer.model.SessionManager;
+import com.mark.zumo.client.customer.model.CustomerSessionManager;
 
 /**
  * Created by mark on 18. 6. 8.
@@ -19,13 +19,13 @@ public class CustomerFcmIdService extends FirebaseInstanceIdService {
 
     private static final String TAG = "CustomerFcmIdService";
 
-    private SessionManager sessionManager;
+    private CustomerSessionManager customerSessionManager;
 
     @Override
     public void onCreate() {
         super.onCreate();
 
-        sessionManager = SessionManager.INSTANCE;
+        customerSessionManager = CustomerSessionManager.INSTANCE;
 
         String refreshedToken = FirebaseInstanceId.getInstance().getToken();
         Log.d(TAG, "Refreshed token: " + refreshedToken);
@@ -50,8 +50,8 @@ public class CustomerFcmIdService extends FirebaseInstanceIdService {
             return;
         }
 
-        sessionManager.getSessionUser()
-                .flatMap(user -> sessionManager.registerToken(user, refreshedToken))
+        customerSessionManager.getSessionUser()
+                .flatMap(user -> customerSessionManager.registerToken(user, refreshedToken))
                 .doOnSuccess(snsToken -> Log.d(TAG, "onTokenRefresh: updated Success-" + snsToken))
                 .subscribe();
     }

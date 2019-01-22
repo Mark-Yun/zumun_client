@@ -36,12 +36,15 @@ import io.reactivex.Observable;
 public class MenuSelectorDialogFragment extends DialogFragment {
 
     private final List<Menu> selectedMenuList = new ArrayList<>();
+    private final List<String> menuUuidListToExcept = new ArrayList<>();
+    private final List<String> menuUuidListToCheck = new ArrayList<>();
+
     @BindView(R.id.recycler_view) RecyclerView recyclerView;
     @BindView(R.id.title) AppCompatTextView title;
+
     private MenuSettingViewModel menuSettingViewModel;
+
     private SelectMenuListListener listener;
-    private List<String> menuUuidListToExcept = new ArrayList<>();
-    private List<String> menuUuidListToCheck = new ArrayList<>();
     private String textTitle;
 
     public static MenuSelectorDialogFragment newInstance() {
@@ -94,7 +97,7 @@ public class MenuSelectorDialogFragment extends DialogFragment {
     public View onCreateView(@NonNull final LayoutInflater inflater, @Nullable final ViewGroup container,
                              @Nullable final Bundle savedInstanceState) {
 
-        View view = inflater.inflate(R.layout.fragment_dialog_menu_selector, container, false);
+        View view = inflater.inflate(R.layout.dialog_fragment_menu_selector, container, false);
         ButterKnife.bind(this, view);
         title.setText(textTitle);
         inflateRecyclerView();

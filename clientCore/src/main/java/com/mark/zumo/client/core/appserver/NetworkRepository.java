@@ -6,7 +6,18 @@
 
 package com.mark.zumo.client.core.appserver;
 
-import com.mark.zumo.client.core.appserver.request.RequestUpdateCategoriesOfMenu;
+import com.mark.zumo.client.core.appserver.request.bank.DepositRequest;
+import com.mark.zumo.client.core.appserver.request.bank.InquiryAccountRequest;
+import com.mark.zumo.client.core.appserver.request.login.StoreUserSignInRequest;
+import com.mark.zumo.client.core.appserver.request.registration.StoreRegistrationRequest;
+import com.mark.zumo.client.core.appserver.request.registration.result.StoreRegistrationResult;
+import com.mark.zumo.client.core.appserver.request.signup.StoreOwnerSignUpRequest;
+import com.mark.zumo.client.core.appserver.response.DepositResponse;
+import com.mark.zumo.client.core.appserver.response.InquiryAccountResponse;
+import com.mark.zumo.client.core.appserver.response.StoreUserHandShakeResponse;
+import com.mark.zumo.client.core.appserver.response.store.registration.StoreRegistrationResponse;
+import com.mark.zumo.client.core.appserver.response.store.user.signin.StoreUserSignInResponse;
+import com.mark.zumo.client.core.appserver.response.store.user.signup.StoreOwnerSignUpResponse;
 import com.mark.zumo.client.core.entity.Menu;
 import com.mark.zumo.client.core.entity.MenuCategory;
 import com.mark.zumo.client.core.entity.MenuDetail;
@@ -18,6 +29,9 @@ import com.mark.zumo.client.core.entity.OrderDetail;
 import com.mark.zumo.client.core.entity.SnsToken;
 import com.mark.zumo.client.core.entity.Store;
 import com.mark.zumo.client.core.entity.user.GuestUser;
+import com.mark.zumo.client.core.entity.user.store.StoreOwner;
+import com.mark.zumo.client.core.entity.user.store.StoreUser;
+import com.mark.zumo.client.core.entity.user.store.StoreUserContract;
 
 import java.util.List;
 
@@ -39,6 +53,21 @@ public interface NetworkRepository {
     @POST("users/customer/guest")
     Maybe<GuestUser> createGuestUser();
 
+    @GET("users/store/handshake")
+    Maybe<StoreUserHandShakeResponse> signInHandShake(@Query(StoreUser.Schema.email) String storeUserEmail);
+
+    @GET("store/registration/contract")
+    Maybe<List<StoreUserContract>> getStoreUserContractListByStoreUserUuid(@Query(StoreUser.Schema.uuid) String storeUserUuid);
+
+    @POST("users/store")
+    Maybe<StoreOwnerSignUpResponse> createStoreOwner(@Body StoreOwnerSignUpRequest request);
+
+    @GET("users/store/{" + StoreOwner.Schema.uuid + "}")
+    Maybe<StoreOwner> getStoreOwner(@Path(StoreOwner.Schema.uuid) String storeUserUuid);
+
+    @POST("login/store")
+    Maybe<StoreUserSignInResponse> storeUserLogin(@Body StoreUserSignInRequest request);
+
 
     @PUT("store/{" + Store.Schema.uuid + "}")
     Maybe<Store> updateStore(@Path(Store.Schema.uuid) String storeUuid,
@@ -48,10 +77,31 @@ public interface NetworkRepository {
     Maybe<Store> getStore(@Path(Store.Schema.uuid) String storeUuid);
 
     @GET("store")
-    Maybe<List<Store>> getNearByStore(@Query("latitude") final double latitude,
-                                      @Query("longitude") final double longitude,
+    Maybe<List<Store>> getNearByStore(@Query(Store.Schema.latitude) final double latitude,
+                                      @Query(Store.Schema.longitude) final double longitude,
                                       @Query("distance") final double distanceKm);
 
+
+    @POST("store/registration/request")
+    Maybe<StoreRegistrationResponse> createStoreRegistrationRequest(@Body StoreRegistrationRequest storeRegistrationRequest);
+
+    @GET("store/registration/request")
+    Maybe<List<StoreRegistrationRequest>> getStoreRegistrationRequestByStoreUserUuid(@Query(StoreRegistrationRequest.Schema.storeUserUuid) String storeUserUuid);
+
+    @GET("store/registration/request")
+    Maybe<List<StoreRegistrationRequest>> getStoreRegistrationRequestAll(@Query("limit") int limit);
+
+    @GET("store/registration/result")
+    Maybe<List<StoreRegistrationResult>> getStoreRegistrationResultByStoreUserUuid(@Query(StoreUser.Schema.uuid) String storeUserUuid);
+
+    @POST("store/registration/approve")
+    Maybe<StoreRegistrationResult> approveStoreRegistration(@Body StoreRegistrationRequest storeRegistrationRequest);
+
+    @POST("store/registration/reject")
+    Maybe<StoreRegistrationResult> rejectStoreRegistration(@Body StoreRegistrationRequest storeRegistrationRequest);
+
+    @POST("menu")
+    Maybe<Menu> createMenu(@Body Menu menu);
 
     @GET("menu")
     Maybe<List<Menu>> getMenuList(@Query(Menu.Schema.storeUuid) String storeUuid);
@@ -75,7 +125,7 @@ public interface NetworkRepository {
     Maybe<MenuDetail> deleteMenuDetail(@Path(MenuDetail.Schema.uuid) String menuDetailUuid);
 
     @PUT("menu/detail/")
-    Maybe<List<MenuDetail>> updateCategoriesOfMenu(@Query(RequestUpdateCategoriesOfMenu.Schema.menuUuid) String menuUuid,
+    Maybe<List<MenuDetail>> updateCategoriesOfMenu(@Query(MenuDetail.Schema.menuUuid) String menuUuid,
                                                    @Body List<MenuDetail> menuDetailList);
 
     @PUT("menu/detail")
@@ -118,13 +168,17 @@ public interface NetworkRepository {
     Maybe<List<MenuOptionDetail>> createMenuOptionDetailList(@Body List<MenuOptionDetail> menuOptionDetailList);
 
     @GET("menu/option/detail")
-    Maybe<List<MenuOptionDetail>> getMenuOptionDetailListByMenuOptionByStoreUuid(@Query(MenuOptionDetail.Schema.storeUuid) String storeUuid);
+    Maybe<List<MenuOptionDetail>> getMenuOptionDetailListByStoreUuid(@Query(MenuOptionDetail.Schema.storeUuid) String storeUuid);
 
     @GET("menu/option/detail")
-    Maybe<List<MenuOptionDetail>> getMenuOptionDetailListByStoreUuid(@Query(MenuOptionDetail.Schema.storeUuid) String storeUuid);
+    Maybe<List<MenuOptionDetail>> getMenuOptionDetailListByMenuUuid(@Query(MenuOptionDetail.Schema.menuUuid) String menuUuid);
 
     @PUT("menu/option/detail")
     Maybe<List<MenuOptionDetail>> updateMenuOptionDetailList(@Body List<MenuOptionDetail> menuOptionDetailList);
+
+    @PUT("menu/option/detail/")
+    Maybe<List<MenuOptionDetail>> updateMenuOptionCategoriesOfMenu(@Query(MenuOptionDetail.Schema.menuUuid) String menuUuid,
+                                                                   @Body List<MenuOptionDetail> menuOptionDetailList);
 
     @DELETE("menu/option/detail/{" + MenuOptionDetail.Schema.uuid + "}")
     Maybe<MenuOptionDetail> deleteMenuOptionDetail(@Path(MenuOptionDetail.Schema.uuid) String menuOptionDetailUuid);
@@ -135,6 +189,9 @@ public interface NetworkRepository {
 
     @GET("menu/option/category")
     Maybe<List<MenuOptionCategory>> getMenuOptionCategoryListByStoreUuid(final @Query(MenuOptionCategory.Schema.storeUuid) String storeUuid);
+
+    @GET("menu/option/category/{" + MenuOptionCategory.Schema.uuid + "}")
+    Maybe<MenuOptionCategory> getMenuOptionCategory(final @Path(MenuOptionCategory.Schema.uuid) String menuOptionCategoryUuid);
 
     @PUT("menu/option/category/{" + MenuOptionCategory.Schema.uuid + "}")
     Maybe<MenuOptionCategory> updateMenuOptionCategory(final @Path(MenuOptionCategory.Schema.uuid) String menuOptionCategoryUuid,
@@ -147,7 +204,6 @@ public interface NetworkRepository {
     Maybe<MenuOptionCategory> deleteMenuOptionCategory(final @Path(MenuOptionCategory.Schema.uuid) String menuOptionCategoryUuid);
 
 
-
     @GET("category")
     Maybe<List<MenuCategory>> getMenuCategoryListByStoreUuid(@Query(MenuCategory.Schema.storeUuid) String storeUuid);
 
@@ -155,8 +211,8 @@ public interface NetworkRepository {
     Maybe<MenuCategory> deleteCategory(@Path(MenuCategory.Schema.uuid) String categoryUuid);
 
     @PUT("category/{" + MenuCategory.Schema.uuid + "}")
-    Maybe<MenuCategory> updateCategoriesOfMenu(@Path(MenuCategory.Schema.uuid) final String menuCategoryUuid,
-                                               @Body final MenuCategory menuCategory);
+    Maybe<MenuCategory> updateMenuCategory(@Path(MenuCategory.Schema.uuid) final String menuCategoryUuid,
+                                           @Body final MenuCategory menuCategory);
 
     @PUT("category")
     Maybe<List<MenuCategory>> updateMenuCategoryList(@Body final List<MenuCategory> menuCategoryList);
@@ -166,7 +222,6 @@ public interface NetworkRepository {
 
     @POST("category")
     Maybe<MenuCategory> createMenuCategory(@Body MenuCategory menuCategory);
-
 
 
     @POST("order")
@@ -195,4 +250,11 @@ public interface NetworkRepository {
 
     @POST("token")
     Maybe<SnsToken> createSnsToken(@Body SnsToken snsToken);
+
+
+    @POST("/bank/transfer/deposit")
+    Maybe<DepositResponse> depsit(DepositRequest depositRequest);
+
+    @POST("/bank/inquiry/account")
+    Maybe<InquiryAccountResponse> inquiryBankAccount(InquiryAccountRequest inquiryAccountRequest);
 }

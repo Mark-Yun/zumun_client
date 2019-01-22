@@ -16,6 +16,7 @@
     android:layout_height="wrap_content"
     android:layout_marginStart="@dimen/small_margin"
     android:layout_marginTop="@dimen/small_margin"
+    android:background="?attr/selectableItemBackground"
     android:clickable="true"
     android:focusable="true">
 
@@ -36,7 +37,7 @@
 
         <android.support.v7.widget.AppCompatTextView
             android:id="@+id/name"
-            style="@style/SubtitleTextDark"
+            style="@style/SubtitleTextLight"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAlignment="center"
@@ -46,7 +47,7 @@
 
         <android.support.v7.widget.AppCompatTextView
             android:id="@+id/price"
-            style="@style/SecondaryLineTextDark"
+            style="@style/SecondaryLineTextLight"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAlignment="center"

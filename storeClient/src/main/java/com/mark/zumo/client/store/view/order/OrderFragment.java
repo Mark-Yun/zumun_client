@@ -6,7 +6,6 @@
 package com.mark.zumo.client.store.view.order;
 
 import android.arch.lifecycle.ViewModelProviders;
-import android.content.res.Resources;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -32,7 +31,6 @@ import com.mark.zumo.client.store.viewmodel.OrderViewModel;
 
 import java.util.List;
 
-import az.plainpie.PieView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -48,8 +46,6 @@ public class OrderFragment extends Fragment {
     @BindView(R.id.requested_order_indicator_count) AppCompatTextView requestedOrderCount;
     @BindView(R.id.canceled_order_order_indicator_count) AppCompatTextView canceledOrderCount;
     @BindView(R.id.complete_order_indicator_count) AppCompatTextView completeOrderCount;
-
-    @BindView(R.id.pie_graph) PieView pieGraph;
 
     @BindView(R.id.requested_order_indicator) ConstraintLayout requestedOrderIndicator;
 
@@ -76,26 +72,11 @@ public class OrderFragment extends Fragment {
         ButterKnife.bind(this, view);
         inflateStoreInfo();
         inflateIndicators();
-        inflatePieView();
         return view;
     }
 
-    private void inflatePieView() {
-        Resources resources = getContext().getResources();
-        if (resources == null) {
-            return;
-        }
-        pieGraph.setTextColor(resources.getColor(R.color.color_50));
-        pieGraph.setMainBackgroundColor(resources.getColor(R.color.color_500));
-        pieGraph.setPercentageBackgroundColor(resources.getColor(R.color.color_50));
-        pieGraph.setInnerBackgroundColor(resources.getColor(R.color.color_900));
-        pieGraph.setPercentageTextSize(50);
-        pieGraph.setPieInnerPadding(30);
-        pieGraph.setPercentage(0);
-    }
-
     private void inflateStoreInfo() {
-        mainViewModel.loadSessionStore().observe(this, this::onLoadStore);
+        mainViewModel.getSessionStore().observe(this, this::onLoadStore);
     }
 
     private void onLoadStore(Store store) {
@@ -116,19 +97,6 @@ public class OrderFragment extends Fragment {
     private void onLoadRequestedOrder(List<MenuOrder> requestedOrderList) {
         String text = String.valueOf(requestedOrderList.size());
         requestedOrderCount.setText(text);
-        int requestedCount = 0;
-        int acceptedCount = 0;
-        for (MenuOrder menuOrder : requestedOrderList) {
-            if (menuOrder.state == MenuOrder.State.REQUESTED.ordinal()) {
-                requestedCount++;
-            } else if (menuOrder.state == MenuOrder.State.ACCEPTED.ordinal()) {
-                acceptedCount++;
-            }
-        }
-        float percentage = (requestedCount + acceptedCount) == 0
-                ? 1
-                : (float) acceptedCount / (float) (requestedCount + acceptedCount);
-        pieGraph.setPercentage(percentage * 100);
     }
 
     private void onLoadCanceledOrder(List<MenuOrder> acceptedOrder) {

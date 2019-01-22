@@ -10,7 +10,6 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.preference.Preference;
-import android.support.v7.preference.PreferenceFragmentCompat;
 
 import com.mark.zumo.client.store.R;
 
@@ -19,7 +18,7 @@ import java.util.Objects;
 /**
  * Created by mark on 18. 6. 25.
  */
-public class SettingPreferenceFragment extends PreferenceFragmentCompat {
+public class SettingPreferenceFragment extends BasePreferenceFragmentCompat {
 
     private Preference selectedPreference;
 
@@ -31,14 +30,12 @@ public class SettingPreferenceFragment extends PreferenceFragmentCompat {
     @Override
     public boolean onPreferenceTreeClick(final Preference preference) {
         selectedPreference = preference;
-
-        String fragmentName = preference.getFragment();
-        Fragment fragment = Fragment.instantiate(getContext(), fragmentName);
+        Fragment fragment = Fragment.instantiate(getContext(), preference.getFragment());
 
         Objects.requireNonNull(getFragmentManager())
                 .beginTransaction()
-                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
                 .replace(R.id.setting_main_fragment, fragment)
+                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
                 .commit();
 
         return super.onPreferenceTreeClick(preference);

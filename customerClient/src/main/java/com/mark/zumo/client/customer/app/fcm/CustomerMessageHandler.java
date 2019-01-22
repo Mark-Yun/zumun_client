@@ -26,8 +26,8 @@ import com.mark.zumo.client.core.appserver.request.message.OrderCompleteMessage;
 import com.mark.zumo.client.core.appserver.request.message.SnsMessage;
 import com.mark.zumo.client.core.repository.OrderRepository;
 import com.mark.zumo.client.core.util.context.ContextHolder;
+import com.mark.zumo.client.customer.model.CustomerOrderManager;
 import com.mark.zumo.client.customer.model.NotificationHandler;
-import com.mark.zumo.client.customer.model.OrderManager;
 
 import java.util.Map;
 
@@ -40,7 +40,7 @@ public enum CustomerMessageHandler {
     public static final String TAG = "CustomerMessageHandler";
 
     private NotificationHandler notificationHandler;
-    private OrderManager orderManager;
+    private CustomerOrderManager customerOrderManager;
 
     private Thread vibrationThread;
     private String orderUuid;
@@ -50,7 +50,7 @@ public enum CustomerMessageHandler {
 
     CustomerMessageHandler() {
         notificationHandler = NotificationHandler.INSTANCE;
-        orderManager = OrderManager.INSTANCE;
+        customerOrderManager = CustomerOrderManager.INSTANCE;
     }
 
     private void registerBroadCastReceiver(Context context) {
@@ -94,14 +94,14 @@ public enum CustomerMessageHandler {
 
     private void onOrderAccepted(Context context, OrderAcceptedMessage message) {
         Log.d(TAG, "onOrderAccepted: " + message);
-        orderManager.getMenuOrderFromApi(message.orderUuid)
+        customerOrderManager.getMenuOrderFromApi(message.orderUuid)
                 .doOnSuccess(menuOrder -> notificationHandler.requestOrderProgressNotification(context, menuOrder))
                 .subscribe();
     }
 
     private void onOrderComplete(Context context, OrderCompleteMessage message) {
         Log.d(TAG, "onOrderComplete: " + message);
-        orderManager.getMenuOrderFromApi(message.orderUuid)
+        customerOrderManager.getMenuOrderFromApi(message.orderUuid)
                 .doOnSuccess(menuOrder -> notificationHandler.requestOrderProgressNotification(context, menuOrder))
                 .subscribe();
 

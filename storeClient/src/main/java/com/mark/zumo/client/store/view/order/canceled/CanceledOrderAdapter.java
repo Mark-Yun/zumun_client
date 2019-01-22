@@ -85,7 +85,7 @@ class CanceledOrderAdapter extends RecyclerView.Adapter<CanceledOrderAdapter.Vie
     @Override
     public CanceledOrderAdapter.ViewHolder onCreateViewHolder(@NonNull final ViewGroup parent, final int viewType) {
         LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
-        View view = layoutInflater.inflate(R.layout.card_view_requested_order, parent, false);
+        View view = layoutInflater.inflate(R.layout.card_view_order, parent, false);
         return new ViewHolder(view);
     }
 
@@ -95,8 +95,8 @@ class CanceledOrderAdapter extends RecyclerView.Adapter<CanceledOrderAdapter.Vie
 
         holder.orderName.setText(menuOrder.orderName);
         holder.orderNumber.setText(menuOrder.orderNumber);
-        boolean isAccepted = menuOrder.state == MenuOrder.State.ACCEPTED.ordinal();
-        holder.acceptedState.setVisibility(isAccepted ? View.VISIBLE : View.GONE);
+        holder.state.setBackgroundResource(R.drawable.background_order_state_canceled);
+        holder.state.setText(MenuOrder.State.of(menuOrder.state).stringRes);
         setSelectedText(holder.orderName, false);
         setSelectedText(holder.orderNumber, false);
 
@@ -135,19 +135,6 @@ class CanceledOrderAdapter extends RecyclerView.Adapter<CanceledOrderAdapter.Vie
                     .replace(FRAGMENT_IDS[emptyIndex], fragment, FRAGMENT_TAGS[emptyIndex])
                     .runOnCommit(() -> fragmentMap.put(menuOrder.uuid, FRAGMENT_TAGS[emptyIndex]))
                     .runOnCommit(() -> selectedOrderMap.put(emptyIndex, menuOrder.uuid))
-                    .runOnCommit(() -> ((OrderDetailFragment) fragment).setOrderActionListener(
-                            new OrderDetailFragment.OrderActionListener() {
-                                @Override
-                                public void onAcceptOrder(final MenuOrder order) {
-                                    boolean isAccepted = menuOrder.state == MenuOrder.State.ACCEPTED.ordinal();
-                                    holder.acceptedState.setVisibility(isAccepted ? View.VISIBLE : View.GONE);
-                                }
-
-                                @Override
-                                public void onClose(final String orderUuid) {
-                                    closeOrderDetail(holder, menuOrder, index);
-                                }
-                            }))
                     .commit();
 
             setSelectedText(holder.orderName, true);
@@ -206,7 +193,7 @@ class CanceledOrderAdapter extends RecyclerView.Adapter<CanceledOrderAdapter.Vie
     static class ViewHolder extends RecyclerView.ViewHolder {
         @BindView(R.id.order_number) AppCompatTextView orderNumber;
         @BindView(R.id.order_name) AppCompatTextView orderName;
-        @BindView(R.id.accepted_state) AppCompatTextView acceptedState;
+        @BindView(R.id.state) AppCompatTextView state;
 
         private ViewHolder(final View itemView) {
             super(itemView);

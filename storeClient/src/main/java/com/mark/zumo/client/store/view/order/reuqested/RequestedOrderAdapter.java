@@ -79,7 +79,7 @@ class RequestedOrderAdapter extends RecyclerView.Adapter<RequestedOrderAdapter.V
     @Override
     public RequestedOrderAdapter.ViewHolder onCreateViewHolder(@NonNull final ViewGroup parent, final int viewType) {
         LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
-        View view = layoutInflater.inflate(R.layout.card_view_requested_order, parent, false);
+        View view = layoutInflater.inflate(R.layout.card_view_order, parent, false);
         return new ViewHolder(view);
     }
 
@@ -90,7 +90,9 @@ class RequestedOrderAdapter extends RecyclerView.Adapter<RequestedOrderAdapter.V
         holder.orderName.setText(menuOrder.orderName);
         holder.orderNumber.setText(menuOrder.orderNumber);
         boolean isAccepted = menuOrder.state == MenuOrder.State.ACCEPTED.ordinal();
-        holder.acceptedState.setVisibility(isAccepted ? View.VISIBLE : View.GONE);
+        holder.state.setBackgroundResource(isAccepted ? R.drawable.background_order_state_accepted : R.drawable.background_order_state_requested);
+        holder.state.setText(MenuOrder.State.of(menuOrder.state).stringRes);
+
         setSelectedText(holder.orderName, false);
         setSelectedText(holder.orderNumber, false);
 
@@ -134,7 +136,11 @@ class RequestedOrderAdapter extends RecyclerView.Adapter<RequestedOrderAdapter.V
                                 @Override
                                 public void onAcceptOrder(final MenuOrder order) {
                                     boolean isAccepted = menuOrder.state == MenuOrder.State.ACCEPTED.ordinal();
-                                    holder.acceptedState.setVisibility(isAccepted ? View.VISIBLE : View.GONE);
+                                    if (!isAccepted) {
+                                        return;
+                                    }
+
+                                    holder.state.setBackgroundResource(R.drawable.background_order_state_accepted);
                                 }
 
                                 @Override
@@ -200,7 +206,7 @@ class RequestedOrderAdapter extends RecyclerView.Adapter<RequestedOrderAdapter.V
     static class ViewHolder extends RecyclerView.ViewHolder {
         @BindView(R.id.order_number) AppCompatTextView orderNumber;
         @BindView(R.id.order_name) AppCompatTextView orderName;
-        @BindView(R.id.accepted_state) AppCompatTextView acceptedState;
+        @BindView(R.id.state) AppCompatTextView state;
 
         private ViewHolder(final View itemView) {
             super(itemView);

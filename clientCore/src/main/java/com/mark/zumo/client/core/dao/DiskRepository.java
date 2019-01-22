@@ -13,6 +13,8 @@ import android.arch.persistence.room.OnConflictStrategy;
 import android.arch.persistence.room.Query;
 import android.arch.persistence.room.RoomWarnings;
 
+import com.mark.zumo.client.core.appserver.request.registration.StoreRegistrationRequest;
+import com.mark.zumo.client.core.appserver.request.registration.result.StoreRegistrationResult;
 import com.mark.zumo.client.core.entity.Menu;
 import com.mark.zumo.client.core.entity.MenuCategory;
 import com.mark.zumo.client.core.entity.MenuDetail;
@@ -21,9 +23,13 @@ import com.mark.zumo.client.core.entity.MenuOptionCategory;
 import com.mark.zumo.client.core.entity.MenuOptionDetail;
 import com.mark.zumo.client.core.entity.MenuOrder;
 import com.mark.zumo.client.core.entity.OrderDetail;
+import com.mark.zumo.client.core.entity.SessionStore;
 import com.mark.zumo.client.core.entity.SnsToken;
 import com.mark.zumo.client.core.entity.Store;
 import com.mark.zumo.client.core.entity.user.GuestUser;
+import com.mark.zumo.client.core.entity.user.store.StoreOwner;
+import com.mark.zumo.client.core.entity.user.store.StoreUserContract;
+import com.mark.zumo.client.core.entity.user.store.StoreUserSession;
 import com.mark.zumo.client.core.payment.kakao.entity.PaymentToken;
 
 import java.util.List;
@@ -39,6 +45,8 @@ public interface DiskRepository {
     @Query("SELECT * FROM " + GuestUser.TABLE + " WHERE uuid LIKE :uuid LIMIT 1")
     Maybe<GuestUser> getGuestUser(String uuid);
 
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    void insertStoreOwner(StoreOwner storeOwner);
 
     @Query("SELECT * FROM " + Store.TABLE + " WHERE store_uuid LIKE :uuid LIMIT 1")
     Maybe<Store> getStore(String uuid);
@@ -87,7 +95,10 @@ public interface DiskRepository {
     Maybe<List<MenuOption>> getMenuOptionListByStoreUuid(String storeUuid);
 
     @Query("SELECT * FROM " + MenuOptionDetail.Schema.table + " WHERE store_uuid LIKE :storeUuid")
-    Maybe<List<MenuOptionDetail>> getMenuOptionDetailListByMenuOptionByStoreUuid(String storeUuid);
+    Maybe<List<MenuOptionDetail>> getMenuOptionDetailListByStoreUuid(String storeUuid);
+
+    @Query("SELECT * FROM " + MenuOptionDetail.Schema.table + " WHERE menu_uuid LIKE :menuUuid")
+    Maybe<List<MenuOptionDetail>> getMenuOptionDetailListByMenuUuid(String menuUuid);
 
     @Query("SELECT * FROM " + MenuOptionDetail.Schema.table +
             " WHERE menu_option_category_uuid LIKE :menuOptionCategoryUuid" +
@@ -101,8 +112,35 @@ public interface DiskRepository {
     @Query("DELETE FROM " + MenuOptionDetail.Schema.table + " WHERE menu_option_category_uuid LIKE :menuOptionCategoryUuid")
     void deleteMenuOptionDetailOfMenuOptionCategory(String menuOptionCategoryUuid);
 
+    @Query("DELETE FROM " + MenuOptionDetail.Schema.table + " WHERE menu_uuid LIKE :menuUuid")
+    void deleteMenuOptionDetailByMenuUuid(String menuUuid);
+
     @Query("DELETE FROM " + MenuOptionDetail.Schema.table + " WHERE store_uuid LIKE :storeUuid")
     void deleteMenuOptionDetailOfStore(String storeUuid);
+
+    @Query("DELETE FROM " + MenuOptionDetail.Schema.table + " WHERE menu_uuid LIKE :menuUuid")
+    void deleteMenuOptionDetailOfMenu(String menuUuid);
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    void insertStoreUserSession(StoreUserSession storeUserSession);
+
+    @Query("SELECT * FROM " + StoreUserSession.Schema.table + " ORDER BY " + StoreUserSession.Schema.createdDate + " DESC LIMIT 1")
+    Maybe<StoreUserSession> getStoreUserSession();
+
+    @Query("SELECT * FROM " + StoreOwner.Schema.TABLE + " WHERE " + StoreOwner.Schema.uuid + " LIKE :storeUserUuid")
+    Maybe<StoreOwner> getStoreOwner(String storeUserUuid);
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    void insertStoreUser(StoreOwner storeOwner);
+
+    @Query("DELETE FROM " + StoreUserSession.Schema.table)
+    void removeAllStoreUserSession();
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    void insertSessionStore(SessionStore sessionStore);
+
+    @Query("SELECT * FROM " + SessionStore.Schema.TABLE + " ORDER BY " + StoreUserSession.Schema.createdDate + " DESC LIMIT 1")
+    Maybe<SessionStore> getSessionStore();
 
     @Query("SELECT * FROM " + MenuOption.Schema.table + " WHERE menu_option_uuid LIKE :menuOptionUuid LIMIT 1")
     Maybe<MenuOption> getMenuOption(String menuOptionUuid);
@@ -229,4 +267,31 @@ public interface DiskRepository {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertMenuDetailList(List<MenuDetail> menuDetailList);
+
+    @Query("SELECT * FROM " + StoreUserContract.Schema.table + " WHERE store_user_uuid LIKE :storeUserUuid")
+    Maybe<List<StoreUserContract>> getStoreUserContractListbyStoreUserUuid(String storeUserUuid);
+
+    @Query("SELECT * FROM " + StoreRegistrationRequest.Schema.table + " WHERE store_user_uuid LIKE :storeUserUuid")
+    Maybe<List<StoreRegistrationRequest>> getStoreRegistrationRequestListByStoreUserUuid(String storeUserUuid);
+
+    @Query("SELECT * FROM " + StoreRegistrationRequest.Schema.table + " ORDER BY created_date LIMIT :limit")
+    Maybe<List<StoreRegistrationRequest>> getStoreRegistrationRequestAll(int limit);
+
+    @Query("SELECT * FROM " + StoreRegistrationRequest.Schema.table + " WHERE store_registration_request_uuid = :uuid")
+    Maybe<StoreRegistrationRequest> getStoreRegistrationRequestByUuid(String uuid);
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    void insertStoreRegistrationRequest(StoreRegistrationRequest storeRegistrationRequest);
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    void insertStoreRegistrationRequestList(List<StoreRegistrationRequest> storeRegistrationRequestList);
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    void insertStoreRegistrationResult(StoreRegistrationResult storeRegistrationResult);
+
+    @Query("SELECT * FROM " + StoreRegistrationResult.Schema.table + " WHERE store_user_uuid LIKE :storeUserUuid")
+    Maybe<List<StoreRegistrationResult>> getStoreRegistrationResultByStoreUserUuid(String storeUserUuid);
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    void insertStoreUserConractList(List<StoreUserContract> storeUserContractList);
 }

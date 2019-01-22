@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (c) 2018. Mark Soft - All Rights Reserved
+  ~ Unauthorized copying of this file, via any medium is strictly prohibited
+  ~ Proprietary and confidential
+  -->
+
+<resources>
+    <string name="store_registration_hint_store_name">가게 이름</string>
+    <string name="store_registration_hint_store_phone_number">가게 전화번호</string>
+    <string name="store_registration_hint_store_type">가게 종류</string>
+    <string name="store_registration_hint_store_corporate_registration_name">상호명</string>
+    <string name="store_registration_hint_store_corporate_registration_owner_name">대표자 성명</string>
+    <string name="store_registration_hint_store_corporate_registration_address">사업자 주소</string>
+    <string name="store_registration_hint_store_corporate_registration_number">사업자 등록 번호</string>
+    <string name="store_registration_hint_store_corporate_registration_scan">사업자 등록증 스캔 이미지</string>
+    <string name="store_registration_hint_store_location">가게 위치</string>
+    <string name="store_registration_hint_store_address">가게 주소</string>
+    <string name="store_registration_hint_store_cover_image">가게 배경 이미지</string>
+    <string name="store_registration_hint_store_thumbnail_image">가게 로고 이미지</string>
+    <string name="store_registration_category_store_info">가게 정보</string>
+    <string name="store_registration_category_corporate_info">사업자 정보</string>
+</resources>

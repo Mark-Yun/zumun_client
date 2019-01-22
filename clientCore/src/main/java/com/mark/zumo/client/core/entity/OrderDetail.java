@@ -56,6 +56,7 @@ public class OrderDetail implements Serializable {
         this.menuOptionUuidList = menuOptionUuidList;
         this.quantity = quantity;
         this.price = price;
+        this.menuOrderName = menuName;
     }
 
     public static OrderDetail fromMenu(Menu menu) {

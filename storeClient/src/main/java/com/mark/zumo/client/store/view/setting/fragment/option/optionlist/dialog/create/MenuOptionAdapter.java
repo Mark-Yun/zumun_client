@@ -25,18 +25,18 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import io.reactivex.Observable;
 
 /**
  * Created by mark on 18. 12. 7.
  */
 class MenuOptionAdapter extends RecyclerView.Adapter<MenuOptionAdapter.ViewHolder> {
 
-    private final List<MenuOption> menuOptionList;
-    private TextInputEditText lastEditText;
+    private final List<MenuOption.Builder> menuOptionBuilderList;
 
     MenuOptionAdapter() {
-        menuOptionList = new ArrayList<>();
-        menuOptionList.add(MenuOption.createEmptyMenuOption());
+        menuOptionBuilderList = new ArrayList<>();
+        menuOptionBuilderList.add(new MenuOption.Builder());
     }
 
     @NonNull
@@ -49,9 +49,8 @@ class MenuOptionAdapter extends RecyclerView.Adapter<MenuOptionAdapter.ViewHolde
 
     @Override
     public void onBindViewHolder(@NonNull final ViewHolder holder, final int position) {
-        MenuOption menuOption = menuOptionList.get(position);
-        holder.remove.setOnClickListener(v -> onRemove(menuOption));
-        lastEditText = holder.value;
+        MenuOption.Builder menuOptionBuilder = menuOptionBuilderList.get(position);
+        holder.remove.setOnClickListener(v -> onRemove(menuOptionBuilder));
         holder.value.setText("");
         holder.value.addTextChangedListener(new TextWatcher() {
             @Override
@@ -65,7 +64,7 @@ class MenuOptionAdapter extends RecyclerView.Adapter<MenuOptionAdapter.ViewHolde
                     return;
                 }
 
-                menuOption.value = String.valueOf(s);
+                menuOptionBuilder.setValue(String.valueOf(s));
                 onChangedOptionInput();
             }
 
@@ -88,7 +87,7 @@ class MenuOptionAdapter extends RecyclerView.Adapter<MenuOptionAdapter.ViewHolde
                     return;
                 }
 
-                menuOption.price = Integer.parseInt(s.toString());
+                menuOptionBuilder.setPrice(Integer.parseInt(s.toString()));
                 onChangedOptionInput();
             }
 
@@ -100,37 +99,39 @@ class MenuOptionAdapter extends RecyclerView.Adapter<MenuOptionAdapter.ViewHolde
     }
 
     List<MenuOption> getMenuOptionList() {
-        return menuOptionList;
+        return Observable.fromIterable(menuOptionBuilderList)
+                .map(MenuOption.Builder::build)
+                .toList().blockingGet();
     }
 
     private void onChangedOptionInput() {
-        for (MenuOption menuOption : menuOptionList) {
-            if (TextUtils.isEmpty(menuOption.value)) {
+        for (MenuOption.Builder builder : menuOptionBuilderList) {
+            if (TextUtils.isEmpty(builder.getValue())) {
                 return;
             }
 
-            if (menuOption.price < 0) {
+            if (builder.getPrice() < 0) {
                 return;
             }
         }
 
-        menuOptionList.add(MenuOption.createEmptyMenuOption());
-        notifyItemInserted(menuOptionList.size() - 1);
+        menuOptionBuilderList.add(new MenuOption.Builder());
+        notifyItemInserted(menuOptionBuilderList.size() - 1);
     }
 
-    private void onRemove(MenuOption menuOption) {
-        int index = menuOptionList.indexOf(menuOption);
-        if (index < 0 || index >= menuOptionList.size()) {
+    private void onRemove(MenuOption.Builder builder) {
+        int index = menuOptionBuilderList.indexOf(builder);
+        if (index < 0 || index >= menuOptionBuilderList.size()) {
             return;
         }
 
-        menuOptionList.remove(index);
+        menuOptionBuilderList.remove(index);
         notifyItemRemoved(index);
     }
 
     @Override
     public int getItemCount() {
-        return menuOptionList.size();
+        return menuOptionBuilderList.size();
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder {

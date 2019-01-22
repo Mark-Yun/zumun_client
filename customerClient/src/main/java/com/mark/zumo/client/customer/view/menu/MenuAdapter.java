@@ -29,8 +29,8 @@ import com.mark.zumo.client.customer.view.menu.detail.MenuDetailActivity;
 import com.mark.zumo.client.customer.view.rebound.Rebound;
 
 import java.text.NumberFormat;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -42,22 +42,20 @@ class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.ViewHolder> {
 
     private final LifecycleOwner lifecycleOwner;
 
-    private MenuSelectListener listener;
+    private final MenuSelectListener listener;
+    private final List<Menu> menuList;
 
-    private List<Menu> menuList;
-
-    MenuAdapter(LifecycleOwner lifecycleOwner) {
+    MenuAdapter(LifecycleOwner lifecycleOwner, final MenuSelectListener listener) {
         this.lifecycleOwner = lifecycleOwner;
-        menuList = new ArrayList<>();
+        this.listener = listener;
+
+        menuList = new CopyOnWriteArrayList<>();
     }
 
     void setMenuList(final List<Menu> menuList) {
-        this.menuList = menuList;
+        this.menuList.clear();
+        this.menuList.addAll(menuList);
         notifyDataSetChanged();
-    }
-
-    void setListener(final MenuSelectListener listener) {
-        this.listener = listener;
     }
 
     @NonNull

@@ -9,11 +9,17 @@
 
     <!--sign up-->
     <string name="edit_text_hint_email">E-mail</string>
+    <string name="edit_text_hint_password">Password</string>
+    <string name="sign_in_slogan_text">Make order easier with ZUMUN</string>
+    <string name="auto_login">Sign in automatically</string>
     <string name="button_sign_in">SIGN IN</string>
     <string name="button_sign_up">SIGN UP</string>
+    <string name="find_my_email_title">Authenticate by your Phone Number</string>
+    <string name="find_my_password_title">Authenticate by your Email</string>
     <string name="text_view_go_to_sign_up">Go To Sign Up >></string>
     <string name="text_view_back_to_sign_in">&lt;&lt;Back To Sign In</string>
-
+    <string name="find_my_email">Missed Email</string>
+    <string name="find_my_password">Missed Password</string>
     <string name="order_title_description">Order number</string>
     <string name="order_date_description">Date:&#160;</string>
     <string name="order_time_description">Time:&#160;</string>
@@ -60,6 +66,15 @@
     <string name="preference_title_menu_detail_menu_category">Menu Category</string>
     <string name="preference_key_menu_detail_menu_category" translatable="false">menu_detail_menu_category</string>
 
+    <string name="preference_title_menu_detail_menu_option">Menu Option</string>
+    <string name="preference_key_menu_detail_menu_option" translatable="false">menu_detail_menu_option</string>
+
+    <string name="menu_setting_menu_info_title">Menu Information</string>
+    <string name="menu_setting_menu_name_description">Menu Name</string>
+    <string name="menu_setting_menu_price_description">Menu Price</string>
+    <string name="menu_setting_menu_category_title">Categories</string>
+    <string name="menu_setting_menu_option_title">Applied Options</string>
+
     <string name="store_profile_name_editor_title">Store Name</string>
     <string name="store_profile_name_editor_message">Insert new store name</string>
 
@@ -84,6 +99,7 @@
     <string name="content_desc_navigation_drawer_open">Open navigation drawer</string>
     <string name="content_desc_navigation_drawer_close">Close navigation drawer</string>
 
+    <string name="title_home">Home</string>
     <string name="title_order">Order</string>
     <string name="title_menu">Menu</string>
     <string name="title_amount">Amount</string>
@@ -117,7 +133,8 @@
     <string name="store_owner_bank_account">Store Owner Back Account</string>
     <string name="store_owner_bank_account_scan">Store Owner Back Account Scan</string>
 
-    <string name="menu_title_widthdraw">Withdraw</string>
+    <string name="menu_title_withdraw">Withdraw Management</string>
+    <string name="menu_title_store_sign_up">Store Registration</string>
 
     <string name="option_setting_mode_description_edit">Select an option to edit</string>
     <string name="option_setting_mode_description_delete">Select options to delete</string>
@@ -125,4 +142,57 @@
 
     <string name="un_categorized_menu_category_title">Not Categorized Menus</string>
     <string name="menu_selector_title_to_select_menus_to_add_into_category">Select menus to add into %s category</string>
+    <string name="sign_up_description_title">Make Your Order Easier</string>
+    <string name="menu_creator_title">Create New Menu</string>
+
+    <string name="main_activity_sign_out_title">Sign Out</string>
+    <string name="main_activity_select_store">Select Store</string>
+    <string name="main_activity_select_store_create_store">Create New Store</string>
+    <string name="sign_out_dialog_title">Sign Out</string>
+    <string name="sign_out_dialog_message">Sign out from current user</string>
+
+    <string name="sign_up_success_dialog_title">Sign Up Success</string>
+    <string name="sign_up_success_dialog_message">Welcome! Sign in and make order easier with ZUMUN</string>
+
+    <string name="store_registration_hint_store_name">Store Name</string>
+    <string name="store_registration_hint_store_phone_number">Store Phone Number</string>
+    <string name="store_registration_hint_store_type">Store Type</string>
+    <string name="store_registration_hint_store_corporate_registration_name">Registration Name</string>
+    <string name="store_registration_hint_store_corporate_registration_owner_name">Registration Owner Name</string>
+    <string name="store_registration_hint_store_corporate_registration_address">Registration Address</string>
+    <string name="store_registration_hint_store_corporate_registration_number">Registration Number</string>
+    <string name="store_registration_hint_store_corporate_registration_scan">Registration Scan</string>
+    <string name="store_registration_hint_store_location">Store Location</string>
+    <string name="store_registration_hint_store_address">Store Address</string>
+    <string name="store_registration_hint_store_cover_image">Store Cover Image</string>
+    <string name="store_registration_hint_store_thumbnail_image">Store Thumbnail Image</string>
+    <string name="store_registration_category_store_info">Store Information</string>
+    <string name="store_registration_category_corporate_info">Corporate Information</string>
+
+    <string name="store_registration_request_list">Store Registration Request List</string>
+    <string name="store_registration_request_id">Request ID</string>
+    <string name="store_registration_request_name">Store Name</string>
+    <string name="store_registration_request_state">State</string>
+    <string name="store_registration_request_requested_date">Requested Date</string>
+
+    <string name="store_select_button_text">Select Store</string>
+    <string name="store_select_none_session_store_title">There is no registered Store</string>
+    <string name="store_select_none_session_store_message">You do not have your store yet! Join us!</string>
+    <string name="store_select_none_session_store_button_text">Request New Store</string>
+
+    <string name="withdraw_available_money_title">Available Withdraw Money</string>
+    <string name="withdraw_available_money_description">The money can be withdraw which only deposit from credit card operator</string>
+    <string name="withdraw_money_title">Withdraw Money</string>
+    <string name="withdraw_money_description">The money will deposit to %1$s %2$s</string>
+    <string name="withdraw_available_money_button_text">Withdraw</string>
+    <string name="bank_account_title">Bank Account</string>
+
+    <string name="menu_order_no">Order No.%s</string>
+
+    <string name="menu_name_update_dialog_title">Modifying Menu Name</string>
+    <string name="menu_name_update_dialog_message">Insert new name of menu</string>
+    <string name="menu_price_update_dialog_title">Modifying Price Name</string>
+    <string name="menu_price_update_dialog_message">Insert new price of menu</string>
+
+    <string name="store_registration_complete_dialog_message">Your request is accepted. Please wait for reviewing of new store.</string>
 </resources>
