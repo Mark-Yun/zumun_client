@@ -13,8 +13,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.media.AudioAttributes;
 import android.os.Build;
-import android.os.Handler;
-import android.os.Looper;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
 import android.support.v4.content.LocalBroadcastManager;
@@ -68,7 +66,7 @@ public enum CustomerMessageHandler {
 
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(VibrationContract.ACTION);
-        context.registerReceiver(broadcastReceiver, intentFilter, VibrationContract.PERMISSION, new Handler(Looper.getMainLooper()));
+        context.registerReceiver(broadcastReceiver, intentFilter);
     }
 
     void handleMessage(Context context, Map<String, String> data) {
@@ -151,7 +149,6 @@ public enum CustomerMessageHandler {
 
     public interface VibrationContract {
         String ACTION = "com.mark.zumo.client.customer.action.STOP_VIBRATION";
-        String PERMISSION = "com.mark.zumo.client.customer.permission.ORDER_PROGRESS_NOTIFICATION";
         String ORDER_KEY = "order_uuid";
     }
 
