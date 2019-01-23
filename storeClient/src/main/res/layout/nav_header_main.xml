@@ -12,7 +12,9 @@
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        app:layout_constraintDimensionRatio="H, 8:5">
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintDimensionRatio="H, 8:5"
+        app:layout_constraintTop_toTopOf="parent">
 
         <android.support.v7.widget.AppCompatImageView
             android:id="@+id/cover_image"

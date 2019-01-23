@@ -123,8 +123,10 @@
             android:text="@string/find_my_email"
             android:textColor="@color/colorTextLight"
             android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/find_my_password"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <android.support.v7.widget.AppCompatTextView
             android:id="@+id/find_my_password"
@@ -135,8 +137,10 @@
             android:text="@string/find_my_password"
             android:textColor="@color/colorTextLight"
             android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/sign_up"
-            app:layout_constraintStart_toEndOf="@+id/find_my_email" />
+            app:layout_constraintStart_toEndOf="@+id/find_my_email"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <android.support.v7.widget.AppCompatTextView
             android:id="@+id/sign_up"
@@ -147,7 +151,9 @@
             android:text="@string/button_sign_up"
             android:textColor="@color/colorTextLight"
             android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/find_my_password" />
+            app:layout_constraintStart_toEndOf="@+id/find_my_password"
+            app:layout_constraintTop_toTopOf="parent" />
     </android.support.constraint.ConstraintLayout>
 </android.support.constraint.ConstraintLayout>

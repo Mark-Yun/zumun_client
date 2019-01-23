@@ -1,3 +1,4 @@
+//noinspection GradleCompatible
 /*
  * Copyright (c) 2018. Mark Soft - All Rights Reserved
  * Unauthorized copying of this file, via any medium is strictly prohibited
@@ -51,6 +52,7 @@ android {
         debug {
             signingConfig signingConfigs.debug
             versionNameSuffix 'd'
+            applicationIdSuffix ".dev"
         }
     }
 
@@ -69,9 +71,6 @@ private static Integer generateVersionCode(minimumSdk, major, minor, patch) {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-
-    implementation "com.github.lsjwzh.RecyclerViewPager:lib:v1.1.2@aar"
-    implementation "com.github.lsjwzh.RecyclerViewPager:tablayoutsupport:v1.1.2@aar"
 
     implementation "com.amazonaws:aws-android-sdk-s3:2.6.25"
     implementation "com.amazonaws:aws-android-sdk-cognito:2.6.25"
