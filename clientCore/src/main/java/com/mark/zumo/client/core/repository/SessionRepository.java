@@ -15,10 +15,8 @@ import com.mark.zumo.client.core.appserver.NetworkRepository;
 import com.mark.zumo.client.core.dao.AppDatabaseProvider;
 import com.mark.zumo.client.core.dao.DiskRepository;
 import com.mark.zumo.client.core.entity.SnsToken;
-import com.mark.zumo.client.core.entity.Store;
 import com.mark.zumo.client.core.entity.user.GuestUser;
 import com.mark.zumo.client.core.security.SecurePreferences;
-import com.mark.zumo.client.core.util.DebugUtil;
 
 import java.util.concurrent.TimeUnit;
 
@@ -40,7 +38,6 @@ public enum SessionRepository {
     private static final Object sessionHeaderLock = new Object();
 
     private final SecurePreferences securePreferences;
-    private final NetworkRepository networkRepository;
     private final DiskRepository diskRepository;
 
     private GuestUser guestUser;
@@ -49,9 +46,12 @@ public enum SessionRepository {
 
     SessionRepository() {
         securePreferences = SecuredRepository.INSTANCE.securePreferences();
-        networkRepository = AppServerServiceProvider.INSTANCE.networkRepository;
         diskRepository = AppDatabaseProvider.INSTANCE.diskRepository;
         sessionHeader = new Bundle();
+    }
+
+    private NetworkRepository networkRepository() {
+        return AppServerServiceProvider.INSTANCE.networkRepository();
     }
 
     private GuestUser saveGuestUser(final GuestUser guestUser) {
@@ -83,14 +83,8 @@ public enum SessionRepository {
                 .doOnSuccess(this::buildGuestUserSessionHeader);
     }
 
-    public Maybe<String> getStoreFromCache() {
-        //TODO: remove test data
-        return Maybe.fromCallable(DebugUtil::store)
-                .map(store -> store.uuid);
-    }
-
     public Maybe<GuestUser> createGuestUser() {
-        return networkRepository.createGuestUser()
+        return networkRepository().createGuestUser()
                 .doOnSuccess(this::saveGuestUser)
                 .flatMap(this::registerSnsTokenOnCreateUser)
                 .retryWhen(errors -> errors.flatMap(error -> Flowable.timer(3, TimeUnit.SECONDS)))
@@ -128,15 +122,15 @@ public enum SessionRepository {
     }
 
     public void putSessionHeader(Bundle bundle) {
-        this.sessionHeader.putAll(bundle);
+        AppServerServiceProvider.INSTANCE.putSessionHeader(bundle);
     }
 
     public void clearSessionHeader(String key) {
-        this.sessionHeader.remove(key);
+        AppServerServiceProvider.INSTANCE.clearSessionHeader(key);
     }
 
     public Maybe<SnsToken> registerSnsToken(SnsToken snsToken) {
-        return networkRepository.createSnsToken(snsToken)
+        return networkRepository().createSnsToken(snsToken)
                 .doOnSuccess(diskRepository::insertSnsToken)
                 .subscribeOn(Schedulers.io());
     }
@@ -145,18 +139,6 @@ public enum SessionRepository {
         return Maybe.fromCallable(this::getCustomerFromSecuredRepository)
                 .switchIfEmpty(createGuestUser())
                 .map(this::buildGuestUserSessionHeader2);
-    }
-
-    public Maybe<Bundle> getStoreSession() {
-        //TODO: remove test data
-        return Maybe.fromCallable(DebugUtil::store)
-                .map(this::buildStoreSessionHeader);
-    }
-
-    public Bundle buildStoreSessionHeader(Store store) {
-        return new SessionBuilder()
-                .put(SessionRepository.KEY_STORE_UUID, store.uuid)
-                .build();
     }
 
     private static class SessionBuilder {
@@ -172,7 +154,6 @@ public enum SessionRepository {
         }
 
         public Bundle build() {
-            AppServerServiceProvider.INSTANCE.buildNetworkRepository(bundle);
             return bundle;
         }
     }

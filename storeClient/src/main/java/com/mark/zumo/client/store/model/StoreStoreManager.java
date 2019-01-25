@@ -11,7 +11,6 @@ import com.mark.zumo.client.core.appserver.request.registration.StoreRegistratio
 import com.mark.zumo.client.core.appserver.request.registration.result.StoreRegistrationResult;
 import com.mark.zumo.client.core.appserver.response.store.registration.StoreRegistrationResponse;
 import com.mark.zumo.client.core.entity.Store;
-import com.mark.zumo.client.core.repository.SessionRepository;
 import com.mark.zumo.client.core.repository.StoreRepository;
 
 import java.util.ArrayList;
@@ -35,105 +34,101 @@ public enum StoreStoreManager {
 
     INSTANCE;
 
-    private final SessionRepository sessionRepository;
-    private final Maybe<StoreRepository> storeRepositoryMaybe;
+    private final StoreRepository storeRepository;
 
     StoreStoreManager() {
-        sessionRepository = SessionRepository.INSTANCE;
-        storeRepositoryMaybe = sessionRepository.getStoreSession()
-                .map(StoreRepository::getInstance);
+        storeRepository = StoreRepository.INSTANCE;
     }
 
-    public Maybe<Store> updateStoreName(Store store, String newName) {
+    public Maybe<Store> updateSessionStoreName(Store store, String newName) {
         Store newStore = Store.Builder.from(store)
                 .setName(newName)
                 .build();
 
-        return storeRepositoryMaybe.flatMap(storeRepository -> storeRepository.updateStore(newStore))
+        return storeRepository.updateStore(newStore)
                 .subscribeOn(Schedulers.io());
     }
 
-    public Maybe<Store> updateStoreLocation(Store store, LatLng latLng) {
+    public Maybe<Store> updateSessionStoreLocation(Store store, LatLng latLng) {
         Store newStore = Store.Builder.from(store)
                 .setLatitude(latLng.latitude)
                 .setLongitude(latLng.longitude)
                 .build();
 
-        return storeRepositoryMaybe.flatMap(storeRepository -> storeRepository.updateStore(newStore))
+        return storeRepository.updateStore(newStore)
                 .subscribeOn(Schedulers.io());
     }
 
-    public Maybe<Store> updateStoreCoverImageUrl(Store store, String coverImageUrl) {
+    public Maybe<Store> updateSessionStoreCoverImageUrl(Store store, String coverImageUrl) {
         Store newStore = Store.Builder.from(store)
                 .setCoverImageUrl(coverImageUrl)
                 .build();
 
-        return storeRepositoryMaybe.flatMap(storeRepository -> storeRepository.updateStore(newStore))
+        return storeRepository.updateStore(newStore)
                 .subscribeOn(Schedulers.io());
 
     }
 
-    public Maybe<Store> updateStoreThumbnailImageUrl(Store store, String thumbnailImageUrl) {
+    public Maybe<Store> updateSessionStoreThumbnailImageUrl(Store store, String thumbnailImageUrl) {
         Store newStore = Store.Builder.from(store)
                 .setThumbnailUrl(thumbnailImageUrl)
                 .build();
 
-        return storeRepositoryMaybe.flatMap(storeRepository -> storeRepository.updateStore(newStore))
+        return storeRepository.updateStore(newStore)
                 .subscribeOn(Schedulers.io());
     }
 
     public Observable<List<StoreRegistrationRequest>> getCombinedStoreRegistrationRequestByStoreUserUuid(String storeUserUuid) {
-        return storeRepositoryMaybe.flatMapObservable(storeRepository ->
-                Observable.create((ObservableOnSubscribe<List<StoreRegistrationRequest>>) e -> {
-                    List<StoreRegistrationRequest> requestList = new CopyOnWriteArrayList<>();
-                    List<StoreRegistrationResult> resultList = new CopyOnWriteArrayList<>();
+        return Observable.create((ObservableOnSubscribe<List<StoreRegistrationRequest>>) e -> {
+            List<StoreRegistrationRequest> requestList = new CopyOnWriteArrayList<>();
+            List<StoreRegistrationResult> resultList = new CopyOnWriteArrayList<>();
 
-                    Set<Class> nextToken = new CopyOnWriteArraySet<>();
-                    Set<Class> completeToken = new CopyOnWriteArraySet<>();
+            Set<Class> nextToken = new CopyOnWriteArraySet<>();
+            Set<Class> completeToken = new CopyOnWriteArraySet<>();
 
-                    nextToken.add(StoreRegistrationRequest.class);
-                    completeToken.add(StoreRegistrationRequest.class);
-                    storeRepository.getStoreRegistrationRequestListByStoreUserUuid(storeUserUuid)
-                            .subscribeOn(Schedulers.newThread())
-                            .doOnNext(storeRegistrationRequests -> {
-                                requestList.clear();
-                                requestList.addAll(storeRegistrationRequests);
-                                nextToken.remove(StoreRegistrationRequest.class);
-                                if (nextToken.isEmpty()) {
-                                    List<StoreRegistrationRequest> mappedRequestList = mapStoreRegistrationRequest(requestList, resultList);
-                                    e.onNext(mappedRequestList);
-                                }
-                            })
-                            .doOnComplete(() -> {
-                                completeToken.remove(StoreRegistrationRequest.class);
-                                if (completeToken.isEmpty()) {
-                                    e.onComplete();
-                                }
-                            })
-                            .subscribe();
+            nextToken.add(StoreRegistrationRequest.class);
+            completeToken.add(StoreRegistrationRequest.class);
+            storeRepository.getStoreRegistrationRequestListByStoreUserUuid(storeUserUuid)
+                    .subscribeOn(Schedulers.newThread())
+                    .doOnNext(storeRegistrationRequests -> {
+                        requestList.clear();
+                        requestList.addAll(storeRegistrationRequests);
+                        nextToken.remove(StoreRegistrationRequest.class);
+                        if (nextToken.isEmpty()) {
+                            List<StoreRegistrationRequest> mappedRequestList = mapStoreRegistrationRequest(requestList, resultList);
+                            e.onNext(mappedRequestList);
+                        }
+                    })
+                    .doOnComplete(() -> {
+                        completeToken.remove(StoreRegistrationRequest.class);
+                        if (completeToken.isEmpty()) {
+                            e.onComplete();
+                        }
+                    })
+                    .subscribe();
 
-                    nextToken.add(StoreRegistrationResult.class);
-                    completeToken.add(StoreRegistrationResult.class);
-                    storeRepository.getStoreRegistrationResultListByStoreUserUuid(storeUserUuid)
-                            .subscribeOn(Schedulers.newThread())
-                            .doOnNext(registrationResults -> {
-                                resultList.clear();
-                                resultList.addAll(registrationResults);
-                                nextToken.remove(StoreRegistrationResult.class);
-                                if (nextToken.isEmpty()) {
-                                    List<StoreRegistrationRequest> mappedRequestList = mapStoreRegistrationRequest(requestList, resultList);
-                                    e.onNext(mappedRequestList);
-                                }
-                            })
-                            .doOnComplete(() -> {
-                                completeToken.remove(StoreRegistrationResult.class);
-                                if (completeToken.isEmpty()) {
-                                    e.onComplete();
-                                }
-                            })
-                            .subscribe();
-                })
-        ).distinctUntilChanged().subscribeOn(Schedulers.io());
+            nextToken.add(StoreRegistrationResult.class);
+            completeToken.add(StoreRegistrationResult.class);
+            storeRepository.getStoreRegistrationResultListByStoreUserUuid(storeUserUuid)
+                    .subscribeOn(Schedulers.newThread())
+                    .doOnNext(registrationResults -> {
+                        resultList.clear();
+                        resultList.addAll(registrationResults);
+                        nextToken.remove(StoreRegistrationResult.class);
+                        if (nextToken.isEmpty()) {
+                            List<StoreRegistrationRequest> mappedRequestList = mapStoreRegistrationRequest(requestList, resultList);
+                            e.onNext(mappedRequestList);
+                        }
+                    })
+                    .doOnComplete(() -> {
+                        completeToken.remove(StoreRegistrationResult.class);
+                        if (completeToken.isEmpty()) {
+                            e.onComplete();
+                        }
+                    })
+                    .subscribe();
+        })
+                .distinctUntilChanged().subscribeOn(Schedulers.io());
     }
 
     private List<StoreRegistrationRequest> mapStoreRegistrationRequest(final List<StoreRegistrationRequest> storeRegistrationRequests,
@@ -160,14 +155,12 @@ public enum StoreStoreManager {
     }
 
     public Observable<Store> getStore(String storeUuid) {
-        return storeRepositoryMaybe.flatMapObservable(storeRepository ->
-                storeRepository.getStore(storeUuid)
-        ).subscribeOn(Schedulers.io());
+        return storeRepository.getStore(storeUuid)
+                .subscribeOn(Schedulers.io());
     }
 
     public Maybe<StoreRegistrationResponse> createStoreRegistrationRequest(StoreRegistrationRequest storeRegistrationRequest) {
-        return storeRepositoryMaybe.flatMap(storeRepository ->
-                storeRepository.createStoreRegistrationRequest(storeRegistrationRequest)
-        ).subscribeOn(Schedulers.io());
+        return storeRepository.createStoreRegistrationRequest(storeRegistrationRequest)
+                .subscribeOn(Schedulers.io());
     }
 }

@@ -11,6 +11,7 @@ import android.support.annotation.Nullable;
 import android.util.Log;
 
 import com.google.android.gms.common.util.Base64Utils;
+import com.google.android.gms.maps.model.LatLng;
 import com.mark.zumo.client.core.appserver.request.login.StoreUserSignInRequest;
 import com.mark.zumo.client.core.appserver.request.signup.StoreOwnerSignUpRequest;
 import com.mark.zumo.client.core.appserver.response.store.user.signin.StoreUserSignInErrorCode;
@@ -23,6 +24,7 @@ import com.mark.zumo.client.core.entity.user.store.StoreOwner;
 import com.mark.zumo.client.core.entity.user.store.StoreUserContract;
 import com.mark.zumo.client.core.entity.user.store.StoreUserSession;
 import com.mark.zumo.client.core.repository.SessionRepository;
+import com.mark.zumo.client.core.repository.StoreRepository;
 import com.mark.zumo.client.core.repository.StoreUserRepository;
 
 import java.security.InvalidKeyException;
@@ -39,9 +41,11 @@ import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 
+import io.reactivex.Flowable;
 import io.reactivex.Maybe;
 import io.reactivex.Observable;
 import io.reactivex.schedulers.Schedulers;
+import io.reactivex.subjects.Subject;
 
 /**
  * Created by mark on 18. 4. 30.
@@ -54,41 +58,46 @@ public enum StoreUserManager {
 
     private static final String STORE_USER_SESSION_HEADER_KEY = "store_user_session_token";
     private static final String SESSION_STORE_KEY = "store_uuid";
+    private static final String PASSWORD_DIGEST_ALGORITHM = "MD5";
 
     private final StoreUserRepository storeUserRepository;
     private final SessionRepository sessionRepository;
+    private final StoreRepository storeRepository;
 
     @Nullable
     private StoreUserSession storeUserSession;
     @Nullable
-    private Store sessionStore;
+    private SessionStore storeSession;
+
+    private Subject<Store> sessionStoreSubject;
+    private Subject<StoreUserSession> storeUserSessionSubject;
 
     StoreUserManager() {
         storeUserRepository = StoreUserRepository.INSTANCE;
         sessionRepository = SessionRepository.INSTANCE;
+        storeRepository = StoreRepository.INSTANCE;
     }
 
-    private static String md5(final String s) {
-        final String MD5 = "MD5";
+    private static String passwordDigest(final String source) {
         try {
             // Create MD5 Hash
-            MessageDigest digest = java.security.MessageDigest
-                    .getInstance(MD5);
-            digest.update(s.getBytes());
+            MessageDigest digest = java.security.MessageDigest.getInstance(PASSWORD_DIGEST_ALGORITHM);
+            digest.update(source.getBytes());
             byte messageDigest[] = digest.digest();
 
             // Create Hex String
             StringBuilder hexString = new StringBuilder();
             for (byte aMessageDigest : messageDigest) {
                 String hexedString = Integer.toHexString(0xFF & aMessageDigest);
-                while (hexedString.length() < 2)
+                while (hexedString.length() < 2) {
                     hexedString = "0" + hexedString;
+                }
                 hexString.append(hexedString);
             }
             return hexString.toString();
 
         } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
+            Log.e(TAG, "passwordDigest: ", e);
         }
         return "";
     }
@@ -129,7 +138,7 @@ public enum StoreUserManager {
     public Maybe<StoreUserSignupException> signup(StoreOwnerSignUpRequest request) {
         return storeUserRepository.storeUserHandShake(request.email)
                 .map(publicKey -> {
-                    request.password = RSAEncrypt(publicKey, md5(request.password));
+                    request.password = RSAEncrypt(publicKey, passwordDigest(request.password));
                     return request;
                 }).flatMap(storeUserRepository::creteStoreOwner)
                 .map(StoreUserSignupException::new)
@@ -138,7 +147,7 @@ public enum StoreUserManager {
 
     public Maybe<StoreUserSignInErrorCode> signIn(final String email, final String password, final boolean isAutoLogin) {
         return storeUserRepository.storeUserHandShake(email)
-                .map(publicKey -> RSAEncrypt(publicKey, md5(password)))
+                .map(publicKey -> RSAEncrypt(publicKey, passwordDigest(password)))
                 .map(encryptedPassword -> new StoreUserSignInRequest.Builder()
                         .setEmail(email)
                         .setPassword(encryptedPassword)
@@ -156,28 +165,33 @@ public enum StoreUserManager {
     }
 
     public Maybe<StoreUserSession> getStoreUserSessionAsync() {
-        return storeUserRepository.getStoreUserSession()
+        return storeUserRepository.getStoreUserSessionMaybe()
+                .firstElement()
                 .doOnSuccess(this::setStoreUserSession)
                 .subscribeOn(Schedulers.io());
     }
 
     @Nullable
-    public Store getSessionStoreSync() {
-        return sessionStore;
+    public SessionStore getSessionStoreSync() {
+        return storeSession;
     }
 
-    public Maybe<? extends Store> getSessionStoreAsync() {
-        return storeUserRepository.getSessionStore()
-                .doOnSuccess(sessionStore -> Log.d(TAG, "getSessionStoreAsync: " + sessionStore))
+    public Maybe<Store> getSessionStoreAsync() {
+        return storeUserRepository.getSessionStoreMaybe()
                 .subscribeOn(Schedulers.io());
     }
 
-    public Maybe<? extends Store> setSessionStore(Store store) {
-        Log.d(TAG, "setSessionStore: " + store);
+    public Flowable<Store> getSessionStoreAsyncFlowable() {
+        return storeUserRepository.getSessionStoreFlowable()
+                .subscribeOn(Schedulers.io());
+    }
+
+    public Maybe<Store> setSessionStore(Store store) {
         return Maybe.just(SessionStore.from(store))
                 .doOnSuccess(storeUserRepository::saveSessionStore)
-                .doOnSuccess(sessionStore -> this.sessionStore = sessionStore)
+                .doOnSuccess(sessionStore -> this.storeSession = sessionStore)
                 .doOnSuccess(sessionStore -> sessionRepository.putSessionHeader(buildStoreUserSessionHeader()))
+                .map(x -> store)
                 .subscribeOn(Schedulers.io());
     }
 
@@ -223,7 +237,7 @@ public enum StoreUserManager {
         Bundle bundle = new Bundle();
 
         bundle.putString(STORE_USER_SESSION_HEADER_KEY, storeUserSession != null ? storeUserSession.token : "");
-        bundle.putString(SESSION_STORE_KEY, sessionStore != null ? sessionStore.uuid : "");
+        bundle.putString(SESSION_STORE_KEY, storeSession != null ? storeSession.uuid : "");
 
         return bundle;
     }
@@ -231,6 +245,56 @@ public enum StoreUserManager {
     public Maybe<SnsToken> registerTokenOnRefresh(Store store, String token) {
         SnsToken snsToken = new SnsToken(store.uuid, SnsToken.TokenType.ANDROID, token);
         return sessionRepository.registerSnsToken(snsToken)
+                .subscribeOn(Schedulers.io());
+    }
+
+    public Maybe<Store> updateSessionStoreName(String newName) {
+
+        return storeUserRepository.getSessionStoreMaybe()
+                .map(store -> Store.Builder.from(store)
+                        .setName(newName)
+                        .build())
+                .flatMap(storeRepository::updateStore)
+                .flatMap(this::setSessionStore)
+                .subscribeOn(Schedulers.io());
+    }
+
+    public Maybe<Store> updateSessionStoreLocation(LatLng latLng) {
+
+        return storeUserRepository.getSessionStoreMaybe()
+                .map(store -> Store.Builder.from(store)
+                        .setLatitude(latLng.latitude)
+                        .setLongitude(latLng.longitude)
+                        .build())
+                .flatMap(storeRepository::updateStore)
+                .flatMap(this::setSessionStore)
+                .subscribeOn(Schedulers.io());
+    }
+
+    public Maybe<Store> updateSessionStoreCoverImageUrl(String coverImageUrl) {
+        return storeUserRepository.getSessionStoreMaybe()
+                .doOnSuccess(store -> Log.d(TAG, "updateSessionStoreCoverImageUrl: getSessionStore=" + store))
+                .map(store -> Store.Builder.from(store)
+                        .setCoverImageUrl(coverImageUrl)
+                        .build())
+                .doOnSuccess(store -> Log.d(TAG, "updateSessionStoreCoverImageUrl: createdSessionStore=" + store))
+                .flatMap(storeRepository::updateStore)
+                .doOnSuccess(store -> Log.d(TAG, "updateSessionStoreCoverImageUrl: updatedSessionStore=" + store))
+                .flatMap(this::setSessionStore)
+                .subscribeOn(Schedulers.io());
+
+    }
+
+    public Maybe<Store> updateSessionStoreThumbnailImageUrl(String thumbnailImageUrl) {
+        return storeUserRepository.getSessionStoreMaybe()
+                .doOnSuccess(store -> Log.d(TAG, "updateSessionStoreThumbnailImageUrl: getSessionStore=" + store))
+                .map(store -> Store.Builder.from(store)
+                        .setThumbnailUrl(thumbnailImageUrl)
+                        .build())
+                .doOnSuccess(store -> Log.d(TAG, "updateSessionStoreThumbnailImageUrl: createdSessionStore=" + store))
+                .flatMap(storeRepository::updateStore)
+                .doOnSuccess(store -> Log.d(TAG, "updateSessionStoreThumbnailImageUrl: updatedSessionStore=" + store))
+                .flatMap(this::setSessionStore)
                 .subscribeOn(Schedulers.io());
     }
 }

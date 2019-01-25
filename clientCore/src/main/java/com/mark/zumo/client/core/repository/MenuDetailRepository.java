@@ -6,14 +6,11 @@
 
 package com.mark.zumo.client.core.repository;
 
-import android.os.Bundle;
-
 import com.mark.zumo.client.core.appserver.AppServerServiceProvider;
 import com.mark.zumo.client.core.appserver.NetworkRepository;
 import com.mark.zumo.client.core.dao.AppDatabaseProvider;
 import com.mark.zumo.client.core.dao.DiskRepository;
 import com.mark.zumo.client.core.entity.MenuDetail;
-import com.mark.zumo.client.core.util.BundleUtils;
 
 import java.util.List;
 
@@ -24,36 +21,24 @@ import io.reactivex.observables.GroupedObservable;
 /**
  * Created by mark on 18. 8. 5.
  */
-public class MenuDetailRepository {
+public enum MenuDetailRepository {
+    INSTANCE;
 
     private final static String TAG = "MenuDetailRepository";
 
-    private static Bundle session;
-    private static MenuDetailRepository sInstance;
     private final DiskRepository diskRepository;
-    private final NetworkRepository networkRepository;
 
-    private MenuDetailRepository(final Bundle session) {
-        networkRepository = AppServerServiceProvider.INSTANCE.buildNetworkRepository(session);
+    MenuDetailRepository() {
         diskRepository = AppDatabaseProvider.INSTANCE.diskRepository;
-        MenuDetailRepository.session = session;
     }
 
-    public static MenuDetailRepository getInstance(Bundle session) {
-        if (sInstance == null || !BundleUtils.equalsBundles(MenuDetailRepository.session, session)) {
-            synchronized (MenuDetailRepository.class) {
-                if (sInstance == null) {
-                    sInstance = new MenuDetailRepository(session);
-                }
-            }
-        }
-
-        return sInstance;
+    private NetworkRepository networkRepository() {
+        return AppServerServiceProvider.INSTANCE.networkRepository();
     }
 
     public Observable<GroupedObservable<String, MenuDetail>> getMenuDetailListOfStore(String storeUuid) {
         Maybe<List<MenuDetail>> menuListDB = diskRepository.getMenuDetailByStoreUuid(storeUuid);
-        Maybe<List<MenuDetail>> menuListApi = networkRepository.getMenuDetailByStoreUuid(storeUuid)
+        Maybe<List<MenuDetail>> menuListApi = networkRepository().getMenuDetailByStoreUuid(storeUuid)
                 .doOnSuccess(unused -> diskRepository.deleteMenuDetailListByStoreUuid(storeUuid))
                 .doOnSuccess(diskRepository::insertMenuDetailList);
 
@@ -66,7 +51,7 @@ public class MenuDetailRepository {
     }
 
     public Maybe<List<MenuDetail>> createMenuDetailList(List<MenuDetail> menuDetailList) {
-        return networkRepository.createMenuDetailList(menuDetailList)
+        return networkRepository().createMenuDetailList(menuDetailList)
                 .doOnSuccess(diskRepository::insertMenuDetailList);
     }
 
@@ -82,7 +67,7 @@ public class MenuDetailRepository {
     public Maybe<List<MenuDetail>> removeMenuDetailList(final List<MenuDetail> menuDetailList) {
         return Observable.fromIterable(menuDetailList)
                 .map(menuDetail -> menuDetail.uuid)
-                .flatMapMaybe(menuDetail -> networkRepository.deleteMenuDetail(menuDetail)
+                .flatMapMaybe(menuDetail -> networkRepository().deleteMenuDetail(menuDetail)
                         .map(menuDetail1 -> menuDetail1.uuid)
                         .flatMap(diskRepository::getMenuDetail))
                 .toList().toMaybe()
@@ -91,13 +76,13 @@ public class MenuDetailRepository {
 
     public Maybe<List<MenuDetail>> updateMenuDetailSequence(final String menuCategoryUuid,
                                                             final List<MenuDetail> menuDetailList) {
-        return networkRepository.updateMenusOfCategory(menuCategoryUuid, menuDetailList)
+        return networkRepository().updateMenusOfCategory(menuCategoryUuid, menuDetailList)
                 .doOnSuccess(diskRepository::insertMenuDetailList);
     }
 
     public Observable<List<MenuDetail>> getMenuDetailListByCategoryUuid(final String categoryUuid) {
         Maybe<List<MenuDetail>> menuDetailListDB = diskRepository.getMenuDetailByCategoryUuid(categoryUuid);
-        Maybe<List<MenuDetail>> menuDetailListApi = networkRepository.getMenuDetailByCategoryUuid(categoryUuid)
+        Maybe<List<MenuDetail>> menuDetailListApi = networkRepository().getMenuDetailByCategoryUuid(categoryUuid)
                 .doOnSuccess(x -> diskRepository.deleteMenuDetailListByCategoryUuid(categoryUuid))
                 .doOnSuccess(diskRepository::insertMenuDetailList);
         return Maybe.merge(menuDetailListDB, menuDetailListApi)
@@ -111,14 +96,14 @@ public class MenuDetailRepository {
 
     public Maybe<List<MenuDetail>> updateCategoriesOfMenu(final String menuUuid,
                                                           final List<MenuDetail> menuDetailList) {
-        return networkRepository.updateCategoriesOfMenu(menuUuid, menuDetailList)
+        return networkRepository().updateCategoriesOfMenu(menuUuid, menuDetailList)
                 .doOnSuccess(result -> diskRepository.deleteMenuDetailListByMenuUuid(menuUuid))
                 .doOnSuccess(diskRepository::insertMenuDetailList);
     }
 
     public Maybe<List<MenuDetail>> updateMenusOfCategory(final String categoryUuid,
                                                          final List<MenuDetail> menuDetailList) {
-        return networkRepository.updateMenusOfCategory(categoryUuid, menuDetailList)
+        return networkRepository().updateMenusOfCategory(categoryUuid, menuDetailList)
                 .doOnSuccess(result -> diskRepository.deleteMenuDetailListByCategoryUuid(categoryUuid))
                 .doOnSuccess(diskRepository::insertMenuDetailList);
     }

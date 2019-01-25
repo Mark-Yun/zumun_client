@@ -6,11 +6,8 @@
 
 package com.mark.zumo.client.core.util;
 
-import android.os.Build;
-
 import com.mark.zumo.client.core.appserver.request.signup.StoreOwnerSignUpRequest;
 import com.mark.zumo.client.core.appserver.response.store.user.signup.StoreUserSignupException;
-import com.mark.zumo.client.core.entity.Store;
 
 import java.util.UUID;
 
@@ -21,10 +18,6 @@ import java.util.UUID;
 public class DebugUtil {
 
     private static final String TEST_STORE_UUID = "FD8BC4DD00B04E60A166A5FBD3454E8F";
-
-    public static Store store() {
-        return new Store(TEST_STORE_UUID, Build.MODEL, 37.2624914, 127.0446137, "TEST", "TEST", "", "", "");
-    }
 
     public static StoreOwnerSignUpRequest storeOwnerSignUpRequest() throws StoreUserSignupException {
         return new StoreOwnerSignUpRequest.Builder()

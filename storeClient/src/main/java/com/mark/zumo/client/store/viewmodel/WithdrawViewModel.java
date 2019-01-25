@@ -12,7 +12,6 @@ import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.support.annotation.NonNull;
 
-import com.mark.zumo.client.core.entity.Store;
 import com.mark.zumo.client.core.entity.user.store.StoreOwner;
 import com.mark.zumo.client.store.model.StoreStoreManager;
 import com.mark.zumo.client.store.model.StoreUserManager;
@@ -48,19 +47,6 @@ public class WithdrawViewModel extends AndroidViewModel {
     public LiveData<Object> withdraw(String string) {
 
         MutableLiveData<Object> liveData = new MutableLiveData<>();
-
-        return liveData;
-    }
-
-    public LiveData<Store> getSessionStore() {
-
-        MutableLiveData<Store> liveData = new MutableLiveData<>();
-        Maybe.fromCallable(storeUserManager::getSessionStoreSync)
-                .switchIfEmpty(storeUserManager.getSessionStoreAsync())
-                .observeOn(AndroidSchedulers.mainThread())
-                .doOnSuccess(liveData::setValue)
-                .doOnSubscribe(compositeDisposable::add)
-                .subscribe();
 
         return liveData;
     }

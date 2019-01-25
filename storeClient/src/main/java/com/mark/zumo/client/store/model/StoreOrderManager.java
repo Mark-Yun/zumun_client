@@ -12,7 +12,6 @@ import com.mark.zumo.client.core.entity.MenuOrder;
 import com.mark.zumo.client.core.entity.OrderDetail;
 import com.mark.zumo.client.core.repository.MessageHandler;
 import com.mark.zumo.client.core.repository.OrderRepository;
-import com.mark.zumo.client.core.repository.SessionRepository;
 import com.mark.zumo.client.store.model.entity.OrderBucket;
 
 import java.util.List;
@@ -32,23 +31,16 @@ public enum StoreOrderManager {
 
     private static final String TAG = "StoreOrderManager";
 
-    private final SessionRepository sessionRepository;
-
-    private final Maybe<OrderRepository> orderRepositoryMaybe;
-    private final Maybe<MessageHandler> messageHandlerMaybe;
+    private final OrderRepository orderRepository;
+    private final MessageHandler messageHandler;
 
     private OrderBucket canceledOrderBucket;
     private OrderBucket requestedOrderBucket;
     private OrderBucket completeOrderBucket;
 
     StoreOrderManager() {
-        sessionRepository = SessionRepository.INSTANCE;
-
-        orderRepositoryMaybe = sessionRepository.getStoreSession()
-                .map(OrderRepository::getInstance);
-
-        messageHandlerMaybe = sessionRepository.getStoreSession()
-                .map(MessageHandler::getInstance);
+        orderRepository = OrderRepository.INSTANCE;
+        messageHandler = MessageHandler.INSTANCE;
     }
 
     public void putRequestedOrderBucket(String menuOrderUuid) {
@@ -57,25 +49,23 @@ public enum StoreOrderManager {
         if (requestedOrderBucket == null) {
             return;
         }
-        orderRepositoryMaybe.flatMap(orderRepository ->
-                orderRepository.getMenuOrderFromApi(menuOrderUuid)
-                        .subscribeOn(Schedulers.io())
-                        .doOnSuccess(requestedOrderBucket::addOrder))
+        orderRepository.getMenuOrderFromApi(menuOrderUuid)
+                .subscribeOn(Schedulers.io())
+                .doOnSuccess(requestedOrderBucket::addOrder)
                 .subscribe();
     }
 
     private void loadOrderBucket(String storeUuid, OrderBucket orderBucket, MenuOrder.State... states) {
-        orderRepositoryMaybe.flatMapObservable(orderRepository ->
-                orderRepository.getMenuOrderListByStoreUuid(storeUuid, 0, 30)
-                        .map(Observable::fromIterable)
-                        .doOnNext(menuOrderObservable ->
-                                menuOrderObservable.filter(menuOrder -> stateAnyMatch(MenuOrder.State.of(menuOrder.state), states))
-                                        .toList()
-                                        .doOnSuccess(orderBucket::setOrder)
-                                        .subscribeOn(Schedulers.io())
-                                        .subscribe()
-                        )
-        ).subscribeOn(Schedulers.io()).subscribe();
+        orderRepository.getMenuOrderListByStoreUuid(storeUuid, 0, 30)
+                .map(Observable::fromIterable)
+                .doOnNext(menuOrderObservable ->
+                        menuOrderObservable.filter(menuOrder -> stateAnyMatch(MenuOrder.State.of(menuOrder.state), states))
+                                .toList()
+                                .doOnSuccess(orderBucket::setOrder)
+                                .subscribeOn(Schedulers.io())
+                                .subscribe()
+
+                ).subscribeOn(Schedulers.io()).subscribe();
     }
 
     private boolean stateAnyMatch(MenuOrder.State targetState, MenuOrder.State[] states) {
@@ -125,41 +115,37 @@ public enum StoreOrderManager {
     }
 
     public Observable<List<OrderDetail>> getOrderDetailList(String orderUuid) {
-        return orderRepositoryMaybe.flatMapObservable(orderRepository -> orderRepository.getOrderDetailListByOrderUuid(orderUuid))
+        return orderRepository.getOrderDetailListByOrderUuid(orderUuid)
                 .subscribeOn(Schedulers.io());
     }
 
     public Maybe<MenuOrder> acceptOrder(MenuOrder menuOrder) {
-        return orderRepositoryMaybe.flatMap(orderRepository ->
-                orderRepository.updateMenuOrderState(menuOrder.uuid, MenuOrder.State.ACCEPTED.ordinal())
-                        .flatMap(updatedMenuOrder -> messageHandlerMaybe.flatMap(messageHandler -> messageHandler.sendMessageAcceptedOrder(updatedMenuOrder)))
-                        .doOnSuccess(x -> requestedOrderBucket.notifyOnNext())
-        ).subscribeOn(Schedulers.io());
+        return orderRepository.updateMenuOrderState(menuOrder.uuid, MenuOrder.State.ACCEPTED.ordinal())
+                .flatMap(messageHandler::sendMessageAcceptedOrder)
+                .doOnSuccess(x -> requestedOrderBucket.notifyOnNext())
+                .subscribeOn(Schedulers.io());
     }
 
     public Maybe<MenuOrder> rejectOrder(String orderUuid) {
-        return orderRepositoryMaybe.flatMap(orderRepository ->
-                orderRepository.updateMenuOrderState(orderUuid, MenuOrder.State.REJECTED.ordinal())
-                        .map(menuOrder -> menuOrder.uuid)
-                        .map(requestedOrderBucket::removeOrder)
-                        .doOnSuccess(canceledOrderBucket::addOrder))
+        return orderRepository.updateMenuOrderState(orderUuid, MenuOrder.State.REJECTED.ordinal())
+                .map(menuOrder -> menuOrder.uuid)
+                .map(requestedOrderBucket::removeOrder)
+                .doOnSuccess(canceledOrderBucket::addOrder)
                 .subscribeOn(Schedulers.io());
     }
 
     public Maybe<MenuOrder> completeOrder(String orderUuid) {
-        return orderRepositoryMaybe.flatMap(orderRepository ->
-                orderRepository.updateMenuOrderState(orderUuid, MenuOrder.State.COMPLETE.ordinal())
-                        .flatMap(updatedOrder -> messageHandlerMaybe.flatMap(messageHandler -> messageHandler.sendMessageCompleteOrder(updatedOrder)))
-                        .map(menuOrder -> menuOrder.uuid)
-                        .map(requestedOrderBucket::removeOrder)
-                        .doOnSuccess(completeOrderBucket::addOrder)
-        ).subscribeOn(Schedulers.io());
+        return orderRepository.updateMenuOrderState(orderUuid, MenuOrder.State.COMPLETE.ordinal())
+                .flatMap(messageHandler::sendMessageCompleteOrder)
+                .map(menuOrder -> menuOrder.uuid)
+                .map(requestedOrderBucket::removeOrder)
+                .doOnSuccess(completeOrderBucket::addOrder)
+                .subscribeOn(Schedulers.io());
     }
 
     public Maybe<MenuOrder> getMenuOrderFromDisk(String orderUuid) {
-        return orderRepositoryMaybe.flatMap(orderRepository ->
-                orderRepository.getMenuOrderFromDisk(orderUuid)
-        ).subscribeOn(Schedulers.io());
+        return orderRepository.getMenuOrderFromDisk(orderUuid)
+                .subscribeOn(Schedulers.io());
     }
 
     public Maybe<Long> acceptAllOrder() {

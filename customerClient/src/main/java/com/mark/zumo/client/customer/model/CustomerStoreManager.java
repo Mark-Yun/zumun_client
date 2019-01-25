@@ -8,7 +8,6 @@ package com.mark.zumo.client.customer.model;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.mark.zumo.client.core.entity.Store;
-import com.mark.zumo.client.core.repository.SessionRepository;
 import com.mark.zumo.client.core.repository.StoreRepository;
 
 import java.util.List;
@@ -26,27 +25,24 @@ public enum CustomerStoreManager {
 
     private static final String TAG = "CustomerStoreManager";
 
-    private final SessionRepository sessionRepository;
-    private final Maybe<StoreRepository> storeRepositoryMaybe;
+    private final StoreRepository storeRepository;
 
     CustomerStoreManager() {
-        sessionRepository = SessionRepository.INSTANCE;
-        storeRepositoryMaybe = sessionRepository.getCustomerSession()
-                .map(StoreRepository::getInstance);
+        storeRepository = StoreRepository.INSTANCE;
     }
 
     public Maybe<List<Store>> nearByStore(LatLng latLng, double distanceKm) {
-        return storeRepositoryMaybe.flatMap(storeRepository -> storeRepository.nearByStore(latLng.latitude, latLng.longitude, distanceKm))
+        return storeRepository.nearByStore(latLng.latitude, latLng.longitude, distanceKm)
                 .subscribeOn(Schedulers.io());
     }
 
     public Observable<Store> getStore(String storeUuid) {
-        return storeRepositoryMaybe.flatMapObservable(storeRepository -> storeRepository.getStore(storeUuid))
+        return storeRepository.getStore(storeUuid)
                 .subscribeOn(Schedulers.io());
     }
 
     public Maybe<Store> getStoreFromDisk(String storeUuid) {
-        return storeRepositoryMaybe.flatMap(storeRepository -> storeRepository.getStoreFromDisk(storeUuid))
+        return storeRepository.getStoreFromDisk(storeUuid)
                 .subscribeOn(Schedulers.io());
     }
 }

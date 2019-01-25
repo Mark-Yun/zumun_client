@@ -76,7 +76,7 @@ public class OrderFragment extends Fragment {
     }
 
     private void inflateStoreInfo() {
-        mainViewModel.getSessionStore().observe(this, this::onLoadStore);
+        mainViewModel.getSessionStoreFlowable().observe(this, this::onLoadStore);
     }
 
     private void onLoadStore(Store store) {

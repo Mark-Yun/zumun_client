@@ -27,8 +27,8 @@ import io.reactivex.schedulers.Schedulers;
 public enum CustomerOrderManager {
     INSTANCE;
 
-    private final Maybe<OrderRepository> orderRepositoryMaybe;
-    private final Maybe<MessageHandler> messageHandlerMaybe;
+    private final OrderRepository orderRepository;
+    private final MessageHandler messageHandler;
 
     private final CustomerSessionManager customerSessionManager;
     private final SessionRepository sessionRepository;
@@ -37,10 +37,8 @@ public enum CustomerOrderManager {
         sessionRepository = SessionRepository.INSTANCE;
         customerSessionManager = CustomerSessionManager.INSTANCE;
 
-        orderRepositoryMaybe = sessionRepository.getCustomerSession()
-                .map(OrderRepository::getInstance);
-        messageHandlerMaybe = sessionRepository.getCustomerSession()
-                .map(MessageHandler::getInstance);
+        orderRepository = OrderRepository.INSTANCE;
+        messageHandler = MessageHandler.INSTANCE;
     }
 
     public Maybe<MenuOrder> createMenuOrder(List<OrderDetail> orderDetailList) {
@@ -56,48 +54,47 @@ public enum CustomerOrderManager {
                     orderDetail.menuOrderName = orderName;
                     return orderDetail;
                 }).toList().toMaybe()
-                .flatMap(order -> orderRepositoryMaybe.flatMap(orderRepository -> orderRepository.createMenuOrder(order)))
+                .flatMap(orderRepository::createMenuOrder)
                 .subscribeOn(Schedulers.io());
     }
 
     public Maybe<MenuOrder> createMenuOrder(OrderDetail orderDetail) {
-        return orderRepositoryMaybe.flatMap(orderRepository -> orderRepository.createMenuOrder(orderDetail))
+        return orderRepository.createMenuOrder(orderDetail)
                 .subscribeOn(Schedulers.io());
     }
 
     public Maybe<MenuOrder> getMenuOrderFromDisk(String orderUuid) {
-        return orderRepositoryMaybe.flatMap(orderRepository -> orderRepository.getMenuOrderFromDisk(orderUuid))
+        return orderRepository.getMenuOrderFromDisk(orderUuid)
                 .subscribeOn(Schedulers.io());
     }
 
     public Maybe<MenuOrder> getMenuOrderFromApi(String orderUuid) {
-        return orderRepositoryMaybe.flatMap(orderRepository -> orderRepository.getMenuOrderFromApi(orderUuid))
+        return orderRepository.getMenuOrderFromApi(orderUuid)
                 .subscribeOn(Schedulers.io());
     }
 
     public Observable<MenuOrder> getMenuOrder(String orderUuid) {
-        return orderRepositoryMaybe.flatMapObservable(orderRepository -> orderRepository.getMenuOrder(orderUuid))
+        return orderRepository.getMenuOrder(orderUuid)
                 .subscribeOn(Schedulers.io());
     }
 
     public Observable<List<MenuOrder>> getMenuOrderListByCustomerUuid(String customerUuid) {
-        return orderRepositoryMaybe.flatMapObservable(orderRepository ->
-                orderRepository.getMenuOrderListByCustomerUuid(customerUuid, 0, 20)
-        ).subscribeOn(Schedulers.io());
+        return orderRepository.getMenuOrderListByCustomerUuid(customerUuid, 0, 20)
+                .subscribeOn(Schedulers.io());
     }
 
     public Observable<List<OrderDetail>> getOrderDetailListByOrderUuid(String orderUuid) {
-        return orderRepositoryMaybe.flatMapObservable(orderRepository -> orderRepository.getOrderDetailListByOrderUuid(orderUuid))
+        return orderRepository.getOrderDetailListByOrderUuid(orderUuid)
                 .subscribeOn(Schedulers.io());
     }
 
     public Maybe<MenuOrder> sendOrderCreateMessage(MenuOrder menuOrder) {
-        return messageHandlerMaybe.flatMap(messageHandler -> messageHandler.sendMessageCreateOrder(menuOrder))
+        return messageHandler.sendMessageCreateOrder(menuOrder)
                 .subscribeOn(Schedulers.io());
     }
 
     public Maybe<MenuOrder> updateMenuOrderStateRequested(String orderUuid) {
-        return orderRepositoryMaybe.flatMap(orderRepository -> orderRepository.updateMenuOrderState(orderUuid, MenuOrder.State.REQUESTED.ordinal()))
+        return orderRepository.updateMenuOrderState(orderUuid, MenuOrder.State.REQUESTED.ordinal())
                 .subscribeOn(Schedulers.io());
     }
 }

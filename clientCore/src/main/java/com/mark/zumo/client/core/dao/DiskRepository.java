@@ -34,6 +34,7 @@ import com.mark.zumo.client.core.payment.kakao.entity.PaymentToken;
 
 import java.util.List;
 
+import io.reactivex.Flowable;
 import io.reactivex.Maybe;
 
 /**
@@ -125,7 +126,10 @@ public interface DiskRepository {
     void insertStoreUserSession(StoreUserSession storeUserSession);
 
     @Query("SELECT * FROM " + StoreUserSession.Schema.table + " ORDER BY " + StoreUserSession.Schema.createdDate + " DESC LIMIT 1")
-    Maybe<StoreUserSession> getStoreUserSession();
+    Flowable<StoreUserSession> getStoreUserSessionFlowable();
+
+    @Query("SELECT * FROM " + StoreUserSession.Schema.table + " ORDER BY " + StoreUserSession.Schema.createdDate + " DESC LIMIT 1")
+    Maybe<StoreUserSession> getStoreUserSessionMaybe();
 
     @Query("SELECT * FROM " + StoreOwner.Schema.TABLE + " WHERE " + StoreOwner.Schema.uuid + " LIKE :storeUserUuid")
     Maybe<StoreOwner> getStoreOwner(String storeUserUuid);
@@ -136,11 +140,17 @@ public interface DiskRepository {
     @Query("DELETE FROM " + StoreUserSession.Schema.table)
     void removeAllStoreUserSession();
 
+    @Query("DELETE FROM " + SessionStore.Schema.TABLE)
+    void removeAllStoreSssion();
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertSessionStore(SessionStore sessionStore);
 
     @Query("SELECT * FROM " + SessionStore.Schema.TABLE + " ORDER BY " + StoreUserSession.Schema.createdDate + " DESC LIMIT 1")
-    Maybe<SessionStore> getSessionStore();
+    Flowable<SessionStore> getSessionStoreFlowable();
+
+    @Query("SELECT * FROM " + SessionStore.Schema.TABLE + " ORDER BY " + StoreUserSession.Schema.createdDate + " DESC LIMIT 1")
+    Maybe<SessionStore> getSessionStoreMaybe();
 
     @Query("SELECT * FROM " + MenuOption.Schema.table + " WHERE menu_option_uuid LIKE :menuOptionUuid LIMIT 1")
     Maybe<MenuOption> getMenuOption(String menuOptionUuid);
