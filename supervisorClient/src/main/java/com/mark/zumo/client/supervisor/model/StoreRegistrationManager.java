@@ -6,8 +6,6 @@
 
 package com.mark.zumo.client.supervisor.model;
 
-import android.os.Bundle;
-
 import com.mark.zumo.client.core.appserver.request.registration.StoreRegistrationRequest;
 import com.mark.zumo.client.core.appserver.request.registration.result.StoreRegistrationResult;
 import com.mark.zumo.client.core.repository.StoreRepository;
@@ -27,7 +25,7 @@ public enum StoreRegistrationManager {
     private StoreRepository storeRepository;
 
     StoreRegistrationManager() {
-        storeRepository = StoreRepository.getInstance(new Bundle());
+        storeRepository = StoreRepository.INSTANCE;
     }
 
     public Observable<List<StoreRegistrationRequest>> getStoreRegistrationRequestList() {

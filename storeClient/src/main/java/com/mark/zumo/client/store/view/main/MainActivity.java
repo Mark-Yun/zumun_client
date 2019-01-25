@@ -138,7 +138,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     }
 
     private void inflateStoreInformation() {
-        mainViewModel.getSessionStore().observe(this, this::onStoreLoaded);
+        mainViewModel.getSessionStoreFlowable().observe(this, this::onStoreLoaded);
     }
 
     private void onStoreLoaded(Store store) {

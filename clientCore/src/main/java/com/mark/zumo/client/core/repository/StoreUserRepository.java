@@ -15,13 +15,14 @@ import com.mark.zumo.client.core.appserver.response.store.user.signup.StoreUserS
 import com.mark.zumo.client.core.dao.AppDatabaseProvider;
 import com.mark.zumo.client.core.dao.DiskRepository;
 import com.mark.zumo.client.core.entity.SessionStore;
+import com.mark.zumo.client.core.entity.Store;
 import com.mark.zumo.client.core.entity.user.store.StoreOwner;
 import com.mark.zumo.client.core.entity.user.store.StoreUserContract;
 import com.mark.zumo.client.core.entity.user.store.StoreUserSession;
-import com.mark.zumo.client.core.security.SecurePreferences;
 
 import java.util.List;
 
+import io.reactivex.Flowable;
 import io.reactivex.Maybe;
 import io.reactivex.Observable;
 
@@ -31,28 +32,33 @@ import io.reactivex.Observable;
 public enum StoreUserRepository {
     INSTANCE;
 
-    private final SecurePreferences securePreferences;
-    private final NetworkRepository networkRepository;
     private final DiskRepository diskRepository;
 
     StoreUserRepository() {
-        securePreferences = SecuredRepository.INSTANCE.securePreferences();
-        networkRepository = AppServerServiceProvider.INSTANCE.networkRepository;
         diskRepository = AppDatabaseProvider.INSTANCE.diskRepository;
     }
 
+    private NetworkRepository networkRepository() {
+        return AppServerServiceProvider.INSTANCE.networkRepository();
+    }
+
     public Maybe<String> storeUserHandShake(String email) {
-        return networkRepository.signInHandShake(email)
+        return networkRepository().signInHandShake(email)
                 .map(storeUserHandShakeResponse -> storeUserHandShakeResponse.publicKey);
     }
 
-    public Maybe<StoreUserSession> getStoreUserSession() {
-        return diskRepository.getStoreUserSession();
+    public Flowable<StoreUserSession> getStoreUserSessionFlowable() {
+        return diskRepository.getStoreUserSessionFlowable();
+    }
+
+    public Observable<StoreUserSession> getStoreUserSessionMaybe() {
+        return diskRepository.getStoreUserSessionMaybe()
+                .toObservable();
     }
 
     public Observable<StoreOwner> getStoreOwner(String storeUserUuid) {
         Maybe<StoreOwner> storeUserDB = diskRepository.getStoreOwner(storeUserUuid);
-        Maybe<StoreOwner> storeUserApi = networkRepository.getStoreOwner(storeUserUuid)
+        Maybe<StoreOwner> storeUserApi = networkRepository().getStoreOwner(storeUserUuid)
                 .doOnSuccess(diskRepository::insertStoreUser);
 
         return Maybe.merge(storeUserDB, storeUserApi)
@@ -60,8 +66,14 @@ public enum StoreUserRepository {
                 .toObservable();
     }
 
-    public Maybe<SessionStore> getSessionStore() {
-        return diskRepository.getSessionStore();
+    public Flowable<Store> getSessionStoreFlowable() {
+        return diskRepository.getSessionStoreFlowable()
+                .map(Store::from);
+    }
+
+    public Maybe<Store> getSessionStoreMaybe() {
+        return diskRepository.getSessionStoreMaybe()
+                .map(Store::from);
     }
 
     public void saveSessionStore(SessionStore sessionStore) {
@@ -69,13 +81,13 @@ public enum StoreUserRepository {
     }
 
     public Maybe<StoreUserSignupErrorCode> creteStoreOwner(StoreOwnerSignUpRequest request) {
-        return networkRepository.createStoreOwner(request)
+        return networkRepository().createStoreOwner(request)
                 .map(storeOwnerSignUpResponse -> storeOwnerSignUpResponse.storeUserSignUpResponse)
                 .map(StoreUserSignupErrorCode::valueOf);
     }
 
     public Maybe<StoreUserSignInResponse> loginStoreUser(final StoreUserSignInRequest request) {
-        return networkRepository.storeUserLogin(request);
+        return networkRepository().storeUserLogin(request);
     }
 
     public void saveStoreUserSession(StoreUserSession storeUserSession) {
@@ -87,7 +99,7 @@ public enum StoreUserRepository {
     }
 
     public Observable<List<StoreUserContract>> getStoreUserContract(String storeUserUuid) {
-        Maybe<List<StoreUserContract>> storeUserContractListApi = networkRepository.getStoreUserContractListByStoreUserUuid(storeUserUuid);
+        Maybe<List<StoreUserContract>> storeUserContractListApi = networkRepository().getStoreUserContractListByStoreUserUuid(storeUserUuid);
         Maybe<List<StoreUserContract>> storeUserContractListDB = diskRepository.getStoreUserContractListbyStoreUserUuid(storeUserUuid);
 
         return Maybe.merge(storeUserContractListDB, storeUserContractListApi)

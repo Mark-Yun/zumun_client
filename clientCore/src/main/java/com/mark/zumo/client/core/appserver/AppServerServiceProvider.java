@@ -14,12 +14,10 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
-import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.mark.zumo.client.core.app.BuildConfig;
 import com.mark.zumo.client.core.util.context.ContextHolder;
 
-import java.io.File;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
@@ -43,50 +41,34 @@ public enum AppServerServiceProvider {
 
     private static final int MAX_CACHE_SIZE = 5 * 1024 * 1024;
 
-    public NetworkRepository networkRepository;
-    public PaymentService paymentService;
+    private NetworkRepository networkRepository;
+    private PaymentService paymentService;
 
     private Bundle headerBundle;
+    private Bundle currentHeaderBundle;
 
     AppServerServiceProvider() {
-        networkRepository = buildDefaultService();
-    }
+        headerBundle = buildDefaultHeader();
 
-    @NonNull
-    private static GsonConverterFactory gsonConverterFactory() {
-        return GsonConverterFactory.create(gson());
-    }
+        currentHeaderBundle = headerBundle;
+        currentHeaderBundle.putAll(headerBundle);
 
-    @NonNull
-    private static Gson gson() {
-        return new GsonBuilder()
-                .setLenient()
-                .create();
+        networkRepository = buildNetworkRepository(currentHeaderBundle);
+        paymentService = buildPaymentService(currentHeaderBundle);
     }
 
     private static OkHttpClient okHttpClient(final Interceptor interceptor) {
         return new OkHttpClient.Builder()
-                .cache(cache())
+                .cache(new Cache(ContextHolder.getContext().getCacheDir(), MAX_CACHE_SIZE))
                 .addInterceptor(interceptor)
-                .addInterceptor(logger())
-                .connectTimeout(20, TimeUnit.SECONDS)
-                .readTimeout(20, TimeUnit.SECONDS)
-                .writeTimeout(20, TimeUnit.SECONDS)
+                .addInterceptor(new HttpLoggingInterceptor().setLevel(BuildConfig.BUILD_TYPE.httpLoggerLevel))
+                .connectTimeout(10, TimeUnit.SECONDS)
+                .readTimeout(10, TimeUnit.SECONDS)
+                .writeTimeout(10, TimeUnit.SECONDS)
                 .build();
     }
 
-    @NonNull
-    private static HttpLoggingInterceptor logger() {
-        return new HttpLoggingInterceptor().setLevel(BuildConfig.BUILD_TYPE.httpLoggerLevel);
-    }
-
-    @NonNull
-    private static Cache cache() {
-        File cacheDir = ContextHolder.getContext().getCacheDir();
-        return new Cache(cacheDir, MAX_CACHE_SIZE);
-    }
-
-    private static Interceptor interceptor(@NonNull Bundle bundle) {
+    private static Interceptor createInterceptor(@NonNull Bundle bundle) {
         return chain -> {
             Request original = chain.request();
             Request.Builder builder = original.newBuilder();
@@ -141,43 +123,48 @@ public enum AppServerServiceProvider {
         }
     }
 
-    public NetworkRepository buildNetworkRepository(final Bundle bundle) {
-        Bundle mergedBundle = buildDefaultHeader();
-        mergedBundle.putAll(bundle);
-        if (mergedBundle.equals(headerBundle)) {
-            return networkRepository;
+    public NetworkRepository networkRepository() {
+        if (!currentHeaderBundle.equals(headerBundle)) {
+            currentHeaderBundle.putAll(headerBundle);
         }
 
-        headerBundle = mergedBundle;
-        return networkRepository = buildNetworkRepositoryInternal(mergedBundle);
+        networkRepository = buildNetworkRepository(currentHeaderBundle);
+        return networkRepository;
     }
 
-    private NetworkRepository buildDefaultService() {
-        return buildNetworkRepositoryInternal(buildDefaultHeader());
+    public PaymentService paymentService() {
+        if (!currentHeaderBundle.equals(headerBundle)) {
+            currentHeaderBundle.putAll(headerBundle);
+        }
+
+        paymentService = buildPaymentService(currentHeaderBundle);
+        return paymentService;
     }
 
-    private NetworkRepository buildNetworkRepositoryInternal(final Bundle bundle) {
-        Interceptor interceptor = interceptor(bundle);
-        OkHttpClient okHttpClient = okHttpClient(interceptor);
+    public void putSessionHeader(Bundle bundle) {
+        headerBundle.putAll(bundle);
+    }
 
+    public void clearSessionHeader(String key) {
+        headerBundle.remove(key);
+    }
+
+    private NetworkRepository buildNetworkRepository(final Bundle bundle) {
         return new Retrofit.Builder()
                 .baseUrl(BuildConfig.BUILD_TYPE.appServerUrl + serverVersionInfo())
-                .addConverterFactory(gsonConverterFactory())
+                .addConverterFactory(GsonConverterFactory.create(new GsonBuilder().setLenient().create()))
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-                .client(okHttpClient)
+                .client(okHttpClient(createInterceptor(bundle)))
                 .build()
                 .create(NetworkRepository.class);
     }
 
-    public PaymentService buildPaymentService(Bundle bundle) {
-        Interceptor interceptor = interceptor(bundle);
-        OkHttpClient okHttpClient = okHttpClient(interceptor);
-
+    private PaymentService buildPaymentService(final Bundle bundle) {
         return paymentService = new Retrofit.Builder()
                 .baseUrl(BuildConfig.BUILD_TYPE.paymentServiceUrl + serverVersionInfo())
-                .addConverterFactory(gsonConverterFactory())
+                .addConverterFactory(GsonConverterFactory.create(new GsonBuilder().setLenient().create()))
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-                .client(okHttpClient)
+                .client(okHttpClient(createInterceptor(bundle)))
                 .build()
                 .create(PaymentService.class);
     }

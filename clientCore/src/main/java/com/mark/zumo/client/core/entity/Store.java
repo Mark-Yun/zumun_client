@@ -55,6 +55,9 @@ public class Store {
         this.address = address;
     }
 
+    public static Store from(SessionStore sessionStore) {
+        return new Store(sessionStore.uuid, sessionStore.name, sessionStore.latitude, sessionStore.longitude, sessionStore.coverImageUrl, sessionStore.thumbnailUrl, sessionStore.phoneNumber, sessionStore.storeType, sessionStore.address);
+    }
     @Override
     public String toString() {
         return EntityHelper.toString(this);

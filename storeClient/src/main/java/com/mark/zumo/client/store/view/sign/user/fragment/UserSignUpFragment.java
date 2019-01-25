@@ -137,6 +137,7 @@ public class UserSignUpFragment extends Fragment implements BackPressedIntercept
         new AlertDialog.Builder(getActivity())
                 .setTitle(R.string.sign_up_success_dialog_title)
                 .setMessage(R.string.sign_up_success_dialog_message)
+                .setPositiveButton(android.R.string.ok, (dialog, which) -> dialog.dismiss())
                 .setOnDismissListener(dialog -> onDismissDialog())
                 .create()
                 .show();

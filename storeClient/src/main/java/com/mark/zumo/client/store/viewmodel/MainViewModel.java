@@ -25,6 +25,7 @@ import io.reactivex.Maybe;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.disposables.Disposable;
 
 
 /**
@@ -74,12 +75,22 @@ public class MainViewModel extends AndroidViewModel {
         return storeUserManager.getStoreUserSessionSync() != null;
     }
 
+    public LiveData<Store> getSessionStoreFlowable() {
+        Disposable disposable = storeUserManager.getSessionStoreAsyncFlowable()
+                .observeOn(AndroidSchedulers.mainThread())
+//                .doOnNext()
+                .subscribe(sessionStoreLiveData::setValue);
+
+//        compositeDisposable.add(disposable);
+
+        return sessionStoreLiveData;
+    }
+
     public LiveData<Store> getSessionStore() {
-        Maybe.fromCallable(storeUserManager::getSessionStoreSync)
-                .switchIfEmpty(storeUserManager.getSessionStoreAsync())
+        storeUserManager.getSessionStoreAsync()
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSuccess(sessionStoreLiveData::setValue)
-                .doOnSubscribe(compositeDisposable::add)
+                .doOnSubscribe(Disposable::dispose)
                 .subscribe();
 
         return sessionStoreLiveData;
@@ -97,16 +108,6 @@ public class MainViewModel extends AndroidViewModel {
         return sessionStoreLiveData;
     }
 
-    public LiveData<Store> getStore(String storeUuid) {
-        MutableLiveData<Store> liveData = new MutableLiveData<>();
-        storeStoreManager.getStore(storeUuid)
-                .observeOn(AndroidSchedulers.mainThread())
-                .doOnNext(liveData::setValue)
-                .doOnSubscribe(compositeDisposable::add)
-                .subscribe();
-        return liveData;
-    }
-
     public LiveData<List<Store>> getStoreUserContractedStoreList() {
 
         MutableLiveData<List<Store>> liveData = new MutableLiveData<>();
@@ -115,18 +116,14 @@ public class MainViewModel extends AndroidViewModel {
                 .switchIfEmpty(storeUserManager.getStoreUserSessionAsync())
                 .map(storeUserSession -> storeUserSession.uuid)
                 .flatMapObservable(storeUserManager::getStoreUserContract)
-                .doOnNext(storeUserContractList -> Log.d(TAG, "getStoreUserContractedStoreList: " + storeUserContractList))
                 .flatMapMaybe(storeUserContractList ->
                         Observable.fromIterable(storeUserContractList)
                                 .map(storeUserContract -> storeUserContract.storeUuid)
-                                .doOnNext(uuid -> Log.d(TAG, "getStoreUserContractedStoreList: " + uuid))
                                 .flatMap(storeStoreManager::getStore)
-                                .doOnNext(store -> Log.d(TAG, "getStoreUserContractedStoreList: " + store))
                                 .toList().toMaybe()
                 ).observeOn(AndroidSchedulers.mainThread())
                 .doOnNext(liveData::setValue)
                 .doOnSubscribe(compositeDisposable::add)
-                .doOnError(throwable -> Log.e(TAG, "getStoreUserContractedStoreList: not exist user session"))
                 .subscribe();
 
         return liveData;
@@ -137,7 +134,6 @@ public class MainViewModel extends AndroidViewModel {
                 .map(store -> p2pServer = new P2pServer(activity, store))
                 .flatMapObservable(P2pServer::findCustomer)
                 .doOnSubscribe(compositeDisposable::add)
-                .doOnNext(customerUuid -> Log.d(TAG, "findCustomer: " + customerUuid))
                 .subscribe();
     }
 
@@ -147,6 +143,7 @@ public class MainViewModel extends AndroidViewModel {
 
     @Override
     protected void onCleared() {
+        Log.d(TAG, "onCleared: ");
         compositeDisposable.clear();
         if (p2pServer != null) {
             p2pServer.stopAdvertising();

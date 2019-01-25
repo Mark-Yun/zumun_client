@@ -20,7 +20,6 @@ import com.mark.zumo.client.store.model.S3TransferManager;
 import com.mark.zumo.client.store.model.StoreStoreManager;
 import com.mark.zumo.client.store.model.StoreUserManager;
 
-import io.reactivex.Maybe;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 
@@ -68,7 +67,7 @@ public class StoreSettingViewModel extends AndroidViewModel {
     public LiveData<Store> updateStoreName(String newName) {
         MutableLiveData<Store> liveData = new MutableLiveData<>();
         storeUserManager.getSessionStoreAsync()
-                .flatMap(store -> storeStoreManager.updateStoreName(store, newName))
+                .flatMap(store -> storeUserManager.updateSessionStoreName(newName))
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSuccess(liveData::setValue)
                 .doOnSubscribe(compositeDisposable::add)
@@ -79,7 +78,7 @@ public class StoreSettingViewModel extends AndroidViewModel {
     public LiveData<Store> updateStoreLocation(LatLng latLng) {
         MutableLiveData<Store> liveData = new MutableLiveData<>();
         storeUserManager.getSessionStoreAsync()
-                .flatMap(store -> storeStoreManager.updateStoreLocation(store, latLng))
+                .flatMap(store -> storeUserManager.updateSessionStoreLocation(latLng))
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSuccess(liveData::setValue)
                 .doOnSubscribe(compositeDisposable::add)
@@ -89,18 +88,13 @@ public class StoreSettingViewModel extends AndroidViewModel {
 
     public LiveData<Store> uploadCoverImage(Activity activity, Uri uri) {
         MutableLiveData<Store> liveData = new MutableLiveData<>();
-        Maybe.zip(
-                storeUserManager.getSessionStoreAsync(),
-                storeUserManager.getSessionStoreAsync()
-                        .map(store -> store.uuid)
-                        .flatMap(storeUuid -> s3TransferManager.uploadCoverImage(activity, storeUuid, uri)),
-                storeStoreManager::updateStoreCoverImageUrl
-        ).doOnSuccess(
-                storeMaybe -> storeMaybe.observeOn(AndroidSchedulers.mainThread())
-                        .doOnSuccess(liveData::setValue)
-                        .doOnSubscribe(compositeDisposable::add)
-                        .subscribe()
-        ).subscribe();
+        storeUserManager.getSessionStoreAsync()
+                .flatMap(store -> s3TransferManager.uploadCoverImage(activity, store.uuid, uri))
+                .flatMap(storeUserManager::updateSessionStoreCoverImageUrl)
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnSuccess(liveData::setValue)
+                .doOnSubscribe(compositeDisposable::add)
+                .subscribe();
 
         return liveData;
     }
@@ -108,18 +102,13 @@ public class StoreSettingViewModel extends AndroidViewModel {
     public LiveData<Store> uploadThumbnailImage(Activity activity, Uri uri) {
         MutableLiveData<Store> liveData = new MutableLiveData<>();
 
-        Maybe.zip(
-                storeUserManager.getSessionStoreAsync(),
-                storeUserManager.getSessionStoreAsync()
-                        .map(store -> store.uuid)
-                        .flatMap(storeUuid -> s3TransferManager.uploadThumbnailImage(activity, storeUuid, uri)),
-                storeStoreManager::updateStoreThumbnailImageUrl
-        ).doOnSuccess(
-                storeMaybe -> storeMaybe.observeOn(AndroidSchedulers.mainThread())
-                        .doOnSuccess(liveData::setValue)
-                        .doOnSubscribe(compositeDisposable::add)
-                        .subscribe()
-        ).subscribe();
+        storeUserManager.getSessionStoreAsync()
+                .flatMap(store -> s3TransferManager.uploadThumbnailImage(activity, store.uuid, uri))
+                .flatMap(storeUserManager::updateSessionStoreThumbnailImageUrl)
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnSuccess(liveData::setValue)
+                .doOnSubscribe(compositeDisposable::add)
+                .subscribe();
 
         return liveData;
     }

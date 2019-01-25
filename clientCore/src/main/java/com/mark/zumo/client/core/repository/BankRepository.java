@@ -12,12 +12,12 @@ import com.mark.zumo.client.core.appserver.AppServerServiceProvider;
 import com.mark.zumo.client.core.appserver.NetworkRepository;
 import com.mark.zumo.client.core.dao.AppDatabaseProvider;
 import com.mark.zumo.client.core.dao.DiskRepository;
-import com.mark.zumo.client.core.util.BundleUtils;
 
 /**
  * Created by mark on 19. 1. 13.
  */
-public class BankRepository {
+public enum BankRepository {
+    INSTANCE;
 
     private static final String TAG = "MenuRepository";
 
@@ -25,24 +25,12 @@ public class BankRepository {
     private static BankRepository sInstance;
 
     private final DiskRepository diskRepository;
-    private final NetworkRepository networkRepository;
 
-    private BankRepository(final Bundle session) {
-        networkRepository = AppServerServiceProvider.INSTANCE.buildNetworkRepository(session);
+    BankRepository() {
         diskRepository = AppDatabaseProvider.INSTANCE.diskRepository;
-        BankRepository.session = session;
     }
 
-    public static BankRepository getInstance(Bundle session) {
-        if (sInstance == null || !BundleUtils.equalsBundles(BankRepository.session, session)) {
-            synchronized (BankRepository.class) {
-                if (sInstance == null) {
-                    sInstance = new BankRepository(session);
-                }
-            }
-        }
-
-        return sInstance;
+    private NetworkRepository networkRepository() {
+        return AppServerServiceProvider.INSTANCE.networkRepository();
     }
-
 }
