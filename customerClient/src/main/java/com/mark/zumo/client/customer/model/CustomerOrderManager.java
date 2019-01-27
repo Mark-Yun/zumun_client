@@ -8,9 +8,9 @@ package com.mark.zumo.client.customer.model;
 
 import com.mark.zumo.client.core.entity.MenuOrder;
 import com.mark.zumo.client.core.entity.OrderDetail;
+import com.mark.zumo.client.core.repository.CustomerUserRepository;
 import com.mark.zumo.client.core.repository.MessageHandler;
 import com.mark.zumo.client.core.repository.OrderRepository;
-import com.mark.zumo.client.core.repository.SessionRepository;
 import com.mark.zumo.client.core.util.context.ContextHolder;
 import com.mark.zumo.client.customer.R;
 
@@ -31,10 +31,10 @@ public enum CustomerOrderManager {
     private final MessageHandler messageHandler;
 
     private final CustomerSessionManager customerSessionManager;
-    private final SessionRepository sessionRepository;
+    private final CustomerUserRepository customerUserRepository;
 
     CustomerOrderManager() {
-        sessionRepository = SessionRepository.INSTANCE;
+        customerUserRepository = CustomerUserRepository.INSTANCE;
         customerSessionManager = CustomerSessionManager.INSTANCE;
 
         orderRepository = OrderRepository.INSTANCE;

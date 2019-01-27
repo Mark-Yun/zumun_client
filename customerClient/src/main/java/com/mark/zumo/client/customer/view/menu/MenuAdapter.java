@@ -68,6 +68,10 @@ class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.ViewHolder> {
     @Override
     public void onBindViewHolder(@NonNull final ViewHolder viewHolder, final int position) {
         Menu menu = menuList.get(position);
+        if (menu == null) {
+            return;
+        }
+
         viewHolder.name.setText(menu.name);
         viewHolder.price.setText(NumberFormat.getCurrencyInstance().format(menu.price));
 
