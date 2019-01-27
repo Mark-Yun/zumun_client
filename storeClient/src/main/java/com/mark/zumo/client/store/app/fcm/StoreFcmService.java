@@ -6,10 +6,12 @@
 
 package com.mark.zumo.client.store.app.fcm;
 
+import android.text.TextUtils;
 import android.util.Log;
 
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
+import com.mark.zumo.client.store.model.StoreUserManager;
 
 import java.util.Map;
 
@@ -20,11 +22,14 @@ public class StoreFcmService extends FirebaseMessagingService {
     private final static String TAG = "StoreFcmService";
 
     private StoreMessageHandler storeMessageHandler;
+    private StoreUserManager storeUserManager;
 
     @Override
     public void onCreate() {
         super.onCreate();
+
         storeMessageHandler = StoreMessageHandler.INSTANCE;
+        storeUserManager = StoreUserManager.INSTANCE;
     }
 
     @Override
@@ -48,4 +53,21 @@ public class StoreFcmService extends FirebaseMessagingService {
         // Also if you intend on generating your own notifications as a result of a received FCM
         // message, here is where that should be initiated. See sendNotification method below.
     }
+
+    @Override
+    public void onNewToken(final String token) {
+        Log.d(TAG, "onNewToken: " + token);
+
+        // If you want to send messages to this application instance or
+        // manage this apps subscriptions on the server side, send the
+        // Instance ID token to your app server.
+        if (TextUtils.isEmpty(token)) {
+            return;
+        }
+
+        storeUserManager.registerToken()
+                .doOnSuccess(snsToken -> Log.d(TAG, "onNewToken: snsToken=" + snsToken))
+                .subscribe();
+    }
+
 }

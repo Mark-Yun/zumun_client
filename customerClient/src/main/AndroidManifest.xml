@@ -25,17 +25,14 @@
             android:name="firebase_messaging_auto_init_enabled"
             android:value="false" />
 
-        <service android:name=".app.fcm.CustomerFcmService">
+        <service
+            android:name=".app.fcm.CustomerFcmService"
+            android:exported="false">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
 
-        <service android:name=".app.fcm.CustomerFcmIdService">
-            <intent-filter>
-                <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
-            </intent-filter>
-        </service>
 
         <activity
             android:name=".view.main.MainActivity"

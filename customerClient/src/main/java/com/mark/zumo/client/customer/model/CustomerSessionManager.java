@@ -6,11 +6,17 @@
 
 package com.mark.zumo.client.customer.model;
 
+import android.os.Bundle;
+import android.util.Log;
+
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.iid.InstanceIdResult;
 import com.mark.zumo.client.core.entity.SnsToken;
 import com.mark.zumo.client.core.entity.user.GuestUser;
-import com.mark.zumo.client.core.repository.SessionRepository;
+import com.mark.zumo.client.core.repository.CustomerUserRepository;
 
 import io.reactivex.Maybe;
+import io.reactivex.MaybeOnSubscribe;
 import io.reactivex.schedulers.Schedulers;
 
 /**
@@ -23,20 +29,77 @@ public enum CustomerSessionManager {
 
     private static final String TAG = "CustomerSessionManager";
 
-    private final SessionRepository sessionRepository;
+    private static final String KEY_CUSTOMER_UUID = "customer_uuid";
+
+    private final CustomerUserRepository customerUserRepository;
+
+    private GuestUser guestUser;
 
     CustomerSessionManager() {
-        sessionRepository = SessionRepository.INSTANCE;
+        customerUserRepository = CustomerUserRepository.INSTANCE;
     }
 
     public Maybe<GuestUser> getSessionUser() {
-        return sessionRepository.getSessionUser()
+        return customerUserRepository.getGuestUserSession()
+                .switchIfEmpty(customerUserRepository.createGuestUser())
+                .flatMap(this::setGuestUserSession)
                 .subscribeOn(Schedulers.io());
     }
 
-    public Maybe<SnsToken> registerToken(GuestUser guestUser, String token) {
-        SnsToken snsToken = new SnsToken(guestUser.uuid, SnsToken.TokenType.ANDROID, token);
-        return sessionRepository.registerSnsToken(snsToken)
+    private Maybe<GuestUser> setGuestUserSession(GuestUser guestUser) {
+        return Maybe.just(guestUser)
+                .doOnSuccess(customerUserRepository::saveGuestUser)
+                .doOnSuccess(guestUserSession -> this.guestUser = guestUserSession)
+                .doOnSuccess(guestUserSession -> customerUserRepository.putSessionHeader(buildStoreUserSessionHeader()))
+                .doOnSuccess(x -> registerToken()
+                        .doOnSuccess(snsToken -> Log.d(TAG, "setGuestUserSession: snsToken=" + snsToken))
+                        .subscribe()
+                ).map(x -> guestUser)
                 .subscribeOn(Schedulers.io());
+    }
+
+    public Maybe<SnsToken> registerToken() {
+        return Maybe.just(guestUser)
+                .flatMap(this::createSnsToken)
+                .flatMap(customerUserRepository::registerSnsToken)
+                .subscribeOn(Schedulers.io());
+    }
+
+    private Maybe<String> getFCMToken() {
+        return Maybe.create((MaybeOnSubscribe<String>) emitter ->
+                FirebaseInstanceId.getInstance().getInstanceId()
+                        .addOnCompleteListener(task -> {
+                            if (!task.isSuccessful()) {
+                                Log.w(TAG, "getFCMToken: getInstanceId failed", task.getException());
+                                emitter.onComplete();
+                                return;
+                            }
+
+                            InstanceIdResult result = task.getResult();
+                            if (result == null) {
+                                Log.w(TAG, "getFCMToken: getResult failed");
+                                emitter.onComplete();
+                                return;
+                            }
+
+                            String token = result.getToken();
+                            Log.d(TAG, "getFCMToken: token=" + token);
+                            emitter.onSuccess(token);
+                            emitter.onComplete();
+                        })
+        ).subscribeOn(Schedulers.io());
+    }
+
+    private Maybe<SnsToken> createSnsToken(GuestUser guestUser) {
+        return getFCMToken()
+                .map(token -> new SnsToken(guestUser.uuid, SnsToken.TokenType.ANDROID, token));
+    }
+
+    private Bundle buildStoreUserSessionHeader() {
+        Bundle bundle = new Bundle();
+
+        bundle.putString(KEY_CUSTOMER_UUID, guestUser != null ? guestUser.uuid : "");
+
+        return bundle;
     }
 }

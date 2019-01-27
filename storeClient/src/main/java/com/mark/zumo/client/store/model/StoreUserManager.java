@@ -12,6 +12,8 @@ import android.util.Log;
 
 import com.google.android.gms.common.util.Base64Utils;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.iid.InstanceIdResult;
 import com.mark.zumo.client.core.appserver.request.login.StoreUserSignInRequest;
 import com.mark.zumo.client.core.appserver.request.signup.StoreOwnerSignUpRequest;
 import com.mark.zumo.client.core.appserver.response.store.user.signin.StoreUserSignInErrorCode;
@@ -23,7 +25,7 @@ import com.mark.zumo.client.core.entity.Store;
 import com.mark.zumo.client.core.entity.user.store.StoreOwner;
 import com.mark.zumo.client.core.entity.user.store.StoreUserContract;
 import com.mark.zumo.client.core.entity.user.store.StoreUserSession;
-import com.mark.zumo.client.core.repository.SessionRepository;
+import com.mark.zumo.client.core.repository.CustomerUserRepository;
 import com.mark.zumo.client.core.repository.StoreRepository;
 import com.mark.zumo.client.core.repository.StoreUserRepository;
 
@@ -43,6 +45,7 @@ import javax.crypto.NoSuchPaddingException;
 
 import io.reactivex.Flowable;
 import io.reactivex.Maybe;
+import io.reactivex.MaybeOnSubscribe;
 import io.reactivex.Observable;
 import io.reactivex.schedulers.Schedulers;
 import io.reactivex.subjects.Subject;
@@ -61,7 +64,7 @@ public enum StoreUserManager {
     private static final String PASSWORD_DIGEST_ALGORITHM = "MD5";
 
     private final StoreUserRepository storeUserRepository;
-    private final SessionRepository sessionRepository;
+    private final CustomerUserRepository customerUserRepository;
     private final StoreRepository storeRepository;
 
     @Nullable
@@ -74,7 +77,7 @@ public enum StoreUserManager {
 
     StoreUserManager() {
         storeUserRepository = StoreUserRepository.INSTANCE;
-        sessionRepository = SessionRepository.INSTANCE;
+        customerUserRepository = CustomerUserRepository.INSTANCE;
         storeRepository = StoreRepository.INSTANCE;
     }
 
@@ -190,8 +193,11 @@ public enum StoreUserManager {
         return Maybe.just(SessionStore.from(store))
                 .doOnSuccess(storeUserRepository::saveSessionStore)
                 .doOnSuccess(sessionStore -> this.storeSession = sessionStore)
-                .doOnSuccess(sessionStore -> sessionRepository.putSessionHeader(buildStoreUserSessionHeader()))
-                .map(x -> store)
+                .doOnSuccess(sessionStore -> customerUserRepository.putSessionHeader(buildStoreUserSessionHeader()))
+                .doOnSuccess(sessionStore -> registerToken()
+                        .doOnSuccess(snsToken -> Log.d(TAG, "setSessionStore: snsToken" + snsToken))
+                        .subscribe()
+                ).map(x -> store)
                 .subscribeOn(Schedulers.io());
     }
 
@@ -227,7 +233,7 @@ public enum StoreUserManager {
     private void setStoreUserSession(@Nullable final StoreUserSession storeUserSession) {
 
         this.storeUserSession = storeUserSession;
-        sessionRepository.putSessionHeader(buildStoreUserSessionHeader());
+        customerUserRepository.putSessionHeader(buildStoreUserSessionHeader());
         Maybe.fromAction(() -> storeUserRepository.saveStoreUserSession(storeUserSession))
                 .subscribeOn(Schedulers.io())
                 .subscribe();
@@ -242,10 +248,41 @@ public enum StoreUserManager {
         return bundle;
     }
 
-    public Maybe<SnsToken> registerTokenOnRefresh(Store store, String token) {
-        SnsToken snsToken = new SnsToken(store.uuid, SnsToken.TokenType.ANDROID, token);
-        return sessionRepository.registerSnsToken(snsToken)
+    public Maybe<SnsToken> registerToken() {
+        return Maybe.just(storeSession)
+                .flatMap(this::createSnsToken)
+                .flatMap(customerUserRepository::registerSnsToken)
                 .subscribeOn(Schedulers.io());
+    }
+
+    private Maybe<String> getFCMToken() {
+        return Maybe.create((MaybeOnSubscribe<String>) emitter ->
+                FirebaseInstanceId.getInstance().getInstanceId()
+                        .addOnCompleteListener(task -> {
+                            if (!task.isSuccessful()) {
+                                Log.w(TAG, "getFCMToken: getInstanceId failed", task.getException());
+                                emitter.onComplete();
+                                return;
+                            }
+
+                            InstanceIdResult result = task.getResult();
+                            if (result == null) {
+                                Log.w(TAG, "getFCMToken: getResult failed");
+                                emitter.onComplete();
+                                return;
+                            }
+
+                            String token = result.getToken();
+                            Log.d(TAG, "getFCMToken: token=" + token);
+                            emitter.onSuccess(token);
+                            emitter.onComplete();
+                        })
+        ).subscribeOn(Schedulers.io());
+    }
+
+    private Maybe<SnsToken> createSnsToken(SessionStore sessionStore) {
+        return getFCMToken()
+                .map(token -> new SnsToken(sessionStore.uuid, SnsToken.TokenType.ANDROID, token));
     }
 
     public Maybe<Store> updateSessionStoreName(String newName) {

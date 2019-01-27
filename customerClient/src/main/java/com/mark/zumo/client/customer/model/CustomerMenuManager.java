@@ -17,9 +17,9 @@ import com.mark.zumo.client.core.entity.MenuOptionDetail;
 import com.mark.zumo.client.core.entity.OrderDetail;
 import com.mark.zumo.client.core.p2p.P2pClient;
 import com.mark.zumo.client.core.repository.CategoryRepository;
+import com.mark.zumo.client.core.repository.CustomerUserRepository;
 import com.mark.zumo.client.core.repository.MenuDetailRepository;
 import com.mark.zumo.client.core.repository.MenuRepository;
-import com.mark.zumo.client.core.repository.SessionRepository;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -44,18 +44,20 @@ public enum CustomerMenuManager {
     INSTANCE;
 
     public static final String TAG = "CustomerMenuManager";
-    private final SessionRepository sessionRepository;
+    private final CustomerUserRepository customerUserRepository;
 
     private P2pClient p2pClient;
 
     private MenuRepository menuRepository;
     private MenuDetailRepository menuDetailRepository;
+    private CategoryRepository categoryRepository;
 
     CustomerMenuManager() {
-        sessionRepository = SessionRepository.INSTANCE;
+        customerUserRepository = CustomerUserRepository.INSTANCE;
 
         menuRepository = MenuRepository.INSTANCE;
         menuDetailRepository = MenuDetailRepository.INSTANCE;
+        categoryRepository = CategoryRepository.INSTANCE;
 
     }
 
@@ -203,9 +205,7 @@ public enum CustomerMenuManager {
     }
 
     private Observable<List<MenuCategory>> getMenuCategoryList(String storeUuid) {
-        return sessionRepository.getCustomerSession()
-                .map(session -> CategoryRepository.INSTANCE)
-                .flatMapObservable(categoryRepository -> categoryRepository.getMenuCategoryList(storeUuid))
+        return categoryRepository.getMenuCategoryList(storeUuid)
                 .flatMapSingle(menuCategories ->
                         Observable.fromIterable(menuCategories)
                                 .sorted((c1, c2) -> c1.seqNum - c2.seqNum)

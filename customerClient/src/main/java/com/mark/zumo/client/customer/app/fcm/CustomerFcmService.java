@@ -16,6 +16,7 @@ import android.util.Log;
 
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
+import com.mark.zumo.client.customer.model.CustomerSessionManager;
 
 import java.util.Map;
 
@@ -27,12 +28,14 @@ public class CustomerFcmService extends FirebaseMessagingService {
     private final static String TAG = "CustomerFcmService";
 
     private CustomerMessageHandler customerMessageHandler;
+    private CustomerSessionManager customerSessionManager;
 
     @Override
     public void onCreate() {
         super.onCreate();
 
         customerMessageHandler = CustomerMessageHandler.INSTANCE;
+        customerSessionManager = CustomerSessionManager.INSTANCE;
     }
 
     @Override
@@ -54,5 +57,14 @@ public class CustomerFcmService extends FirebaseMessagingService {
 
         // Also if you intend on generating your own notifications as a result of a received FCM
         // message, here is where that should be initiated. See sendNotification method below.
+    }
+
+    @Override
+    public void onNewToken(final String token) {
+        Log.d(TAG, "onNewToken: " + token);
+
+        customerSessionManager.registerToken()
+                .doOnSuccess(snsToken -> Log.d(TAG, "onNewToken: snsToken=" + snsToken))
+                .subscribe();
     }
 }
