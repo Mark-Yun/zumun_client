@@ -20,7 +20,6 @@ import com.kakao.auth.KakaoSDK;
 import com.mark.zumo.client.core.app.AppErrorHandler;
 import com.mark.zumo.client.core.util.context.ContextHolder;
 import com.mark.zumo.client.core.util.context.ContextInjector;
-import com.mark.zumo.client.customer.model.CustomerSessionManager;
 import com.wonderkiln.blurkit.BlurKit;
 
 /**
@@ -32,15 +31,14 @@ public class CustomerClientApp extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        ContextInjector.inject(this);
         initApplication();
-        KakaoSDK.init(new KakaoSdkAdapter());
     }
 
     private void initApplication() {
-        CustomerSessionManager instance = CustomerSessionManager.INSTANCE;
+        ContextInjector.inject(this);
         BlurKit.init(this);
         AppErrorHandler.setup();
+        KakaoSDK.init(new KakaoSdkAdapter());
     }
 
     private static class KakaoSdkAdapter extends KakaoAdapter {

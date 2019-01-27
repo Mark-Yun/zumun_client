@@ -65,9 +65,7 @@ public class StoreFcmService extends FirebaseMessagingService {
             return;
         }
 
-        storeUserManager.registerToken()
-                .doOnSuccess(snsToken -> Log.d(TAG, "onNewToken: snsToken=" + snsToken))
-                .subscribe();
+        storeUserManager.registerToken();
     }
 
 }

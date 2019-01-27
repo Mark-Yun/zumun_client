@@ -63,8 +63,6 @@ public class CustomerFcmService extends FirebaseMessagingService {
     public void onNewToken(final String token) {
         Log.d(TAG, "onNewToken: " + token);
 
-        customerSessionManager.registerToken()
-                .doOnSuccess(snsToken -> Log.d(TAG, "onNewToken: snsToken=" + snsToken))
-                .subscribe();
+        customerSessionManager.registerToken();
     }
 }
