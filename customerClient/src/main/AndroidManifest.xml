@@ -33,7 +33,6 @@
             </intent-filter>
         </service>
 
-
         <activity
             android:name=".view.main.MainActivity"
             android:launchMode="singleTop"

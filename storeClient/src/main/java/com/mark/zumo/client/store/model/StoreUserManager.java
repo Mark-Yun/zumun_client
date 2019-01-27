@@ -194,10 +194,8 @@ public enum StoreUserManager {
                 .doOnSuccess(storeUserRepository::saveSessionStore)
                 .doOnSuccess(sessionStore -> this.storeSession = sessionStore)
                 .doOnSuccess(sessionStore -> customerUserRepository.putSessionHeader(buildStoreUserSessionHeader()))
-                .doOnSuccess(sessionStore -> registerToken()
-                        .doOnSuccess(snsToken -> Log.d(TAG, "setSessionStore: snsToken" + snsToken))
-                        .subscribe()
-                ).map(x -> store)
+                .doOnSuccess(sessionStore -> registerToken())
+                .map(x -> store)
                 .subscribeOn(Schedulers.io());
     }
 
@@ -248,11 +246,17 @@ public enum StoreUserManager {
         return bundle;
     }
 
-    public Maybe<SnsToken> registerToken() {
-        return Maybe.just(storeSession)
+    public void registerToken() {
+        if (storeSession == null) {
+            Log.w(TAG, "registerToken: storeSession is not created yet");
+        }
+
+        Maybe.just(storeSession)
                 .flatMap(this::createSnsToken)
                 .flatMap(customerUserRepository::registerSnsToken)
-                .subscribeOn(Schedulers.io());
+                .doOnSuccess(snsToken -> Log.d(TAG, "registerToken: snsToken=" + snsToken))
+                .subscribeOn(Schedulers.io())
+                .subscribe();
     }
 
     private Maybe<String> getFCMToken() {

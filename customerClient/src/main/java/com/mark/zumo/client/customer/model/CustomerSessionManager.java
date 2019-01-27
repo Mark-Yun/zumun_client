@@ -51,18 +51,23 @@ public enum CustomerSessionManager {
                 .doOnSuccess(customerUserRepository::saveGuestUser)
                 .doOnSuccess(guestUserSession -> this.guestUser = guestUserSession)
                 .doOnSuccess(guestUserSession -> customerUserRepository.putSessionHeader(buildStoreUserSessionHeader()))
-                .doOnSuccess(x -> registerToken()
-                        .doOnSuccess(snsToken -> Log.d(TAG, "setGuestUserSession: snsToken=" + snsToken))
-                        .subscribe()
-                ).map(x -> guestUser)
+                .doOnSuccess(x -> registerToken())
+                .map(x -> guestUser)
                 .subscribeOn(Schedulers.io());
     }
 
-    public Maybe<SnsToken> registerToken() {
-        return Maybe.just(guestUser)
+    public void registerToken() {
+        if (guestUser == null) {
+            Log.w(TAG, "registerToken: guestUserSession is not created yet");
+            return;
+        }
+
+        Maybe.just(guestUser)
                 .flatMap(this::createSnsToken)
                 .flatMap(customerUserRepository::registerSnsToken)
-                .subscribeOn(Schedulers.io());
+                .doOnSuccess(snsToken -> Log.d(TAG, "registerToken: snsToken=" + snsToken))
+                .subscribeOn(Schedulers.io())
+                .subscribe();
     }
 
     private Maybe<String> getFCMToken() {
