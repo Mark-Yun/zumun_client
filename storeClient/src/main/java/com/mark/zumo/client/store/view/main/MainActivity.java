@@ -95,12 +95,13 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
             mainViewModel.hasSessionStoreAsync().observe(this, this::onSessionStoreLoaded);
         } else { //has session store
             Log.d(TAG, "checkSessionAndInflateMainFragmentIfPossible: session prepared. inflateMainFragment");
-            inflateStoreInformation();
             inflateMainFragment();
         }
     }
 
     private void inflateMainFragment() {
+        inflateStoreInformation();
+
         mainViewModel.findCustomer(this);
         Menu menu = navView.getMenu();
         if (menu == null) {
@@ -119,7 +120,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     private void onSessionStoreLoaded(boolean hasSessionStore) {
         Log.d(TAG, "onSessionStoreLoaded: hasSessionStore=" + hasSessionStore);
         if (hasSessionStore) {
-            inflateStoreInformation();
+            inflateMainFragment();
         } else {
             StoreSelectFragment storeSelectFragment = StoreSelectFragment.newInstance()
                     .onSelectStore(this::onSelectedStore)

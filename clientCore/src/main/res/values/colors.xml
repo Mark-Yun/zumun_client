@@ -23,12 +23,12 @@
     <color name="colorBadge">#EEF43F34</color>
     <color name="backgroundMenuTitle">#32212121</color>
 
-    <color name="order_state_created">@android:color/holo_blue_dark</color>
-    <color name="order_state_requested">@android:color/holo_blue_dark</color>
-    <color name="order_state_accepted">@android:color/holo_orange_dark</color>
-    <color name="order_state_complete">@android:color/holo_green_dark</color>
-    <color name="order_state_rejected">@android:color/holo_red_dark</color>
-    <color name="order_state_canceled">@android:color/holo_red_dark</color>
+    <color name="order_state_created">#5D4037</color>
+    <color name="order_state_requested">#F57C00</color>
+    <color name="order_state_accepted">#009688</color>
+    <color name="order_state_complete">#536DFE</color>
+    <color name="order_state_rejected">#D32F2F</color>
+    <color name="order_state_canceled">#D32F2F</color>
 
     <color name="store_registration_result_state_requested">#007D00</color>
     <color name="store_registration_result_state_rejected">#D50000</color>

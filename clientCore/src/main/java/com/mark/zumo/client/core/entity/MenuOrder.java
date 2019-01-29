@@ -83,21 +83,23 @@ public class MenuOrder implements Serializable {
 
     public enum State {
 
-        CREATED(R.string.order_state_created, R.string.notification_description_created, R.color.order_state_created),
-        REQUESTED(R.string.order_state_requested, R.string.notification_description_requested, R.color.order_state_requested),
-        ACCEPTED(R.string.order_state_accepted, R.string.notification_description_accepted, R.color.order_state_accepted),
-        COMPLETE(R.string.order_state_complete, R.string.notification_description_complete, R.color.order_state_complete),
-        REJECTED(R.string.order_state_rejected, R.string.notification_description_rejected, R.color.order_state_rejected),
-        CANCELED(R.string.order_state_canceled, R.string.notification_description_canceled, R.color.order_state_canceled);
+        CREATED(R.string.order_state_created, R.string.notification_description_created, R.color.order_state_created, R.drawable.background_order_state_created),
+        REQUESTED(R.string.order_state_requested, R.string.notification_description_requested, R.color.order_state_requested, R.drawable.background_order_state_requested),
+        ACCEPTED(R.string.order_state_accepted, R.string.notification_description_accepted, R.color.order_state_accepted, R.drawable.background_order_state_accepted),
+        COMPLETE(R.string.order_state_complete, R.string.notification_description_complete, R.color.order_state_complete, R.drawable.background_order_state_complete),
+        REJECTED(R.string.order_state_rejected, R.string.notification_description_rejected, R.color.order_state_rejected, R.drawable.background_order_state_canceled),
+        CANCELED(R.string.order_state_canceled, R.string.notification_description_canceled, R.color.order_state_canceled, R.drawable.background_order_state_canceled);
 
         public final int stringRes;
         public final int notificationContentRes;
         public final int colorRes;
+        public final int backgroundRes;
 
-        State(final int stringRes, final int notificationContentRes, final int colorRes) {
+        State(final int stringRes, final int notificationContentRes, final int colorRes, final int backgroundRes) {
             this.stringRes = stringRes;
             this.notificationContentRes = notificationContentRes;
             this.colorRes = colorRes;
+            this.backgroundRes = backgroundRes;
         }
 
         public static State of(int orderState) {

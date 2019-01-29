@@ -9,13 +9,15 @@ package com.mark.zumo.client.core.p2p;
 import com.google.android.gms.nearby.connection.AdvertisingOptions;
 import com.google.android.gms.nearby.connection.DiscoveryOptions;
 import com.google.android.gms.nearby.connection.Strategy;
+import com.mark.zumo.client.core.app.BuildConfig;
 
 /**
  * Created by mark on 18. 5. 1.
  */
 
 class Options {
-    static final String SERVICE_ID = "com.mark.zumo";
+    static final String SERVICE_ID = "com.mark.zumun" + BuildConfig.BUILD_TYPE.name();
+
     private static final Strategy P2P_CONNECTION_STRATEGY = Strategy.P2P_STAR;
     static final AdvertisingOptions ADVERTISING = new AdvertisingOptions.Builder()
             .setStrategy(P2P_CONNECTION_STRATEGY)

@@ -249,6 +249,7 @@ public enum StoreUserManager {
     public void registerToken() {
         if (storeSession == null) {
             Log.w(TAG, "registerToken: storeSession is not created yet");
+            return;
         }
 
         Maybe.just(storeSession)
