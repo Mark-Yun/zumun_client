@@ -92,8 +92,8 @@ public class StoreProfileInfoFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_setting_store_profile, container, false);
         ButterKnife.bind(this, view);
 
-        inflateStoreProfileView();
         inflateMapFragment();
+        inflateStoreProfileView();
 
         return view;
     }
@@ -128,7 +128,9 @@ public class StoreProfileInfoFragment extends Fragment {
         } catch (IOException ignored) {
         }
 
-        mapFragment.getMapAsync(googleMap -> onLocationChanged(googleMap, store));
+        if (mapFragment != null) {
+            mapFragment.getMapAsync(googleMap -> onLocationChanged(googleMap, store));
+        }
     }
 
     private void inflateMapFragment() {

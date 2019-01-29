@@ -137,8 +137,7 @@ public class OrderDetailFragment extends Fragment {
 
     @OnClick(R.id.reject)
     public void onRejectClicked() {
-        orderViewModel.rejectOrder(orderUuid);
-        finish();
+        orderViewModel.rejectOrder(orderUuid).observe(this, menuOrder -> finish());
     }
 
     @OnClick(R.id.accept)
@@ -153,8 +152,7 @@ public class OrderDetailFragment extends Fragment {
 
     @OnClick(R.id.complete)
     public void onCompleteClicked() {
-        orderViewModel.completeOrder(orderUuid);
-        finish();
+        orderViewModel.completeOrder(orderUuid).observe(this, menuOrder -> finish());
     }
 
     @NonNull

@@ -57,7 +57,7 @@
         android:padding="@dimen/small_margin"
         android:text="@string/order_state_accepted"
         android:textAlignment="center"
-        android:textColor="@color/colorTextLight"
+        android:textColor="@color/colorTextDark"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

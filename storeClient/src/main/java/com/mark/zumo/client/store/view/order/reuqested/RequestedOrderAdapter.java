@@ -86,12 +86,12 @@ class RequestedOrderAdapter extends RecyclerView.Adapter<RequestedOrderAdapter.V
     @Override
     public void onBindViewHolder(@NonNull final RequestedOrderAdapter.ViewHolder holder, final int position) {
         MenuOrder menuOrder = menuOrderList.get(position);
+        MenuOrder.State state = MenuOrder.State.of(menuOrder.state);
 
         holder.orderName.setText(menuOrder.orderName);
         holder.orderNumber.setText(menuOrder.orderNumber);
-        boolean isAccepted = menuOrder.state == MenuOrder.State.ACCEPTED.ordinal();
-        holder.state.setBackgroundResource(isAccepted ? R.drawable.background_order_state_accepted : R.drawable.background_order_state_requested);
-        holder.state.setText(MenuOrder.State.of(menuOrder.state).stringRes);
+        holder.state.setBackgroundResource(state.backgroundRes);
+        holder.state.setText(state.stringRes);
 
         setSelectedText(holder.orderName, false);
         setSelectedText(holder.orderNumber, false);
