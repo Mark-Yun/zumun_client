@@ -23,7 +23,7 @@ import android.view.ViewGroup;
 
 import com.mark.zumo.client.core.entity.user.store.StoreOwner;
 import com.mark.zumo.client.store.R;
-import com.mark.zumo.client.store.viewmodel.WithdrawViewModel;
+import com.mark.zumo.client.store.viewmodel.BankViewModel;
 
 import java.text.NumberFormat;
 import java.util.Locale;
@@ -45,7 +45,7 @@ public class WithdrawFragment extends Fragment {
     @BindView(R.id.withdraw_text) TextInputEditText withdrawText;
     @BindView(R.id.withdraw_description) AppCompatTextView withdrawDescription;
 
-    private WithdrawViewModel withdrawViewModel;
+    private BankViewModel bankViewModel;
 
     public static WithdrawFragment newInstance() {
 
@@ -60,7 +60,7 @@ public class WithdrawFragment extends Fragment {
     public void onCreate(@Nullable final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        withdrawViewModel = ViewModelProviders.of(this).get(WithdrawViewModel.class);
+        bankViewModel = ViewModelProviders.of(this).get(BankViewModel.class);
     }
 
     @Nullable
@@ -89,7 +89,7 @@ public class WithdrawFragment extends Fragment {
             public void afterTextChanged(final Editable editable) {
             }
         });
-        withdrawViewModel.getSessionStoreOwner().observe(this, this::onLoadStoreUser);
+        bankViewModel.getSessionStoreOwner().observe(this, this::onLoadStoreUser);
     }
 
     private void onLoadStoreUser(StoreOwner storeOwner) {

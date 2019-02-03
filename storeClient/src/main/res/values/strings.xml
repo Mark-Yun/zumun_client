@@ -195,4 +195,6 @@
     <string name="menu_price_update_dialog_message">Insert new price of menu</string>
 
     <string name="store_registration_complete_dialog_message">Your request is accepted. Please wait for reviewing of new store.</string>
+
+    <string name="bank_selector_title">Select Bank</string>
 </resources>

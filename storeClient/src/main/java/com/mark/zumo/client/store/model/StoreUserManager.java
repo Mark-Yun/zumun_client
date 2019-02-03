@@ -339,4 +339,15 @@ public enum StoreUserManager {
                 .flatMap(this::setSessionStore)
                 .subscribeOn(Schedulers.io());
     }
+
+    public Maybe<StoreOwner> updateStoreOwnerBank(String storeUserUuid, String bankCode, String bankAccountNumber) {
+        return getStoreOwner(storeUserUuid)
+                .lastElement()
+                .map(StoreOwner.Builder::from)
+                .map(builder -> builder.setBankCode(bankCode))
+                .map(builder -> builder.setBankAccountNumber(bankAccountNumber))
+                .map(StoreOwner.Builder::build)
+                .flatMap(storeUserRepository::updateStoreOwner)
+                .subscribeOn(Schedulers.io());
+    }
 }

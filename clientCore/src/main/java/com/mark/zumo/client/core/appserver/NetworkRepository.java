@@ -56,14 +56,17 @@ public interface NetworkRepository {
     @GET("users/store/handshake")
     Maybe<StoreUserHandShakeResponse> signInHandShake(@Query(StoreUser.Schema.email) String storeUserEmail);
 
-    @GET("store/registration/contract")
-    Maybe<List<StoreUserContract>> getStoreUserContractListByStoreUserUuid(@Query(StoreUser.Schema.uuid) String storeUserUuid);
 
     @POST("users/store")
     Maybe<StoreOwnerSignUpResponse> createStoreOwner(@Body StoreOwnerSignUpRequest request);
 
     @GET("users/store/{" + StoreOwner.Schema.uuid + "}")
     Maybe<StoreOwner> getStoreOwner(@Path(StoreOwner.Schema.uuid) String storeUserUuid);
+
+    @PUT("users/store/{" + StoreOwner.Schema.uuid + "}")
+    Maybe<StoreOwner> updateStoreOwner(@Path(StoreOwner.Schema.uuid) final String storeUserUuid,
+                                       @Body final StoreOwner storeOwner);
+
 
     @POST("login/store")
     Maybe<StoreUserSignInResponse> storeUserLogin(@Body StoreUserSignInRequest request);
@@ -99,6 +102,10 @@ public interface NetworkRepository {
 
     @POST("store/registration/reject")
     Maybe<StoreRegistrationResult> rejectStoreRegistration(@Body StoreRegistrationRequest storeRegistrationRequest);
+
+    @GET("store/registration/contract")
+    Maybe<List<StoreUserContract>> getStoreUserContractListByStoreUserUuid(@Query(StoreUser.Schema.uuid) String storeUserUuid);
+
 
     @POST("menu")
     Maybe<Menu> createMenu(@Body Menu menu);
@@ -256,5 +263,5 @@ public interface NetworkRepository {
     Maybe<DepositResponse> depsit(DepositRequest depositRequest);
 
     @POST("/bank/inquiry/account")
-    Maybe<InquiryAccountResponse> inquiryBankAccount(InquiryAccountRequest inquiryAccountRequest);
+    Maybe<InquiryAccountResponse> inquiryBankAccount(@Body InquiryAccountRequest inquiryAccountRequest);
 }

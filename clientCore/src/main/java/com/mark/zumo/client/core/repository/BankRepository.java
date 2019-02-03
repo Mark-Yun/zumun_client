@@ -6,12 +6,12 @@
 
 package com.mark.zumo.client.core.repository;
 
-import android.os.Bundle;
-
 import com.mark.zumo.client.core.appserver.AppServerServiceProvider;
 import com.mark.zumo.client.core.appserver.NetworkRepository;
-import com.mark.zumo.client.core.dao.AppDatabaseProvider;
-import com.mark.zumo.client.core.dao.DiskRepository;
+import com.mark.zumo.client.core.appserver.request.bank.InquiryAccountRequest;
+import com.mark.zumo.client.core.appserver.response.InquiryAccountResponse;
+
+import io.reactivex.Maybe;
 
 /**
  * Created by mark on 19. 1. 13.
@@ -21,16 +21,11 @@ public enum BankRepository {
 
     private static final String TAG = "MenuRepository";
 
-    private static Bundle session;
-    private static BankRepository sInstance;
-
-    private final DiskRepository diskRepository;
-
-    BankRepository() {
-        diskRepository = AppDatabaseProvider.INSTANCE.diskRepository;
-    }
-
     private NetworkRepository networkRepository() {
         return AppServerServiceProvider.INSTANCE.networkRepository();
+    }
+
+    public Maybe<InquiryAccountResponse> inquiryBankAccount(InquiryAccountRequest inquiryAccountRequest) {
+        return networkRepository().inquiryBankAccount(inquiryAccountRequest);
     }
 }

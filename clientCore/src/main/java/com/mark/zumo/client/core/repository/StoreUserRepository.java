@@ -106,4 +106,9 @@ public enum StoreUserRepository {
                 .distinctUntilChanged()
                 .toObservable();
     }
+
+    public Maybe<StoreOwner> updateStoreOwner(StoreOwner storeOwner) {
+        return networkRepository().updateStoreOwner(storeOwner.uuid, storeOwner)
+                .doOnSuccess(diskRepository::insertStoreOwner);
+    }
 }
