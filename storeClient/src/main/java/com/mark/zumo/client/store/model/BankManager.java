@@ -27,9 +27,11 @@ public enum BankManager {
         bankRepository = BankRepository.INSTANCE;
     }
 
-    public Maybe<Boolean> inquiryBankAccount(final String holderInfo, final String bankCode, final String accountNumber) {
+    public Maybe<Boolean> inquiryBankAccount(final String email, final String holderInfo,
+                                             final String bankCode, final String accountNumber) {
+
         InquiryAccountRequest inquiryAccountRequest = new InquiryAccountRequest(bankCode, holderInfo, accountNumber);
-        return bankRepository.inquiryBankAccount(inquiryAccountRequest)
+        return bankRepository.inquiryBankAccount(email, inquiryAccountRequest)
                 .map(inquiryAccountResponse -> matchInquiryBankInfo(inquiryAccountRequest, inquiryAccountResponse))
                 .subscribeOn(Schedulers.io());
     }

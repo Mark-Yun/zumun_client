@@ -7,7 +7,7 @@
 package com.mark.zumo.client.core.appserver;
 
 import com.mark.zumo.client.core.appserver.request.bank.DepositRequest;
-import com.mark.zumo.client.core.appserver.request.bank.InquiryAccountRequest;
+import com.mark.zumo.client.core.appserver.request.crypto.CryptoRequest;
 import com.mark.zumo.client.core.appserver.request.login.StoreUserSignInRequest;
 import com.mark.zumo.client.core.appserver.request.registration.StoreRegistrationRequest;
 import com.mark.zumo.client.core.appserver.request.registration.result.StoreRegistrationResult;
@@ -15,6 +15,7 @@ import com.mark.zumo.client.core.appserver.request.signup.StoreOwnerSignUpReques
 import com.mark.zumo.client.core.appserver.response.DepositResponse;
 import com.mark.zumo.client.core.appserver.response.InquiryAccountResponse;
 import com.mark.zumo.client.core.appserver.response.StoreUserHandShakeResponse;
+import com.mark.zumo.client.core.appserver.response.crypto.CryptoResponse;
 import com.mark.zumo.client.core.appserver.response.store.registration.StoreRegistrationResponse;
 import com.mark.zumo.client.core.appserver.response.store.user.signin.StoreUserSignInResponse;
 import com.mark.zumo.client.core.appserver.response.store.user.signup.StoreOwnerSignUpResponse;
@@ -259,9 +260,9 @@ public interface NetworkRepository {
     Maybe<SnsToken> createSnsToken(@Body SnsToken snsToken);
 
 
-    @POST("/bank/transfer/deposit")
+    @POST("bank/transfer/deposit")
     Maybe<DepositResponse> depsit(DepositRequest depositRequest);
 
-    @POST("/bank/inquiry/account")
-    Maybe<InquiryAccountResponse> inquiryBankAccount(@Body InquiryAccountRequest inquiryAccountRequest);
+    @POST("bank/inquiry/account/name")
+    Maybe<CryptoResponse<InquiryAccountResponse>> inquiryBankAccount(@Body CryptoRequest cryptoRequest);
 }

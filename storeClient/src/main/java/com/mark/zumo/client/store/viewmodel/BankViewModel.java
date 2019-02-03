@@ -88,7 +88,11 @@ public class BankViewModel extends AndroidViewModel {
                                                 final String bankCode, final String accountNumber) {
 
         MutableLiveData<Boolean> liveData = new MutableLiveData<>();
-        bankManager.inquiryBankAccount(birth.concat(sex), bankCode, accountNumber)
+
+        Maybe.fromCallable(storeUserManager::getStoreUserSessionSync)
+                .switchIfEmpty(storeUserManager.getStoreUserSessionAsync())
+                .map(storeUserSession -> storeUserSession.email)
+                .flatMap(email -> bankManager.inquiryBankAccount(email, birth.concat(sex), bankCode, accountNumber))
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSuccess(liveData::setValue)
                 .doOnSubscribe(compositeDisposable::add)

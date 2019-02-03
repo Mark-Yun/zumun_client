@@ -6,6 +6,8 @@
 
 package com.mark.zumo.client.core.repository;
 
+import android.os.Bundle;
+
 import com.mark.zumo.client.core.appserver.AppServerServiceProvider;
 import com.mark.zumo.client.core.appserver.NetworkRepository;
 import com.mark.zumo.client.core.appserver.request.login.StoreUserSignInRequest;
@@ -15,6 +17,7 @@ import com.mark.zumo.client.core.appserver.response.store.user.signup.StoreUserS
 import com.mark.zumo.client.core.dao.AppDatabaseProvider;
 import com.mark.zumo.client.core.dao.DiskRepository;
 import com.mark.zumo.client.core.entity.SessionStore;
+import com.mark.zumo.client.core.entity.SnsToken;
 import com.mark.zumo.client.core.entity.Store;
 import com.mark.zumo.client.core.entity.user.store.StoreOwner;
 import com.mark.zumo.client.core.entity.user.store.StoreUserContract;
@@ -25,6 +28,7 @@ import java.util.List;
 import io.reactivex.Flowable;
 import io.reactivex.Maybe;
 import io.reactivex.Observable;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * Created by mark on 18. 12. 13.
@@ -85,6 +89,17 @@ public enum StoreUserRepository {
                 .map(storeOwnerSignUpResponse -> storeOwnerSignUpResponse.storeUserSignUpResponse)
                 .map(StoreUserSignupErrorCode::valueOf);
     }
+
+    public Maybe<SnsToken> registerSnsToken(SnsToken snsToken) {
+        return networkRepository().createSnsToken(snsToken)
+                .doOnSuccess(diskRepository::insertSnsToken)
+                .subscribeOn(Schedulers.io());
+    }
+
+    public void putSessionHeader(Bundle bundle) {
+        AppServerServiceProvider.INSTANCE.putSessionHeader(bundle);
+    }
+
 
     public Maybe<StoreUserSignInResponse> loginStoreUser(final StoreUserSignInRequest request) {
         return networkRepository().storeUserLogin(request);

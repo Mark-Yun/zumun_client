@@ -10,7 +10,6 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
-import com.google.android.gms.common.util.Base64Utils;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.InstanceIdResult;
@@ -25,23 +24,13 @@ import com.mark.zumo.client.core.entity.Store;
 import com.mark.zumo.client.core.entity.user.store.StoreOwner;
 import com.mark.zumo.client.core.entity.user.store.StoreUserContract;
 import com.mark.zumo.client.core.entity.user.store.StoreUserSession;
-import com.mark.zumo.client.core.repository.CustomerUserRepository;
 import com.mark.zumo.client.core.repository.StoreRepository;
 import com.mark.zumo.client.core.repository.StoreUserRepository;
+import com.mark.zumo.client.core.security.EncryptionUtil;
 
-import java.security.InvalidKeyException;
-import java.security.KeyFactory;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.security.PublicKey;
-import java.security.spec.InvalidKeySpecException;
-import java.security.spec.X509EncodedKeySpec;
 import java.util.List;
-
-import javax.crypto.BadPaddingException;
-import javax.crypto.Cipher;
-import javax.crypto.IllegalBlockSizeException;
-import javax.crypto.NoSuchPaddingException;
 
 import io.reactivex.Flowable;
 import io.reactivex.Maybe;
@@ -64,7 +53,6 @@ public enum StoreUserManager {
     private static final String PASSWORD_DIGEST_ALGORITHM = "MD5";
 
     private final StoreUserRepository storeUserRepository;
-    private final CustomerUserRepository customerUserRepository;
     private final StoreRepository storeRepository;
 
     @Nullable
@@ -77,7 +65,6 @@ public enum StoreUserManager {
 
     StoreUserManager() {
         storeUserRepository = StoreUserRepository.INSTANCE;
-        customerUserRepository = CustomerUserRepository.INSTANCE;
         storeRepository = StoreRepository.INSTANCE;
     }
 
@@ -105,43 +92,10 @@ public enum StoreUserManager {
         return "";
     }
 
-    private PublicKey createPublicKey(final String publicKeyString) {
-        String refinedPublicKey = publicKeyString;
-
-        refinedPublicKey = refinedPublicKey.replace("-----BEGIN PUBLIC KEY-----\n", "");
-        refinedPublicKey = refinedPublicKey.replace("-----END PUBLIC KEY-----", "");
-
-        byte[] decodedPublicKey = Base64Utils.decode(refinedPublicKey);
-        try {
-            return KeyFactory.getInstance("RSA").generatePublic(new X509EncodedKeySpec(decodedPublicKey));
-        } catch (InvalidKeySpecException | NoSuchAlgorithmException e) {
-            Log.e(TAG, "createPublicKey: exception occurred", e);
-            return null;
-        }
-    }
-
-    @Nullable
-    private String RSAEncrypt(final String publicKeyString, final String password) {
-        try {
-            PublicKey publicKey = createPublicKey(publicKeyString);
-
-            Cipher cipher = Cipher.getInstance("RSA/ECB/PKCS1Padding");
-            cipher.init(Cipher.ENCRYPT_MODE, publicKey);
-
-            byte[] encryptedBytes = cipher.doFinal(password.getBytes());
-
-            return Base64Utils.encode(encryptedBytes);
-        } catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException |
-                IllegalBlockSizeException | BadPaddingException e) {
-            Log.e(TAG, "RSAEncrypt: ", e);
-            return null;
-        }
-    }
-
     public Maybe<StoreUserSignupException> signup(StoreOwnerSignUpRequest request) {
         return storeUserRepository.storeUserHandShake(request.email)
                 .map(publicKey -> {
-                    request.password = RSAEncrypt(publicKey, passwordDigest(request.password));
+                    request.password = EncryptionUtil.encryptRSA(publicKey, passwordDigest(request.password));
                     return request;
                 }).flatMap(storeUserRepository::creteStoreOwner)
                 .map(StoreUserSignupException::new)
@@ -150,7 +104,7 @@ public enum StoreUserManager {
 
     public Maybe<StoreUserSignInErrorCode> signIn(final String email, final String password, final boolean isAutoLogin) {
         return storeUserRepository.storeUserHandShake(email)
-                .map(publicKey -> RSAEncrypt(publicKey, passwordDigest(password)))
+                .map(publicKey -> EncryptionUtil.encryptRSA(publicKey, passwordDigest(password)))
                 .map(encryptedPassword -> new StoreUserSignInRequest.Builder()
                         .setEmail(email)
                         .setPassword(encryptedPassword)
@@ -193,7 +147,7 @@ public enum StoreUserManager {
         return Maybe.just(SessionStore.from(store))
                 .doOnSuccess(storeUserRepository::saveSessionStore)
                 .doOnSuccess(sessionStore -> this.storeSession = sessionStore)
-                .doOnSuccess(sessionStore -> customerUserRepository.putSessionHeader(buildStoreUserSessionHeader()))
+                .doOnSuccess(sessionStore -> storeUserRepository.putSessionHeader(buildStoreUserSessionHeader()))
                 .doOnSuccess(sessionStore -> registerToken())
                 .map(x -> store)
                 .subscribeOn(Schedulers.io());
@@ -231,7 +185,7 @@ public enum StoreUserManager {
     private void setStoreUserSession(@Nullable final StoreUserSession storeUserSession) {
 
         this.storeUserSession = storeUserSession;
-        customerUserRepository.putSessionHeader(buildStoreUserSessionHeader());
+        storeUserRepository.putSessionHeader(buildStoreUserSessionHeader());
         Maybe.fromAction(() -> storeUserRepository.saveStoreUserSession(storeUserSession))
                 .subscribeOn(Schedulers.io())
                 .subscribe();
@@ -240,8 +194,9 @@ public enum StoreUserManager {
     private Bundle buildStoreUserSessionHeader() {
         Bundle bundle = new Bundle();
 
-        bundle.putString(STORE_USER_SESSION_HEADER_KEY, storeUserSession != null ? storeUserSession.token : "");
-        bundle.putString(SESSION_STORE_KEY, storeSession != null ? storeSession.uuid : "");
+        bundle.putString(StoreUserSession.Schema.token, storeUserSession != null ? storeUserSession.token : "");
+        bundle.putString(StoreUserSession.Schema.email, storeUserSession != null ? storeUserSession.email : "");
+        bundle.putString(Store.Schema.uuid, storeSession != null ? storeSession.uuid : "");
 
         return bundle;
     }
@@ -254,8 +209,7 @@ public enum StoreUserManager {
 
         Maybe.just(storeSession)
                 .flatMap(this::createSnsToken)
-                .flatMap(customerUserRepository::registerSnsToken)
-                .doOnSuccess(snsToken -> Log.d(TAG, "registerToken: snsToken=" + snsToken))
+                .flatMap(storeUserRepository::registerSnsToken)
                 .subscribeOn(Schedulers.io())
                 .subscribe();
     }
@@ -278,7 +232,6 @@ public enum StoreUserManager {
                             }
 
                             String token = result.getToken();
-                            Log.d(TAG, "getFCMToken: token=" + token);
                             emitter.onSuccess(token);
                             emitter.onComplete();
                         })
@@ -315,13 +268,10 @@ public enum StoreUserManager {
 
     public Maybe<Store> updateSessionStoreCoverImageUrl(String coverImageUrl) {
         return storeUserRepository.getSessionStoreMaybe()
-                .doOnSuccess(store -> Log.d(TAG, "updateSessionStoreCoverImageUrl: getSessionStore=" + store))
                 .map(store -> Store.Builder.from(store)
                         .setCoverImageUrl(coverImageUrl)
                         .build())
-                .doOnSuccess(store -> Log.d(TAG, "updateSessionStoreCoverImageUrl: createdSessionStore=" + store))
                 .flatMap(storeRepository::updateStore)
-                .doOnSuccess(store -> Log.d(TAG, "updateSessionStoreCoverImageUrl: updatedSessionStore=" + store))
                 .flatMap(this::setSessionStore)
                 .subscribeOn(Schedulers.io());
 
@@ -329,13 +279,10 @@ public enum StoreUserManager {
 
     public Maybe<Store> updateSessionStoreThumbnailImageUrl(String thumbnailImageUrl) {
         return storeUserRepository.getSessionStoreMaybe()
-                .doOnSuccess(store -> Log.d(TAG, "updateSessionStoreThumbnailImageUrl: getSessionStore=" + store))
                 .map(store -> Store.Builder.from(store)
                         .setThumbnailUrl(thumbnailImageUrl)
                         .build())
-                .doOnSuccess(store -> Log.d(TAG, "updateSessionStoreThumbnailImageUrl: createdSessionStore=" + store))
                 .flatMap(storeRepository::updateStore)
-                .doOnSuccess(store -> Log.d(TAG, "updateSessionStoreThumbnailImageUrl: updatedSessionStore=" + store))
                 .flatMap(this::setSessionStore)
                 .subscribeOn(Schedulers.io());
     }
