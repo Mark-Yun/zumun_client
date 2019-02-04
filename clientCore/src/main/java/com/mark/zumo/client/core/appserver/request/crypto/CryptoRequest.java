@@ -39,7 +39,7 @@ public class CryptoRequest {
     }
 
     public interface Schema {
-        String encryptedContent = "encryted_content";
+        String encryptedContent = "encrypted_content";
         String publicKey = "client_public_key";
     }
 }
