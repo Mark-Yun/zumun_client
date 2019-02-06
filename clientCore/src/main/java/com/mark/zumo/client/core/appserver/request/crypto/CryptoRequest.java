@@ -7,7 +7,6 @@
 package com.mark.zumo.client.core.appserver.request.crypto;
 
 import com.google.gson.Gson;
-import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import com.mark.zumo.client.core.security.EncryptionUtil;
 
@@ -22,10 +21,9 @@ public class CryptoRequest {
     public final String encryptedContent;
     @SerializedName(Schema.publicKey)
     public final String publicKey;
-    @Expose
-    public final PrivateKey privateKey;
+    public transient final PrivateKey privateKey;
 
-    public CryptoRequest(final String encryptedContent) {
+    private CryptoRequest(final String encryptedContent) {
         KeyPair keyPair = EncryptionUtil.generateKeyPair();
         this.publicKey = EncryptionUtil.convertPublicKey(keyPair.getPublic());
         this.privateKey = keyPair.getPrivate();

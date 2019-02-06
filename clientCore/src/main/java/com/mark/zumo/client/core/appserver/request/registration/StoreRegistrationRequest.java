@@ -12,7 +12,6 @@ import android.arch.persistence.room.PrimaryKey;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
-import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import com.mark.zumo.client.core.appserver.request.registration.result.StoreRegistrationResult;
 import com.mark.zumo.client.core.appserver.response.store.registration.StoreRegistrationException;
@@ -59,8 +58,8 @@ public class StoreRegistrationRequest {
     @SerializedName(Schema.createdDate) @ColumnInfo(name = Schema.createdDate)
     public final long createdDate;
 
-    @Expose @Ignore
-    public List<StoreRegistrationResult> resultList;
+    @Ignore
+    public transient List<StoreRegistrationResult> resultList;
 
     public StoreRegistrationRequest(@NonNull final String uuid, final String storeUserUuid, final String storeName, final String storePhoneNumber, final String storeType, final String corporateRegistrationName, final String corporateRegistrationOwnerName, final String corporateRegistrationNumber, final String corporateRegistrationAddress, final String corporateRegistrationScanUrl, final double latitude, final double longitude, final String storeAddress, final String coverImageRrl, final String thumbnailImageUrl, final long createdDate) {
         this.uuid = uuid;

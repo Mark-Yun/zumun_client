@@ -15,7 +15,7 @@ public class StoreUserHandShakeResponse {
     @SerializedName(Schema.publicKey)
     public final String publicKey;
 
-    private StoreUserHandShakeResponse(final String publicKey) {
+    public StoreUserHandShakeResponse(final String publicKey) {
         this.publicKey = publicKey;
     }
 

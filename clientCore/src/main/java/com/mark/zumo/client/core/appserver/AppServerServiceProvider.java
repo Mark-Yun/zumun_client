@@ -14,6 +14,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
+import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.mark.zumo.client.core.app.BuildConfig;
 import com.mark.zumo.client.core.util.context.ContextHolder;
@@ -152,17 +153,24 @@ public enum AppServerServiceProvider {
     private NetworkRepository buildNetworkRepository(final Bundle bundle) {
         return new Retrofit.Builder()
                 .baseUrl(BuildConfig.BUILD_TYPE.appServerUrl + serverVersionInfo())
-                .addConverterFactory(GsonConverterFactory.create(new GsonBuilder().setLenient().create()))
+                .addConverterFactory(GsonConverterFactory.create(createGson()))
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .client(okHttpClient(createInterceptor(bundle)))
                 .build()
                 .create(NetworkRepository.class);
     }
 
+    @NonNull
+    private Gson createGson() {
+        return new GsonBuilder()
+                .setLenient()
+                .create();
+    }
+
     private PaymentService buildPaymentService(final Bundle bundle) {
         return paymentService = new Retrofit.Builder()
                 .baseUrl(BuildConfig.BUILD_TYPE.paymentServiceUrl + serverVersionInfo())
-                .addConverterFactory(GsonConverterFactory.create(new GsonBuilder().setLenient().create()))
+                .addConverterFactory(GsonConverterFactory.create(createGson()))
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .client(okHttpClient(createInterceptor(bundle)))
                 .build()
