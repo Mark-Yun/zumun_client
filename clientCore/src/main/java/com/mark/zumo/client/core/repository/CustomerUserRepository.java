@@ -77,7 +77,6 @@ public enum CustomerUserRepository {
                 .map(x -> guestUser);
     }
 
-
     public void putSessionHeader(Bundle bundle) {
         AppServerServiceProvider.INSTANCE.putSessionHeader(bundle);
     }

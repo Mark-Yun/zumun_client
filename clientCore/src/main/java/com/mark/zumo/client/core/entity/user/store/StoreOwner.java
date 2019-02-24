@@ -73,6 +73,115 @@ public class StoreOwner {
         this.contractVersion = contractVersion;
     }
 
+    public static class Builder {
+        private String uuid = "";
+        private String name = "";
+        private String password = "";
+        private String phoneNumber = "";
+        private String email = "";
+        private String authType = "";
+        private String authToken = "";
+        private String bankCode = "";
+        private String bankAccountNumber = "";
+        private String bankAccountScanUrl = "";
+        private long requestId = 0;
+        private long createdDate = 0;
+        private String userStatus = "";
+        private int contractVersion = 0;
+
+        public static Builder from(StoreOwner storeOwner) {
+            return new Builder()
+                    .setUuid(storeOwner.uuid)
+                    .setName(storeOwner.name)
+                    .setPassword(storeOwner.password)
+                    .setPhoneNumber(storeOwner.phoneNumber)
+                    .setEmail(storeOwner.email)
+                    .setAuthType(storeOwner.authType)
+                    .setAuthToken(storeOwner.authToken)
+                    .setBankCode(storeOwner.bankCode)
+                    .setBankAccountNumber(storeOwner.bankAccountNumber)
+                    .setBankAccountScanUrl(storeOwner.bankAccountScanUrl)
+                    .setRequestId(storeOwner.requestId)
+                    .setCreatedDate(storeOwner.createdDate)
+                    .setUserStatus(storeOwner.userStatus)
+                    .setContractVersion(storeOwner.contractVersion);
+        }
+
+        public Builder setUuid(final String uuid) {
+            this.uuid = uuid;
+            return this;
+        }
+
+        public Builder setName(final String name) {
+            this.name = name;
+            return this;
+        }
+
+        public Builder setPassword(final String password) {
+            this.password = password;
+            return this;
+        }
+
+        public Builder setPhoneNumber(final String phoneNumber) {
+            this.phoneNumber = phoneNumber;
+            return this;
+        }
+
+        public Builder setEmail(final String email) {
+            this.email = email;
+            return this;
+        }
+
+        public Builder setAuthType(final String authType) {
+            this.authType = authType;
+            return this;
+        }
+
+        public Builder setAuthToken(final String authToken) {
+            this.authToken = authToken;
+            return this;
+        }
+
+        public Builder setBankCode(final String bankCode) {
+            this.bankCode = bankCode;
+            return this;
+        }
+
+        public Builder setBankAccountNumber(final String bankAccountNumber) {
+            this.bankAccountNumber = bankAccountNumber;
+            return this;
+        }
+
+        public Builder setBankAccountScanUrl(final String bankAccountScanUrl) {
+            this.bankAccountScanUrl = bankAccountScanUrl;
+            return this;
+        }
+
+        public Builder setRequestId(final long requestId) {
+            this.requestId = requestId;
+            return this;
+        }
+
+        public Builder setCreatedDate(final long createdDate) {
+            this.createdDate = createdDate;
+            return this;
+        }
+
+        public Builder setUserStatus(final String userStatus) {
+            this.userStatus = userStatus;
+            return this;
+        }
+
+        public Builder setContractVersion(final int contractVersion) {
+            this.contractVersion = contractVersion;
+            return this;
+        }
+
+        public StoreOwner build() {
+            return new StoreOwner(uuid, name, password, phoneNumber, email, authType, authToken, bankCode, bankAccountNumber, bankAccountScanUrl, requestId, createdDate, userStatus, contractVersion);
+        }
+    }
+
     @Override
     public String toString() {
         return EntityHelper.toString(this);

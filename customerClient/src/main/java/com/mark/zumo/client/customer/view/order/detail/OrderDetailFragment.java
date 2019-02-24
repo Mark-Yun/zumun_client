@@ -52,13 +52,12 @@ import butterknife.OnClick;
  */
 public class OrderDetailFragment extends Fragment {
 
+    public static final String TAG = "OrderDetailFragment";
     private static final ArrayList<MenuOrder.State> STEPS = new ArrayList<MenuOrder.State>() {{
         add(MenuOrder.State.REQUESTED);
         add(MenuOrder.State.ACCEPTED);
         add(MenuOrder.State.COMPLETE);
     }};
-    public static final String TAG = "OrderDetailFragment";
-
     @BindView(R.id.store_cover_image) AppCompatImageView storeCoverImage;
     @BindView(R.id.store_cover_title) AppCompatTextView storeCoverTitle;
     @BindView(R.id.order_detail_recycler_view) RecyclerView recyclerView;
@@ -83,10 +82,19 @@ public class OrderDetailFragment extends Fragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        LocalBroadcastManager.getInstance(getContext()).unregisterReceiver(broadcastReceiver);
+        Context context = getContext();
+        if (context == null) {
+            return;
+        }
+        LocalBroadcastManager.getInstance(context).unregisterReceiver(broadcastReceiver);
     }
 
     private void registerOrderUpdateReceiver() {
+        Context context = getContext();
+        if (context == null) {
+            return;
+        }
+
         broadcastReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(final Context context, final Intent intent) {
@@ -95,7 +103,7 @@ public class OrderDetailFragment extends Fragment {
         };
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(OrderRepository.ACTION_ORDER_UPDATED);
-        LocalBroadcastManager.getInstance(getContext()).registerReceiver(broadcastReceiver, intentFilter);
+        LocalBroadcastManager.getInstance(context).registerReceiver(broadcastReceiver, intentFilter);
     }
 
     @Nullable
@@ -131,6 +139,10 @@ public class OrderDetailFragment extends Fragment {
     }
 
     private void loadOrderInformation() {
+        if (getArguments() == null) {
+            return;
+        }
+
         String orderUuid = getArguments().getString(OrderDetailActivity.KEY_ORDER_UUID);
         orderViewModel.getMenuOrderDetail(orderUuid).observe(this, orderDetailAdapter::setOrderDetailList);
         orderViewModel.getMenuOrder(orderUuid).observe(this, this::onLoadMenuOrder);
@@ -151,11 +163,10 @@ public class OrderDetailFragment extends Fragment {
     }
 
     private void inflateOrderInfo() {
-        ArrayList<String> steps = new ArrayList<String>() {{
-            for (MenuOrder.State state : STEPS) {
-                add(getString(state.stringRes));
-            }
-        }};
+        ArrayList<String> steps = new ArrayList<>();
+        for (MenuOrder.State state : STEPS) {
+            steps.add(getString(state.stringRes));
+        }
 
         orderStepView.getState()
                 .animationType(StepView.ANIMATION_ALL)
@@ -173,25 +184,34 @@ public class OrderDetailFragment extends Fragment {
         orderStepView.setVisibility(isComplete ? View.GONE : View.VISIBLE);
         bigOrderNumberLayout.setVisibility(isComplete ? View.VISIBLE : View.GONE);
         bigOrderNumber.setText(menuOrder.orderNumber);
-        Animation animation = AnimationUtils.loadAnimation(getContext(), R.anim.blink_animation);
+        Context context = getContext();
+        if (context == null) {
+            return;
+        }
+
+        Animation animation = AnimationUtils.loadAnimation(context, R.anim.blink_animation);
         bigOrderNumber.setAnimation(animation);
         animation.start();
 
         if (isComplete) {
             Intent intent = new Intent(CustomerMessageHandler.VibrationContract.ACTION);
             intent.putExtra(CustomerMessageHandler.VibrationContract.ORDER_KEY, menuOrder.uuid);
-            intent.setPackage(getContext().getPackageName());
-            getContext().sendBroadcast(intent);
+            intent.setPackage(context.getPackageName());
+            context.sendBroadcast(intent);
             Log.d(TAG, "onLoadMenuOrder: send broadcast-" + intent.getAction());
         }
 
-        orderCompleteInformationTitle.setText(getContext().getString(R.string.order_complete_information_title, menuOrder.orderName));
+        orderCompleteInformationTitle.setText(context.getString(R.string.order_complete_information_title, menuOrder.orderName));
 
         inflateStoreInfo(menuOrder.storeUuid);
     }
 
     @OnClick(R.id.back_button)
     public void onBackButtonClicked() {
+        if (getActivity() == null) {
+            return;
+        }
+
         getActivity().finish();
     }
 }

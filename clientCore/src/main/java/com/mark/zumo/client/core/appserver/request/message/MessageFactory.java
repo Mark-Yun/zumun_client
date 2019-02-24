@@ -17,7 +17,7 @@ public final class MessageFactory {
 
     public static SnsMessage create(Map<String, String> data) {
         String messageType = data.get(SnsMessageContract.MessageType.key);
-        if (TextUtils.isEmpty(messageType)) {
+        if (messageType == null || TextUtils.isEmpty(messageType)) {
             return null;
         }
 

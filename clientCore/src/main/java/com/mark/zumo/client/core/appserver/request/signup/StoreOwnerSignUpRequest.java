@@ -23,7 +23,6 @@
  */
 package com.mark.zumo.client.core.appserver.request.signup;
 
-import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import com.mark.zumo.client.core.appserver.response.store.user.signup.StoreUserSignupException;
 import com.mark.zumo.client.core.entity.user.store.StoreOwner;
@@ -38,8 +37,7 @@ public class StoreOwnerSignUpRequest {
     public final String uuid;
     @SerializedName(Schema.name)
     public final String name;
-    @Expose
-    public final String passwordConfirm;
+    public transient final String passwordConfirm;
     @SerializedName(Schema.bankAccountNumber)
     public final String bankAccountNumber;
     @SerializedName(Schema.phoneNumber)

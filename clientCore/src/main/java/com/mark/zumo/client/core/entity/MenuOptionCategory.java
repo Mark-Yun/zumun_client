@@ -12,7 +12,6 @@ import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
 import android.support.annotation.NonNull;
 
-import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import com.mark.zumo.client.core.entity.util.EntityComparator;
 
@@ -34,10 +33,10 @@ public class MenuOptionCategory {
     public final String storeUuid;
     @ColumnInfo(name = Schema.seqNum) @SerializedName(Schema.seqNum)
     public int seqNum;
-    @Ignore @Expose(deserialize = false, serialize = false)
-    public List<MenuOption> menuOptionList;
-    @Ignore @Expose(deserialize = false, serialize = false)
-    public List<Menu> menuList;
+    @Ignore
+    public transient List<MenuOption> menuOptionList;
+    @Ignore
+    public transient List<Menu> menuList;
 
     public MenuOptionCategory(@NonNull final String uuid, final String name, final String storeUuid, final int seqNum) {
         this.uuid = uuid;

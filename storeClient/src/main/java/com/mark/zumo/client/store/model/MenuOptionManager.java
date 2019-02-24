@@ -20,6 +20,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.CopyOnWriteArraySet;
 
 import io.reactivex.Maybe;
@@ -33,8 +35,7 @@ import io.reactivex.schedulers.Schedulers;
 public enum MenuOptionManager {
     INSTANCE;
 
-
-    private final static String TAG = "MenuOptionManager";
+    private static final String TAG = "MenuOptionManager";
 
     private final MenuRepository menuRepository;
 
@@ -49,10 +50,10 @@ public enum MenuOptionManager {
 
     public Observable<List<MenuOptionCategory>> getCombinedMenuOptionCategoryListByStoreUuid(String storeUuid) {
         return Observable.create((ObservableOnSubscribe<List<MenuOptionCategory>>) e -> {
-            List<MenuOptionCategory> menuOptionCategoryList = new ArrayList<>();
-            Map<String, List<MenuOption>> menuOptionMap = new HashMap<>();
-            List<Menu> menuList = new ArrayList<>();
-            Map<String, List<MenuOptionDetail>> menuOptionDetailMap = new HashMap<>();
+            List<MenuOptionCategory> menuOptionCategoryList = new CopyOnWriteArrayList<>();
+            Map<String, List<MenuOption>> menuOptionMap = new ConcurrentHashMap<>();
+            List<Menu> menuList = new CopyOnWriteArrayList<>();
+            Map<String, List<MenuOptionDetail>> menuOptionDetailMap = new ConcurrentHashMap<>();
 
             Set<Class> nextToken = new CopyOnWriteArraySet<>();
             Set<Class> completeToken = new CopyOnWriteArraySet<>();

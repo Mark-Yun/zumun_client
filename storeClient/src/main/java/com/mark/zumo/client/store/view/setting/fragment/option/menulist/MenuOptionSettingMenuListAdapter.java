@@ -182,9 +182,7 @@ public class MenuOptionSettingMenuListAdapter extends RecyclerView.Adapter<MenuO
 
     private void notifyModeChange() {
         Iterator<Runnable> iterator = modeUpdateOperationPool.iterator();
-        if (iterator == null) {
-            return;
-        }
+
         new Handler(Looper.getMainLooper()).post(() -> {
             while (iterator.hasNext()) {
                 iterator.next().run();

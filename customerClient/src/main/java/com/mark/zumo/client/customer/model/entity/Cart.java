@@ -114,7 +114,7 @@ public class Cart {
 
         orderDetailList.add(index,
                 new OrderDetail(
-                        null,
+                        "",
                         orderDetail.storeUuid,
                         orderDetail.menuUuid,
                         orderDetail.menuName,

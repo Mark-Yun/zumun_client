@@ -7,7 +7,7 @@
 package com.mark.zumo.client.core.appserver;
 
 import com.mark.zumo.client.core.appserver.request.bank.DepositRequest;
-import com.mark.zumo.client.core.appserver.request.bank.InquiryAccountRequest;
+import com.mark.zumo.client.core.appserver.request.crypto.CryptoRequest;
 import com.mark.zumo.client.core.appserver.request.login.StoreUserSignInRequest;
 import com.mark.zumo.client.core.appserver.request.registration.StoreRegistrationRequest;
 import com.mark.zumo.client.core.appserver.request.registration.result.StoreRegistrationResult;
@@ -15,6 +15,7 @@ import com.mark.zumo.client.core.appserver.request.signup.StoreOwnerSignUpReques
 import com.mark.zumo.client.core.appserver.response.DepositResponse;
 import com.mark.zumo.client.core.appserver.response.InquiryAccountResponse;
 import com.mark.zumo.client.core.appserver.response.StoreUserHandShakeResponse;
+import com.mark.zumo.client.core.appserver.response.crypto.CryptoResponse;
 import com.mark.zumo.client.core.appserver.response.store.registration.StoreRegistrationResponse;
 import com.mark.zumo.client.core.appserver.response.store.user.signin.StoreUserSignInResponse;
 import com.mark.zumo.client.core.appserver.response.store.user.signup.StoreOwnerSignUpResponse;
@@ -56,14 +57,17 @@ public interface NetworkRepository {
     @GET("users/store/handshake")
     Maybe<StoreUserHandShakeResponse> signInHandShake(@Query(StoreUser.Schema.email) String storeUserEmail);
 
-    @GET("store/registration/contract")
-    Maybe<List<StoreUserContract>> getStoreUserContractListByStoreUserUuid(@Query(StoreUser.Schema.uuid) String storeUserUuid);
 
     @POST("users/store")
     Maybe<StoreOwnerSignUpResponse> createStoreOwner(@Body StoreOwnerSignUpRequest request);
 
     @GET("users/store/{" + StoreOwner.Schema.uuid + "}")
     Maybe<StoreOwner> getStoreOwner(@Path(StoreOwner.Schema.uuid) String storeUserUuid);
+
+    @PUT("users/store/{" + StoreOwner.Schema.uuid + "}")
+    Maybe<StoreOwner> updateStoreOwner(@Path(StoreOwner.Schema.uuid) final String storeUserUuid,
+                                       @Body final StoreOwner storeOwner);
+
 
     @POST("login/store")
     Maybe<StoreUserSignInResponse> storeUserLogin(@Body StoreUserSignInRequest request);
@@ -99,6 +103,10 @@ public interface NetworkRepository {
 
     @POST("store/registration/reject")
     Maybe<StoreRegistrationResult> rejectStoreRegistration(@Body StoreRegistrationRequest storeRegistrationRequest);
+
+    @GET("store/registration/contract")
+    Maybe<List<StoreUserContract>> getStoreUserContractListByStoreUserUuid(@Query(StoreUser.Schema.uuid) String storeUserUuid);
+
 
     @POST("menu")
     Maybe<Menu> createMenu(@Body Menu menu);
@@ -252,9 +260,9 @@ public interface NetworkRepository {
     Maybe<SnsToken> createSnsToken(@Body SnsToken snsToken);
 
 
-    @POST("/bank/transfer/deposit")
+    @POST("bank/transfer/deposit")
     Maybe<DepositResponse> depsit(DepositRequest depositRequest);
 
-    @POST("/bank/inquiry/account")
-    Maybe<InquiryAccountResponse> inquiryBankAccount(InquiryAccountRequest inquiryAccountRequest);
+    @POST("bank/inquiry/account/name")
+    Maybe<CryptoResponse<InquiryAccountResponse>> inquiryBankAccount(@Body CryptoRequest cryptoRequest);
 }

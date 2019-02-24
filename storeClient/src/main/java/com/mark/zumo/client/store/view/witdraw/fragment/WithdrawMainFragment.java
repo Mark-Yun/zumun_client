@@ -19,7 +19,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.mark.zumo.client.store.R;
-import com.mark.zumo.client.store.viewmodel.WithdrawViewModel;
+import com.mark.zumo.client.store.view.witdraw.fragment.bank.BankAccountFragment;
+import com.mark.zumo.client.store.viewmodel.BankViewModel;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -34,7 +35,7 @@ public class WithdrawMainFragment extends Fragment {
     @BindView(R.id.bank_account_indicator) ConstraintLayout bankAccountIndicator;
     @BindView(R.id.main_activity_background_image) AppCompatImageView mainActivityBackgroundImage;
 
-    private WithdrawViewModel withdrawViewModel;
+    private BankViewModel bankViewModel;
 
     public static WithdrawMainFragment newInstance() {
 
@@ -49,7 +50,7 @@ public class WithdrawMainFragment extends Fragment {
     public void onCreate(@Nullable final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        withdrawViewModel = ViewModelProviders.of(this).get(WithdrawViewModel.class);
+        bankViewModel = ViewModelProviders.of(this).get(BankViewModel.class);
     }
 
     @Nullable
