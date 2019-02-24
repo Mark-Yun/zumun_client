@@ -28,6 +28,7 @@ import java.net.UnknownHostException;
 import io.reactivex.exceptions.OnErrorNotImplementedException;
 import io.reactivex.exceptions.UndeliverableException;
 import io.reactivex.plugins.RxJavaPlugins;
+import okhttp3.ResponseBody;
 import retrofit2.HttpException;
 
 /**
@@ -64,7 +65,10 @@ public class AppErrorHandler {
 
             if (e instanceof HttpException) {
                 if (BuildConfig.BUILD_TYPE == AppConfig.DEBUG) {
-                    showDebugToast(((HttpException) e).response().errorBody().string());
+                    ResponseBody responseBody = ((HttpException) e).response().errorBody();
+                    if (responseBody != null) {
+                        showDebugToast(responseBody.string());
+                    }
                     return;
                 }
                 showToast(R.string.error_message_on_http_exception);

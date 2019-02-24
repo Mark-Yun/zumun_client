@@ -9,6 +9,7 @@ package com.mark.zumo.client.customer.view.menu;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -16,6 +17,7 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -111,7 +113,11 @@ public class MenuFragment extends Fragment {
         menuViewModel.getStore(storeUuid).observe(this, this::onLoadStore);
     }
 
-    private void onAddCartComplete(final View itemView, final Menu menu) {
+    private void onAddCartComplete(@Nullable final View itemView, final Menu menu) {
+        if (itemView == null) {
+            return;
+        }
+
         String text = itemView.getContext().getString(R.string.added_to_cart, menu.name);
         Snackbar.make(itemView, text, Snackbar.LENGTH_LONG).show();
     }
@@ -148,13 +154,15 @@ public class MenuFragment extends Fragment {
         Observer<Cart> observer = new Observer<Cart>() {
             @Override
             public void onChanged(@Nullable final Cart cart) {
-
+                FragmentActivity activity = getActivity();
                 if (cart == null || cart.getItemCount() == 0) {
-                    Toast.makeText(getActivity(), R.string.theres_no_item_in_cart, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(activity, R.string.theres_no_item_in_cart, Toast.LENGTH_SHORT).show();
                 } else {
                     Intent intent = new Intent(getContext(), CartActivity.class);
                     intent.putExtra(CartActivity.KEY_STORE_UUID, storeUuid);
-                    getActivity().startActivityForResult(intent, CartActivity.REQUEST_CODE);
+                    if (activity != null) {
+                        activity.startActivityForResult(intent, CartActivity.REQUEST_CODE);
+                    }
                 }
 
                 cartLiveData.removeObserver(this);
@@ -195,8 +203,13 @@ public class MenuFragment extends Fragment {
     }
 
     private void onSuccessPayment(@NonNull String orderUuid) {
+        Context context = getContext();
+        if (context == null) {
+            return;
+        }
+
         Intent intent = new Intent();
-        intent.setClass(getContext(), OrderDetailActivity.class);
+        intent.setClass(context, OrderDetailActivity.class);
         intent.putExtra(OrderDetailActivity.KEY_ORDER_UUID, orderUuid);
         startActivity(intent);
     }

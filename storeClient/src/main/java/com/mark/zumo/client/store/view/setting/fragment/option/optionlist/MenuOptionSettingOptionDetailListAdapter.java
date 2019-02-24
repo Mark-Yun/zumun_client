@@ -123,13 +123,7 @@ class MenuOptionSettingOptionDetailListAdapter extends RecyclerView.Adapter<Menu
     }
 
     void onClickParent(boolean isChecked) {
-        Iterator<CheckBox> iterator = checkBoxSet.iterator();
-        if (iterator == null) {
-            return;
-        }
-
-        while (iterator.hasNext()) {
-            CheckBox checkBox = iterator.next();
+        for (final CheckBox checkBox : checkBoxSet) {
             if (checkBox.isChecked() != isChecked) {
                 checkBox.performClick();
             }

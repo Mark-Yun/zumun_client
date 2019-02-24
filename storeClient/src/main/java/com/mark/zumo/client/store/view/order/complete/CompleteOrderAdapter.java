@@ -69,7 +69,8 @@ class CompleteOrderAdapter extends RecyclerView.Adapter<CompleteOrderAdapter.Vie
 
     private static int getKeyFromValue(Map<Integer, String> map, String value) {
         for (int key : map.keySet()) {
-            if (map.get(key).equals(value)) {
+            String order = map.get(key);
+            if (order != null && order.equals(value)) {
                 return key;
             }
         }
@@ -145,10 +146,12 @@ class CompleteOrderAdapter extends RecyclerView.Adapter<CompleteOrderAdapter.Vie
 
     private void closeOrderDetail(final @NonNull ViewHolder holder, final MenuOrder menuOrder, final int index) {
         Fragment fragment = fragmentManager.findFragmentByTag(fragmentMap.get(menuOrder.uuid));
-        fragmentManager.beginTransaction()
-                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
-                .remove(fragment)
-                .commit();
+        if (fragment != null) {
+            fragmentManager.beginTransaction()
+                    .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+                    .remove(fragment)
+                    .commit();
+        }
 
         setSelectedText(holder.orderName, false);
         setSelectedText(holder.orderNumber, false);

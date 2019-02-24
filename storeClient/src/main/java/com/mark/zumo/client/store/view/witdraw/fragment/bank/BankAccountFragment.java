@@ -13,6 +13,7 @@
 package com.mark.zumo.client.store.view.witdraw.fragment.bank;
 
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.Context;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -52,7 +53,7 @@ public class BankAccountFragment extends Fragment {
     private BankViewModel bankViewModel;
     private Map<String, String> bankCodeMap;
 
-    private String bankCode;
+    private String selectedBankCode;
 
     public static BankAccountFragment newInstance() {
 
@@ -88,7 +89,12 @@ public class BankAccountFragment extends Fragment {
 
     private Map<String, String> createBankCodeMap() {
         Map<String, String> bankMap = new HashMap<>();
-        Resources resources = getContext().getResources();
+        Context context = getContext();
+        if (context == null) {
+            return bankMap;
+        }
+
+        Resources resources = context.getResources();
 
         String[] bankCodeArray = resources.getStringArray(R.array.bank_codes);
         String[] bankNameArray = resources.getStringArray(R.array.bank_entries);
@@ -107,19 +113,19 @@ public class BankAccountFragment extends Fragment {
         bankAccountText.setText(storeOwner.bankAccountNumber);
 
         if (TextUtils.isEmpty(storeOwner.bankCode) && bankCodeMap.containsKey(storeOwner.bankCode)) {
-            this.bankCode = storeOwner.bankCode;
+            this.selectedBankCode = storeOwner.bankCode;
             bank.setText(bankCodeMap.get(storeOwner.bankCode));
         }
     }
 
     @OnClick(R.id.save)
     public void onSaveClicked() {
-        String birth = bankAccountOwnerBirth.getText().toString();
-        String sex = bankAccountOwnerSex.getText().toString();
-        String bankAccountNumber = bankAccountText.getText().toString();
+        String birth = bankAccountOwnerBirth.getText() == null ? "" : bankAccountOwnerBirth.getText().toString();
+        String sex = bankAccountOwnerSex.getText() == null ? "" : bankAccountOwnerSex.getText().toString();
+        String bankAccountNumber = bankAccountText.getText() == null ? "" : bankAccountText.getText().toString();
 
-        bankViewModel.inquiryBankAccount(birth, sex, bankCode, bankAccountNumber)
-                .observe(this, success -> onInquiryBankAccount(bankCode, bankAccountNumber, success));
+        bankViewModel.inquiryBankAccount(birth, sex, selectedBankCode, bankAccountNumber)
+                .observe(this, success -> onInquiryBankAccount(selectedBankCode, bankAccountNumber, success));
 
     }
 
@@ -145,7 +151,7 @@ public class BankAccountFragment extends Fragment {
     }
 
     private void onSelectBank(String bankName, String bankCode) {
-        this.bankCode = bankCode;
+        this.selectedBankCode = bankCode;
         bank.setText(bankName);
     }
 }

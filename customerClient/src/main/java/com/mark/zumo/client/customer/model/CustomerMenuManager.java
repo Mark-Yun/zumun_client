@@ -6,14 +6,11 @@
 
 package com.mark.zumo.client.customer.model;
 
-import android.support.annotation.NonNull;
-
 import com.mark.zumo.client.core.entity.Menu;
 import com.mark.zumo.client.core.entity.MenuCategory;
 import com.mark.zumo.client.core.entity.MenuDetail;
 import com.mark.zumo.client.core.entity.MenuOption;
 import com.mark.zumo.client.core.entity.MenuOptionCategory;
-import com.mark.zumo.client.core.entity.MenuOptionDetail;
 import com.mark.zumo.client.core.entity.OrderDetail;
 import com.mark.zumo.client.core.p2p.P2pClient;
 import com.mark.zumo.client.core.repository.CategoryRepository;
@@ -24,11 +21,12 @@ import com.mark.zumo.client.core.repository.MenuRepository;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Deque;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedDeque;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.CopyOnWriteArraySet;
 
 import io.reactivex.Maybe;
@@ -77,12 +75,12 @@ public enum CustomerMenuManager {
 
     public Observable<List<MenuCategory>> getCombinedMenuCategoryList(String storeUuid) {
         return Observable.create(e -> {
-            List<MenuCategory> menuCategoryList = new ArrayList<>();
-            List<Menu> menuList = new ArrayList<>();
-            Map<String, List<MenuDetail>> menuDetailMap = new HashMap<>();
+            final List<MenuCategory> menuCategoryList = new CopyOnWriteArrayList<>();
+            final List<Menu> menuList = new CopyOnWriteArrayList<>();
+            final Map<String, List<MenuDetail>> menuDetailMap = new ConcurrentHashMap<>();
 
-            Set<Class> loadingToken = new CopyOnWriteArraySet<>();
-            Set<Class> completeToken = new CopyOnWriteArraySet<>();
+            final Set<Class> loadingToken = new CopyOnWriteArraySet<>();
+            final Set<Class> completeToken = new CopyOnWriteArraySet<>();
 
             loadingToken.add(MenuCategory.class);
             completeToken.add(MenuCategory.class);
@@ -158,9 +156,9 @@ public enum CustomerMenuManager {
                                                    final List<Menu> menuList,
                                                    final Map<String, List<MenuDetail>> menuDetailMap) {
 
-        List<MenuCategory> resultMenuCategoryList = new ArrayList<>();
+        List<MenuCategory> resultMenuCategoryList = new CopyOnWriteArrayList<>();
 
-        Map<String, Menu> menuMap = new HashMap<>();
+        Map<String, Menu> menuMap = new ConcurrentHashMap<>();
         for (Menu menu : menuList) {
             menuMap.put(menu.uuid, menu);
         }
@@ -170,8 +168,8 @@ public enum CustomerMenuManager {
                 continue;
             }
 
-            List<MenuDetail> menuDetailList = menuDetailMap.get(menuCategory.uuid);
-            if (menuDetailList.size() > 1) {
+            final List<MenuDetail> menuDetailList = menuDetailMap.get(menuCategory.uuid);
+            if (menuDetailList != null && menuDetailList.size() > 1) {
                 Collections.sort(menuDetailList, (o1, o2) -> o1.menuSeqNum - o2.menuSeqNum);
             }
 
@@ -230,8 +228,8 @@ public enum CustomerMenuManager {
 
     public Maybe<MenuOptionCategory> getCombinedMenuOptionCategory(String menuOptionCategoryUuid) {
         return Maybe.create((MaybeOnSubscribe<MenuOptionCategory>) e -> {
-            final List<MenuOptionCategory> menuOptionCategoryList = new ArrayList<>();
-            final List<MenuOption> menuOptionList = new ArrayList<>();
+            final List<MenuOptionCategory> menuOptionCategoryList = new CopyOnWriteArrayList<>();
+            final List<MenuOption> menuOptionList = new CopyOnWriteArrayList<>();
 
             final Deque<Object> loadingToken = new ConcurrentLinkedDeque<>();
 
@@ -267,40 +265,6 @@ public enum CustomerMenuManager {
                     .doOnSubscribe(x -> loadingToken.add(new Object()))
                     .subscribe();
         }).subscribeOn(Schedulers.io());
-    }
-
-    private List<MenuOptionCategory> mapMenuOptionCategoryWithMenuOption(@NonNull final List<MenuOptionCategory> menuOptionCategoryList,
-                                                                         @NonNull final Map<String, List<MenuOption>> menuOptionMap,
-                                                                         @NonNull final List<Menu> menuList,
-                                                                         @NonNull final Map<String, List<MenuOptionDetail>> menuOptionDetailMap) {
-        final List<MenuOptionCategory> resultMenuOptionCategoryList = new ArrayList<>(menuOptionCategoryList);
-        final Map<String, Menu> menuMap = new HashMap<>();
-        for (Menu menu : menuList) {
-            menuMap.put(menu.uuid, menu);
-        }
-
-        for (MenuOptionCategory menuOptionCategory : resultMenuOptionCategoryList) {
-            if (menuOptionMap.containsKey(menuOptionCategory.uuid)) {
-                menuOptionCategory.menuOptionList = new ArrayList<>();
-                menuOptionCategory.menuOptionList.addAll(menuOptionMap.get(menuOptionCategory.uuid));
-                Collections.sort(menuOptionCategory.menuOptionList, (o1, o2) -> o1.seqNum - o2.seqNum);
-            }
-
-            if (menuOptionDetailMap.containsKey(menuOptionCategory.uuid)) {
-                List<Menu> includedMenuList = new ArrayList<>();
-                for (MenuOptionDetail menuOptionDetail : menuOptionDetailMap.get(menuOptionCategory.uuid)) {
-                    if (!menuMap.containsKey(menuOptionDetail.menuUuid)) {
-                        continue;
-                    }
-
-                    includedMenuList.add(menuMap.get(menuOptionDetail.menuUuid));
-                }
-                menuOptionCategory.menuList = new ArrayList<>();
-                menuOptionCategory.menuList.addAll(includedMenuList);
-            }
-        }
-
-        return resultMenuOptionCategoryList;
     }
 
     public Maybe<OrderDetail> createOrderDetail(String menuUuid, List<String> menuOptionUuidList, int amount) {

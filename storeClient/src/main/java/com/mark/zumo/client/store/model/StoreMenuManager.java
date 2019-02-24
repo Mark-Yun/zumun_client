@@ -12,7 +12,6 @@ import android.util.Log;
 import com.mark.zumo.client.core.entity.Menu;
 import com.mark.zumo.client.core.entity.MenuCategory;
 import com.mark.zumo.client.core.entity.MenuDetail;
-import com.mark.zumo.client.core.entity.MenuOptionCategory;
 import com.mark.zumo.client.core.repository.CategoryRepository;
 import com.mark.zumo.client.core.repository.MenuDetailRepository;
 import com.mark.zumo.client.core.repository.MenuRepository;
@@ -25,6 +24,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.CopyOnWriteArraySet;
 
 import io.reactivex.Maybe;
@@ -40,7 +41,7 @@ public enum StoreMenuManager {
 
     INSTANCE;
 
-    private final static String TAG = "StoreMenuManager";
+    private static final String TAG = "StoreMenuManager";
 
     private final MenuRepository menuRepository;
     private final CategoryRepository categoryRepository;
@@ -71,12 +72,12 @@ public enum StoreMenuManager {
 
     public Observable<List<MenuCategory>> getCombinedMenuCategoryList(String storeUuid) {
         return Observable.create((ObservableOnSubscribe<List<MenuCategory>>) e -> {
-            List<MenuCategory> menuCategoryList = new ArrayList<>();
-            List<Menu> menuList = new ArrayList<>();
-            Map<String, List<MenuDetail>> menuDetailMap = new HashMap<>();
+            final List<MenuCategory> menuCategoryList = new CopyOnWriteArrayList<>();
+            final List<Menu> menuList = new CopyOnWriteArrayList<>();
+            final Map<String, List<MenuDetail>> menuDetailMap = new ConcurrentHashMap<>();
 
-            Set<Class> nextToken = new CopyOnWriteArraySet<>();
-            Set<Class> completeToken = new CopyOnWriteArraySet<>();
+            final Set<Class> nextToken = new CopyOnWriteArraySet<>();
+            final Set<Class> completeToken = new CopyOnWriteArraySet<>();
 
             nextToken.add(MenuCategory.class);
             completeToken.add(MenuCategory.class);
@@ -351,12 +352,6 @@ public enum StoreMenuManager {
                 ).subscribeOn(Schedulers.io());
     }
 
-    public Maybe<MenuOptionCategory> createMenuOptionCategory(String storeUuid, String name) {
-        MenuOptionCategory menuOptionCategory = MenuOptionCategory.create(name, storeUuid);
-        return menuRepository.createMenuOptionCategory(menuOptionCategory)
-                .subscribeOn(Schedulers.io());
-    }
-
     public Maybe<List<Menu>> removeMenuDetailListAsMenuList(final MenuCategory menuCategory,
                                                             final List<Menu> menuList) {
 
@@ -423,22 +418,9 @@ public enum StoreMenuManager {
                 .flatMap(menuDetailList -> menuDetailRepository.updateCategoriesOfMenu(menuUuid, menuDetailList)
                         .flatMapObservable(Observable::fromIterable)
                         .map(menuDetail -> menuDetail.menuCategoryUuid)
-                        .flatMapMaybe(categoryUuid -> categoryRepository.getMenuCategoryFromDisk(categoryUuid))
+                        .flatMapMaybe(categoryRepository::getMenuCategoryFromDisk)
                         .toList().toMaybe())
                 .subscribeOn(Schedulers.io());
     }
 
-    public Maybe<List<MenuDetail>> updateMenusOfCategory(final String storeUuid,
-                                                         final String categoryUuid,
-                                                         final List<String> menuUuidList) {
-        return Observable.fromIterable(menuUuidList)
-                .map(menuUuid -> new MenuDetail.Builder()
-                        .setMenuUuid(menuUuid)
-                        .setStoreUuid(storeUuid)
-                        .setMenuCategoryUuid(categoryUuid)
-                        .setMenuSeqNum(menuUuidList.indexOf(menuUuid))
-                        .build()).toList().toMaybe()
-                .flatMap(menuDetailList -> menuDetailRepository.updateMenusOfCategory(categoryUuid, menuDetailList))
-                .subscribeOn(Schedulers.io());
-    }
 }

@@ -69,7 +69,8 @@ class CanceledOrderAdapter extends RecyclerView.Adapter<CanceledOrderAdapter.Vie
 
     private static int getKeyFromValue(Map<Integer, String> map, String value) {
         for (int key : map.keySet()) {
-            if (map.get(key).equals(value)) {
+            String order = map.get(key);
+            if (order != null && order.equals(value)) {
                 return key;
             }
         }
