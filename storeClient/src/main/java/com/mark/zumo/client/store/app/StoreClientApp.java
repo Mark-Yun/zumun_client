@@ -16,7 +16,6 @@ import android.app.Application;
 
 import com.mark.zumo.client.core.app.AppErrorHandler;
 import com.mark.zumo.client.core.util.context.ContextInjector;
-import com.wonderkiln.blurkit.BlurKit;
 
 /**
  * Created by mark on 18. 5. 7.
@@ -29,7 +28,6 @@ public class StoreClientApp extends Application {
         super.onCreate();
 
         ContextInjector.inject(this);
-        BlurKit.init(this);
         AppErrorHandler.setup();
     }
 }

@@ -66,6 +66,7 @@ public class MenuFragment extends Fragment {
     private MenuViewModel menuViewModel;
 
     private String storeUuid;
+    private View rootView;
 
     @Override
     public void onCreate(@Nullable final Bundle savedInstanceState) {
@@ -77,7 +78,7 @@ public class MenuFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull final LayoutInflater inflater, @Nullable final ViewGroup container, @Nullable final Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_menu, container, false);
+        rootView = inflater.inflate(R.layout.fragment_menu, container, false);
         ButterKnife.bind(this, rootView);
 
         inflateStoreCover();
@@ -93,7 +94,17 @@ public class MenuFragment extends Fragment {
         recyclerView.setHasFixedSize(true);
         recyclerView.setNestedScrollingEnabled(false);
 
-        MenuCategoryAdapter menuCategoryAdapter = new MenuCategoryAdapter(this, this::onSelectMenu);
+        MenuCategoryAdapter menuCategoryAdapter = new MenuCategoryAdapter(this, new MenuAdapter.MenuSelectListener() {
+            @Override
+            public void onSelectMenu(final Menu menu) {
+                MenuFragment.this.onSelectMenu(menu);
+            }
+
+            @Override
+            public void onLongClickMenu(final Menu menu) {
+                MenuFragment.this.onLongClickMenu(menu);
+            }
+        });
 
         recyclerView.setAdapter(menuCategoryAdapter);
         menuViewModel.loadCombinedMenuCategoryList(storeUuid).observe(this, menuCategoryAdapter::setCategoryList);
@@ -102,6 +113,15 @@ public class MenuFragment extends Fragment {
     private void onSelectMenu(Menu menu) {
         menuViewModel.addMenuToCart(menu);
         onAddCartComplete(getView(), menu);
+    }
+
+    private void onLongClickMenu(Menu menu) {
+        if (getActivity() == null || getActivity().getWindow() == null) {
+            return;
+        }
+
+        ViewGroup decorView = (ViewGroup) getActivity().getWindow().getDecorView();
+        MenuDetailActivity.startMenuDetailActivity(decorView, storeUuid, menu.uuid);
     }
 
     private void inflateCartBadge() {

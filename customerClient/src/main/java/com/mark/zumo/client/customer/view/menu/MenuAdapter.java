@@ -11,7 +11,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
-import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -99,7 +98,10 @@ class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.ViewHolder> {
         Intent intent = new Intent(context, MenuDetailActivity.class);
         intent.putExtra(MenuDetailActivity.KEY_MENU_UUID, menu.uuid);
         intent.putExtra(MenuDetailActivity.KEY_MENU_STORE_UUID, menu.storeUuid);
-        ((FragmentActivity) context).startActivityForResult(intent, MenuDetailActivity.REQUEST_CODE);
+//        ((FragmentActivity) context).startActivityForResult(intent, MenuDetailActivity.REQUEST_CODE);
+
+        listener.onLongClickMenu(menu);
+
         return true;
     }
 
@@ -110,6 +112,7 @@ class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.ViewHolder> {
 
     public interface MenuSelectListener {
         void onSelectMenu(Menu menu);
+        void onLongClickMenu(Menu menu);
     }
 
     // Provide a reference to the views for each data item

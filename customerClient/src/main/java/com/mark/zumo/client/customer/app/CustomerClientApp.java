@@ -20,7 +20,6 @@ import com.kakao.auth.KakaoSDK;
 import com.mark.zumo.client.core.app.AppErrorHandler;
 import com.mark.zumo.client.core.util.context.ContextHolder;
 import com.mark.zumo.client.core.util.context.ContextInjector;
-import com.wonderkiln.blurkit.BlurKit;
 
 /**
  * Created by mark on 18. 5. 7.
@@ -36,7 +35,6 @@ public class CustomerClientApp extends Application {
 
     private void initApplication() {
         ContextInjector.inject(this);
-        BlurKit.init(this);
         AppErrorHandler.setup();
         KakaoSDK.init(new KakaoSdkAdapter());
     }

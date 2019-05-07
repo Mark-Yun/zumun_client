@@ -6,7 +6,6 @@
 
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:blurkit="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -49,21 +48,5 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/header"
         app:layout_constraintVertical_weight="1" />
-
-    <com.wonderkiln.blurkit.BlurLayout
-        android:id="@+id/blur_filter"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:clickable="false"
-        android:focusable="false"
-        android:visibility="gone"
-        app:blurRadius="10"
-        app:layout_constraintBottom_toBottomOf="@+id/menu_fragment"
-        app:layout_constraintEnd_toEndOf="@+id/menu_fragment"
-        app:layout_constraintHorizontal_weight="1"
-        app:layout_constraintStart_toStartOf="@+id/menu_fragment"
-        app:layout_constraintTop_toTopOf="@+id/menu_fragment"
-        app:layout_constraintVertical_weight="1"
-        blurkit:blk_fps="0" />
 
 </android.support.constraint.ConstraintLayout>
