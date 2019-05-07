@@ -33,7 +33,9 @@ public enum CartManager {
             storeCartMap.put(storeUuid, cart);
         }
 
-        return Observable.create((ObservableOnSubscribe<Cart>) e -> e.onNext(storeCartMap.get(storeUuid).addEmitter(e))).subscribeOn(Schedulers.computation());
+        return Observable.create((ObservableOnSubscribe<Cart>) e ->
+                e.onNext(storeCartMap.get(storeUuid).addEmitter(e))
+        ).subscribeOn(Schedulers.computation());
     }
 
     public void clearCart(final String storeUuid) {
