@@ -148,6 +148,16 @@ public class OrderViewModel extends AndroidViewModel {
         return liveData;
     }
 
+    public LiveData<MenuOrder> finishOrder(String orderUuid) {
+        MutableLiveData<MenuOrder> liveData = new MutableLiveData<>();
+        storeOrderManager.finishOrder(orderUuid)
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnSuccess(liveData::setValue)
+                .doOnSuccess(order -> showToast("finish " + order.orderName))
+                .subscribe();
+        return liveData;
+    }
+
     private void showToast(final String acceptOrder) {
         Toast.makeText(getApplication(), acceptOrder, Toast.LENGTH_SHORT).show();
     }

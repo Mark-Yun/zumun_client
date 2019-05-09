@@ -57,6 +57,7 @@ public class OrderDetailFragment extends Fragment {
         add(MenuOrder.State.REQUESTED);
         add(MenuOrder.State.ACCEPTED);
         add(MenuOrder.State.COMPLETE);
+        add(MenuOrder.State.FINISHED);
     }};
     @BindView(R.id.store_cover_image) AppCompatImageView storeCoverImage;
     @BindView(R.id.store_cover_title) AppCompatTextView storeCoverTitle;

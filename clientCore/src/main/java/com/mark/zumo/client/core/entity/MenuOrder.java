@@ -87,6 +87,7 @@ public class MenuOrder implements Serializable {
         REQUESTED(R.string.order_state_requested, R.string.notification_description_requested, R.color.order_state_requested, R.drawable.background_order_state_requested),
         ACCEPTED(R.string.order_state_accepted, R.string.notification_description_accepted, R.color.order_state_accepted, R.drawable.background_order_state_accepted),
         COMPLETE(R.string.order_state_complete, R.string.notification_description_complete, R.color.order_state_complete, R.drawable.background_order_state_complete),
+        FINISHED(R.string.order_state_finished, R.string.notification_description_complete, R.color.order_state_complete, R.drawable.background_order_state_finished),
         REJECTED(R.string.order_state_rejected, R.string.notification_description_rejected, R.color.order_state_rejected, R.drawable.background_order_state_canceled),
         CANCELED(R.string.order_state_canceled, R.string.notification_description_canceled, R.color.order_state_canceled, R.drawable.background_order_state_canceled);
 

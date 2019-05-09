@@ -19,9 +19,9 @@ android {
         targetCompatibility JavaVersion.VERSION_1_8
     }
 
-    def versionPropsFile = file('version.properties')
+    def versionPropsFile = file('version.gradle')
     if (!versionPropsFile.canRead()) {
-        throw new GradleException("Could not read version.properties!")
+        throw new GradleException("Could not read version.gradle!")
     }
 
     Properties versionProps = new Properties()

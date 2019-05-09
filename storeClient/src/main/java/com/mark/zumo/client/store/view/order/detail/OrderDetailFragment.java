@@ -55,6 +55,7 @@ public class OrderDetailFragment extends Fragment {
     @BindView(R.id.accept) AppCompatButton accept;
     @BindView(R.id.refund) AppCompatButton refund;
     @BindView(R.id.complete) AppCompatButton complete;
+    @BindView(R.id.finish) AppCompatButton finish;
 
     private OrderViewModel orderViewModel;
     private String orderUuid;
@@ -128,11 +129,13 @@ public class OrderDetailFragment extends Fragment {
         MenuOrder.State state = MenuOrder.State.of(menuOrder.state);
         boolean isAccepted = MenuOrder.State.ACCEPTED == state;
         boolean isRequested = MenuOrder.State.REQUESTED == state;
+        boolean isComplete = MenuOrder.State.COMPLETE == state;
 
         accept.setVisibility(isRequested ? View.VISIBLE : View.GONE);
         reject.setVisibility(isRequested ? View.VISIBLE : View.GONE);
         complete.setVisibility(isAccepted ? View.VISIBLE : View.GONE);
         refund.setVisibility(isAccepted ? View.VISIBLE : View.GONE);
+        finish.setVisibility(isComplete ? View.VISIBLE : View.GONE);
     }
 
     @OnClick(R.id.reject)
@@ -152,7 +155,12 @@ public class OrderDetailFragment extends Fragment {
 
     @OnClick(R.id.complete)
     public void onCompleteClicked() {
-        orderViewModel.completeOrder(orderUuid).observe(this, menuOrder -> finish());
+        orderViewModel.completeOrder(orderUuid).observe(this, this::onCompleteSuccess);
+    }
+
+    @OnClick(R.id.finish)
+    public void onFinishClicked() {
+        orderViewModel.finishOrder(orderUuid).observe(this, menuOrder -> finish());
     }
 
     @NonNull
@@ -181,7 +189,7 @@ public class OrderDetailFragment extends Fragment {
     }
 
     private void onCompleteSuccess(MenuOrder menuOrder) {
-
+        updateButtonState(menuOrder);
     }
 
     public interface OrderActionListener {

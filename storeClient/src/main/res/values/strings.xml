@@ -35,6 +35,7 @@
     <string name="requested_order_reject_button_text">REJECT</string>
     <string name="requested_order_refund_button_text">REFUND</string>
     <string name="requested_order_complete_button_text">COMPLETE</string>
+    <string name="requested_order_finish_button_text">FINISH</string>
 
     <string name="preference_title_menu_category">Menu Settings</string>
     <string name="preference_title_store_category">Store Settings</string>

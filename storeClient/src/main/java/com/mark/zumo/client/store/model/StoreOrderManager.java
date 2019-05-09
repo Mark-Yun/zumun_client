@@ -82,7 +82,8 @@ public enum StoreOrderManager {
             requestedOrderBucket = new OrderBucket();
             loadOrderBucket(storeUuid, requestedOrderBucket,
                     MenuOrder.State.REQUESTED,
-                    MenuOrder.State.ACCEPTED);
+                    MenuOrder.State.ACCEPTED,
+                    MenuOrder.State.COMPLETE);
         }
 
         return Observable.create(
@@ -136,6 +137,13 @@ public enum StoreOrderManager {
 
     public Maybe<MenuOrder> completeOrder(String orderUuid) {
         return orderRepository.updateMenuOrderState(orderUuid, MenuOrder.State.COMPLETE.ordinal())
+                .flatMap(messageHandler::sendMessageAcceptedOrder)
+                .doOnSuccess(x -> requestedOrderBucket.notifyOnNext())
+                .subscribeOn(Schedulers.io());
+    }
+
+    public Maybe<MenuOrder> finishOrder(String orderUuid) {
+        return orderRepository.updateMenuOrderState(orderUuid, MenuOrder.State.FINISHED.ordinal())
                 .flatMap(messageHandler::sendMessageCompleteOrder)
                 .map(menuOrder -> menuOrder.uuid)
                 .map(requestedOrderBucket::removeOrder)
