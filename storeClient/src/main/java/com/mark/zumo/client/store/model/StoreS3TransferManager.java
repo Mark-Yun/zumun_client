@@ -27,7 +27,7 @@ public enum StoreS3TransferManager {
     private final S3BucketRepository s3BucketRepository;
 
     StoreS3TransferManager() {
-        s3BucketRepository = S3BucketRepository.INSTNACE;
+        s3BucketRepository = S3BucketRepository.INSTANCE;
     }
 
     private static String getThumbnailImageDirPath(String storeUuid) {
