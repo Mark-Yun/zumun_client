@@ -71,11 +71,6 @@ private static Integer generateVersionCode(minimumSdk, major, minor, patch) {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-
-    implementation "com.amazonaws:aws-android-sdk-s3:2.6.25"
-    implementation "com.amazonaws:aws-android-sdk-cognito:2.6.25"
-    implementation('com.amazonaws:aws-android-sdk-mobile-client:2.6.+@aar') { transitive = true }
-
     implementation 'com.library.tangxiaolv:telegramgallery:1.0.5'
     implementation 'com.theartofdev.edmodo:android-image-cropper:2.6.0'
     implementation 'com.github.zurche:plain-pie:v0.2.4'

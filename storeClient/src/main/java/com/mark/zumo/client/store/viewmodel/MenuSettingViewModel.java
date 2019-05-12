@@ -17,8 +17,8 @@ import android.support.annotation.NonNull;
 import com.mark.zumo.client.core.entity.Menu;
 import com.mark.zumo.client.core.entity.MenuCategory;
 import com.mark.zumo.client.store.model.MenuOptionManager;
-import com.mark.zumo.client.store.model.S3TransferManager;
 import com.mark.zumo.client.store.model.StoreMenuManager;
+import com.mark.zumo.client.store.model.StoreS3TransferManager;
 import com.mark.zumo.client.store.model.StoreUserManager;
 
 import java.util.List;
@@ -35,7 +35,7 @@ public class MenuSettingViewModel extends AndroidViewModel {
 
     private final StoreUserManager storeUserManager;
     private final StoreMenuManager storeMenuManager;
-    private final S3TransferManager s3TransferManager;
+    private final StoreS3TransferManager storeS3TransferManager;
     private final MenuOptionManager menuOptionManager;
 
     private final CompositeDisposable disposables;
@@ -47,7 +47,7 @@ public class MenuSettingViewModel extends AndroidViewModel {
 
         storeUserManager = StoreUserManager.INSTANCE;
         storeMenuManager = StoreMenuManager.INSTANCE;
-        s3TransferManager = S3TransferManager.INSTANCE;
+        storeS3TransferManager = StoreS3TransferManager.INSTANCE;
         menuOptionManager = MenuOptionManager.INSTANCE;
 
         disposables = new CompositeDisposable();
@@ -244,7 +244,7 @@ public class MenuSettingViewModel extends AndroidViewModel {
                 .flatMap(preparedMenu ->
                         storeMenuManager.createMenu(preparedMenu)
                                 .flatMap(createdMenu ->
-                                        s3TransferManager.uploadMenuImage(activity, createdMenu.uuid, Uri.parse(menu.imageUrl))
+                                        storeS3TransferManager.uploadMenuImage(activity, createdMenu.uuid, Uri.parse(menu.imageUrl))
                                                 .flatMap(url -> storeMenuManager.updateMenuImageUrl(createdMenu.uuid, url))
                                                 .flatMap(updatedMenu ->
                                                         storeMenuManager.createMenuDetailListAsMenuList(updatedMenu.storeUuid, updatedMenu.uuid, menuCategoryUuidList)
@@ -262,7 +262,7 @@ public class MenuSettingViewModel extends AndroidViewModel {
     public LiveData<Menu> uploadAndUpdateMenuImage(Activity activity, String menuUuid, Uri uri) {
         MutableLiveData<Menu> liveData = new MutableLiveData<>();
 
-        s3TransferManager.uploadMenuImage(activity, menuUuid, uri)
+        storeS3TransferManager.uploadMenuImage(activity, menuUuid, uri)
                 .flatMap(url -> storeMenuManager.updateMenuImageUrl(menuUuid, url))
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSuccess(liveData::setValue)

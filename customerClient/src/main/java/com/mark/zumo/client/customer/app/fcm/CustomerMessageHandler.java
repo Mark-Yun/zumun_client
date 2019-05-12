@@ -141,7 +141,7 @@ public enum CustomerMessageHandler {
             AudioAttributes audioAttributes = new AudioAttributes.Builder()
                     .setUsage(AudioAttributes.USAGE_ALARM)
                     .build();
-            vibrator.vibrate(VibrationEffect.createOneShot(3000, 255), audioAttributes);
+            vibrator.vibrate(VibrationEffect.createOneShot(5000, 255), audioAttributes);
         } else {
             vibrator.vibrate(3000);
         }
@@ -166,7 +166,7 @@ public enum CustomerMessageHandler {
                 createCompleteVibration(context);
                 synchronized (this) {
                     try {
-                        wait(4000);
+                        wait(1000);
                     } catch (InterruptedException e) {
                         Log.d(TAG, "VibratorThread: interrupted");
                     }

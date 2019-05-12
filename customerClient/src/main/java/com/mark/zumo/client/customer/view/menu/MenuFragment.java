@@ -81,7 +81,7 @@ public class MenuFragment extends Fragment {
         rootView = inflater.inflate(R.layout.fragment_menu, container, false);
         ButterKnife.bind(this, rootView);
 
-        inflateStoreCover();
+        inflateStoreInfo();
         inflateMenuRecyclerView();
         inflateCartBadge();
         return rootView;
@@ -129,7 +129,7 @@ public class MenuFragment extends Fragment {
                 .observe(this, this::onLoadCart);
     }
 
-    private void inflateStoreCover() {
+    private void inflateStoreInfo() {
         menuViewModel.getStore(storeUuid).observe(this, this::onLoadStore);
     }
 

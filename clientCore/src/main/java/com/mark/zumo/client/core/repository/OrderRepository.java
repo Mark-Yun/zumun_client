@@ -91,6 +91,7 @@ public enum OrderRepository {
     public Observable<List<MenuOrder>> getMenuOrderListByCustomerUuid(String customerUuid, int offset, int limit) {
         Maybe<List<MenuOrder>> menuOrderListDB = diskRepository.getMenuOrderByCustomerUuid(customerUuid, offset, limit);
         Maybe<List<MenuOrder>> menuOrderListApi = networkRepository().getMenuOrderListByCustomerUuid(customerUuid, offset, limit)
+                .doOnSuccess(x -> diskRepository.deleteMenuOrderListByCustomerUuid(customerUuid))
                 .doOnSuccess(diskRepository::insertMenuOrderList);
 
         return Maybe.merge(menuOrderListDB, menuOrderListApi)

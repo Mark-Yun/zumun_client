@@ -18,7 +18,7 @@ import com.mark.zumo.client.core.appserver.request.signup.StoreOwnerSignUpReques
 import com.mark.zumo.client.core.appserver.response.store.user.signin.StoreUserSignInErrorCode;
 import com.mark.zumo.client.core.appserver.response.store.user.signup.StoreUserSignupErrorCode;
 import com.mark.zumo.client.core.appserver.response.store.user.signup.StoreUserSignupException;
-import com.mark.zumo.client.store.model.S3TransferManager;
+import com.mark.zumo.client.store.model.StoreS3TransferManager;
 import com.mark.zumo.client.store.model.StoreUserManager;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -31,7 +31,7 @@ import io.reactivex.disposables.CompositeDisposable;
 public class StoreUserSignViewModel extends AndroidViewModel {
 
     private final StoreUserManager storeUserManager;
-    private final S3TransferManager s3TransferManager;
+    private final StoreS3TransferManager storeS3TransferManager;
 
     private final CompositeDisposable disposables;
 
@@ -39,7 +39,7 @@ public class StoreUserSignViewModel extends AndroidViewModel {
         super(application);
 
         storeUserManager = StoreUserManager.INSTANCE;
-        s3TransferManager = S3TransferManager.INSTANCE;
+        storeS3TransferManager = StoreS3TransferManager.INSTANCE;
 
         disposables = new CompositeDisposable();
     }
@@ -74,7 +74,7 @@ public class StoreUserSignViewModel extends AndroidViewModel {
     public LiveData<String> uploadBankAccountScanImage(Activity activity, Uri uri) {
         MutableLiveData<String> liveData = new MutableLiveData<>();
 
-        s3TransferManager.uploadBankScanImage(activity, uri)
+        storeS3TransferManager.uploadBankScanImage(activity, uri)
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSuccess(liveData::setValue)
                 .doOnSubscribe(disposables::add)

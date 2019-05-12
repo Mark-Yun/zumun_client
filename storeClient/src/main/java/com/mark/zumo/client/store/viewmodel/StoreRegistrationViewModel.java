@@ -18,7 +18,7 @@ import android.support.annotation.NonNull;
 import com.mark.zumo.client.core.appserver.request.registration.StoreRegistrationRequest;
 import com.mark.zumo.client.core.appserver.response.store.registration.StoreRegistrationResponse;
 import com.mark.zumo.client.core.provider.AppLocationProvider;
-import com.mark.zumo.client.store.model.S3TransferManager;
+import com.mark.zumo.client.store.model.StoreS3TransferManager;
 import com.mark.zumo.client.store.model.StoreStoreManager;
 import com.mark.zumo.client.store.model.StoreUserManager;
 
@@ -38,7 +38,7 @@ public class StoreRegistrationViewModel extends AndroidViewModel {
     private final StoreUserManager storeUserManager;
     private final StoreStoreManager storeStoreManager;
     private final AppLocationProvider appLocationProvider;
-    private final S3TransferManager s3TransferManager;
+    private final StoreS3TransferManager storeS3TransferManager;
 
     private final CompositeDisposable compositeDisposable;
 
@@ -48,7 +48,7 @@ public class StoreRegistrationViewModel extends AndroidViewModel {
         storeUserManager = StoreUserManager.INSTANCE;
         storeStoreManager = StoreStoreManager.INSTANCE;
         appLocationProvider = AppLocationProvider.INSTANCE;
-        s3TransferManager = S3TransferManager.INSTANCE;
+        storeS3TransferManager = StoreS3TransferManager.INSTANCE;
 
         compositeDisposable = new CompositeDisposable();
     }
@@ -76,7 +76,7 @@ public class StoreRegistrationViewModel extends AndroidViewModel {
                 .switchIfEmpty(storeUserManager.getStoreUserSessionAsync())
                 .map(storeUserSession -> storeUserSession.uuid)
                 .flatMap(storeUserUuid ->
-                        s3TransferManager.uploadCorporateScanImage(activity, storeUserUuid, Uri.parse(storeRegistrationRequest.corporateRegistrationScanUrl))
+                        storeS3TransferManager.uploadCorporateScanImage(activity, storeUserUuid, Uri.parse(storeRegistrationRequest.corporateRegistrationScanUrl))
                                 .map(uploadedUrl ->
                                         new StoreRegistrationRequest.Builder(storeRegistrationRequest)
                                                 .setCorporateRegistrationScanUrl(uploadedUrl)

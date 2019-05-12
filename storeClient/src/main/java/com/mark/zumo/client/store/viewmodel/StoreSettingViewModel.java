@@ -6,17 +6,17 @@
 
 package com.mark.zumo.client.store.viewmodel;
 
-import android.app.Activity;
 import android.app.Application;
 import android.arch.lifecycle.AndroidViewModel;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
+import android.content.Context;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.mark.zumo.client.core.entity.Store;
-import com.mark.zumo.client.store.model.S3TransferManager;
+import com.mark.zumo.client.store.model.StoreS3TransferManager;
 import com.mark.zumo.client.store.model.StoreStoreManager;
 import com.mark.zumo.client.store.model.StoreUserManager;
 
@@ -30,7 +30,7 @@ public class StoreSettingViewModel extends AndroidViewModel {
 
     private final StoreUserManager storeUserManager;
     private final StoreStoreManager storeStoreManager;
-    private final S3TransferManager s3TransferManager;
+    private final StoreS3TransferManager storeS3TransferManager;
 
     private final CompositeDisposable compositeDisposable;
 
@@ -41,7 +41,7 @@ public class StoreSettingViewModel extends AndroidViewModel {
 
         storeUserManager = StoreUserManager.INSTANCE;
         storeStoreManager = StoreStoreManager.INSTANCE;
-        s3TransferManager = S3TransferManager.INSTANCE;
+        storeS3TransferManager = StoreS3TransferManager.INSTANCE;
 
         compositeDisposable = new CompositeDisposable();
     }
@@ -86,10 +86,10 @@ public class StoreSettingViewModel extends AndroidViewModel {
         return liveData;
     }
 
-    public LiveData<Store> uploadCoverImage(Activity activity, Uri uri) {
+    public LiveData<Store> uploadCoverImage(Context context, Uri uri) {
         MutableLiveData<Store> liveData = new MutableLiveData<>();
         storeUserManager.getSessionStoreAsync()
-                .flatMap(store -> s3TransferManager.uploadCoverImage(activity, store.uuid, uri))
+                .flatMap(store -> storeS3TransferManager.uploadCoverImage(context, store.uuid, uri))
                 .flatMap(storeUserManager::updateSessionStoreCoverImageUrl)
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSuccess(liveData::setValue)
@@ -99,11 +99,11 @@ public class StoreSettingViewModel extends AndroidViewModel {
         return liveData;
     }
 
-    public LiveData<Store> uploadThumbnailImage(Activity activity, Uri uri) {
+    public LiveData<Store> uploadThumbnailImage(Context context, Uri uri) {
         MutableLiveData<Store> liveData = new MutableLiveData<>();
 
         storeUserManager.getSessionStoreAsync()
-                .flatMap(store -> s3TransferManager.uploadThumbnailImage(activity, store.uuid, uri))
+                .flatMap(store -> storeS3TransferManager.uploadThumbnailImage(context, store.uuid, uri))
                 .flatMap(storeUserManager::updateSessionStoreThumbnailImageUrl)
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSuccess(liveData::setValue)

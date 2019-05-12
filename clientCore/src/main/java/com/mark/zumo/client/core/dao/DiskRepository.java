@@ -88,6 +88,9 @@ public interface DiskRepository {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertMenuOrderList(List<MenuOrder> menuOrderList);
 
+    @Query("DELETE FROM " + MenuOrder.TABLE + " WHERE customer_uuid LIKE :customerUuid")
+    void deleteMenuOrderListByCustomerUuid(String customerUuid);
+
     @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
     @Query("SELECT * FROM " + MenuOption.Schema.table + " WHERE menu_option_category_uuid LIKE :menuOptionCategoryUuid")
     Maybe<List<MenuOption>> getMenuOptionListByMenuOptionCategoryUuid(String menuOptionCategoryUuid);
