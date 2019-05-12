@@ -24,7 +24,6 @@ import com.mark.zumo.client.store.model.StoreUserManager;
 
 import java.util.List;
 
-import io.reactivex.Maybe;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 
@@ -56,8 +55,7 @@ public class StoreRegistrationViewModel extends AndroidViewModel {
     public LiveData<List<StoreRegistrationRequest>> getCombinedStoreRegistrationRequest() {
         MutableLiveData<List<StoreRegistrationRequest>> liveData = new MutableLiveData<>();
 
-        Maybe.fromCallable(storeUserManager::getStoreUserSessionSync)
-                .switchIfEmpty(storeUserManager.getStoreUserSessionAsync())
+        storeUserManager.getStoreUserSession()
                 .map(storeUserSession -> storeUserSession.uuid)
                 .flatMapObservable(storeStoreManager::getCombinedStoreRegistrationRequestByStoreUserUuid)
                 .observeOn(AndroidSchedulers.mainThread())
@@ -72,8 +70,7 @@ public class StoreRegistrationViewModel extends AndroidViewModel {
                                                                               final StoreRegistrationRequest storeRegistrationRequest) {
         MutableLiveData<StoreRegistrationResponse> liveData = new MutableLiveData<>();
 
-        Maybe.fromCallable(storeUserManager::getStoreUserSessionSync)
-                .switchIfEmpty(storeUserManager.getStoreUserSessionAsync())
+        storeUserManager.getStoreUserSession()
                 .map(storeUserSession -> storeUserSession.uuid)
                 .flatMap(storeUserUuid ->
                         storeS3TransferManager.uploadCorporateScanImage(activity, storeUserUuid, Uri.parse(storeRegistrationRequest.corporateRegistrationScanUrl))

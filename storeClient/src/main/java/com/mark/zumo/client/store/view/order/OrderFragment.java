@@ -63,6 +63,8 @@ public class OrderFragment extends Fragment {
         super.onCreate(savedInstanceState);
         orderViewModel = ViewModelProviders.of(this).get(OrderViewModel.class);
         mainViewModel = ViewModelProviders.of(this).get(MainViewModel.class);
+
+        mainViewModel.refreshSnsToken();
     }
 
     @Nullable
@@ -76,10 +78,10 @@ public class OrderFragment extends Fragment {
     }
 
     private void inflateStoreInfo() {
-        mainViewModel.getSessionStoreFlowable().observe(this, this::onLoadStore);
+        mainViewModel.getSessionStoreObservable().observe(this, this::onStoreUpdated);
     }
 
-    private void onLoadStore(Store store) {
+    private void onStoreUpdated(Store store) {
         GlideApp.with(this)
                 .load(store.coverImageUrl)
                 .transition(DrawableTransitionOptions.withCrossFade())

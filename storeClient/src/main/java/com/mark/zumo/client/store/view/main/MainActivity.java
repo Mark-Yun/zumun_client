@@ -76,8 +76,6 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         ButterKnife.bind(this);
         LayoutInflater.from(this).inflate(R.layout.nav_header_main, navView);
 
-        checkSessionAndInflateMainFragmentIfPossible();
-
         setSupportActionBar(toolbar);
 
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.content_desc_navigation_drawer_open, R.string.content_desc_navigation_drawer_close);
@@ -86,24 +84,17 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 
         navView.setNavigationItemSelectedListener(this);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+
+        checkSessionAndInflateMainFragmentIfPossible();
     }
 
     private void checkSessionAndInflateMainFragmentIfPossible() {
-        if (!mainViewModel.hasStoreUserSession()) { //doesn't have user session
-            Log.d(TAG, "checkSessionAndInflateMainFragmentIfPossible: doesn't have removeAllStoreUserSession");
-            UserSignActivity.start(this);
-        } else if (!mainViewModel.hasSessionStore()) { //doesn't have session store
-            Log.d(TAG, "checkSessionAndInflateMainFragmentIfPossible: doesn't have sessionStore");
-            mainViewModel.hasSessionStoreAsync().observe(this, this::onSessionStoreLoaded);
-        } else { //has session store
-            Log.d(TAG, "checkSessionAndInflateMainFragmentIfPossible: session prepared. inflateMainFragment");
-            inflateMainFragment();
-        }
+        mainViewModel.hasSessionStoreAsync().observe(this, this::onSessionStoreLoaded);
     }
 
     private void inflateMainFragment() {
-        inflateStoreInformation();
 
+        inflateStoreInformation();
         mainViewModel.findCustomer(this);
         Menu menu = navView.getMenu();
         if (menu == null) {
@@ -137,14 +128,18 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     }
 
     private void onSelectedStore(Store store) {
+        if (store == null) {
+            return;
+        }
+
         inflateMainFragment();
     }
 
     private void inflateStoreInformation() {
-        mainViewModel.getSessionStoreFlowable().observe(this, this::onStoreLoaded);
+        mainViewModel.getSessionStoreObservable().observe(this, this::onStoreUpdated);
     }
 
-    private void onStoreLoaded(Store store) {
+    private void onStoreUpdated(Store store) {
         if (store == null) {
             return;
         }

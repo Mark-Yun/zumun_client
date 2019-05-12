@@ -21,11 +21,9 @@ import com.mark.zumo.client.store.model.StoreUserManager;
 
 import java.util.List;
 
-import io.reactivex.Maybe;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
-import io.reactivex.disposables.Disposable;
 
 
 /**
@@ -54,52 +52,40 @@ public class MainViewModel extends AndroidViewModel {
         sessionStoreLiveData = new MutableLiveData<>();
     }
 
-    public boolean hasSessionStore() {
-        return storeUserManager.getSessionStoreSync() != null;
-    }
-
     public LiveData<Boolean> hasSessionStoreAsync() {
-        MutableLiveData<Boolean> liveData = new MutableLiveData<>();
-        liveData.setValue(false);
+        final MutableLiveData<Boolean> liveData = new MutableLiveData<>();
 
-        storeUserManager.getSessionStoreAsync()
+        storeStoreManager.getStoreSessionMaybe()
                 .observeOn(AndroidSchedulers.mainThread())
-                .doOnSuccess(sessionStore -> liveData.setValue(sessionStore != null))
-                .doOnComplete(() -> liveData.setValue(liveData.getValue()))
+                .doOnSuccess(sessionStore -> liveData.setValue(true))
+                .doOnComplete(() -> {
+                    if (liveData.getValue() == null) {
+                        liveData.setValue(false);
+                    }
+                })
                 .doOnSubscribe(compositeDisposable::add)
                 .subscribe();
         return liveData;
     }
 
-    public boolean hasStoreUserSession() {
-        return storeUserManager.getStoreUserSessionSync() != null;
-    }
-
-    public LiveData<Store> getSessionStoreFlowable() {
-        Disposable disposable = storeUserManager.getSessionStoreAsyncFlowable()
+    public LiveData<Store> getSessionStoreObservable() {
+        storeStoreManager.getStoreSessionObservable()
                 .observeOn(AndroidSchedulers.mainThread())
-//                .doOnNext()
-                .subscribe(sessionStoreLiveData::setValue);
-
-//        compositeDisposable.add(disposable);
-
-        return sessionStoreLiveData;
-    }
-
-    public LiveData<Store> getSessionStore() {
-        storeUserManager.getSessionStoreAsync()
-                .observeOn(AndroidSchedulers.mainThread())
-                .doOnSuccess(sessionStoreLiveData::setValue)
-                .doOnSubscribe(Disposable::dispose)
+                .doOnNext(sessionStoreLiveData::setValue)
+                .doOnSubscribe(compositeDisposable::add)
                 .subscribe();
 
         return sessionStoreLiveData;
     }
 
+    public void refreshSnsToken() {
+        storeStoreManager.registerToken();
+    }
+
     public LiveData<Store> setSessionStore(String storeUuid) {
 
         storeStoreManager.getStore(storeUuid)
-                .flatMapMaybe(storeUserManager::setSessionStore)
+                .flatMapMaybe(storeStoreManager::saveSessionStore)
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnNext(sessionStoreLiveData::setValue)
                 .doOnSubscribe(compositeDisposable::add)
@@ -112,8 +98,7 @@ public class MainViewModel extends AndroidViewModel {
 
         MutableLiveData<List<Store>> liveData = new MutableLiveData<>();
 
-        Maybe.fromCallable(storeUserManager::getStoreUserSessionSync)
-                .switchIfEmpty(storeUserManager.getStoreUserSessionAsync())
+        storeUserManager.getStoreUserSession()
                 .map(storeUserSession -> storeUserSession.uuid)
                 .flatMapObservable(storeUserManager::getStoreUserContract)
                 .flatMapMaybe(storeUserContractList ->
@@ -130,7 +115,7 @@ public class MainViewModel extends AndroidViewModel {
     }
 
     public void findCustomer(Activity activity) {
-        storeUserManager.getSessionStoreAsync()
+        storeStoreManager.getStoreSessionMaybe()
                 .map(store -> p2pServer = new P2pServer(activity, store))
                 .flatMapObservable(P2pServer::findCustomer)
                 .doOnSubscribe(compositeDisposable::add)
@@ -139,6 +124,7 @@ public class MainViewModel extends AndroidViewModel {
 
     public void signOut() {
         storeUserManager.signOut();
+        storeStoreManager.signOut();
     }
 
     @Override

@@ -36,6 +36,7 @@ import java.util.List;
 
 import io.reactivex.Flowable;
 import io.reactivex.Maybe;
+import io.reactivex.Observable;
 
 /**
  * Created by mark on 18. 4. 30.
@@ -50,7 +51,10 @@ public interface DiskRepository {
     void insertStoreOwner(StoreOwner storeOwner);
 
     @Query("SELECT * FROM " + Store.TABLE + " WHERE store_uuid LIKE :uuid LIMIT 1")
-    Maybe<Store> getStore(String uuid);
+    Maybe<Store> getStoreMaybe(String uuid);
+
+    @Query("SELECT * FROM " + Store.TABLE + " WHERE store_uuid LIKE :uuid LIMIT 1")
+    Flowable<Store> getStoreFlowable(String uuid);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertStore(Store store);
@@ -144,16 +148,13 @@ public interface DiskRepository {
     void removeAllStoreUserSession();
 
     @Query("DELETE FROM " + SessionStore.Schema.TABLE)
-    void removeAllStoreSssion();
+    void removeAllStoreSession();
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertSessionStore(SessionStore sessionStore);
 
     @Query("SELECT * FROM " + SessionStore.Schema.TABLE + " ORDER BY " + StoreUserSession.Schema.createdDate + " DESC LIMIT 1")
-    Flowable<SessionStore> getSessionStoreFlowable();
-
-    @Query("SELECT * FROM " + SessionStore.Schema.TABLE + " ORDER BY " + StoreUserSession.Schema.createdDate + " DESC LIMIT 1")
-    Maybe<SessionStore> getSessionStoreMaybe();
+    Maybe<SessionStore> getSessionStore();
 
     @Query("SELECT * FROM " + MenuOption.Schema.table + " WHERE menu_option_uuid LIKE :menuOptionUuid LIMIT 1")
     Maybe<MenuOption> getMenuOption(String menuOptionUuid);

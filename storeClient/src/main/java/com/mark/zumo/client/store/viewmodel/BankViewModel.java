@@ -17,7 +17,6 @@ import com.mark.zumo.client.store.model.BankManager;
 import com.mark.zumo.client.store.model.StoreStoreManager;
 import com.mark.zumo.client.store.model.StoreUserManager;
 
-import io.reactivex.Maybe;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 
@@ -57,8 +56,7 @@ public class BankViewModel extends AndroidViewModel {
     public LiveData<StoreOwner> getSessionStoreOwner() {
 
         MutableLiveData<StoreOwner> liveData = new MutableLiveData<>();
-        Maybe.fromCallable(storeUserManager::getStoreUserSessionSync)
-                .switchIfEmpty(storeUserManager.getStoreUserSessionAsync())
+        storeUserManager.getStoreUserSession()
                 .map(storeUserSession -> storeUserSession.uuid)
                 .flatMapObservable(storeUserManager::getStoreOwner)
                 .observeOn(AndroidSchedulers.mainThread())
@@ -72,8 +70,7 @@ public class BankViewModel extends AndroidViewModel {
     public LiveData<StoreOwner> updateBankAccount(final String bankCode, final String bankAccountNumber) {
 
         MutableLiveData<StoreOwner> liveData = new MutableLiveData<>();
-        Maybe.fromCallable(storeUserManager::getStoreUserSessionSync)
-                .switchIfEmpty(storeUserManager.getStoreUserSessionAsync())
+        storeUserManager.getStoreUserSession()
                 .map(storeUserSession -> storeUserSession.uuid)
                 .flatMap(storeUserUuid -> storeUserManager.updateStoreOwnerBank(storeUserUuid, bankCode, bankAccountNumber))
                 .observeOn(AndroidSchedulers.mainThread())
@@ -89,8 +86,7 @@ public class BankViewModel extends AndroidViewModel {
 
         MutableLiveData<Boolean> liveData = new MutableLiveData<>();
 
-        Maybe.fromCallable(storeUserManager::getStoreUserSessionSync)
-                .switchIfEmpty(storeUserManager.getStoreUserSessionAsync())
+        storeUserManager.getStoreUserSession()
                 .map(storeUserSession -> storeUserSession.email)
                 .flatMap(email -> bankManager.inquiryBankAccount(email, birth.concat(sex), bankCode, accountNumber))
                 .observeOn(AndroidSchedulers.mainThread())

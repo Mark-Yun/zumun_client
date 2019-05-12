@@ -59,16 +59,8 @@ public class UserSignActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
 
         storeUserSignViewModel = ViewModelProviders.of(this).get(StoreUserSignViewModel.class);
-        if (storeUserSignViewModel.hasStoreUserSessionSync()) {
-            if (storeUserSignViewModel.hasSessionStoreSync()) {
-                MainActivity.start(this);
-                return;
-            } else {
-                storeUserSignViewModel.hasSessionStoreAsync().observe(this, this::onSessionStoreLoaded);
-            }
-        } else {
-            storeUserSignViewModel.hasStoreUserSessionAsync().observe(this, this::onStoreUserSessionLoaded);
-        }
+
+        storeUserSignViewModel.hasStoreUserSessionAsync().observe(this, this::onStoreUserSessionLoaded);
 
         setContentView(R.layout.activity_sign);
         ButterKnife.bind(this);
@@ -92,19 +84,16 @@ public class UserSignActivity extends BaseActivity {
             return;
         }
 
-        if (storeUserSignViewModel.hasSessionStoreSync()) {
-            MainActivity.start(this);
-        } else {
-            storeUserSignViewModel.hasSessionStoreAsync().observe(this, this::onSessionStoreLoaded);
-        }
+        storeUserSignViewModel.hasSessionStoreAsync().observe(this, this::onSessionStoreLoaded);
     }
 
     private void onSessionStoreLoaded(boolean hasSessionStore) {
         if (!hasSessionStore) {
             inflateStoreSelectFragment();
-        } else {
-            MainActivity.start(this);
+            return;
         }
+
+        MainActivity.start(this);
     }
 
     private void inflateStoreSelectFragment() {

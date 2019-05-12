@@ -146,8 +146,8 @@ public enum AppServerServiceProvider {
         headerBundle.putAll(bundle);
     }
 
-    public void clearSessionHeader(String key) {
-        headerBundle.remove(key);
+    public void clearSessionHeader() {
+        headerBundle.clear();
     }
 
     private NetworkRepository buildNetworkRepository(final Bundle bundle) {

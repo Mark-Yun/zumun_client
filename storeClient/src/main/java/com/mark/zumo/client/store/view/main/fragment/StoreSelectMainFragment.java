@@ -45,7 +45,7 @@ public class StoreSelectMainFragment extends Fragment {
 
     private void inflateView() {
         StoreSelectFragment storeSelectFragment = StoreSelectFragment.newInstance()
-                .onSelectStore(listener)
+                .onSelectStore(listener::onSelectStore)
                 .onClickStoreRegistration(storeRegistrationAction);
 
         getFragmentManager().beginTransaction()

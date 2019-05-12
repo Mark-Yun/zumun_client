@@ -25,7 +25,7 @@ import java.util.Map;
  */
 public class CustomerFcmService extends FirebaseMessagingService {
 
-    private final static String TAG = "CustomerFcmService";
+    private static final String TAG = "CustomerFcmService";
 
     private CustomerMessageHandler customerMessageHandler;
     private CustomerSessionManager customerSessionManager;

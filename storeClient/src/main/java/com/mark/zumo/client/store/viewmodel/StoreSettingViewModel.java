@@ -34,8 +34,6 @@ public class StoreSettingViewModel extends AndroidViewModel {
 
     private final CompositeDisposable compositeDisposable;
 
-    private MutableLiveData<Store> currentStore;
-
     public StoreSettingViewModel(@NonNull final Application application) {
         super(application);
 
@@ -46,28 +44,22 @@ public class StoreSettingViewModel extends AndroidViewModel {
         compositeDisposable = new CompositeDisposable();
     }
 
-    public LiveData<Store> getCurrentStore() {
-        if (currentStore == null) {
-            currentStore = new MutableLiveData<>();
-        }
+    public LiveData<Store> getCurrentSessionStore() {
+        MutableLiveData<Store> currentStore = new MutableLiveData<>();
 
-        loadOnCurrentStore();
+        storeStoreManager.getStoreSessionObservable()
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnNext(currentStore::setValue)
+                .doOnSubscribe(compositeDisposable::add)
+                .subscribe();
 
         return currentStore;
     }
 
-    public void loadOnCurrentStore() {
-        storeUserManager.getSessionStoreAsync()
-                .observeOn(AndroidSchedulers.mainThread())
-                .doOnSuccess(currentStore::setValue)
-                .doOnSubscribe(compositeDisposable::add)
-                .subscribe();
-    }
 
     public LiveData<Store> updateStoreName(String newName) {
         MutableLiveData<Store> liveData = new MutableLiveData<>();
-        storeUserManager.getSessionStoreAsync()
-                .flatMap(store -> storeUserManager.updateSessionStoreName(newName))
+        storeStoreManager.updateSessionStoreName(newName)
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSuccess(liveData::setValue)
                 .doOnSubscribe(compositeDisposable::add)
@@ -77,8 +69,7 @@ public class StoreSettingViewModel extends AndroidViewModel {
 
     public LiveData<Store> updateStoreLocation(LatLng latLng) {
         MutableLiveData<Store> liveData = new MutableLiveData<>();
-        storeUserManager.getSessionStoreAsync()
-                .flatMap(store -> storeUserManager.updateSessionStoreLocation(latLng))
+        storeStoreManager.updateSessionStoreLocation(latLng)
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSuccess(liveData::setValue)
                 .doOnSubscribe(compositeDisposable::add)
@@ -88,9 +79,8 @@ public class StoreSettingViewModel extends AndroidViewModel {
 
     public LiveData<Store> uploadCoverImage(Context context, Uri uri) {
         MutableLiveData<Store> liveData = new MutableLiveData<>();
-        storeUserManager.getSessionStoreAsync()
-                .flatMap(store -> storeS3TransferManager.uploadCoverImage(context, store.uuid, uri))
-                .flatMap(storeUserManager::updateSessionStoreCoverImageUrl)
+        storeS3TransferManager.uploadCoverImage(context, uri)
+                .flatMap(storeStoreManager::updateSessionStoreCoverImageUrl)
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSuccess(liveData::setValue)
                 .doOnSubscribe(compositeDisposable::add)
@@ -102,9 +92,8 @@ public class StoreSettingViewModel extends AndroidViewModel {
     public LiveData<Store> uploadThumbnailImage(Context context, Uri uri) {
         MutableLiveData<Store> liveData = new MutableLiveData<>();
 
-        storeUserManager.getSessionStoreAsync()
-                .flatMap(store -> storeS3TransferManager.uploadThumbnailImage(context, store.uuid, uri))
-                .flatMap(storeUserManager::updateSessionStoreThumbnailImageUrl)
+        storeS3TransferManager.uploadThumbnailImage(context, uri)
+                .flatMap(storeStoreManager::updateSessionStoreThumbnailImageUrl)
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSuccess(liveData::setValue)
                 .doOnSubscribe(compositeDisposable::add)

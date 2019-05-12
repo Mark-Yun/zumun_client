@@ -104,7 +104,7 @@ public class StoreProfilePreferenceFragment extends BasePreferenceFragmentCompat
         addressPreference = findPreference(getString(R.string.store_address_preference_key));
         addressPreference.setOnPreferenceClickListener(this::onAddressPreferenceClicked);
 
-        storeSettingViewModel.getCurrentStore().observe(this, this::onLoadStore);
+        storeSettingViewModel.getCurrentSessionStore().observe(this, this::onLoadStore);
     }
 
     private void onLoadStore(Store store) {

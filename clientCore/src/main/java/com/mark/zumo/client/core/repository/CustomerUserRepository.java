@@ -81,8 +81,8 @@ public enum CustomerUserRepository {
         AppServerServiceProvider.INSTANCE.putSessionHeader(bundle);
     }
 
-    public void clearSessionHeader(String key) {
-        AppServerServiceProvider.INSTANCE.clearSessionHeader(key);
+    public void clearSessionHeader() {
+        AppServerServiceProvider.INSTANCE.clearSessionHeader();
     }
 
     public Maybe<SnsToken> registerSnsToken(SnsToken snsToken) {

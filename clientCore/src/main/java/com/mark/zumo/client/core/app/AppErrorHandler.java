@@ -71,19 +71,21 @@ public class AppErrorHandler {
                     }
                     return;
                 }
-                showToast(R.string.error_message_on_http_exception);
+                Log.e(TAG, "setup: ", e);
                 return;
             } else if (e instanceof UnknownHostException) {
                 showToast(R.string.error_message_on_unknown_host_exception);
+                Log.e(TAG, "setup: ", e);
                 return;
             } else if (e instanceof IOException) {
-                showToast(R.string.error_message_on_io_exception);
+                Log.e(TAG, "setup: ", e);
                 return;
             } else if (e instanceof SQLiteConstraintException) {
                 if (BuildConfig.BUILD_TYPE == AppConfig.DEBUG) {
                     showDebugToast(e.getMessage());
                     return;
                 }
+                Log.e(TAG, "setup: ", e);
             }
 
             if (e instanceof InterruptedException) {
