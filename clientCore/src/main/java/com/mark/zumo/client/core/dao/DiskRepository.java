@@ -71,7 +71,10 @@ public interface DiskRepository {
 
 
     @Query("SELECT * FROM " + MenuOrder.TABLE + " WHERE menu_order_uuid LIKE :menuOrderUuid LIMIT 1")
-    Maybe<MenuOrder> getMenuOrder(String menuOrderUuid);
+    Maybe<MenuOrder> getMenuOrderMaybe(String menuOrderUuid);
+
+    @Query("SELECT * FROM " + MenuOrder.TABLE + " WHERE menu_order_uuid LIKE :menuOrderUuid LIMIT 1")
+    Flowable<MenuOrder> getMenuOrderFlowable(String menuOrderUuid);
 
     @Query("SELECT * FROM " + MenuOrder.TABLE +
             " WHERE customer_uuid LIKE :customerUuid" +

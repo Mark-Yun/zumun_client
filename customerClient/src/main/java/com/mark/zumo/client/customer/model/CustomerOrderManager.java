@@ -88,13 +88,18 @@ public enum CustomerOrderManager {
                 .subscribeOn(Schedulers.io());
     }
 
-    public Maybe<MenuOrder> sendOrderCreateMessage(MenuOrder menuOrder) {
-        return messageHandler.sendMessageCreateOrder(menuOrder)
+    public Maybe<MenuOrder> sendToStoreOrderCreateMessage(MenuOrder menuOrder) {
+        return messageHandler.sendMessageOrderUpdated(menuOrder.storeUuid, menuOrder)
                 .subscribeOn(Schedulers.io());
     }
 
     public Maybe<MenuOrder> updateMenuOrderStateRequested(String orderUuid) {
         return orderRepository.updateMenuOrderState(orderUuid, MenuOrder.State.REQUESTED.ordinal())
+                .subscribeOn(Schedulers.io());
+    }
+
+    public Observable<MenuOrder> getMenuOrderObservable(final String orderUuid) {
+        return orderRepository.getMenuOrderObservable(orderUuid)
                 .subscribeOn(Schedulers.io());
     }
 }

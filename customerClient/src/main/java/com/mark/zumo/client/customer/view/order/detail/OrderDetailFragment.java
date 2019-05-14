@@ -195,11 +195,7 @@ public class OrderDetailFragment extends Fragment {
         animation.start();
 
         if (isComplete) {
-            Intent intent = new Intent(CustomerMessageHandler.VibrationContract.ACTION);
-            intent.putExtra(CustomerMessageHandler.VibrationContract.ORDER_KEY, menuOrder.uuid);
-            intent.setPackage(context.getPackageName());
-            context.sendBroadcast(intent);
-            Log.d(TAG, "onLoadMenuOrder: send broadcast-" + intent.getAction());
+            orderViewModel.stopOrderAlarm(menuOrder.uuid);
         }
 
         orderCompleteInformationTitle.setText(context.getString(R.string.order_complete_information_title, menuOrder.orderName));

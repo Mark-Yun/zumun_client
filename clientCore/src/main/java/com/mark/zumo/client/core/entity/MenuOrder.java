@@ -113,6 +113,11 @@ public class MenuOrder implements Serializable {
         }
     }
 
+    public interface Listener {
+        default void onOrderChanged(MenuOrder menuOrder) {
+        }
+    }
+
     public interface Schema {
         String uuid = "menu_order_uuid";
         String orderName = "menu_order_name";

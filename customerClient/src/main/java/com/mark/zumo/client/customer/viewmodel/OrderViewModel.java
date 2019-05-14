@@ -17,6 +17,7 @@ import com.mark.zumo.client.core.entity.MenuOrder;
 import com.mark.zumo.client.core.entity.OrderDetail;
 import com.mark.zumo.client.core.entity.Store;
 import com.mark.zumo.client.customer.model.CustomerMenuManager;
+import com.mark.zumo.client.customer.model.CustomerNotificationManager;
 import com.mark.zumo.client.customer.model.CustomerOrderManager;
 import com.mark.zumo.client.customer.model.CustomerSessionManager;
 import com.mark.zumo.client.customer.model.CustomerStoreManager;
@@ -36,6 +37,7 @@ public class OrderViewModel extends AndroidViewModel {
     private final CustomerOrderManager customerOrderManager;
     private final CustomerStoreManager customerStoreManager;
     private final CustomerSessionManager customerSessionManager;
+    private final CustomerNotificationManager customerNotificationManager;
 
     private final CompositeDisposable compositeDisposable;
     private final CustomerMenuManager customerMenuManager;
@@ -47,6 +49,7 @@ public class OrderViewModel extends AndroidViewModel {
         customerStoreManager = CustomerStoreManager.INSTANCE;
         customerSessionManager = CustomerSessionManager.INSTANCE;
         customerMenuManager = CustomerMenuManager.INSTANCE;
+        customerNotificationManager = CustomerNotificationManager.INSTANCE;
 
         compositeDisposable = new CompositeDisposable();
     }
@@ -88,7 +91,7 @@ public class OrderViewModel extends AndroidViewModel {
     public LiveData<MenuOrder> getMenuOrder(String orderUuid) {
         MutableLiveData<MenuOrder> liveData = new MutableLiveData<>();
 
-        customerOrderManager.getMenuOrder(orderUuid)
+        customerOrderManager.getMenuOrderObservable(orderUuid)
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnNext(liveData::setValue)
                 .doOnSubscribe(compositeDisposable::add)
@@ -117,5 +120,9 @@ public class OrderViewModel extends AndroidViewModel {
                 .doOnSubscribe(compositeDisposable::add)
                 .subscribe();
         return liveData;
+    }
+
+    public void stopOrderAlarm(final String menuOrderUuid) {
+        customerNotificationManager.stopOrderNotificationTracking(menuOrderUuid);
     }
 }

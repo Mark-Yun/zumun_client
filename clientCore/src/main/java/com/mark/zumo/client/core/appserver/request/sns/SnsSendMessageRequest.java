@@ -3,10 +3,10 @@
  * Unauthorized copying of this file, via any medium is strictly prohibited
  * Proprietary and confidential
  */
-package com.mark.zumo.client.core.appserver.request;
+package com.mark.zumo.client.core.appserver.request.sns;
 
 import com.google.gson.annotations.SerializedName;
-import com.mark.zumo.client.core.appserver.request.message.SnsMessage;
+import com.mark.zumo.client.core.appserver.request.sns.message.SnsMessage;
 import com.mark.zumo.client.core.entity.util.EntityHelper;
 
 /**
@@ -19,9 +19,9 @@ public class SnsSendMessageRequest {
     @SerializedName(Schema.MESSAGE)
     public final SnsMessage message;
 
-    public SnsSendMessageRequest(final String uuid, final SnsMessage message) {
+    public SnsSendMessageRequest(final String uuid, final SnsMessage snsMessage) {
         this.uuid = uuid;
-        this.message = message;
+        this.message = snsMessage;
     }
 
     interface Schema {

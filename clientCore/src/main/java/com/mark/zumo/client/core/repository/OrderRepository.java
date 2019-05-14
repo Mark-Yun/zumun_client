@@ -33,7 +33,7 @@ import io.reactivex.schedulers.Schedulers;
 public enum OrderRepository {
     INSTANCE;
 
-    public static final String ACTION_ORDER_UPDATED = "com.mark.zumo.client.zumo.action.ORDER_UPDATED";
+    public static final String ACTION_ORDER_UPDATED = "com.mark.zumo.client.zumo.action.EVENT_ORDER_UPDATED";
 
     private static final String TAG = "OrderRepository";
 
@@ -60,7 +60,7 @@ public enum OrderRepository {
     }
 
     public Maybe<MenuOrder> getMenuOrderFromDisk(String orderUuid) {
-        return diskRepository.getMenuOrder(orderUuid)
+        return diskRepository.getMenuOrderMaybe(orderUuid)
                 .subscribeOn(Schedulers.io());
     }
 
@@ -75,6 +75,11 @@ public enum OrderRepository {
         Maybe<MenuOrder> menuOrderApi = getMenuOrderFromApi(orderUuid);
         return Maybe.merge(menuOrderDB, menuOrderApi)
                 .distinctUntilChanged()
+                .toObservable();
+    }
+
+    public Observable<MenuOrder> getMenuOrderObservable(String orderUuid) {
+        return diskRepository.getMenuOrderFlowable(orderUuid)
                 .toObservable();
     }
 

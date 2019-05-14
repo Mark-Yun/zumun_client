@@ -47,7 +47,7 @@ public class CustomerFcmService extends FirebaseMessagingService {
         Map<String, String> data = remoteMessage.getData();
         if (data.size() > 0) {
             Log.d(TAG, "Message data payload: " + data);
-            customerMessageHandler.handleMessage(this, data);
+            customerMessageHandler.handleMessage(data);
         }
 
         // Check if message contains a notification payload.

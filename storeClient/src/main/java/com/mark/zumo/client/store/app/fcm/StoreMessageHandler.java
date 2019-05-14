@@ -6,9 +6,10 @@
 
 package com.mark.zumo.client.store.app.fcm;
 
-import com.mark.zumo.client.core.appserver.request.message.MessageFactory;
-import com.mark.zumo.client.core.appserver.request.message.OrderCreatedMessage;
-import com.mark.zumo.client.core.appserver.request.message.SnsMessage;
+import android.util.Log;
+
+import com.mark.zumo.client.core.appserver.request.sns.message.MessageFactory;
+import com.mark.zumo.client.core.appserver.request.sns.message.SnsMessage;
 import com.mark.zumo.client.store.model.StoreOrderManager;
 
 import java.util.Map;
@@ -19,6 +20,8 @@ import java.util.Map;
 enum StoreMessageHandler {
     INSTANCE;
 
+    private static final String TAG = "StoreMessageHandler";
+
     private StoreOrderManager storeOrderManager;
 
     StoreMessageHandler() {
@@ -27,13 +30,18 @@ enum StoreMessageHandler {
 
     void handleMessage(Map<String, String> data) {
         SnsMessage snsMessage = MessageFactory.create(data);
+        if (snsMessage == null) {
+            Log.e(TAG, "handleMessage: message is NULL!");
+            return;
+        }
 
-        if (snsMessage instanceof OrderCreatedMessage) {
-            onOrderCreated((OrderCreatedMessage) snsMessage);
+        if (SnsMessage.Type.EVENT_ORDER_UPDATED.name().equals(snsMessage.messageType)) {
+            onOrderUpdated(snsMessage.data);
         }
     }
 
-    private void onOrderCreated(OrderCreatedMessage message) {
-        storeOrderManager.putRequestedOrderBucket(message.orderUuid);
+    private void onOrderUpdated(final String orderUuid) {
+        Log.d(TAG, "onOrderUpdated: " + orderUuid);
+        storeOrderManager.putRequestedOrderBucket(orderUuid);
     }
 }
