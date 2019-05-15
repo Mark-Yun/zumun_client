@@ -70,18 +70,9 @@ public enum StoreUserRepository {
                 .toObservable();
     }
 
-    public Flowable<Store> getSessionStoreFlowable() {
-        return diskRepository.getSessionStoreFlowable()
-                .map(Store::from);
-    }
-
     public Maybe<Store> getSessionStoreMaybe() {
-        return diskRepository.getSessionStoreMaybe()
+        return diskRepository.getSessionStore()
                 .map(Store::from);
-    }
-
-    public void saveSessionStore(SessionStore sessionStore) {
-        diskRepository.insertSessionStore(sessionStore);
     }
 
     public Maybe<StoreUserSignupErrorCode> creteStoreOwner(StoreOwnerSignUpRequest request) {
@@ -90,16 +81,17 @@ public enum StoreUserRepository {
                 .map(StoreUserSignupErrorCode::valueOf);
     }
 
-    public Maybe<SnsToken> registerSnsToken(SnsToken snsToken) {
-        return networkRepository().createSnsToken(snsToken)
-                .doOnSuccess(diskRepository::insertSnsToken)
-                .subscribeOn(Schedulers.io());
-    }
-
     public void putSessionHeader(Bundle bundle) {
         AppServerServiceProvider.INSTANCE.putSessionHeader(bundle);
     }
 
+    public void clearSessionHeader() {
+        AppServerServiceProvider.INSTANCE.clearSessionHeader();
+    }
+
+    public void removeStoreUserSession() {
+        diskRepository.removeAllStoreUserSession();
+    }
 
     public Maybe<StoreUserSignInResponse> loginStoreUser(final StoreUserSignInRequest request) {
         return networkRepository().storeUserLogin(request);

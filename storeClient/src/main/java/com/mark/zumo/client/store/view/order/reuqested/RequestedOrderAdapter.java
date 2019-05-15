@@ -135,11 +135,6 @@ class RequestedOrderAdapter extends RecyclerView.Adapter<RequestedOrderAdapter.V
                             new OrderDetailFragment.OrderActionListener() {
                                 @Override
                                 public void onAcceptOrder(final MenuOrder order) {
-                                    boolean isAccepted = menuOrder.state == MenuOrder.State.ACCEPTED.ordinal();
-                                    if (!isAccepted) {
-                                        return;
-                                    }
-
                                     holder.state.setBackgroundResource(R.drawable.background_order_state_accepted);
                                 }
 

@@ -11,6 +11,7 @@ import android.util.Log;
 
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
+import com.mark.zumo.client.store.model.StoreStoreManager;
 import com.mark.zumo.client.store.model.StoreUserManager;
 
 import java.util.Map;
@@ -22,14 +23,14 @@ public class StoreFcmService extends FirebaseMessagingService {
     private final static String TAG = "StoreFcmService";
 
     private StoreMessageHandler storeMessageHandler;
-    private StoreUserManager storeUserManager;
+    private StoreStoreManager storeStoreManager;
 
     @Override
     public void onCreate() {
         super.onCreate();
 
         storeMessageHandler = StoreMessageHandler.INSTANCE;
-        storeUserManager = StoreUserManager.INSTANCE;
+        storeStoreManager = StoreStoreManager.INSTANCE;
     }
 
     @Override
@@ -65,7 +66,7 @@ public class StoreFcmService extends FirebaseMessagingService {
             return;
         }
 
-        storeUserManager.registerToken();
+        storeStoreManager.registerToken();
     }
 
 }

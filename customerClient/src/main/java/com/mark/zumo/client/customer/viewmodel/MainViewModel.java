@@ -15,10 +15,10 @@ import android.support.annotation.NonNull;
 
 import com.mark.zumo.client.core.entity.Store;
 import com.mark.zumo.client.core.p2p.P2pClient;
+import com.mark.zumo.client.customer.model.CustomerNotificationManager;
 import com.mark.zumo.client.customer.model.CustomerOrderManager;
 import com.mark.zumo.client.customer.model.CustomerSessionManager;
 import com.mark.zumo.client.customer.model.CustomerStoreManager;
-import com.mark.zumo.client.customer.model.NotificationHandler;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
@@ -32,7 +32,6 @@ public class MainViewModel extends AndroidViewModel {
     private final CustomerSessionManager customerSessionManager;
     private final CustomerStoreManager customerStoreManager;
     private final CustomerOrderManager customerOrderManager;
-    private final NotificationHandler notificationHandler;
 
     private final CompositeDisposable compositeDisposable;
 
@@ -43,7 +42,6 @@ public class MainViewModel extends AndroidViewModel {
         customerSessionManager = CustomerSessionManager.INSTANCE;
         customerStoreManager = CustomerStoreManager.INSTANCE;
         customerOrderManager = CustomerOrderManager.INSTANCE;
-        notificationHandler = NotificationHandler.INSTANCE;
 
         compositeDisposable = new CompositeDisposable();
     }

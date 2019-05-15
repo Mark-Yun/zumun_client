@@ -4,7 +4,7 @@
   "CredentialsProvider": {
     "CognitoIdentity": {
       "Default": {
-        "PoolId": "ap-northeast-2:41bbd48d-a643-42ef-8837-31e5e671971d",
+        "PoolId": "ap-northeast-2:618c31f1-ec25-4a8d-b21b-fda675f370e2",
         "Region": "ap-northeast-2"
       }
     }
@@ -14,13 +14,13 @@
   },
   "S3TransferUtility": {
     "Default": {
-      "Bucket": "androidzumunstorecli-userfiles-mobilehub-1302992463",
+      "Bucket": "zumunprd-userfiles-mobilehub-1070385381",
       "Region": "ap-northeast-2"
     }
   },
   "PinpointAnalytics": {
     "Default": {
-      "AppId": "5d55c9bc6a694ce38dc5b9ce6874a62f",
+      "AppId": "7778477ac80048f9bae8953ca7adf9de",
       "Region": "us-east-1"
     }
   },
@@ -31,7 +31,7 @@
   },
   "UserFileManager": {
     "Default": {
-      "Bucket": "androidzumunstorecli-userfiles-mobilehub-1302992463",
+      "Bucket": "zumunprd-userfiles-mobilehub-1070385381",
       "Region": "ap-northeast-2"
     }
   }

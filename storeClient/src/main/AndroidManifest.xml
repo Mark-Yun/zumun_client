@@ -22,8 +22,7 @@
         android:theme="@style/AppTheme">
 
         <service
-            android:name="com.mark.zumo.client.store.app.fcm.StoreFcmService"
-            android:exported="false">
+            android:name="com.mark.zumo.client.store.app.fcm.StoreFcmService">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>

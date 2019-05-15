@@ -80,10 +80,12 @@ public enum StoreOrderManager {
     public Observable<OrderBucket> requestedOrderBucket(String storeUuid) {
         if (requestedOrderBucket == null) {
             requestedOrderBucket = new OrderBucket();
-            loadOrderBucket(storeUuid, requestedOrderBucket,
-                    MenuOrder.State.REQUESTED,
-                    MenuOrder.State.ACCEPTED);
         }
+
+        loadOrderBucket(storeUuid, requestedOrderBucket,
+                MenuOrder.State.REQUESTED,
+                MenuOrder.State.ACCEPTED,
+                MenuOrder.State.COMPLETE);
 
         return Observable.create(
                 (ObservableOnSubscribe<OrderBucket>) e -> e.onNext(requestedOrderBucket.addEmitter(e))
@@ -121,7 +123,7 @@ public enum StoreOrderManager {
 
     public Maybe<MenuOrder> acceptOrder(MenuOrder menuOrder) {
         return orderRepository.updateMenuOrderState(menuOrder.uuid, MenuOrder.State.ACCEPTED.ordinal())
-                .flatMap(messageHandler::sendMessageAcceptedOrder)
+                .flatMap(menuOrder1 -> messageHandler.sendMessageOrderUpdated(menuOrder1.customerUuid, menuOrder1))
                 .doOnSuccess(x -> requestedOrderBucket.notifyOnNext())
                 .subscribeOn(Schedulers.io());
     }
@@ -136,7 +138,14 @@ public enum StoreOrderManager {
 
     public Maybe<MenuOrder> completeOrder(String orderUuid) {
         return orderRepository.updateMenuOrderState(orderUuid, MenuOrder.State.COMPLETE.ordinal())
-                .flatMap(messageHandler::sendMessageCompleteOrder)
+                .flatMap(menuOrder1 -> messageHandler.sendMessageOrderUpdated(menuOrder1.customerUuid, menuOrder1))
+                .doOnSuccess(x -> requestedOrderBucket.notifyOnNext())
+                .subscribeOn(Schedulers.io());
+    }
+
+    public Maybe<MenuOrder> finishOrder(String orderUuid) {
+        return orderRepository.updateMenuOrderState(orderUuid, MenuOrder.State.FINISHED.ordinal())
+                .flatMap(menuOrder1 -> messageHandler.sendMessageOrderUpdated(menuOrder1.customerUuid, menuOrder1))
                 .map(menuOrder -> menuOrder.uuid)
                 .map(requestedOrderBucket::removeOrder)
                 .doOnSuccess(completeOrderBucket::addOrder)

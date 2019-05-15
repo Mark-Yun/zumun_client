@@ -6,6 +6,9 @@
 
 package com.mark.zumo.client.core.repository;
 
+import android.os.Bundle;
+import android.util.Log;
+
 import com.mark.zumo.client.core.appserver.AppServerServiceProvider;
 import com.mark.zumo.client.core.appserver.NetworkRepository;
 import com.mark.zumo.client.core.appserver.request.registration.StoreRegistrationRequest;
@@ -13,6 +16,8 @@ import com.mark.zumo.client.core.appserver.request.registration.result.StoreRegi
 import com.mark.zumo.client.core.appserver.response.store.registration.StoreRegistrationResponse;
 import com.mark.zumo.client.core.dao.AppDatabaseProvider;
 import com.mark.zumo.client.core.dao.DiskRepository;
+import com.mark.zumo.client.core.entity.SessionStore;
+import com.mark.zumo.client.core.entity.SnsToken;
 import com.mark.zumo.client.core.entity.Store;
 
 import java.util.List;
@@ -50,7 +55,7 @@ public enum StoreRepository {
     }
 
     public Observable<Store> getStore(String storeUuid) {
-        Maybe<Store> storeDB = diskRepository.getStore(storeUuid);
+        Maybe<Store> storeDB = diskRepository.getStoreMaybe(storeUuid);
         Maybe<Store> storeApi = networkRepository().getStore(storeUuid)
                 .doOnSuccess(diskRepository::insertStore);
 
@@ -61,12 +66,47 @@ public enum StoreRepository {
     }
 
     public Maybe<Store> getStoreFromDisk(String storeUuid) {
-        return diskRepository.getStore(storeUuid);
+        return diskRepository.getStoreMaybe(storeUuid);
     }
 
     public Maybe<Store> getStoreFromApi(String storeUuid) {
         return networkRepository().getStore(storeUuid)
                 .doOnSuccess(diskRepository::insertStore);
+    }
+
+    public Maybe<SnsToken> registerSnsToken(SnsToken snsToken) {
+        return networkRepository().createSnsToken(snsToken)
+                .doOnSuccess(diskRepository::insertSnsToken)
+                .subscribeOn(Schedulers.io());
+    }
+
+    public Maybe<Store> getStoreSessionMaybe() {
+        return diskRepository.getSessionStore()
+                .map(sessionStore -> sessionStore.uuid)
+                .flatMap(this::getStoreFromApi);
+    }
+
+    public void removeStoreSession() {
+        diskRepository.removeAllStoreSession();
+    }
+
+    public void putSessionHeader(Bundle bundle) {
+        AppServerServiceProvider.INSTANCE.putSessionHeader(bundle);
+    }
+
+    public void clearSessionHeader() {
+        AppServerServiceProvider.INSTANCE.clearSessionHeader();
+    }
+
+    public void saveSessionStore(SessionStore sessionStore) {
+        Log.i(TAG, "saveSessionStore: sessionStore=" + sessionStore);
+        diskRepository.insertSessionStore(sessionStore);
+    }
+
+    public Observable<Store> getStoreSessionObservable() {
+        return diskRepository.getSessionStore()
+                .map(sessionStore -> sessionStore.uuid)
+                .flatMapObservable(storeUuid -> diskRepository.getStoreFlowable(storeUuid).toObservable());
     }
 
     public Observable<List<StoreRegistrationRequest>> getStoreRegistrationRequestListByStoreUserUuid(String storeUserUuid) {

@@ -23,6 +23,7 @@ import com.mark.zumo.client.customer.model.CustomerSessionManager;
 
 import java.util.List;
 
+import io.reactivex.Maybe;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 
@@ -94,7 +95,7 @@ public class MenuDetailViewModel extends AndroidViewModel {
                 .flatMap(orderDetail ->
                         cartManager.getCart(orderDetail.storeUuid)
                                 .firstElement()
-                                .doOnSuccess(cart -> cart.addCartItem(orderDetail))
+                                .map(cart -> Maybe.fromAction(() -> cart.addCartItem(orderDetail)))
                                 .map(cart -> orderDetail)
                 )
                 .observeOn(AndroidSchedulers.mainThread())

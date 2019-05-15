@@ -99,7 +99,7 @@ public class StoreProfileInfoFragment extends Fragment {
     }
 
     private void inflateStoreProfileView() {
-        storeSettingViewModel.getCurrentStore().observe(this, this::onLoadStore);
+        storeSettingViewModel.getCurrentSessionStore().observe(this, this::onLoadStore);
     }
 
     private void onLoadStore(Store store) {

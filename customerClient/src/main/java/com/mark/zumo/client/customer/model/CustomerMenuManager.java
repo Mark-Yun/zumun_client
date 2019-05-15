@@ -269,13 +269,23 @@ public enum CustomerMenuManager {
 
     public Maybe<OrderDetail> createOrderDetail(String menuUuid, List<String> menuOptionUuidList, int amount) {
         return getMenuFromDisk(menuUuid)
-                .flatMap(menu -> Observable.fromIterable(menuOptionUuidList)
-                        .flatMapMaybe(menuRepository::getMenuOptionFromDisk)
-                        .map(menuOption -> menuOption.price)
-                        .reduce((i, i2) -> i + i2)
-                        .map(optionPrice -> menu.price + optionPrice)
-                        .map(singlePrice -> singlePrice * amount)
-                        .map(totalPrice -> new OrderDetail("", menu.storeUuid, menu.uuid, menu.name, "", menuOptionUuidList, amount, totalPrice))
+                .flatMap(menu ->
+                        Maybe.just(menu)
+                                .flatMap(x -> getMenuOptionListPrice(menuOptionUuidList))
+                                .map(optionPrice -> optionPrice + menu.price)
+                                .map(singlePrice -> singlePrice * amount)
+                                .map(totalPrice -> OrderDetail.create(menu.storeUuid, menu.uuid, menu.name, menuOptionUuidList, amount, totalPrice))
                 );
+    }
+
+    private Maybe<Integer> getMenuOptionListPrice(List<String> menuOptionUuidList) {
+        if (menuOptionUuidList == null || menuOptionUuidList.isEmpty()) {
+            return Maybe.just(0);
+        }
+
+        return Observable.fromIterable(menuOptionUuidList)
+                .flatMapMaybe(menuRepository::getMenuOptionFromDisk)
+                .map(menuOption -> menuOption.price)
+                .reduce((i, i2) -> i + i2);
     }
 }

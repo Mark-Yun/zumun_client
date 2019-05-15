@@ -50,8 +50,6 @@
 -keep class com.samsung.android.sdk.** { *; }
 -keep interface com.samsung.android.sdk.** { *; }
 
--keep class com.wonderkiln.blurkit.** { *; }
-
 -dontwarn android.support.v8.renderscript.*
 -keepclassmembers class android.support.v8.renderscript.RenderScript {
   native *** rsn*(...);

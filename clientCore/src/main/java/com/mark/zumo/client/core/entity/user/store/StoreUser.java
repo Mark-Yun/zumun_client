@@ -33,18 +33,18 @@ public class StoreUser {
     @SerializedName(Schema.email) @ColumnInfo(name = Schema.email)
     public final String email;
     @SerializedName(Schema.auth_type) @ColumnInfo(name = Schema.auth_type)
-    public final String auth_type;
+    public final String authType;
     @SerializedName(Schema.auth_token) @ColumnInfo(name = Schema.auth_token)
-    public final String auth_token;
+    public final String authToken;
 
-    public StoreUser(@NonNull final String uuid, final String name, final String password, final String phoneNumber, final String email, final String auth_type, final String auth_token) {
+    public StoreUser(@NonNull final String uuid, final String name, final String password, final String phoneNumber, final String email, final String authType, final String authToken) {
         this.uuid = uuid;
         this.name = name;
         this.password = password;
         this.phoneNumber = phoneNumber;
         this.email = email;
-        this.auth_type = auth_type;
-        this.auth_token = auth_token;
+        this.authType = authType;
+        this.authToken = authToken;
     }
 
     @Override

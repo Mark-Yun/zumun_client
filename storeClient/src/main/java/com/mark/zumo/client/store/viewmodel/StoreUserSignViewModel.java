@@ -18,7 +18,9 @@ import com.mark.zumo.client.core.appserver.request.signup.StoreOwnerSignUpReques
 import com.mark.zumo.client.core.appserver.response.store.user.signin.StoreUserSignInErrorCode;
 import com.mark.zumo.client.core.appserver.response.store.user.signup.StoreUserSignupErrorCode;
 import com.mark.zumo.client.core.appserver.response.store.user.signup.StoreUserSignupException;
-import com.mark.zumo.client.store.model.S3TransferManager;
+import com.mark.zumo.client.core.entity.Store;
+import com.mark.zumo.client.store.model.StoreS3TransferManager;
+import com.mark.zumo.client.store.model.StoreStoreManager;
 import com.mark.zumo.client.store.model.StoreUserManager;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -31,7 +33,8 @@ import io.reactivex.disposables.CompositeDisposable;
 public class StoreUserSignViewModel extends AndroidViewModel {
 
     private final StoreUserManager storeUserManager;
-    private final S3TransferManager s3TransferManager;
+    private final StoreStoreManager storeStoreManager;
+    private final StoreS3TransferManager storeS3TransferManager;
 
     private final CompositeDisposable disposables;
 
@@ -39,7 +42,8 @@ public class StoreUserSignViewModel extends AndroidViewModel {
         super(application);
 
         storeUserManager = StoreUserManager.INSTANCE;
-        s3TransferManager = S3TransferManager.INSTANCE;
+        storeStoreManager = StoreStoreManager.INSTANCE;
+        storeS3TransferManager = StoreS3TransferManager.INSTANCE;
 
         disposables = new CompositeDisposable();
     }
@@ -74,7 +78,9 @@ public class StoreUserSignViewModel extends AndroidViewModel {
     public LiveData<String> uploadBankAccountScanImage(Activity activity, Uri uri) {
         MutableLiveData<String> liveData = new MutableLiveData<>();
 
-        s3TransferManager.uploadBankScanImage(activity, uri)
+        storeUserManager.getStoreUserSession()
+                .map(storeUserSession -> storeUserSession.uuid)
+                .flatMap(storeUserUuid -> storeS3TransferManager.uploadBankScanImage(activity, storeUserUuid, uri))
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSuccess(liveData::setValue)
                 .doOnSubscribe(disposables::add)
@@ -98,7 +104,7 @@ public class StoreUserSignViewModel extends AndroidViewModel {
 
     public LiveData<Boolean> hasStoreUserSessionAsync() {
         MutableLiveData<Boolean> liveData = new MutableLiveData<>();
-        storeUserManager.getStoreUserSessionAsync()
+        storeUserManager.getStoreUserSession()
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSuccess(storeUserSession -> liveData.setValue(storeUserSession != null))
                 .doOnComplete(() -> liveData.setValue(liveData.getValue() != null))
@@ -107,22 +113,14 @@ public class StoreUserSignViewModel extends AndroidViewModel {
         return liveData;
     }
 
-    public boolean hasStoreUserSessionSync() {
-        return storeUserManager.getStoreUserSessionSync() != null;
-    }
-
     public LiveData<Boolean> hasSessionStoreAsync() {
         MutableLiveData<Boolean> liveData = new MutableLiveData<>();
-        storeUserManager.getSessionStoreAsync()
+        storeStoreManager.getStoreSessionMaybe()
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSuccess(sessionStore -> liveData.setValue(sessionStore != null))
                 .doOnComplete(() -> liveData.setValue(liveData.getValue() != null))
                 .doOnSubscribe(disposables::add)
                 .subscribe();
         return liveData;
-    }
-
-    public boolean hasSessionStoreSync() {
-        return storeUserManager.getSessionStoreSync() != null;
     }
 }

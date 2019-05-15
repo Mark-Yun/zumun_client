@@ -33,7 +33,7 @@ import io.reactivex.schedulers.Schedulers;
 public enum OrderRepository {
     INSTANCE;
 
-    public static final String ACTION_ORDER_UPDATED = "com.mark.zumo.client.zumo.action.ORDER_UPDATED";
+    public static final String ACTION_ORDER_UPDATED = "com.mark.zumo.client.zumo.action.EVENT_ORDER_UPDATED";
 
     private static final String TAG = "OrderRepository";
 
@@ -60,7 +60,7 @@ public enum OrderRepository {
     }
 
     public Maybe<MenuOrder> getMenuOrderFromDisk(String orderUuid) {
-        return diskRepository.getMenuOrder(orderUuid)
+        return diskRepository.getMenuOrderMaybe(orderUuid)
                 .subscribeOn(Schedulers.io());
     }
 
@@ -78,6 +78,11 @@ public enum OrderRepository {
                 .toObservable();
     }
 
+    public Observable<MenuOrder> getMenuOrderObservable(String orderUuid) {
+        return diskRepository.getMenuOrderFlowable(orderUuid)
+                .toObservable();
+    }
+
     public Observable<List<OrderDetail>> getOrderDetailListByOrderUuid(String orderUuid) {
         Maybe<List<OrderDetail>> orderDetailListDB = diskRepository.getOrderDetailListByMenuOrderUuid(orderUuid);
         Maybe<List<OrderDetail>> orderDetailListApi = networkRepository().getOrderDetailList(orderUuid)
@@ -91,6 +96,7 @@ public enum OrderRepository {
     public Observable<List<MenuOrder>> getMenuOrderListByCustomerUuid(String customerUuid, int offset, int limit) {
         Maybe<List<MenuOrder>> menuOrderListDB = diskRepository.getMenuOrderByCustomerUuid(customerUuid, offset, limit);
         Maybe<List<MenuOrder>> menuOrderListApi = networkRepository().getMenuOrderListByCustomerUuid(customerUuid, offset, limit)
+                .doOnSuccess(x -> diskRepository.deleteMenuOrderListByCustomerUuid(customerUuid))
                 .doOnSuccess(diskRepository::insertMenuOrderList);
 
         return Maybe.merge(menuOrderListDB, menuOrderListApi)

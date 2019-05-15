@@ -19,9 +19,9 @@ android {
         targetCompatibility JavaVersion.VERSION_1_8
     }
 
-    def versionPropsFile = file('version.properties')
+    def versionPropsFile = file('version.gradle')
     if (!versionPropsFile.canRead()) {
-        throw new GradleException("Could not read version.properties!")
+        throw new GradleException("Could not read version.gradle!")
     }
 
     Properties versionProps = new Properties()
@@ -33,6 +33,8 @@ android {
     def versionPatch = versionProps['VERSION_PATCH'].toString()
 
     def finalVersionCode = generateVersionCode(rootProject.ext.minSdk, versionMajor, versionMinor, versionPatch)
+
+    def date = new Date().format('yyyyMMddHHmmss')
 
     defaultConfig {
         applicationId "com.mark.zumo.client.store"
@@ -48,10 +50,11 @@ android {
             minifyEnabled true
             shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), '../proguard-rules.pro'
+            versionNameSuffix '-build' + date
         }
         debug {
             signingConfig signingConfigs.debug
-            versionNameSuffix 'd'
+            versionNameSuffix 'd-build' + date
             applicationIdSuffix ".dev"
         }
     }
@@ -71,11 +74,6 @@ private static Integer generateVersionCode(minimumSdk, major, minor, patch) {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-
-    implementation "com.amazonaws:aws-android-sdk-s3:2.6.25"
-    implementation "com.amazonaws:aws-android-sdk-cognito:2.6.25"
-    implementation('com.amazonaws:aws-android-sdk-mobile-client:2.6.+@aar') { transitive = true }
-
     implementation 'com.library.tangxiaolv:telegramgallery:1.0.5'
     implementation 'com.theartofdev.edmodo:android-image-cropper:2.6.0'
     implementation 'com.github.zurche:plain-pie:v0.2.4'

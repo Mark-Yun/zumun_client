@@ -6,7 +6,6 @@
 
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:blurkit="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorPrimary">
@@ -80,7 +79,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/total_price"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/total_price"
@@ -88,7 +89,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/colorAccent"
-            app:layout_constraintEnd_toEndOf="parent" />
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
     </android.support.constraint.ConstraintLayout>
 
@@ -98,18 +101,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/order_button_selector"
+        android:textSize="16sp"
         android:padding="@dimen/big_margin"
         android:text="@string/button_text_send_order"
         app:layout_constraintBottom_toBottomOf="parent" />
-
-    <com.wonderkiln.blurkit.BlurLayout
-        android:id="@+id/blur_filter"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:clickable="false"
-        android:elevation="8dp"
-        android:focusable="false"
-        android:visibility="gone"
-        app:blurRadius="10"
-        blurkit:blk_fps="0" />
 </android.support.constraint.ConstraintLayout>

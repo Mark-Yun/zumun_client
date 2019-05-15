@@ -18,9 +18,9 @@ android {
         targetCompatibility JavaVersion.VERSION_1_8
     }
 
-    def versionPropsFile = file('version.properties')
+    def versionPropsFile = file('version.gradle')
     if (!versionPropsFile.canRead()) {
-        throw new GradleException("Could not read version.properties!")
+        throw new GradleException("Could not read version.gradle!")
     }
 
     Properties versionProps = new Properties()
@@ -32,6 +32,8 @@ android {
     def versionPatch = versionProps['VERSION_PATCH'].toString()
 
     def finalVersionCode = generateVersionCode(rootProject.ext.minSdk, versionMajor, versionMinor, versionPatch)
+
+    def date = new Date().format('yyyyMMddHHmmss')
 
     defaultConfig {
         applicationId "com.mark.zumo.client.supervisor"
@@ -47,10 +49,11 @@ android {
             minifyEnabled true
             shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), '../proguard-rules.pro'
+            versionNameSuffix '-build' + date
         }
         debug {
             signingConfig signingConfigs.debug
-            versionNameSuffix 'd'
+            versionNameSuffix 'd-build' + date
             applicationIdSuffix ".dev"
         }
     }

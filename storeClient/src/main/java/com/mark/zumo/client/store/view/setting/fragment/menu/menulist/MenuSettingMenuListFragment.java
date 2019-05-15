@@ -70,7 +70,7 @@ public class MenuSettingMenuListFragment extends Fragment {
     }
 
     private void inflateStoreInfo() {
-        storeSettingViewModel.getCurrentStore().observe(this, this::onLoadStore);
+        storeSettingViewModel.getCurrentSessionStore().observe(this, this::onLoadStore);
     }
 
     public void onMenuCreateComplete(Menu menu) {

@@ -38,16 +38,19 @@ public class OrderDetail implements Serializable {
     public final String menuName;
     @SerializedName(Schema.menuOrderUuid) @ColumnInfo(name = Schema.menuOrderUuid)
     public final String menuOrderUuid;
-    @SerializedName(Schema.menuOrderName) @ColumnInfo(name = Schema.menuOrderName)
-    public String menuOrderName;
     @SerializedName(Schema.menuOptionUuidList) @ColumnInfo(name = Schema.menuOptionUuidList)
     public final List<String> menuOptionUuidList;
     @SerializedName(Schema.quantity) @ColumnInfo(name = Schema.quantity)
     public final int quantity;
     @SerializedName(Schema.price) @ColumnInfo(name = Schema.price)
     public final int price;
+    @SerializedName(Schema.menuOrderName) @ColumnInfo(name = Schema.menuOrderName)
+    public String menuOrderName;
 
-    public OrderDetail(@NonNull final String uuid, final String storeUuid, final String menuUuid, final String menuName, final String menuOrderUuid, final List<String> menuOptionUuidList, final int quantity, final int price) {
+    public OrderDetail(@NonNull final String uuid, final String storeUuid, final String menuUuid,
+                       final String menuName, final String menuOrderUuid,
+                       final List<String> menuOptionUuidList, final int quantity, final int price) {
+
         this.uuid = uuid;
         this.storeUuid = storeUuid;
         this.menuUuid = menuUuid;
@@ -57,6 +60,11 @@ public class OrderDetail implements Serializable {
         this.quantity = quantity;
         this.price = price;
         this.menuOrderName = menuName;
+    }
+
+    public static OrderDetail create(@NonNull final String uuid, final String storeUuid, final String menuName,
+                                     final List<String> menuOptionUuidList, final int quantity, final int price) {
+        return new OrderDetail("", storeUuid, uuid, menuName, "", menuOptionUuidList, quantity, price);
     }
 
     public static OrderDetail fromMenu(Menu menu) {
@@ -82,6 +90,11 @@ public class OrderDetail implements Serializable {
                 this.menuOptionUuidList.equals(orderDetail.menuOptionUuidList);
     }
 
+    @Override
+    public boolean equals(final Object obj) {
+        return new EntityComparator<>().test(this, obj);
+    }
+
     public interface Schema {
         String uuid = "order_detail_uuid";
         String menuUuid = "menu_uuid";
@@ -92,10 +105,5 @@ public class OrderDetail implements Serializable {
         String storeUuid = "store_uuid";
         String quantity = "ordered_quantity";
         String price = "ordered_price";
-    }
-
-    @Override
-    public boolean equals(final Object obj) {
-        return new EntityComparator<>().test(this, obj);
     }
 }

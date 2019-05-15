@@ -23,6 +23,7 @@ import com.mark.zumo.client.core.entity.MenuOption;
 import com.mark.zumo.client.core.entity.MenuOptionCategory;
 import com.mark.zumo.client.store.model.MenuOptionManager;
 import com.mark.zumo.client.store.model.StoreMenuManager;
+import com.mark.zumo.client.store.model.StoreStoreManager;
 import com.mark.zumo.client.store.model.StoreUserManager;
 
 import java.util.List;
@@ -36,7 +37,7 @@ import io.reactivex.disposables.CompositeDisposable;
  */
 public class MenuOptionSettingViewModel extends AndroidViewModel {
 
-    private final StoreUserManager storeUserManager;
+    private final StoreStoreManager storeStoreManager;
     private final StoreMenuManager storeMenuManager;
     private final MenuOptionManager menuOptionManager;
 
@@ -45,7 +46,7 @@ public class MenuOptionSettingViewModel extends AndroidViewModel {
     public MenuOptionSettingViewModel(@NonNull final Application application) {
         super(application);
 
-        storeUserManager = StoreUserManager.INSTANCE;
+        storeStoreManager = StoreStoreManager.INSTANCE;
         storeMenuManager = StoreMenuManager.INSTANCE;
         menuOptionManager = MenuOptionManager.INSTANCE;
 
@@ -55,7 +56,7 @@ public class MenuOptionSettingViewModel extends AndroidViewModel {
     public LiveData<List<MenuOption>> getMenuOptionList() {
         MutableLiveData<List<MenuOption>> liveData = new MutableLiveData<>();
 
-        storeUserManager.getSessionStoreAsync()
+        storeStoreManager.getStoreSessionMaybe()
                 .map(store -> store.uuid)
                 .flatMapObservable(menuOptionManager::getMenuOptionListByStoreUuid)
                 .observeOn(AndroidSchedulers.mainThread())
@@ -70,7 +71,7 @@ public class MenuOptionSettingViewModel extends AndroidViewModel {
 
         MutableLiveData<MenuOptionCategory> liveData = new MutableLiveData<>();
 
-        storeUserManager.getSessionStoreAsync()
+        storeStoreManager.getStoreSessionMaybe()
                 .map(store -> store.uuid)
                 .flatMap(storeUuid -> menuOptionManager.createMenuOptionCategory(storeUuid, name))
                 .observeOn(AndroidSchedulers.mainThread())
@@ -86,7 +87,7 @@ public class MenuOptionSettingViewModel extends AndroidViewModel {
 
         MutableLiveData<List<Menu>> liveData = new MutableLiveData<>();
 
-        storeUserManager.getSessionStoreAsync()
+        storeStoreManager.getStoreSessionMaybe()
                 .map(store -> store.uuid)
                 .flatMap(storeUuid -> menuOptionManager.createMenuOptionDetailListAsMenuOptionCategory(storeUuid, menuOptionCategoryUuid, menuList))
                 .observeOn(AndroidSchedulers.mainThread())
@@ -150,7 +151,7 @@ public class MenuOptionSettingViewModel extends AndroidViewModel {
     public LiveData<List<MenuOptionCategory>> getCombinedMenuOptionCategoryList() {
         MutableLiveData<List<MenuOptionCategory>> liveData = new MutableLiveData<>();
 
-        storeUserManager.getSessionStoreAsync()
+        storeStoreManager.getStoreSessionMaybe()
                 .map(store -> store.uuid)
                 .flatMapObservable(menuOptionManager::getCombinedMenuOptionCategoryListByStoreUuid)
                 .observeOn(AndroidSchedulers.mainThread())
@@ -164,7 +165,7 @@ public class MenuOptionSettingViewModel extends AndroidViewModel {
     public LiveData<List<MenuOptionCategory>> getMenuOptionCategoryList() {
         MutableLiveData<List<MenuOptionCategory>> liveData = new MutableLiveData<>();
 
-        storeUserManager.getSessionStoreAsync()
+        storeStoreManager.getStoreSessionMaybe()
                 .map(store -> store.uuid)
                 .flatMapObservable(menuOptionManager::getMenuOptionCategoryListByStoreUuid)
                 .observeOn(AndroidSchedulers.mainThread())
@@ -192,7 +193,7 @@ public class MenuOptionSettingViewModel extends AndroidViewModel {
 
         MutableLiveData<MenuOptionCategory> liveData = new MutableLiveData<>();
 
-        storeUserManager.getSessionStoreAsync()
+        storeStoreManager.getStoreSessionMaybe()
                 .map(store -> store.uuid)
                 .flatMap(storeUuid -> menuOptionManager.createMenuOptionCategory(storeUuid, menuOptionCategoryName, menuOptionList))
                 .observeOn(AndroidSchedulers.mainThread())
@@ -208,7 +209,7 @@ public class MenuOptionSettingViewModel extends AndroidViewModel {
 
         MutableLiveData<List<MenuOptionCategory>> liveData = new MutableLiveData<>();
 
-        storeUserManager.getSessionStoreAsync()
+        storeStoreManager.getStoreSessionMaybe()
                 .map(store -> store.uuid)
                 .flatMap(storeUuid -> menuOptionManager.updateMenuOptionCategoriesOfMenu(storeUuid, menuUuid, menuOptionCategoryUuidSet))
                 .observeOn(AndroidSchedulers.mainThread())

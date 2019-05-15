@@ -12,6 +12,7 @@
     <string name="order_state_requested">Requested</string>
     <string name="order_state_accepted">Accepted</string>
     <string name="order_state_complete">Complete</string>
+    <string name="order_state_finished">FINISHED</string>
     <string name="order_state_rejected">Rejected</string>
     <string name="order_state_canceled">Canceled</string>
 
@@ -19,6 +20,7 @@
     <string name="notification_description_requested">Requested</string>
     <string name="notification_description_accepted">Accepted</string>
     <string name="notification_description_complete">Complete</string>
+    <string name="notification_description_finished">Finished</string>
     <string name="notification_description_rejected">Rejected</string>
     <string name="notification_description_canceled">Canceled</string>
 

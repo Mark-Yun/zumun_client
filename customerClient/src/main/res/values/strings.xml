@@ -5,7 +5,7 @@
   -->
 
 <resources>
-    <string name="app_name">Zumun</string>
+    <string name="app_name">The Chago</string>
 
     <string name="place_latest_visit_store_header_text">Latest Visit Stores</string>
     <string name="place_near_by_header_text">Near by Stores</string>

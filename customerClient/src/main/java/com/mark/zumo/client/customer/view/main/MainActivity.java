@@ -11,11 +11,8 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 
 import com.mark.zumo.client.core.view.BaseActivity;
-import com.mark.zumo.client.core.view.Navigator;
 import com.mark.zumo.client.customer.R;
-import com.wonderkiln.blurkit.BlurLayout;
 
-import butterknife.BindView;
 import butterknife.ButterKnife;
 
 /**
@@ -24,16 +21,12 @@ import butterknife.ButterKnife;
 
 public class MainActivity extends BaseActivity {
 
-    @BindView(R.id.blur_filter) BlurLayout blurFilter;
-
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
         inflateMenuFragment();
-
-        Navigator.addBlurFilter(blurFilter);
     }
 
     private void inflateMenuFragment() {
@@ -43,17 +36,5 @@ public class MainActivity extends BaseActivity {
                 .replace(R.id.main_body_fragment, mainBodyFragment)
                 .replace(R.id.main_header_fragment, mainHeaderFragment)
                 .commitAllowingStateLoss();
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        Navigator.setBlurLayoutVisible(false);
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        Navigator.removeBlurFilter(blurFilter);
     }
 }

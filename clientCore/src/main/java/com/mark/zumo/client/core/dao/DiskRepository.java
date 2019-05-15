@@ -36,6 +36,7 @@ import java.util.List;
 
 import io.reactivex.Flowable;
 import io.reactivex.Maybe;
+import io.reactivex.Observable;
 
 /**
  * Created by mark on 18. 4. 30.
@@ -50,7 +51,10 @@ public interface DiskRepository {
     void insertStoreOwner(StoreOwner storeOwner);
 
     @Query("SELECT * FROM " + Store.TABLE + " WHERE store_uuid LIKE :uuid LIMIT 1")
-    Maybe<Store> getStore(String uuid);
+    Maybe<Store> getStoreMaybe(String uuid);
+
+    @Query("SELECT * FROM " + Store.TABLE + " WHERE store_uuid LIKE :uuid LIMIT 1")
+    Flowable<Store> getStoreFlowable(String uuid);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertStore(Store store);
@@ -67,7 +71,10 @@ public interface DiskRepository {
 
 
     @Query("SELECT * FROM " + MenuOrder.TABLE + " WHERE menu_order_uuid LIKE :menuOrderUuid LIMIT 1")
-    Maybe<MenuOrder> getMenuOrder(String menuOrderUuid);
+    Maybe<MenuOrder> getMenuOrderMaybe(String menuOrderUuid);
+
+    @Query("SELECT * FROM " + MenuOrder.TABLE + " WHERE menu_order_uuid LIKE :menuOrderUuid LIMIT 1")
+    Flowable<MenuOrder> getMenuOrderFlowable(String menuOrderUuid);
 
     @Query("SELECT * FROM " + MenuOrder.TABLE +
             " WHERE customer_uuid LIKE :customerUuid" +
@@ -87,6 +94,9 @@ public interface DiskRepository {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertMenuOrderList(List<MenuOrder> menuOrderList);
+
+    @Query("DELETE FROM " + MenuOrder.TABLE + " WHERE customer_uuid LIKE :customerUuid")
+    void deleteMenuOrderListByCustomerUuid(String customerUuid);
 
     @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
     @Query("SELECT * FROM " + MenuOption.Schema.table + " WHERE menu_option_category_uuid LIKE :menuOptionCategoryUuid")
@@ -141,16 +151,13 @@ public interface DiskRepository {
     void removeAllStoreUserSession();
 
     @Query("DELETE FROM " + SessionStore.Schema.TABLE)
-    void removeAllStoreSssion();
+    void removeAllStoreSession();
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertSessionStore(SessionStore sessionStore);
 
     @Query("SELECT * FROM " + SessionStore.Schema.TABLE + " ORDER BY " + StoreUserSession.Schema.createdDate + " DESC LIMIT 1")
-    Flowable<SessionStore> getSessionStoreFlowable();
-
-    @Query("SELECT * FROM " + SessionStore.Schema.TABLE + " ORDER BY " + StoreUserSession.Schema.createdDate + " DESC LIMIT 1")
-    Maybe<SessionStore> getSessionStoreMaybe();
+    Maybe<SessionStore> getSessionStore();
 
     @Query("SELECT * FROM " + MenuOption.Schema.table + " WHERE menu_option_uuid LIKE :menuOptionUuid LIMIT 1")
     Maybe<MenuOption> getMenuOption(String menuOptionUuid);

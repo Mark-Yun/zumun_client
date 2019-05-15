@@ -6,7 +6,7 @@
 
 package com.mark.zumo.client.core.appserver;
 
-import com.mark.zumo.client.core.appserver.request.SnsSendMessageRequest;
+import com.mark.zumo.client.core.appserver.request.sns.SnsSendMessageRequest;
 
 import io.reactivex.Maybe;
 import retrofit2.http.Body;
