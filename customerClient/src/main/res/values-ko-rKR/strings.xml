@@ -5,7 +5,7 @@
   -->
 
 <resources>
-    <string name="app_name">Zumun</string>
+    <string name="app_name">더 차고</string>
     <string name="place_latest_visit_store_header_text">최근 방문한 가게</string>
     <string name="place_near_by_header_text">근처 가게</string>
     <string name="distance_format_kilo_meter">%skm</string>
