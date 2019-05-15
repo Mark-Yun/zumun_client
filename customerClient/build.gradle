@@ -32,6 +32,8 @@ android {
 
     def finalVersionCode = generateVersionCode(rootProject.ext.minSdk, versionMajor, versionMinor, versionPatch)
 
+    def date = new Date().format('yyyyMMddHHmmss')
+
     defaultConfig {
         applicationId "com.mark.zumo.client.customer"
         minSdkVersion minSdk
@@ -46,11 +48,12 @@ android {
             minifyEnabled true
             shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), '../proguard-rules.pro'
+            versionNameSuffix '-build' + date
         }
         debug {
             signingConfig signingConfigs.debug
             applicationIdSuffix ".dev"
-            versionNameSuffix 'd'
+            versionNameSuffix 'd-build' + date
         }
     }
 
