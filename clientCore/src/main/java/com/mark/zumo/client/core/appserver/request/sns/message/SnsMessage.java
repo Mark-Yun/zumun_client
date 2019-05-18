@@ -13,7 +13,7 @@ import com.mark.zumo.client.core.entity.util.EntityHelper;
  * Created by mark on 18. 9. 16.
  */
 public class SnsMessage {
-    @SerializedName(Schema.MESSAGE_TYPE)
+    @SerializedName(Schema.EVENT)
     public final String messageType;
     @SerializedName(Schema.DATA)
     public final String data;
@@ -41,7 +41,7 @@ public class SnsMessage {
      */
 
     public interface Schema {
-        String MESSAGE_TYPE = "message_type";
-        String DATA = "order_uuid";
+        String EVENT = "event";
+        String DATA = "data";
     }
 }

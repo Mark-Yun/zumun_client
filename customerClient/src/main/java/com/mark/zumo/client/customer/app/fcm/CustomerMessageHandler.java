@@ -10,6 +10,7 @@ import android.util.Log;
 
 import com.mark.zumo.client.core.appserver.request.sns.message.MessageFactory;
 import com.mark.zumo.client.core.appserver.request.sns.message.SnsMessage;
+import com.mark.zumo.client.customer.model.CustomerNotificationManager;
 import com.mark.zumo.client.customer.model.CustomerOrderManager;
 
 import java.util.Map;
@@ -23,6 +24,7 @@ public enum CustomerMessageHandler {
     public static final String TAG = "CustomerMessageHandler";
 
     private CustomerOrderManager customerOrderManager;
+    private CustomerNotificationManager customerNotificationManager;
 
     CustomerMessageHandler() {
         customerOrderManager = CustomerOrderManager.INSTANCE;

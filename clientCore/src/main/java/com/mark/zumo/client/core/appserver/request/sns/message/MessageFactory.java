@@ -7,11 +7,7 @@
 package com.mark.zumo.client.core.appserver.request.sns.message;
 
 import android.text.TextUtils;
-import android.util.Log;
 
-import com.mark.zumo.client.core.appserver.request.sns.SnsSendMessageRequest;
-
-import java.lang.reflect.InvocationTargetException;
 import java.util.Map;
 
 /**
@@ -25,11 +21,11 @@ public final class MessageFactory {
     }
 
     public static SnsMessage create(Map<String, String> data) {
-        String messageTypeString = data.get(SnsMessage.Schema.MESSAGE_TYPE);
+        String messageTypeString = data.get(SnsMessage.Schema.EVENT);
         if (messageTypeString == null || TextUtils.isEmpty(messageTypeString)) {
             return null;
         }
-        String dataString = data.get(SnsMessage.Schema.MESSAGE_TYPE);
+        String dataString = data.get(SnsMessage.Schema.DATA);
 
         return new SnsMessage(messageTypeString, dataString);
     }

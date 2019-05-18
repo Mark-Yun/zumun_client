@@ -15,17 +15,13 @@ import android.arch.persistence.room.RoomWarnings;
 
 import com.mark.zumo.client.core.appserver.request.registration.StoreRegistrationRequest;
 import com.mark.zumo.client.core.appserver.request.registration.result.StoreRegistrationResult;
-import com.mark.zumo.client.core.entity.Menu;
 import com.mark.zumo.client.core.entity.MenuCategory;
 import com.mark.zumo.client.core.entity.MenuDetail;
 import com.mark.zumo.client.core.entity.MenuOption;
 import com.mark.zumo.client.core.entity.MenuOptionCategory;
 import com.mark.zumo.client.core.entity.MenuOptionDetail;
-import com.mark.zumo.client.core.entity.MenuOrder;
-import com.mark.zumo.client.core.entity.OrderDetail;
 import com.mark.zumo.client.core.entity.SessionStore;
 import com.mark.zumo.client.core.entity.SnsToken;
-import com.mark.zumo.client.core.entity.Store;
 import com.mark.zumo.client.core.entity.user.GuestUser;
 import com.mark.zumo.client.core.entity.user.store.StoreOwner;
 import com.mark.zumo.client.core.entity.user.store.StoreUserContract;
@@ -36,7 +32,6 @@ import java.util.List;
 
 import io.reactivex.Flowable;
 import io.reactivex.Maybe;
-import io.reactivex.Observable;
 
 /**
  * Created by mark on 18. 4. 30.
@@ -49,54 +44,6 @@ public interface DiskRepository {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertStoreOwner(StoreOwner storeOwner);
-
-    @Query("SELECT * FROM " + Store.TABLE + " WHERE store_uuid LIKE :uuid LIMIT 1")
-    Maybe<Store> getStoreMaybe(String uuid);
-
-    @Query("SELECT * FROM " + Store.TABLE + " WHERE store_uuid LIKE :uuid LIMIT 1")
-    Flowable<Store> getStoreFlowable(String uuid);
-
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    void insertStore(Store store);
-
-
-    @Query("SELECT * FROM " + OrderDetail.TABLE + " WHERE order_detail_uuid LIKE :uuid LIMIT 1")
-    Maybe<OrderDetail> getOrderDetail(String uuid);
-
-    @Query("SELECT * FROM " + OrderDetail.TABLE + " WHERE menu_order_uuid LIKE :menuOrderUuid ")
-    Maybe<List<OrderDetail>> getOrderDetailListByMenuOrderUuid(String menuOrderUuid);
-
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    void insertOrderDetailList(List<OrderDetail> orderDetailList);
-
-
-    @Query("SELECT * FROM " + MenuOrder.TABLE + " WHERE menu_order_uuid LIKE :menuOrderUuid LIMIT 1")
-    Maybe<MenuOrder> getMenuOrderMaybe(String menuOrderUuid);
-
-    @Query("SELECT * FROM " + MenuOrder.TABLE + " WHERE menu_order_uuid LIKE :menuOrderUuid LIMIT 1")
-    Flowable<MenuOrder> getMenuOrderFlowable(String menuOrderUuid);
-
-    @Query("SELECT * FROM " + MenuOrder.TABLE +
-            " WHERE customer_uuid LIKE :customerUuid" +
-            " ORDER BY created_date DESC" +
-            " LIMIT :offset, :limit")
-    Maybe<List<MenuOrder>> getMenuOrderByCustomerUuid(String customerUuid,
-                                                      int offset,
-                                                      int limit);
-
-    @Query("SELECT * FROM " + MenuOrder.TABLE +
-            " WHERE store_uuid LIKE :storeUuid" +
-            " ORDER BY created_date DESC" +
-            " LIMIT :offset, :limit")
-    Maybe<List<MenuOrder>> getMenuOrderByStoreUuid(String storeUuid,
-                                                   int offset,
-                                                   int limit);
-
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    void insertMenuOrderList(List<MenuOrder> menuOrderList);
-
-    @Query("DELETE FROM " + MenuOrder.TABLE + " WHERE customer_uuid LIKE :customerUuid")
-    void deleteMenuOrderListByCustomerUuid(String customerUuid);
 
     @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
     @Query("SELECT * FROM " + MenuOption.Schema.table + " WHERE menu_option_category_uuid LIKE :menuOptionCategoryUuid")
@@ -194,26 +141,6 @@ public interface DiskRepository {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertMenuOptionCategory(MenuOptionCategory menuOptionCategory);
-
-
-    @Query("SELECT * FROM " + Menu.MENU_TABLE + " WHERE menu_uuid LIKE :uuid LIMIT 1")
-    Maybe<Menu> getMenu(String uuid);
-
-    @Query("SELECT * FROM " + Menu.MENU_TABLE + " WHERE store_uuid LIKE :storeUuid")
-    Maybe<List<Menu>> getMenuList(String storeUuid);
-
-    @Query("DELETE FROM " + Menu.MENU_TABLE + " WHERE store_uuid LIKE :storeUuid")
-    void deleteMenuOfStore(String storeUuid);
-
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    void insertMenuList(List<Menu> menus);
-
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    void insertMenu(Menu menu);
-
-
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    void insertMenuOrder(MenuOrder menuOrder);
 
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)

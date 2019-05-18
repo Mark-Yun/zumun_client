@@ -88,7 +88,7 @@ public class CartViewModel extends AndroidViewModel {
     public LiveData<Store> getStore(String storeUuid) {
         MutableLiveData<Store> storeLiveData = new MutableLiveData<>();
 
-        customerStoreManager.getStoreFromDisk(storeUuid)
+        customerStoreManager.getStoreObservableFromDisk(storeUuid)
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSuccess(storeLiveData::setValue)
                 .doOnSubscribe(disposables::add)

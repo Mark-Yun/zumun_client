@@ -44,6 +44,10 @@ import com.mark.zumo.client.core.payment.kakao.entity.PaymentToken;
 @TypeConverters({Converters.class})
 public abstract class AppDatabase extends RoomDatabase {
     public abstract DiskRepository diskRepository();
-
-
+    public abstract MenuDao menuDao();
+    public abstract MenuOptionDao menuOptionDao();
+    public abstract MenuOrderDao menuOrderDao();
+    public abstract StoreDao storeDao();
+    public abstract StoreSessionDao storeSessionDao();
+    public abstract StoreUserSessionDao storeUserSessionDao();
 }

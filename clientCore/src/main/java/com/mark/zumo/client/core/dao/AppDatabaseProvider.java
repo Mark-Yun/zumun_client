@@ -20,10 +20,25 @@ public enum AppDatabaseProvider {
     INSTANCE;
 
     public static final String DB_NAME = "com.mark.zumun.client";
+
     public final DiskRepository diskRepository;
+    public final MenuDao menuDao;
+    public final MenuOptionDao menuOptionDao;
+    public final MenuOrderDao menuOrderDao;
+    public final StoreDao storeDao;
+    public final StoreSessionDao storeSessionDao;
+    public final StoreUserSessionDao storeUserSessionDao;
 
     AppDatabaseProvider() {
-        diskRepository = buildDatabase(ContextHolder.getContext()).diskRepository();
+        AppDatabase appDatabase = buildDatabase(ContextHolder.getContext());
+
+        diskRepository = appDatabase.diskRepository();
+        menuDao = appDatabase.menuDao();
+        menuOptionDao = appDatabase.menuOptionDao();
+        menuOrderDao = appDatabase.menuOrderDao();
+        storeDao = appDatabase.storeDao();
+        storeSessionDao = appDatabase.storeSessionDao();
+        storeUserSessionDao = appDatabase.storeUserSessionDao();
     }
 
     private static AppDatabase buildDatabase(Context context) {
