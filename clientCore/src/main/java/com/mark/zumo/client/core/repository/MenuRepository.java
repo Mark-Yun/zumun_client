@@ -12,6 +12,8 @@ import com.mark.zumo.client.core.appserver.AppServerServiceProvider;
 import com.mark.zumo.client.core.appserver.NetworkRepository;
 import com.mark.zumo.client.core.dao.AppDatabaseProvider;
 import com.mark.zumo.client.core.dao.DiskRepository;
+import com.mark.zumo.client.core.dao.MenuDao;
+import com.mark.zumo.client.core.dao.MenuOptionDao;
 import com.mark.zumo.client.core.entity.Menu;
 import com.mark.zumo.client.core.entity.MenuCategory;
 import com.mark.zumo.client.core.entity.MenuOption;
@@ -33,9 +35,13 @@ public enum MenuRepository {
     private static final String TAG = "MenuRepository";
 
     private final DiskRepository diskRepository;
+    private final MenuDao menuDao;
+    private final MenuOptionDao menuOptionDao;
 
     MenuRepository() {
         diskRepository = AppDatabaseProvider.INSTANCE.diskRepository;
+        menuDao = AppDatabaseProvider.INSTANCE.menuDao;
+        menuOptionDao = AppDatabaseProvider.INSTANCE.menuOptionDao;
     }
 
     private NetworkRepository networkRepository() {
@@ -43,10 +49,10 @@ public enum MenuRepository {
     }
 
     public Observable<List<Menu>> getMenuListOfStore(String storeUuid) {
-        Maybe<List<Menu>> menuListDB = diskRepository.getMenuList(storeUuid);
+        Maybe<List<Menu>> menuListDB = menuDao.getMenuList(storeUuid);
         Maybe<List<Menu>> menuListApi = networkRepository().getMenuList(storeUuid)
-                .doOnSuccess(x -> diskRepository.deleteMenuOfStore(storeUuid))
-                .doOnSuccess(diskRepository::insertMenuList);
+                .doOnSuccess(x -> menuDao.deleteMenuOfStore(storeUuid))
+                .doOnSuccess(menuDao::insertMenuList);
 
         return Maybe.merge(menuListDB, menuListApi)
                 .toObservable()
@@ -54,11 +60,11 @@ public enum MenuRepository {
     }
 
     public Maybe<List<Menu>> getMenuItemsOfStoreFromDisk(String storeUuid) {
-        return diskRepository.getMenuList(storeUuid);
+        return menuDao.getMenuList(storeUuid);
     }
 
     public Observable<List<MenuOption>> getMenuOptionListByMenuOptionCategoryUuid(String menuOptionCategoryUuid) {
-        Maybe<List<MenuOption>> menuOptionListDB = diskRepository.getMenuOptionListByMenuOptionCategoryUuid(menuOptionCategoryUuid);
+        Maybe<List<MenuOption>> menuOptionListDB = menuOptionDao.getMenuOptionListByMenuOptionCategoryUuid(menuOptionCategoryUuid);
         Maybe<List<MenuOption>> menuOptionListApi = networkRepository().getMenuOptionListByMenuOptionCategoryUuid(menuOptionCategoryUuid)
                 .doOnSuccess(diskRepository::insertMenuOptionList)
                 .doOnSuccess(list -> Log.d(TAG, "getMenuOptionListByMenuOptionCategoryUuid: " + list));
@@ -107,7 +113,7 @@ public enum MenuRepository {
 
     public Maybe<Menu> createMenu(Menu menu) {
         return networkRepository().createMenu(menu)
-                .doOnSuccess(diskRepository::insertMenu);
+                .doOnSuccess(menuDao::insertMenu);
     }
 
     public Maybe<List<MenuOption>> createMenuOptionList(List<MenuOption> menuOptionList) {
@@ -131,18 +137,18 @@ public enum MenuRepository {
     }
 
     public Maybe<Menu> getMenuFromDisk(final String uuid) {
-        return diskRepository.getMenu(uuid);
+        return menuDao.getMenu(uuid);
     }
 
     public Maybe<Menu> getMenuFromApi(final String uuid) {
         return networkRepository().getMenu(uuid)
-                .doOnSuccess(diskRepository::insertMenu);
+                .doOnSuccess(menuDao::insertMenu);
     }
 
     public Observable<Menu> getMenu(final String uuid) {
-        Maybe<Menu> menuDB = diskRepository.getMenu(uuid);
+        Maybe<Menu> menuDB = menuDao.getMenu(uuid);
         Maybe<Menu> menuApi = networkRepository().getMenu(uuid)
-                .doOnSuccess(diskRepository::insertMenu);
+                .doOnSuccess(menuDao::insertMenu);
 
         return Maybe.merge(menuDB, menuApi)
                 .toObservable()
@@ -219,12 +225,12 @@ public enum MenuRepository {
 
     public Maybe<Menu> updateMenu(final Menu menu) {
         return networkRepository().updateMenu(menu.uuid, menu)
-                .doOnSuccess(diskRepository::insertMenu);
+                .doOnSuccess(menuDao::insertMenu);
     }
 
     public Maybe<Menu> updateCategoryInMenu(final String menuUuid, final MenuCategory menuCategory) {
         return networkRepository().updateCategoryInMenu(menuUuid, menuCategory)
-                .doOnSuccess(diskRepository::insertMenu);
+                .doOnSuccess(menuDao::insertMenu);
     }
 
     public Maybe<List<MenuOptionCategory>> deleteMenuOptionCategories(List<MenuOptionCategory> menuOptionCategoryList) {

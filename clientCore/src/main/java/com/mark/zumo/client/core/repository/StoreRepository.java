@@ -16,6 +16,7 @@ import com.mark.zumo.client.core.appserver.request.registration.result.StoreRegi
 import com.mark.zumo.client.core.appserver.response.store.registration.StoreRegistrationResponse;
 import com.mark.zumo.client.core.dao.AppDatabaseProvider;
 import com.mark.zumo.client.core.dao.DiskRepository;
+import com.mark.zumo.client.core.dao.StoreDao;
 import com.mark.zumo.client.core.entity.SessionStore;
 import com.mark.zumo.client.core.entity.SnsToken;
 import com.mark.zumo.client.core.entity.Store;
@@ -36,9 +37,11 @@ public enum StoreRepository {
     private static final String TAG = "StoreRepository";
 
     private final DiskRepository diskRepository;
+    private final StoreDao storeDao;
 
     StoreRepository() {
         diskRepository = AppDatabaseProvider.INSTANCE.diskRepository;
+        storeDao = AppDatabaseProvider.INSTANCE.storeDao;
     }
 
     private NetworkRepository networkRepository() {
@@ -51,13 +54,13 @@ public enum StoreRepository {
 
     public Maybe<Store> updateStore(Store store) {
         return networkRepository().updateStore(store.uuid, store)
-                .doOnSuccess(diskRepository::insertStore);
+                .doOnSuccess(storeDao::insertStore);
     }
 
     public Observable<Store> getStore(String storeUuid) {
-        Maybe<Store> storeDB = diskRepository.getStoreMaybe(storeUuid);
+        Maybe<Store> storeDB = storeDao.getStoreMaybe(storeUuid);
         Maybe<Store> storeApi = networkRepository().getStore(storeUuid)
-                .doOnSuccess(diskRepository::insertStore);
+                .doOnSuccess(storeDao::insertStore);
 
         return Maybe.merge(storeDB, storeApi)
                 .toObservable()
@@ -66,12 +69,12 @@ public enum StoreRepository {
     }
 
     public Maybe<Store> getStoreFromDisk(String storeUuid) {
-        return diskRepository.getStoreMaybe(storeUuid);
+        return storeDao.getStoreMaybe(storeUuid);
     }
 
     public Maybe<Store> getStoreFromApi(String storeUuid) {
         return networkRepository().getStore(storeUuid)
-                .doOnSuccess(diskRepository::insertStore);
+                .doOnSuccess(storeDao::insertStore);
     }
 
     public Maybe<SnsToken> registerSnsToken(SnsToken snsToken) {
@@ -106,7 +109,7 @@ public enum StoreRepository {
     public Observable<Store> getStoreSessionObservable() {
         return diskRepository.getSessionStore()
                 .map(sessionStore -> sessionStore.uuid)
-                .flatMapObservable(storeUuid -> diskRepository.getStoreFlowable(storeUuid).toObservable());
+                .flatMapObservable(storeUuid -> storeDao.getStoreFlowable(storeUuid).toObservable());
     }
 
     public Observable<List<StoreRegistrationRequest>> getStoreRegistrationRequestListByStoreUserUuid(String storeUserUuid) {

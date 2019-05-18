@@ -41,7 +41,7 @@ public enum CustomerStoreManager {
                 .subscribeOn(Schedulers.io());
     }
 
-    public Maybe<Store> getStoreFromDisk(String storeUuid) {
+    public Maybe<Store> getStoreObservableFromDisk(String storeUuid) {
         return storeRepository.getStoreFromDisk(storeUuid)
                 .subscribeOn(Schedulers.io());
     }

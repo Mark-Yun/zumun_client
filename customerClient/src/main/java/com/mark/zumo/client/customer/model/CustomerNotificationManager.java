@@ -151,7 +151,7 @@ public enum CustomerNotificationManager {
             notificationManager.createNotificationChannel(notificationChanel);
         }
 
-        storeRepository.getStoreFromDisk(menuOrder.storeUuid)
+        storeRepository.getStoreFromApi(menuOrder.storeUuid)
                 .map(store -> createOrderNotification(store, menuOrder))
                 .doOnSuccess(notification -> notificationManager.notify(menuOrder.uuid.hashCode(), notification))
                 .subscribeOn(Schedulers.io())
