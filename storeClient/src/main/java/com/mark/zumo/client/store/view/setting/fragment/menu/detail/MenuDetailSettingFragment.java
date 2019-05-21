@@ -35,7 +35,7 @@ import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
-import com.mark.zumo.client.core.entity.Menu;
+import com.mark.zumo.client.core.database.entity.Menu;
 import com.mark.zumo.client.core.util.glide.GlideApp;
 import com.mark.zumo.client.core.util.glide.GlideUtils;
 import com.mark.zumo.client.store.R;

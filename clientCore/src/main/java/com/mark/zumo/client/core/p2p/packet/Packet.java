@@ -6,7 +6,7 @@
 
 package com.mark.zumo.client.core.p2p.packet;
 
-import com.mark.zumo.client.core.entity.util.EntityHelper;
+import com.mark.zumo.client.core.database.entity.util.EntityHelper;
 
 /**
  * Created by mark on 18. 5. 5.

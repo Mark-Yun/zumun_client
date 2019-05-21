@@ -27,7 +27,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import com.mark.zumo.client.core.entity.user.store.StoreOwner;
+import com.mark.zumo.client.core.database.entity.user.store.StoreOwner;
 import com.mark.zumo.client.store.R;
 import com.mark.zumo.client.store.view.witdraw.fragment.bank.selector.BankSelectorDialogFragment;
 import com.mark.zumo.client.store.viewmodel.BankViewModel;

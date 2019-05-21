@@ -6,8 +6,8 @@
 
 package com.mark.zumo.client.customer.model;
 
-import com.mark.zumo.client.core.entity.MenuOrder;
-import com.mark.zumo.client.core.entity.OrderDetail;
+import com.mark.zumo.client.core.database.entity.MenuOrder;
+import com.mark.zumo.client.core.database.entity.OrderDetail;
 import com.mark.zumo.client.core.repository.CustomerUserRepository;
 import com.mark.zumo.client.core.repository.MessageHandler;
 import com.mark.zumo.client.core.repository.OrderRepository;

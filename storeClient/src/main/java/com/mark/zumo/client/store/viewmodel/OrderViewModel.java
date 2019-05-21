@@ -13,13 +13,13 @@ import android.arch.lifecycle.MutableLiveData;
 import android.support.annotation.NonNull;
 import android.widget.Toast;
 
-import com.mark.zumo.client.core.entity.MenuOption;
-import com.mark.zumo.client.core.entity.MenuOrder;
-import com.mark.zumo.client.core.entity.OrderDetail;
+import com.mark.zumo.client.core.database.entity.MenuOption;
+import com.mark.zumo.client.core.database.entity.MenuOrder;
+import com.mark.zumo.client.core.database.entity.OrderDetail;
 import com.mark.zumo.client.store.model.MenuOptionManager;
 import com.mark.zumo.client.store.model.StoreOrderManager;
 import com.mark.zumo.client.store.model.StoreStoreManager;
-import com.mark.zumo.client.store.model.entity.OrderBucket;
+import com.mark.zumo.client.store.model.entity.order.OrderBucket;
 
 import java.util.List;
 

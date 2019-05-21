@@ -24,7 +24,7 @@ import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlacePicker;
-import com.mark.zumo.client.core.entity.Store;
+import com.mark.zumo.client.core.database.entity.Store;
 import com.mark.zumo.client.store.R;
 import com.mark.zumo.client.store.view.setting.fragment.BasePreferenceFragmentCompat;
 import com.mark.zumo.client.store.view.util.ImageCropperUtils;

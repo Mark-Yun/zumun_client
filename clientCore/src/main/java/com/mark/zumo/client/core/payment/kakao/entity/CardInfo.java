@@ -7,7 +7,7 @@
 package com.mark.zumo.client.core.payment.kakao.entity;
 
 import com.google.gson.annotations.SerializedName;
-import com.mark.zumo.client.core.entity.util.EntityHelper;
+import com.mark.zumo.client.core.database.entity.util.EntityHelper;
 
 /**
  * Created by mark on 18. 6. 6.

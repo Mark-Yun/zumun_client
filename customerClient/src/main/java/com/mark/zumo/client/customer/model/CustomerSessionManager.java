@@ -11,8 +11,8 @@ import android.util.Log;
 
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.InstanceIdResult;
-import com.mark.zumo.client.core.entity.SnsToken;
-import com.mark.zumo.client.core.entity.user.GuestUser;
+import com.mark.zumo.client.core.database.entity.SnsToken;
+import com.mark.zumo.client.core.database.entity.user.GuestUser;
 import com.mark.zumo.client.core.repository.CustomerUserRepository;
 
 import io.reactivex.Maybe;

@@ -9,7 +9,7 @@ package com.mark.zumo.client.core.payment.kakao.entity;
 import android.text.TextUtils;
 
 import com.google.gson.annotations.SerializedName;
-import com.mark.zumo.client.core.entity.util.EntityHelper;
+import com.mark.zumo.client.core.database.entity.util.EntityHelper;
 
 import org.junit.Assert;
 

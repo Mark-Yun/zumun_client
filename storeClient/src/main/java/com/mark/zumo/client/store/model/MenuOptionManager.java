@@ -8,10 +8,10 @@ package com.mark.zumo.client.store.model;
 
 import android.support.annotation.NonNull;
 
-import com.mark.zumo.client.core.entity.Menu;
-import com.mark.zumo.client.core.entity.MenuOption;
-import com.mark.zumo.client.core.entity.MenuOptionCategory;
-import com.mark.zumo.client.core.entity.MenuOptionDetail;
+import com.mark.zumo.client.core.database.entity.Menu;
+import com.mark.zumo.client.core.database.entity.MenuOption;
+import com.mark.zumo.client.core.database.entity.MenuOptionCategory;
+import com.mark.zumo.client.core.database.entity.MenuOptionDetail;
 import com.mark.zumo.client.core.repository.MenuRepository;
 
 import java.util.ArrayList;

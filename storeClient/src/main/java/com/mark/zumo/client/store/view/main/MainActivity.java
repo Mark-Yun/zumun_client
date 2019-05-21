@@ -31,11 +31,12 @@ import android.view.WindowManager;
 
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.bumptech.glide.request.RequestOptions;
-import com.mark.zumo.client.core.entity.Store;
+import com.mark.zumo.client.core.database.entity.Store;
 import com.mark.zumo.client.core.util.glide.GlideApp;
 import com.mark.zumo.client.core.util.glide.transformation.LinearGradientTransformation;
 import com.mark.zumo.client.core.view.BaseActivity;
 import com.mark.zumo.client.store.R;
+import com.mark.zumo.client.store.view.equipment.EquipmentFragment;
 import com.mark.zumo.client.store.view.main.fragment.storeselect.StoreSelectFragment;
 import com.mark.zumo.client.store.view.order.OrderFragment;
 import com.mark.zumo.client.store.view.setting.fragment.SettingMainFragment;
@@ -192,6 +193,8 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
             updateMainFragment(fragment);
         } else if (id == R.id.nav_withdraw) {
             updateMainFragment(WithdrawMainFragment.newInstance());
+        } else if (id == R.id.nav_equipment) {
+            updateMainFragment(EquipmentFragment.newInstance());
         }
 
         drawer.closeDrawer(GravityCompat.START);

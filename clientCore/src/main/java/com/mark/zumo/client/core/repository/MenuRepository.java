@@ -10,15 +10,15 @@ import android.util.Log;
 
 import com.mark.zumo.client.core.appserver.AppServerServiceProvider;
 import com.mark.zumo.client.core.appserver.NetworkRepository;
-import com.mark.zumo.client.core.dao.AppDatabaseProvider;
-import com.mark.zumo.client.core.dao.DiskRepository;
-import com.mark.zumo.client.core.dao.MenuDao;
-import com.mark.zumo.client.core.dao.MenuOptionDao;
-import com.mark.zumo.client.core.entity.Menu;
-import com.mark.zumo.client.core.entity.MenuCategory;
-import com.mark.zumo.client.core.entity.MenuOption;
-import com.mark.zumo.client.core.entity.MenuOptionCategory;
-import com.mark.zumo.client.core.entity.MenuOptionDetail;
+import com.mark.zumo.client.core.database.AppDatabaseProvider;
+import com.mark.zumo.client.core.database.dao.DiskRepository;
+import com.mark.zumo.client.core.database.dao.MenuDao;
+import com.mark.zumo.client.core.database.dao.MenuOptionDao;
+import com.mark.zumo.client.core.database.entity.Menu;
+import com.mark.zumo.client.core.database.entity.MenuCategory;
+import com.mark.zumo.client.core.database.entity.MenuOption;
+import com.mark.zumo.client.core.database.entity.MenuOptionCategory;
+import com.mark.zumo.client.core.database.entity.MenuOptionDetail;
 
 import java.util.List;
 

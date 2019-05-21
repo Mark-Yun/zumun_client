@@ -7,7 +7,7 @@
 package com.mark.zumo.client.core.p2p;
 
 import com.google.android.gms.nearby.messages.Message;
-import com.mark.zumo.client.core.entity.Store;
+import com.mark.zumo.client.core.database.entity.Store;
 
 /**
  * Created by mark on 18. 4. 30.

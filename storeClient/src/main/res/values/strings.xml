@@ -135,6 +135,7 @@
     <string name="store_owner_bank_account_scan">Store Owner Back Account Scan</string>
 
     <string name="menu_title_withdraw">Withdraw Management</string>
+    <string name="menu_title_equipment">Equipment Management</string>
     <string name="menu_title_store_sign_up">Store Registration</string>
 
     <string name="option_setting_mode_description_edit">Select an option to edit</string>

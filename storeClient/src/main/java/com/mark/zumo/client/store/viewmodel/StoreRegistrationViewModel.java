@@ -17,7 +17,7 @@ import android.support.annotation.NonNull;
 
 import com.mark.zumo.client.core.appserver.request.registration.StoreRegistrationRequest;
 import com.mark.zumo.client.core.appserver.response.store.registration.StoreRegistrationResponse;
-import com.mark.zumo.client.core.provider.AppLocationProvider;
+import com.mark.zumo.client.core.device.AppLocationProvider;
 import com.mark.zumo.client.store.model.StoreS3TransferManager;
 import com.mark.zumo.client.store.model.StoreStoreManager;
 import com.mark.zumo.client.store.model.StoreUserManager;

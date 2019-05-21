@@ -9,9 +9,9 @@ package com.mark.zumo.client.store.model;
 import android.support.annotation.WorkerThread;
 import android.util.Log;
 
-import com.mark.zumo.client.core.entity.Menu;
-import com.mark.zumo.client.core.entity.MenuCategory;
-import com.mark.zumo.client.core.entity.MenuDetail;
+import com.mark.zumo.client.core.database.entity.Menu;
+import com.mark.zumo.client.core.database.entity.MenuCategory;
+import com.mark.zumo.client.core.database.entity.MenuDetail;
 import com.mark.zumo.client.core.repository.CategoryRepository;
 import com.mark.zumo.client.core.repository.MenuDetailRepository;
 import com.mark.zumo.client.core.repository.MenuRepository;

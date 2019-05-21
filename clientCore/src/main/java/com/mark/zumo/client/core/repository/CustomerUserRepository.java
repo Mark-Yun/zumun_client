@@ -12,10 +12,10 @@ import android.util.Log;
 
 import com.mark.zumo.client.core.appserver.AppServerServiceProvider;
 import com.mark.zumo.client.core.appserver.NetworkRepository;
-import com.mark.zumo.client.core.dao.AppDatabaseProvider;
-import com.mark.zumo.client.core.dao.DiskRepository;
-import com.mark.zumo.client.core.entity.SnsToken;
-import com.mark.zumo.client.core.entity.user.GuestUser;
+import com.mark.zumo.client.core.database.AppDatabaseProvider;
+import com.mark.zumo.client.core.database.dao.DiskRepository;
+import com.mark.zumo.client.core.database.entity.SnsToken;
+import com.mark.zumo.client.core.database.entity.user.GuestUser;
 import com.mark.zumo.client.core.security.SecurePreferences;
 
 import io.reactivex.Maybe;

@@ -52,6 +52,33 @@ configure(applications) {
             disable 'LongLogTag', 'CheckResult'
             abortOnError false
         }
+        compileSdkVersion rootProject.ext.compileSdk
+
+        signingConfigs {
+            debug {
+                storeFile file('../keystore/zumun_debug.keystore')
+            }
+        }
+
+        compileOptions {
+            sourceCompatibility JavaVersion.VERSION_1_8
+            targetCompatibility JavaVersion.VERSION_1_8
+        }
+
+        def versionPropsFile = file('../version.gradle')
+        if (!versionPropsFile.canRead()) {
+            throw new GradleException("Could not read version.gradle!")
+        }
+
+        Properties versionProps = new Properties()
+        versionProps.load(new FileInputStream(versionPropsFile))
+
+        def minSdk = versionProps['MIN_SDK'].toString()
+        def versionMajor = versionProps['VERSION_MAJOR'].toString()
+        def versionMinor = versionProps['VERSION_MINOR'].toString()
+        def versionPatch = versionProps['VERSION_PATCH'].toString()
+
+        def finalVersionCode = generateVersionCode(rootProject.ext.minSdk, versionMajor, versionMinor, versionPatch)
 
         defaultConfig {
             multiDexEnabled true
@@ -59,8 +86,35 @@ configure(applications) {
             //blurkit config
             renderscriptTargetApi rootProject.ext.targetSdk
             renderscriptSupportModeEnabled true
+
+            minSdkVersion minSdk
+            targetSdkVersion rootProject.ext.targetSdk
+            versionCode finalVersionCode
+            versionName "${versionMajor}.${versionMinor}.${versionPatch}"
+        }
+        buildTypes {
+            release {
+                signingConfig signingConfigs.debug
+                minifyEnabled true
+                shrinkResources true
+                proguardFiles getDefaultProguardFile('proguard-android.txt'), '../proguard-rules.pro'
+            }
+            debug {
+                signingConfig signingConfigs.debug
+                applicationIdSuffix ".dev"
+                versionNameSuffix 'd'
+            }
+        }
+
+        applicationVariants.all { variant ->
+            variant.outputs.all { output ->
+                outputFileName = new File(
+                        outputFileName.replace(".apk", "-${finalVersionCode}.apk")
+                )
+            }
         }
     }
+
     dependencies {
         implementation project(":clientCore")
 
@@ -117,6 +171,9 @@ configure(libraries) {
                     arguments = ["room.schemaLocation": "$projectDir/schemas".toString()]
                 }
             }
+            sourceSets {
+                androidTest.assets.srcDirs += files("$projectDir/schemas".toString())
+            }
         }
     }
     dependencies {
@@ -130,6 +187,7 @@ configure(libraries) {
         implementation "com.squareup.okhttp3:logging-interceptor:3.4.1"
 
         implementation "android.arch.persistence.room:runtime:1.1.1"
+        implementation "android.arch.persistence.room:testing:1.1.1"
         implementation "android.arch.persistence.room:rxjava2:1.1.1"
         annotationProcessor "android.arch.persistence.room:compiler:1.1.1"
         implementation "android.arch.persistence.room:guava:1.1.1"
@@ -155,9 +213,12 @@ configure(libraries) {
         implementation 'com.scottyab:rootbeer-lib:0.0.7'
 
         implementation ('com.amazonaws:aws-android-sdk-mobile-client:2.7.+@aar') { transitive = true }
-        implementation 'com.amazonaws:aws-android-sdk-s3:2.7.+'
-        implementation 'com.amazonaws:aws-android-sdk-cognito:2.7.+'
+        implementation 'com.amazonaws:aws-android-sdk-s3:2.13.4'
     }
+}
+
+private static Integer generateVersionCode(minimumSdk, major, minor, patch) {
+    return minimumSdk.toInteger() * 10000000 + major.toInteger() * 10000 + minor.toInteger() * 100 + patch.toInteger()
 }
 
 task clean(type: Delete) {

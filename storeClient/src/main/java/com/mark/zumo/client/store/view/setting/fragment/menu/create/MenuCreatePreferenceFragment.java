@@ -21,9 +21,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.mark.zumo.client.core.entity.Menu;
-import com.mark.zumo.client.core.entity.MenuCategory;
-import com.mark.zumo.client.core.entity.MenuOptionCategory;
+import com.mark.zumo.client.core.database.entity.Menu;
+import com.mark.zumo.client.core.database.entity.MenuCategory;
+import com.mark.zumo.client.core.database.entity.MenuOptionCategory;
 import com.mark.zumo.client.store.R;
 import com.mark.zumo.client.store.view.setting.fragment.BasePreferenceFragmentCompat;
 import com.mark.zumo.client.store.viewmodel.MenuOptionSettingViewModel;

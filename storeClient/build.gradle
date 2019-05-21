@@ -6,70 +6,9 @@
  */
 
 android {
-    compileSdkVersion rootProject.ext.compileSdk
-
-    signingConfigs {
-        debug {
-            storeFile file('../keystore/zumun_debug.keystore')
-        }
-    }
-
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
-    }
-
-    def versionPropsFile = file('version.gradle')
-    if (!versionPropsFile.canRead()) {
-        throw new GradleException("Could not read version.gradle!")
-    }
-
-    Properties versionProps = new Properties()
-    versionProps.load(new FileInputStream(versionPropsFile))
-
-    def minSdk = versionProps['MIN_SDK'].toString()
-    def versionMajor = versionProps['VERSION_MAJOR'].toString()
-    def versionMinor = versionProps['VERSION_MINOR'].toString()
-    def versionPatch = versionProps['VERSION_PATCH'].toString()
-
-    def finalVersionCode = generateVersionCode(rootProject.ext.minSdk, versionMajor, versionMinor, versionPatch)
-
-    def date = new Date().format('yyyyMMddHHmmss')
-
     defaultConfig {
         applicationId "com.mark.zumo.client.store"
-        minSdkVersion minSdk
-        targetSdkVersion rootProject.ext.targetSdk
-        versionCode finalVersionCode
-        versionName "${versionMajor}.${versionMinor}.${versionPatch}"
     }
-
-    buildTypes {
-        release {
-            signingConfig signingConfigs.debug
-            minifyEnabled true
-            shrinkResources true
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), '../proguard-rules.pro'
-            versionNameSuffix '-build' + date
-        }
-        debug {
-            signingConfig signingConfigs.debug
-            versionNameSuffix 'd-build' + date
-            applicationIdSuffix ".dev"
-        }
-    }
-
-    applicationVariants.all { variant ->
-        variant.outputs.all { output ->
-            outputFileName = new File(
-                    outputFileName.replace(".apk", "-${finalVersionCode}.apk")
-            )
-        }
-    }
-}
-
-private static Integer generateVersionCode(minimumSdk, major, minor, patch) {
-    return minimumSdk.toInteger() * 10000000 + major.toInteger() * 10000 + minor.toInteger() * 100 + patch.toInteger()
 }
 
 dependencies {

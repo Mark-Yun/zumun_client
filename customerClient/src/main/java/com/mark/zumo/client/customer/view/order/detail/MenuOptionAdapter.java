@@ -13,7 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.mark.zumo.client.core.entity.MenuOption;
+import com.mark.zumo.client.core.database.entity.MenuOption;
 import com.mark.zumo.client.customer.R;
 
 import java.util.ArrayList;

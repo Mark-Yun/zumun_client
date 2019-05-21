@@ -8,7 +8,7 @@ package com.mark.zumo.client.customer.model;
 
 import android.location.Location;
 
-import com.mark.zumo.client.core.provider.AppLocationProvider;
+import com.mark.zumo.client.core.device.AppLocationProvider;
 
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;

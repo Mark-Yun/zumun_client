@@ -12,10 +12,10 @@ import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.support.annotation.NonNull;
 
-import com.mark.zumo.client.core.entity.MenuOption;
-import com.mark.zumo.client.core.entity.MenuOrder;
-import com.mark.zumo.client.core.entity.OrderDetail;
-import com.mark.zumo.client.core.entity.Store;
+import com.mark.zumo.client.core.database.entity.MenuOption;
+import com.mark.zumo.client.core.database.entity.MenuOrder;
+import com.mark.zumo.client.core.database.entity.OrderDetail;
+import com.mark.zumo.client.core.database.entity.Store;
 import com.mark.zumo.client.customer.model.CustomerMenuManager;
 import com.mark.zumo.client.customer.model.CustomerNotificationManager;
 import com.mark.zumo.client.customer.model.CustomerOrderManager;

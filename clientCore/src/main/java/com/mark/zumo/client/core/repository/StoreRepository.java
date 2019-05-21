@@ -14,12 +14,12 @@ import com.mark.zumo.client.core.appserver.NetworkRepository;
 import com.mark.zumo.client.core.appserver.request.registration.StoreRegistrationRequest;
 import com.mark.zumo.client.core.appserver.request.registration.result.StoreRegistrationResult;
 import com.mark.zumo.client.core.appserver.response.store.registration.StoreRegistrationResponse;
-import com.mark.zumo.client.core.dao.AppDatabaseProvider;
-import com.mark.zumo.client.core.dao.DiskRepository;
-import com.mark.zumo.client.core.dao.StoreDao;
-import com.mark.zumo.client.core.entity.SessionStore;
-import com.mark.zumo.client.core.entity.SnsToken;
-import com.mark.zumo.client.core.entity.Store;
+import com.mark.zumo.client.core.database.AppDatabaseProvider;
+import com.mark.zumo.client.core.database.dao.DiskRepository;
+import com.mark.zumo.client.core.database.dao.StoreDao;
+import com.mark.zumo.client.core.database.entity.SessionStore;
+import com.mark.zumo.client.core.database.entity.SnsToken;
+import com.mark.zumo.client.core.database.entity.Store;
 
 import java.util.List;
 

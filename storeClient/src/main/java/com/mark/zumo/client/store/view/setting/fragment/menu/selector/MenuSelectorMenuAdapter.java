@@ -15,7 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 
-import com.mark.zumo.client.core.entity.Menu;
+import com.mark.zumo.client.core.database.entity.Menu;
 import com.mark.zumo.client.store.R;
 
 import java.util.ArrayList;

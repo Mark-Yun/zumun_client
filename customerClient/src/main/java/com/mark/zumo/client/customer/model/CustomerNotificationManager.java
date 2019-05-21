@@ -27,8 +27,8 @@ import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 
-import com.mark.zumo.client.core.entity.MenuOrder;
-import com.mark.zumo.client.core.entity.Store;
+import com.mark.zumo.client.core.database.entity.MenuOrder;
+import com.mark.zumo.client.core.database.entity.Store;
 import com.mark.zumo.client.core.repository.OrderRepository;
 import com.mark.zumo.client.core.repository.StoreRepository;
 import com.mark.zumo.client.core.util.context.ContextHolder;

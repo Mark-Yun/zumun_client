@@ -8,7 +8,7 @@ package com.mark.zumo.client.customer.model.entity;
 
 import android.util.Log;
 
-import com.mark.zumo.client.core.entity.OrderDetail;
+import com.mark.zumo.client.core.database.entity.OrderDetail;
 
 import java.util.ArrayList;
 import java.util.Collection;
