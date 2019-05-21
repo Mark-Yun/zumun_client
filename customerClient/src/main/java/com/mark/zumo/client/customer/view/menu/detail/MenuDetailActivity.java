@@ -18,7 +18,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import com.mark.zumo.client.core.entity.MenuOrder;
+import com.mark.zumo.client.core.database.entity.MenuOrder;
 import com.mark.zumo.client.core.util.context.ContextHolder;
 import com.mark.zumo.client.core.view.RapidClickGuard;
 import com.mark.zumo.client.core.view.TouchResponse;

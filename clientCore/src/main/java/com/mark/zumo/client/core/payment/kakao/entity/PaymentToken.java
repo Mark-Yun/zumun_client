@@ -12,7 +12,7 @@ import android.arch.persistence.room.PrimaryKey;
 import android.support.annotation.NonNull;
 
 import com.google.gson.annotations.SerializedName;
-import com.mark.zumo.client.core.entity.util.EntityHelper;
+import com.mark.zumo.client.core.database.entity.util.EntityHelper;
 
 import static com.mark.zumo.client.core.payment.kakao.entity.PaymentToken.Schema.table;
 

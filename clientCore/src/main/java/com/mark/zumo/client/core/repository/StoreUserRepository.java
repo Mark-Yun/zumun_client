@@ -14,21 +14,20 @@ import com.mark.zumo.client.core.appserver.request.login.StoreUserSignInRequest;
 import com.mark.zumo.client.core.appserver.request.signup.StoreOwnerSignUpRequest;
 import com.mark.zumo.client.core.appserver.response.store.user.signin.StoreUserSignInResponse;
 import com.mark.zumo.client.core.appserver.response.store.user.signup.StoreUserSignupErrorCode;
-import com.mark.zumo.client.core.dao.AppDatabaseProvider;
-import com.mark.zumo.client.core.dao.DiskRepository;
-import com.mark.zumo.client.core.entity.SessionStore;
-import com.mark.zumo.client.core.entity.SnsToken;
-import com.mark.zumo.client.core.entity.Store;
-import com.mark.zumo.client.core.entity.user.store.StoreOwner;
-import com.mark.zumo.client.core.entity.user.store.StoreUserContract;
-import com.mark.zumo.client.core.entity.user.store.StoreUserSession;
+import com.mark.zumo.client.core.database.AppDatabaseProvider;
+import com.mark.zumo.client.core.database.dao.DiskRepository;
+import com.mark.zumo.client.core.database.entity.SessionStore;
+import com.mark.zumo.client.core.database.entity.SnsToken;
+import com.mark.zumo.client.core.database.entity.Store;
+import com.mark.zumo.client.core.database.entity.user.store.StoreOwner;
+import com.mark.zumo.client.core.database.entity.user.store.StoreUserContract;
+import com.mark.zumo.client.core.database.entity.user.store.StoreUserSession;
 
 import java.util.List;
 
 import io.reactivex.Flowable;
 import io.reactivex.Maybe;
 import io.reactivex.Observable;
-import io.reactivex.schedulers.Schedulers;
 
 /**
  * Created by mark on 18. 12. 13.

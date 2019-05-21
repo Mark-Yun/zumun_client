@@ -25,8 +25,8 @@ package com.mark.zumo.client.core.appserver.request.signup;
 
 import com.google.gson.annotations.SerializedName;
 import com.mark.zumo.client.core.appserver.response.store.user.signup.StoreUserSignupException;
-import com.mark.zumo.client.core.entity.user.store.StoreOwner;
-import com.mark.zumo.client.core.entity.util.EntityHelper;
+import com.mark.zumo.client.core.database.entity.user.store.StoreOwner;
+import com.mark.zumo.client.core.database.entity.util.EntityHelper;
 
 /**
  * Created by mark on 18. 9. 9.

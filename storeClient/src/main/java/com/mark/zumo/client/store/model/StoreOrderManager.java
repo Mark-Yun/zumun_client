@@ -8,11 +8,11 @@ package com.mark.zumo.client.store.model;
 
 import android.util.Log;
 
-import com.mark.zumo.client.core.entity.MenuOrder;
-import com.mark.zumo.client.core.entity.OrderDetail;
+import com.mark.zumo.client.core.database.entity.MenuOrder;
+import com.mark.zumo.client.core.database.entity.OrderDetail;
 import com.mark.zumo.client.core.repository.MessageHandler;
 import com.mark.zumo.client.core.repository.OrderRepository;
-import com.mark.zumo.client.store.model.entity.OrderBucket;
+import com.mark.zumo.client.store.model.entity.order.OrderBucket;
 
 import java.util.List;
 

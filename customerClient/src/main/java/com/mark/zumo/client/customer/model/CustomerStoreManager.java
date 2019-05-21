@@ -7,7 +7,7 @@
 package com.mark.zumo.client.customer.model;
 
 import com.google.android.gms.maps.model.LatLng;
-import com.mark.zumo.client.core.entity.Store;
+import com.mark.zumo.client.core.database.entity.Store;
 import com.mark.zumo.client.core.repository.StoreRepository;
 
 import java.util.List;

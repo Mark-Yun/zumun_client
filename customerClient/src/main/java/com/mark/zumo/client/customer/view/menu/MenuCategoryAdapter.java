@@ -24,7 +24,7 @@ import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
 import android.view.animation.LayoutAnimationController;
 
-import com.mark.zumo.client.core.entity.MenuCategory;
+import com.mark.zumo.client.core.database.entity.MenuCategory;
 import com.mark.zumo.client.customer.R;
 
 import java.util.ArrayList;

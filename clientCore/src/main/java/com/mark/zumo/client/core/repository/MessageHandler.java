@@ -6,13 +6,11 @@
 
 package com.mark.zumo.client.core.repository;
 
-import android.util.Log;
-
 import com.mark.zumo.client.core.appserver.AppServerServiceProvider;
 import com.mark.zumo.client.core.appserver.PaymentService;
 import com.mark.zumo.client.core.appserver.request.sns.SnsSendMessageRequest;
 import com.mark.zumo.client.core.appserver.request.sns.message.SnsMessage;
-import com.mark.zumo.client.core.entity.MenuOrder;
+import com.mark.zumo.client.core.database.entity.MenuOrder;
 
 import io.reactivex.Maybe;
 import io.reactivex.schedulers.Schedulers;

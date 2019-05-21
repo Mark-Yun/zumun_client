@@ -31,7 +31,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.mark.zumo.client.core.entity.Menu;
+import com.mark.zumo.client.core.database.entity.Menu;
 import com.mark.zumo.client.store.R;
 import com.mark.zumo.client.store.view.setting.SettingModeSelectee;
 import com.mark.zumo.client.store.view.util.draghelper.reorder.ItemTouchHelperAdapter;

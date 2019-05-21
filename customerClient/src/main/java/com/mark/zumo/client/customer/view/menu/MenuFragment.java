@@ -27,8 +27,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.mark.zumo.client.core.entity.Menu;
-import com.mark.zumo.client.core.entity.Store;
+import com.mark.zumo.client.core.database.entity.Menu;
+import com.mark.zumo.client.core.database.entity.Store;
 import com.mark.zumo.client.core.util.glide.GlideApp;
 import com.mark.zumo.client.core.util.glide.GlideUtils;
 import com.mark.zumo.client.core.view.RapidClickGuard;

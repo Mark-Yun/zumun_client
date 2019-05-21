@@ -37,7 +37,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.VisibleRegion;
 import com.google.maps.android.SphericalUtil;
-import com.mark.zumo.client.core.entity.Store;
+import com.mark.zumo.client.core.database.entity.Store;
 import com.mark.zumo.client.customer.R;
 import com.mark.zumo.client.customer.view.place.adapter.NearbyStoreAdapter;
 import com.mark.zumo.client.customer.viewmodel.PlaceViewModel;

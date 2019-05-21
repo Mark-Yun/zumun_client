@@ -18,7 +18,7 @@ import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.util.SparseArray;
 
-import com.mark.zumo.client.core.entity.Store;
+import com.mark.zumo.client.core.database.entity.Store;
 import com.mark.zumo.client.core.util.context.ContextHolder;
 import com.mark.zumo.client.customer.view.menu.MenuFragment;
 import com.mark.zumo.client.customer.view.order.OrderFragment;

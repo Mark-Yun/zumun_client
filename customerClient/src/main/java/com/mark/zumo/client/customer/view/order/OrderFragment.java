@@ -26,7 +26,7 @@ import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
 import android.view.animation.LayoutAnimationController;
 
-import com.mark.zumo.client.core.entity.MenuOrder;
+import com.mark.zumo.client.core.database.entity.MenuOrder;
 import com.mark.zumo.client.core.repository.OrderRepository;
 import com.mark.zumo.client.customer.R;
 import com.mark.zumo.client.customer.viewmodel.OrderViewModel;

@@ -13,9 +13,8 @@ import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.support.annotation.NonNull;
 
-import com.mark.zumo.client.core.entity.Store;
+import com.mark.zumo.client.core.database.entity.Store;
 import com.mark.zumo.client.core.p2p.P2pClient;
-import com.mark.zumo.client.customer.model.CustomerNotificationManager;
 import com.mark.zumo.client.customer.model.CustomerOrderManager;
 import com.mark.zumo.client.customer.model.CustomerSessionManager;
 import com.mark.zumo.client.customer.model.CustomerStoreManager;

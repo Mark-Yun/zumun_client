@@ -8,9 +8,9 @@ package com.mark.zumo.client.core.repository;
 
 import com.mark.zumo.client.core.appserver.AppServerServiceProvider;
 import com.mark.zumo.client.core.appserver.NetworkRepository;
-import com.mark.zumo.client.core.dao.AppDatabaseProvider;
-import com.mark.zumo.client.core.dao.DiskRepository;
-import com.mark.zumo.client.core.entity.MenuDetail;
+import com.mark.zumo.client.core.database.AppDatabaseProvider;
+import com.mark.zumo.client.core.database.dao.DiskRepository;
+import com.mark.zumo.client.core.database.entity.MenuDetail;
 
 import java.util.List;
 

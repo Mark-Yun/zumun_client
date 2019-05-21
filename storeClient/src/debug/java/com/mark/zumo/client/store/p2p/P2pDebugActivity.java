@@ -14,9 +14,9 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.mark.zumo.client.core.entity.MenuOrder;
-import com.mark.zumo.client.core.entity.Store;
-import com.mark.zumo.client.core.entity.user.GuestUser;
+import com.mark.zumo.client.core.database.entity.MenuOrder;
+import com.mark.zumo.client.core.database.entity.Store;
+import com.mark.zumo.client.core.database.entity.user.GuestUser;
 import com.mark.zumo.client.core.p2p.P2pClient;
 import com.mark.zumo.client.core.p2p.P2pServer;
 import com.mark.zumo.client.store.R;

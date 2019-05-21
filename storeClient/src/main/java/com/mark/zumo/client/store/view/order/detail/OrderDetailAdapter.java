@@ -13,7 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.mark.zumo.client.core.entity.OrderDetail;
+import com.mark.zumo.client.core.database.entity.OrderDetail;
 import com.mark.zumo.client.store.R;
 
 import java.text.NumberFormat;

@@ -15,8 +15,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 
-import com.mark.zumo.client.core.entity.MenuOption;
-import com.mark.zumo.client.core.entity.MenuOptionCategory;
+import com.mark.zumo.client.core.database.entity.MenuOption;
+import com.mark.zumo.client.core.database.entity.MenuOptionCategory;
 import com.mark.zumo.client.customer.R;
 
 import java.util.ArrayList;

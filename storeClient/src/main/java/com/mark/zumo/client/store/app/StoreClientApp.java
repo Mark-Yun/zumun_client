@@ -18,6 +18,7 @@ import android.util.Log;
 import com.mark.zumo.client.core.app.AppErrorHandler;
 import com.mark.zumo.client.core.aws.AWSMobileClientRepository;
 import com.mark.zumo.client.core.util.context.ContextInjector;
+import com.mark.zumo.client.store.model.StorePrinterManager;
 
 /**
  * Created by mark on 18. 5. 7.
@@ -33,5 +34,7 @@ public class StoreClientApp extends Application {
 
         ContextInjector.inject(this);
         AppErrorHandler.setup();
+
+        StorePrinterManager.INSTANCE.fetchConnectPairedBluetoothPrinter(this);
     }
 }

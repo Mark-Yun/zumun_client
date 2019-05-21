@@ -13,8 +13,8 @@ import android.arch.lifecycle.MutableLiveData;
 import android.support.annotation.NonNull;
 
 import com.google.android.gms.maps.model.LatLng;
-import com.mark.zumo.client.core.entity.Store;
-import com.mark.zumo.client.core.provider.AppLocationProvider;
+import com.mark.zumo.client.core.database.entity.Store;
+import com.mark.zumo.client.core.device.AppLocationProvider;
 import com.mark.zumo.client.customer.R;
 import com.mark.zumo.client.customer.model.CustomerLocationManager;
 import com.mark.zumo.client.customer.model.CustomerStoreManager;

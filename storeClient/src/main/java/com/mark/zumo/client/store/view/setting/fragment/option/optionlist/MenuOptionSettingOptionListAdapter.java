@@ -29,8 +29,8 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.mark.zumo.client.core.entity.MenuOption;
-import com.mark.zumo.client.core.entity.MenuOptionCategory;
+import com.mark.zumo.client.core.database.entity.MenuOption;
+import com.mark.zumo.client.core.database.entity.MenuOptionCategory;
 import com.mark.zumo.client.core.view.util.RecyclerUtils;
 import com.mark.zumo.client.store.R;
 import com.mark.zumo.client.store.view.setting.SettingModeSelectee;

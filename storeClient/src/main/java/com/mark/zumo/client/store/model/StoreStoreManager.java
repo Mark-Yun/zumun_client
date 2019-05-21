@@ -15,9 +15,9 @@ import com.google.firebase.iid.InstanceIdResult;
 import com.mark.zumo.client.core.appserver.request.registration.StoreRegistrationRequest;
 import com.mark.zumo.client.core.appserver.request.registration.result.StoreRegistrationResult;
 import com.mark.zumo.client.core.appserver.response.store.registration.StoreRegistrationResponse;
-import com.mark.zumo.client.core.entity.SessionStore;
-import com.mark.zumo.client.core.entity.SnsToken;
-import com.mark.zumo.client.core.entity.Store;
+import com.mark.zumo.client.core.database.entity.SessionStore;
+import com.mark.zumo.client.core.database.entity.SnsToken;
+import com.mark.zumo.client.core.database.entity.Store;
 import com.mark.zumo.client.core.repository.StoreRepository;
 
 import java.util.ArrayList;

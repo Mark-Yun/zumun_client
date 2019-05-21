@@ -18,8 +18,8 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.ViewGroup;
 
-import com.mark.zumo.client.core.entity.MenuOrder;
-import com.mark.zumo.client.core.entity.Store;
+import com.mark.zumo.client.core.database.entity.MenuOrder;
+import com.mark.zumo.client.core.database.entity.Store;
 import com.mark.zumo.client.core.util.glide.GlideApp;
 import com.mark.zumo.client.core.util.glide.GlideUtils;
 import com.mark.zumo.client.core.view.RapidClickGuard;

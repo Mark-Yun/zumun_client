@@ -6,8 +6,8 @@
 
 package com.mark.zumo.client.core.p2p.packet;
 
-import com.mark.zumo.client.core.entity.Menu;
-import com.mark.zumo.client.core.entity.MenuOrder;
+import com.mark.zumo.client.core.database.entity.Menu;
+import com.mark.zumo.client.core.database.entity.MenuOrder;
 
 import java.util.List;
 

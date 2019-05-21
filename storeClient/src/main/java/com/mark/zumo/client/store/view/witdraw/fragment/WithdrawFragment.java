@@ -21,7 +21,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.mark.zumo.client.core.entity.user.store.StoreOwner;
+import com.mark.zumo.client.core.database.entity.user.store.StoreOwner;
 import com.mark.zumo.client.store.R;
 import com.mark.zumo.client.store.viewmodel.BankViewModel;
 

@@ -6,12 +6,12 @@
 
 package com.mark.zumo.client.customer.model;
 
-import com.mark.zumo.client.core.entity.Menu;
-import com.mark.zumo.client.core.entity.MenuCategory;
-import com.mark.zumo.client.core.entity.MenuDetail;
-import com.mark.zumo.client.core.entity.MenuOption;
-import com.mark.zumo.client.core.entity.MenuOptionCategory;
-import com.mark.zumo.client.core.entity.OrderDetail;
+import com.mark.zumo.client.core.database.entity.Menu;
+import com.mark.zumo.client.core.database.entity.MenuCategory;
+import com.mark.zumo.client.core.database.entity.MenuDetail;
+import com.mark.zumo.client.core.database.entity.MenuOption;
+import com.mark.zumo.client.core.database.entity.MenuOptionCategory;
+import com.mark.zumo.client.core.database.entity.OrderDetail;
 import com.mark.zumo.client.core.p2p.P2pClient;
 import com.mark.zumo.client.core.repository.CategoryRepository;
 import com.mark.zumo.client.core.repository.CustomerUserRepository;

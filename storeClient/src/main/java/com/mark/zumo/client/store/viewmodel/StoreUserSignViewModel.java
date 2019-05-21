@@ -18,7 +18,7 @@ import com.mark.zumo.client.core.appserver.request.signup.StoreOwnerSignUpReques
 import com.mark.zumo.client.core.appserver.response.store.user.signin.StoreUserSignInErrorCode;
 import com.mark.zumo.client.core.appserver.response.store.user.signup.StoreUserSignupErrorCode;
 import com.mark.zumo.client.core.appserver.response.store.user.signup.StoreUserSignupException;
-import com.mark.zumo.client.core.entity.Store;
+import com.mark.zumo.client.core.database.entity.Store;
 import com.mark.zumo.client.store.model.StoreS3TransferManager;
 import com.mark.zumo.client.store.model.StoreStoreManager;
 import com.mark.zumo.client.store.model.StoreUserManager;

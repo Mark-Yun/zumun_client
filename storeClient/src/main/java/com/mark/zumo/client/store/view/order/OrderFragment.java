@@ -19,8 +19,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
-import com.mark.zumo.client.core.entity.MenuOrder;
-import com.mark.zumo.client.core.entity.Store;
+import com.mark.zumo.client.core.database.entity.MenuOrder;
+import com.mark.zumo.client.core.database.entity.Store;
 import com.mark.zumo.client.core.util.glide.GlideApp;
 import com.mark.zumo.client.store.R;
 import com.mark.zumo.client.store.view.order.canceled.CanceledOrderFragment;

@@ -18,9 +18,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.mark.zumo.client.core.entity.MenuOption;
-import com.mark.zumo.client.core.entity.MenuOptionCategory;
-import com.mark.zumo.client.core.entity.OrderDetail;
+import com.mark.zumo.client.core.database.entity.MenuOption;
+import com.mark.zumo.client.core.database.entity.MenuOptionCategory;
+import com.mark.zumo.client.core.database.entity.OrderDetail;
 import com.mark.zumo.client.core.view.TouchResponse;
 import com.mark.zumo.client.customer.R;
 import com.mark.zumo.client.customer.view.menu.detail.MenuDetailActivity;

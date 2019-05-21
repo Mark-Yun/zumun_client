@@ -21,7 +21,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.mark.zumo.client.core.entity.Menu;
+import com.mark.zumo.client.core.database.entity.Menu;
 import com.mark.zumo.client.store.R;
 import com.mark.zumo.client.store.view.setting.fragment.menu.create.MenuCreateSettingFragment;
 import com.mark.zumo.client.store.view.setting.fragment.menu.detail.MenuDetailSettingFragment;
