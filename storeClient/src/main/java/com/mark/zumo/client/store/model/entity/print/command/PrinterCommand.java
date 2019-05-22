@@ -524,6 +524,10 @@ public class PrinterCommand {
         return command;
     }
 
+    public static byte[] setFeed() { return Other.byteArraysToBytes(new byte[][] { Command.LF }); }
+
+    public static byte[] commandInit() { return Other.byteArraysToBytes(new byte[][] { Command.ESC_Init }); }
+
     /**
      * 设置打印模式(选择字体(font:A font:B),加粗,字体倍高倍宽(最大4倍高宽))
      *

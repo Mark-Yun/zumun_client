@@ -75,6 +75,7 @@ public class FoundDeviceFragment extends Fragment {
     }
 
     private void onSelectBluetoothDevice(final BluetoothDevice bluetoothDevice) {
+        equipmentViewModel.stopDiscovery();
         equipmentViewModel.connectBluetoothDevice(bluetoothDevice).observe(this, foundDeviceAdapter::onDeviceConnected);
     }
 }

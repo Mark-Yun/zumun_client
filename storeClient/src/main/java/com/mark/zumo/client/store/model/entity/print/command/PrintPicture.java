@@ -6,6 +6,33 @@ import zj.com.customize.sdk.Other;
 
 public class PrintPicture {
 
+    public static final int DITHER_CUSTOM = 0;
+    public static final int DITHER_FLOYD_STEINBERG = 2;
+    public static final int DITHER_SIERRA_LITE = 1;
+
+    private static byte[] lowerPattern;
+
+    private static int[] p0;
+    private static int[] p1;
+    private static int[] p2;
+    private static int[] p3;
+    private static int[] p4;
+    private static int[] p5;
+    private static int[] p6;
+
+    private static byte[] upperPattern = { 0, 2, 1, 3, 3 };
+
+    static  {
+        lowerPattern = new byte[] { 0, 0, 2, 2, 3 };
+        p0 = new int[] { 0, 128 };
+        p1 = new int[] { 0, 64 };
+        p2 = new int[] { 0, 32 };
+        p3 = new int[] { 0, 16 };
+        p4 = new int[] { 0, 8 };
+        p5 = new int[] { 0, 4 };
+        p6 = new int[] { 0, 2 };
+    }
+
     /**
      * 打印位图函数
      * 此函数是将一行作为一个图片打印，这样处理不容易出错
@@ -32,6 +59,7 @@ public class PrintPicture {
 
         return Other.eachLinePixToCmd(dithered, width, nMode);
     }
+
 
     /**
      * 使用下传位图打印图片

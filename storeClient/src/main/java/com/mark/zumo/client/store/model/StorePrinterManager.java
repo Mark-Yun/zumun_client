@@ -3,12 +3,15 @@ package com.mark.zumo.client.store.model;
 import android.bluetooth.BluetoothClass;
 import android.bluetooth.BluetoothDevice;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Color;
 import android.util.Log;
+import android.view.View;
 
-import com.mark.zumo.client.core.database.entity.PairedBluetoothDevice;
 import com.mark.zumo.client.core.device.bluetooth.BluetoothDeviceListener;
 import com.mark.zumo.client.core.device.bluetooth.BluetoothDeviceProvider;
-import com.mark.zumo.client.core.repository.PairedBluetoothDeviceRepository;
+import com.mark.zumo.client.store.model.entity.print.command.CommandBuilder;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -27,59 +30,52 @@ public enum StorePrinterManager implements BluetoothDeviceListener {
     private static final String TAG = "StorePrinterManager";
 
     private final BluetoothDeviceProvider bluetoothDeviceProvider;
-    private final PairedBluetoothDeviceRepository pairedBluetoothDeviceRepository;
     private final Observable<Set<BluetoothDevice>> bondBluetoothDeviceObservable;
 
     private Emitter<Set<BluetoothDevice>> bondBluetoothDeviceObservableEmitter;
 
     StorePrinterManager() {
         bluetoothDeviceProvider = BluetoothDeviceProvider.INSTANCE;
-        pairedBluetoothDeviceRepository = PairedBluetoothDeviceRepository.INSTANCE;
         bluetoothDeviceProvider.addListener(this);
 
         bondBluetoothDeviceObservable = Observable.create(emitter -> {
             bondBluetoothDeviceObservableEmitter = emitter;
-            emitter.onNext(getBondedBluetoothPrinter());
+            emitter.onNext(getBondedBluetoothPrinterSet());
         });
     }
 
-    public void fetchConnectPairedBluetoothPrinter(final Context context) {
-        startDiscovery(context)
-                .flatMapMaybe(this::filterPairedBluetoothDevice)
+    public void fetchConnectPairedBluetoothPrinter() {
+        Observable.fromIterable(getBondedBluetoothPrinterSet())
+                .filter(bluetoothDevice -> !bluetoothDeviceProvider.isConnectedDevice(bluetoothDevice))
                 .flatMapMaybe(this::connectSocket)
                 .subscribeOn(Schedulers.io())
                 .subscribe();
     }
 
-    private Maybe<BluetoothDevice> filterPairedBluetoothDevice(final BluetoothDevice bluetoothDevice) {
-        return pairedBluetoothDeviceRepository.getAllPairedBluetoothDeviceList()
-                .subscribeOn(Schedulers.io())
-                .flatMapObservable(Observable::fromIterable)
-                .any(pairedBluetoothDevice -> pairedBluetoothDevice.address.equals(bluetoothDevice.getAddress()))
-                .toMaybe()
-                .map(x -> bluetoothDevice);
-    }
-
-    public Observable<Set<BluetoothDevice>> getBondedBluetoothPrinterSet() {
+    public Observable<Set<BluetoothDevice>> getBondedBluetoothPrinterSetObservable() {
         return bondBluetoothDeviceObservable
                 .subscribeOn(Schedulers.io());
     }
 
-    public Maybe<BluetoothDevice> connectSocket(final BluetoothDevice bluetoothDevice) {
-        return bluetoothDeviceProvider.connectSocket(bluetoothDevice)
-                .retry()
-                .flatMap(this::savePairedBluetoothDevice)
-                .subscribeOn(Schedulers.io());
+    public void disconnectDevice(final BluetoothDevice bluetoothDevice) {
+
+        if (!bluetoothDeviceProvider.isBondedBluetoothDevice(bluetoothDevice)) {
+            Log.e(TAG, "disconnectDevice: device is not bonded.");
+            return;
+        }
+
+        if (!bluetoothDeviceProvider.isConnectedDevice(bluetoothDevice)) {
+            Log.e(TAG, "disconnectDevice: device is not connected.");
+            return;
+        }
+
+        bluetoothDeviceProvider.disconnectDevice(bluetoothDevice);
     }
 
-    private Maybe<BluetoothDevice> savePairedBluetoothDevice(final BluetoothDevice bluetoothDevice) {
-        return Maybe.create(emitter -> {
-            Log.d(TAG, "savePairedBluetoothDevice: name=" + bluetoothDevice.getName());
-            PairedBluetoothDevice pairedBluetoothDevice = PairedBluetoothDevice.from(bluetoothDevice);
-            pairedBluetoothDeviceRepository.insertPairedBluetoothDevice(pairedBluetoothDevice);
-            emitter.onSuccess(bluetoothDevice);
-            emitter.onComplete();
-        });
+    public Maybe<BluetoothDevice> connectSocket(final BluetoothDevice bluetoothDevice) {
+        return bluetoothDeviceProvider.connectSocket(bluetoothDevice)
+                .retry(10)
+                .subscribeOn(Schedulers.io());
     }
 
     public Observable<BluetoothDevice> startDiscovery(final Context context) {
@@ -87,6 +83,10 @@ public enum StorePrinterManager implements BluetoothDeviceListener {
                 .filter(this::isPrinterDevice)
                 .distinct(BluetoothDevice::getAddress)
                 .subscribeOn(Schedulers.io());
+    }
+
+    public void stopDiscovery() {
+        bluetoothDeviceProvider.stopDiscovery();
     }
 
     public boolean isDiscovering() {
@@ -103,45 +103,72 @@ public enum StorePrinterManager implements BluetoothDeviceListener {
         return majorDeviceClass == BluetoothClass.Device.Major.IMAGING;
     }
 
+    private Bitmap loadBitmapFromView(View view) {
+        int specWidth = View.MeasureSpec.makeMeasureSpec(view.getWidth() /* any */, View.MeasureSpec.EXACTLY);
+        int specHeight = View.MeasureSpec.makeMeasureSpec(view.getHeight() /* any */, View.MeasureSpec.EXACTLY);
+        view.measure(specWidth, specHeight);
+        int questionWidth = view.getMeasuredWidth();
+        int questionHeight = view.getMeasuredHeight();
+
+        Bitmap bitmap = Bitmap.createBitmap(questionWidth, questionHeight, Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(bitmap);
+        canvas.drawColor(Color.WHITE);
+        view.layout(view.getLeft(), view.getTop(), view.getRight(), view.getBottom());
+        view.draw(canvas);
+        return bitmap;
+    }
+
+    public void printView(final View view) {
+        Observable.fromCallable(() ->
+                new CommandBuilder()
+                        .setNewLine(2)
+                        .setBitmap(loadBitmapFromView(view))
+                        .setNewLine(4)
+                        .build())
+                .flatMap(Observable::fromIterable)
+                .flatMapMaybe(bluetoothDeviceProvider::sendData)
+                .subscribeOn(Schedulers.newThread())
+                .subscribe();
+    }
+
     @Override
     public void onDeviceStateChanged(final BluetoothDevice bluetoothDevice, final int state) {
         Log.d(TAG, "onDeviceStateChanged: name=" + bluetoothDevice.getName() + " state=" + state);
-
     }
 
     @Override
     public void onAclConnected(final BluetoothDevice bluetoothDevice) {
         Log.d(TAG, "onAclConnected: " + bluetoothDevice.getName());
-        if (bondBluetoothDeviceObservableEmitter != null) {
-            bondBluetoothDeviceObservableEmitter.onNext(getBondedBluetoothPrinter());
-        }
-    }
-
-    @Override
-    public void onBondStateChanged(final BluetoothDevice bluetoothDevice, final int prevBondState, final int newBondState) {
-        Log.d(TAG, "onBondStateChanged: name=" + bluetoothDevice + " prevBondState=" + prevBondState + " newBondState=" + newBondState);
-        if (prevBondState == BluetoothDevice.BOND_BONDING && newBondState == BluetoothDevice.BOND_BONDED) {
-            if (bondBluetoothDeviceObservableEmitter != null) {
-                bondBluetoothDeviceObservableEmitter.onNext(getBondedBluetoothPrinter());
-            }
-        }
     }
 
     @Override
     public void onAclDisconnected(final BluetoothDevice bluetoothDevice) {
         Log.d(TAG, "onAclDisconnected: " + bluetoothDevice.getName());
+
+        if (bluetoothDeviceProvider.isBondedBluetoothDevice(bluetoothDevice)) {
+            bluetoothDeviceProvider.connectSocket(bluetoothDevice)
+                    .subscribeOn(Schedulers.io())
+                    .subscribe();
+        }
+    }
+
+    @Override
+    public void onBondStateChanged(final BluetoothDevice bluetoothDevice, final int prevBondState, final int newBondState) {
+        Log.d(TAG, "onBondStateChanged: name=" + bluetoothDevice +
+                " prevBondState=" + prevBondState +
+                " newBondState=" + newBondState);
+
         if (bondBluetoothDeviceObservableEmitter != null) {
-            bondBluetoothDeviceObservableEmitter.onNext(getBondedBluetoothPrinter());
+            bondBluetoothDeviceObservableEmitter.onNext(getBondedBluetoothPrinterSet());
         }
     }
 
     @Override
     public void onParingRequested(final BluetoothDevice bluetoothDevice) {
         Log.d(TAG, "onParingRequested: " + bluetoothDevice.getName());
-
     }
 
-    private Set<BluetoothDevice> getBondedBluetoothPrinter() {
+    private Set<BluetoothDevice> getBondedBluetoothPrinterSet() {
         Set<BluetoothDevice> bondedBluetoothPrinterSet = new HashSet<>();
         for (BluetoothDevice bluetoothDevice : bluetoothDeviceProvider.getBondedDevices()) {
             if (isPrinterDevice(bluetoothDevice)) {

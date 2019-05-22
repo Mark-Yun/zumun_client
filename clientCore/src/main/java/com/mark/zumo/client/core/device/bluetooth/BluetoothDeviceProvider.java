@@ -12,7 +12,8 @@ import android.util.Log;
 
 import com.mark.zumo.client.core.util.context.ContextHolder;
 
-import java.io.InputStream;
+import java.io.OutputStream;
+import java.lang.reflect.Method;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -35,19 +36,82 @@ public enum BluetoothDeviceProvider {
     private static final String BLUETOOTH_BOARD_UUID = "00001101-0000-1000-8000-00805f9b34fb";
 
     private final Set<BluetoothDeviceListener> listeners;
-    private final Map<String, BluetoothDevice> bondedDevices;
-    private final Map<String, BluetoothSocket> bondedSockets;
+    private final Map<String, BluetoothSocket> connectedSockets;
+    private final Set<String> removingBondBluetoothDevices;
 
     BluetoothDeviceProvider() {
         listeners = new CopyOnWriteArraySet<>();
-        bondedDevices = new ConcurrentHashMap<>();
-        bondedSockets = new ConcurrentHashMap<>();
+        connectedSockets = new ConcurrentHashMap<>();
+        removingBondBluetoothDevices = new CopyOnWriteArraySet<>();
 
         ContextHolder.getContext().registerReceiver(createStateChangedBroadcastReceiver(), createStateChangedIntentFilter());
     }
 
     public Set<BluetoothDevice> getBondedDevices() {
-        return new HashSet<>(bondedDevices.values());
+        Set<BluetoothDevice> bondedDevices = BluetoothAdapter.getDefaultAdapter().getBondedDevices();
+        HashSet<BluetoothDevice> hashSet = new HashSet<>(bondedDevices);
+        for (BluetoothDevice bluetoothDevice : bondedDevices) {
+            for (String disconnectingAddress : removingBondBluetoothDevices) {
+                if (TextUtils.equals(bluetoothDevice.getAddress(), disconnectingAddress)) {
+                    hashSet.remove(bluetoothDevice);
+                }
+            }
+        }
+
+        return hashSet;
+    }
+
+    public Observable<BluetoothSocket> prepareBluetoothSockets() {
+        return Observable.fromIterable(connectedSockets.values())
+                .map(bluetoothSocket -> {
+                    if (!bluetoothSocket.isConnected()) {
+                        bluetoothSocket.connect();
+                    }
+                    return bluetoothSocket;
+                });
+    }
+
+    public boolean isConnectedDevice(final BluetoothDevice bluetoothDevice) {
+        return connectedSockets.containsKey(bluetoothDevice.getAddress())
+                && connectedSockets.get(bluetoothDevice.getAddress()) != null
+                && connectedSockets.get(bluetoothDevice.getAddress()).isConnected();
+    }
+
+    public void disconnectDevice(final BluetoothDevice bluetoothDevice) {
+        String address = bluetoothDevice.getAddress();
+        BluetoothSocket bluetoothSocket = connectedSockets.remove(address);
+        try {
+            bluetoothSocket.getOutputStream().close();
+        } catch (Exception e) {
+            Log.e(TAG, "disconnectDevice: ", e);
+        }
+        try {
+            bluetoothSocket.getInputStream().close();
+        } catch (Exception e) {
+            Log.e(TAG, "disconnectDevice: ", e);
+        }
+        try {
+            bluetoothSocket.close();
+        } catch (Exception e) {
+            Log.e(TAG, "disconnectDevice: ", e);
+        }
+
+        try {
+            removeBond(bluetoothDevice);
+            removingBondBluetoothDevices.add(bluetoothDevice.getAddress());
+        } catch (Exception e) {
+            removingBondBluetoothDevices.remove(bluetoothDevice);
+            Log.e(TAG, "disconnectDevice: ", e);
+        }
+
+        Log.d(TAG, "disconnectDevice: disconnect complete, device=" + bluetoothDevice.getName());
+    }
+
+    private boolean removeBond(BluetoothDevice bluetoothDevice) throws Exception {
+        Class bluetoothDeviceClass = BluetoothDevice.class;
+        Method removeBondMethod = bluetoothDeviceClass.getMethod("removeBond");
+        Boolean returnValue = (Boolean) removeBondMethod.invoke(bluetoothDevice);
+        return returnValue.booleanValue();
     }
 
     public void addListener(final BluetoothDeviceListener listener) {
@@ -58,50 +122,14 @@ public enum BluetoothDeviceProvider {
         listeners.remove(listener);
     }
 
-    public Maybe<String> sendData(final BluetoothDevice bluetoothDevice, byte[] input) {
-        return Maybe.create(emitter -> {
-            String address = bluetoothDevice.getAddress();
-            if (!bondedSockets.containsKey(address) || bondedSockets.get(address) == null) {
-                emitter.onError(new IllegalArgumentException("bluetooth device is not bonded! address=" + address));
-                emitter.onComplete();
-                return;
-            }
-
-            BluetoothSocket bluetoothSocket = bondedSockets.get(address);
-            bluetoothSocket.getOutputStream().write(input);
-
-            final InputStream inputStream = bluetoothSocket.getInputStream();
-
-            byte[] readBuffer = new byte[1024];  //  수신 버퍼
-            int readBufferPosition = 0;        //   버퍼 내 수신 문자 저장 위치
-            int timeOut = 50;
-            while (timeOut-- > 0) {
-                int bytesAvailable = inputStream.available();
-
-                if (bytesAvailable == 0) {
-                    Thread.sleep(100);
-                    continue;
-                }
-
-                byte[] packetBytes = new byte[bytesAvailable];
-                inputStream.read(packetBytes);
-                for (int i = 0; i < bytesAvailable; i++) {
-                    byte b = packetBytes[i];
-                    if (b == 10) {
-                        byte[] encodedBytes = new byte[readBufferPosition];
-                        System.arraycopy(readBuffer, 0, encodedBytes, 0, encodedBytes.length);
-                        final String data = new String(encodedBytes, "US-ASCII");
-                        readBufferPosition = 0;
-                        emitter.onSuccess(data);
-                        emitter.onComplete();
-                    } else {
-                        readBuffer[readBufferPosition++] = b;
-                    }
-                }
-
-                break;
-            }
-        });
+    public Maybe<String> sendData(byte[] input) {
+        return prepareBluetoothSockets()
+                .map(bluetoothSocket -> {
+                    OutputStream outputStream = bluetoothSocket.getOutputStream();
+                    outputStream.write(input);
+                    outputStream.flush();
+                    return new String(input);
+                }).lastElement();
     }
 
     public boolean isDiscovering() {
@@ -121,6 +149,10 @@ public enum BluetoothDeviceProvider {
         });
     }
 
+    public void stopDiscovery() {
+        BluetoothAdapter.getDefaultAdapter().cancelDiscovery();
+    }
+
     public Maybe<BluetoothDevice> connectSocket(final BluetoothDevice bluetoothDevice) {
         return Maybe.create(emitter -> {
             Log.d(TAG, "connectSocket: name=" + bluetoothDevice.getName());
@@ -130,15 +162,20 @@ public enum BluetoothDeviceProvider {
 
             String address = bluetoothDevice.getAddress();
             Log.d(TAG, "connectSocket: create connection complete. address=" + address);
-            bondedDevices.put(address, bluetoothDevice);
-            bondedSockets.put(address, bluetoothSocket);
+            connectedSockets.put(address, bluetoothSocket);
             emitter.onSuccess(bluetoothDevice);
             emitter.onComplete();
         });
     }
 
-    public boolean isBondedDeviceAddress(final String address) {
-        return bondedDevices.containsKey(address);
+    public boolean isBondedBluetoothDevice(final BluetoothDevice bluetoothDevice) {
+        for (BluetoothDevice bluetoothDevice1 : getBondedDevices()) {
+            if (TextUtils.equals(bluetoothDevice1.getAddress(), bluetoothDevice.getAddress())) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     private IntentFilter createDiscoveryIntentFilter() {
@@ -185,7 +222,9 @@ public enum BluetoothDeviceProvider {
                             return;
                         }
 
-                        if (bondedDevices.containsKey(deviceAddress)) {
+                        int bondState = device.getBondState();
+                        boolean isBonded = bondState == BluetoothDevice.BOND_BONDED || bondState == BluetoothDevice.BOND_BONDING;
+                        if (isBonded) {
                             Log.d(TAG, "onReceive: device was already bonded.");
                             return;
                         }
@@ -270,6 +309,10 @@ public enum BluetoothDeviceProvider {
     private void notifyBondStateChanged(final BluetoothDevice bluetoothDevice,
                                         final int prevBondState,
                                         final int newBondState) {
+        if (newBondState == BluetoothDevice.BOND_NONE) {
+            removingBondBluetoothDevices.remove(bluetoothDevice.getAddress());
+        }
+
         for (BluetoothDeviceListener listener : listeners) {
             try {
                 listener.onBondStateChanged(bluetoothDevice, prevBondState, newBondState);
@@ -281,9 +324,7 @@ public enum BluetoothDeviceProvider {
 
     private void notifyAclDisconnected(final BluetoothDevice bluetoothDevice) {
         String address = bluetoothDevice.getAddress();
-
-        bondedDevices.remove(address);
-        bondedSockets.remove(address);
+        connectedSockets.remove(address);
 
         for (BluetoothDeviceListener listener : listeners) {
             try {

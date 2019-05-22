@@ -16,6 +16,7 @@ import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.AppCompatButton;
@@ -56,6 +57,7 @@ public class OrderDetailFragment extends Fragment {
     @BindView(R.id.refund) AppCompatButton refund;
     @BindView(R.id.complete) AppCompatButton complete;
     @BindView(R.id.finish) AppCompatButton finish;
+    @BindView(R.id.receipt_view) ConstraintLayout receiptView;
 
     private OrderViewModel orderViewModel;
     private String orderUuid;
@@ -177,6 +179,7 @@ public class OrderDetailFragment extends Fragment {
     }
 
     private void onAcceptSuccess(MenuOrder menuOrder) {
+        orderViewModel.printReceipt(receiptView);
         updateButtonState(menuOrder);
 
         if (orderActionListener != null) {

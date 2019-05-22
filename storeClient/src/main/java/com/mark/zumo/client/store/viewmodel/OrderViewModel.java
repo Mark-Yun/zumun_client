@@ -11,6 +11,7 @@ import android.arch.lifecycle.AndroidViewModel;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.support.annotation.NonNull;
+import android.view.View;
 import android.widget.Toast;
 
 import com.mark.zumo.client.core.database.entity.MenuOption;
@@ -18,6 +19,7 @@ import com.mark.zumo.client.core.database.entity.MenuOrder;
 import com.mark.zumo.client.core.database.entity.OrderDetail;
 import com.mark.zumo.client.store.model.MenuOptionManager;
 import com.mark.zumo.client.store.model.StoreOrderManager;
+import com.mark.zumo.client.store.model.StorePrinterManager;
 import com.mark.zumo.client.store.model.StoreStoreManager;
 import com.mark.zumo.client.store.model.entity.order.OrderBucket;
 
@@ -36,6 +38,7 @@ public class OrderViewModel extends AndroidViewModel {
     private final StoreOrderManager storeOrderManager;
     private final StoreStoreManager storeStoreManager;
     private final MenuOptionManager menuOptionManager;
+    private final StorePrinterManager storePrinterManager;
 
     private final CompositeDisposable compositeDisposable;
 
@@ -45,6 +48,7 @@ public class OrderViewModel extends AndroidViewModel {
         storeStoreManager = StoreStoreManager.INSTANCE;
         storeOrderManager = StoreOrderManager.INSTANCE;
         menuOptionManager = MenuOptionManager.INSTANCE;
+        storePrinterManager = StorePrinterManager.INSTANCE;
 
         compositeDisposable = new CompositeDisposable();
     }
@@ -116,6 +120,10 @@ public class OrderViewModel extends AndroidViewModel {
                 .doOnSubscribe(compositeDisposable::add)
                 .subscribe();
         return liveData;
+    }
+
+    public void printReceipt(final View view) {
+        storePrinterManager.printView(view);
     }
 
     public LiveData<MenuOrder> acceptOrder(String orderUuid) {

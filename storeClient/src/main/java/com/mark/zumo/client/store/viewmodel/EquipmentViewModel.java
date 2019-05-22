@@ -6,7 +6,11 @@ import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MediatorLiveData;
 import android.bluetooth.BluetoothDevice;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Color;
 import android.support.annotation.NonNull;
+import android.view.View;
 
 import com.mark.zumo.client.store.model.StorePrinterManager;
 
@@ -42,6 +46,10 @@ public class EquipmentViewModel extends AndroidViewModel {
         return liveData;
     }
 
+    public void stopDiscovery() {
+        storePrinterManager.stopDiscovery();
+    }
+
     public LiveData<BluetoothDevice> connectBluetoothDevice(final BluetoothDevice bluetoothDevice) {
 
         MediatorLiveData<BluetoothDevice> liveData = new MediatorLiveData<>();
@@ -59,13 +67,21 @@ public class EquipmentViewModel extends AndroidViewModel {
 
         MediatorLiveData<Set<BluetoothDevice>> liveData = new MediatorLiveData<>();
 
-        storePrinterManager.getBondedBluetoothPrinterSet()
+        storePrinterManager.getBondedBluetoothPrinterSetObservable()
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnNext(liveData::setValue)
                 .doOnSubscribe(compositeDisposable::add)
                 .subscribe();
 
         return liveData;
+    }
+
+    public void testPrint(final View view) {
+        storePrinterManager.printView(view);
+    }
+
+    public void disconnect(final BluetoothDevice bluetoothDevice) {
+        storePrinterManager.disconnectDevice(bluetoothDevice);
     }
 
     public boolean isDiscovering() {

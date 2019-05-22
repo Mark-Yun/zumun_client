@@ -27,82 +27,91 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <android.support.v7.widget.AppCompatTextView
-        android:id="@+id/order_number"
-        android:layout_width="wrap_content"
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/receipt_view"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/small_margin"
-        android:textColor="@color/color_900"
-        android:textSize="32sp"
-        android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/close_button" />
-
-    <View
-        android:id="@+id/order_name_divider"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_marginTop="@dimen/big_margin"
-        android:background="@color/divider"
-        app:layout_constraintTop_toBottomOf="@+id/order_number" />
-
-    <android.support.v7.widget.LinearLayoutCompat
-        android:id="@+id/date_layout"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/big_margin"
-        android:orientation="horizontal"
-        app:layout_constraintEnd_toStartOf="@+id/time_layout"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/order_name_divider">
+        app:layout_constraintTop_toBottomOf="@+id/close_button">
 
         <android.support.v7.widget.AppCompatTextView
-            android:id="@+id/order_date_description"
+            android:id="@+id/order_number"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/order_date_description"
-            android:textColor="@color/color_900" />
+            android:layout_marginTop="@dimen/small_margin"
+            android:textColor="@color/color_900"
+            android:textSize="32sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-        <android.support.v7.widget.AppCompatTextView
-            android:id="@+id/order_date"
+        <View
+            android:id="@+id/order_name_divider"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="@dimen/big_margin"
+            android:background="@color/divider"
+            app:layout_constraintTop_toBottomOf="@+id/order_number" />
+
+        <android.support.v7.widget.LinearLayoutCompat
+            android:id="@+id/date_layout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/color_900" />
-    </android.support.v7.widget.LinearLayoutCompat>
+            android:layout_marginTop="@dimen/big_margin"
+            android:orientation="horizontal"
+            app:layout_constraintEnd_toStartOf="@+id/time_layout"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/order_name_divider">
 
-    <android.support.v7.widget.LinearLayoutCompat
-        android:id="@+id/time_layout"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintBottom_toBottomOf="@+id/date_layout"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/date_layout"
-        app:layout_constraintTop_toTopOf="@+id/date_layout">
+            <android.support.v7.widget.AppCompatTextView
+                android:id="@+id/order_date_description"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/order_date_description"
+                android:textColor="@color/color_900" />
 
-        <android.support.v7.widget.AppCompatTextView
-            android:id="@+id/order_time_description"
+            <android.support.v7.widget.AppCompatTextView
+                android:id="@+id/order_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/color_900" />
+        </android.support.v7.widget.LinearLayoutCompat>
+
+        <android.support.v7.widget.LinearLayoutCompat
+            android:id="@+id/time_layout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/order_time_description"
-            android:textColor="@color/color_900" />
+            android:orientation="horizontal"
+            app:layout_constraintBottom_toBottomOf="@+id/date_layout"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/date_layout"
+            app:layout_constraintTop_toTopOf="@+id/date_layout">
 
-        <android.support.v7.widget.AppCompatTextView
-            android:id="@+id/order_time"
-            android:layout_width="wrap_content"
+            <android.support.v7.widget.AppCompatTextView
+                android:id="@+id/order_time_description"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/order_time_description"
+                android:textColor="@color/color_900" />
+
+            <android.support.v7.widget.AppCompatTextView
+                android:id="@+id/order_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/color_900" />
+        </android.support.v7.widget.LinearLayoutCompat>
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recycler_view"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="@color/color_900" />
-    </android.support.v7.widget.LinearLayoutCompat>
+            android:layout_marginTop="@dimen/big_margin"
+            android:layout_marginBottom="@dimen/big_margin"
+            app:layout_constraintTop_toBottomOf="@+id/date_layout" />
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/recycler_view"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_marginTop="@dimen/big_margin"
-        android:layout_marginBottom="@dimen/big_margin"
-        app:layout_constraintBottom_toTopOf="@+id/reject"
-        app:layout_constraintTop_toBottomOf="@+id/date_layout" />
+    </android.support.constraint.ConstraintLayout>
 
     <android.support.v7.widget.AppCompatButton
         android:id="@+id/accept"
