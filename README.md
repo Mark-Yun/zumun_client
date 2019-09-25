@@ -3,7 +3,6 @@
 * Mobile Kiosk for order
 * Open Platform for every one
 * Side Project of Mark Yun
-* [Learn Markdown](https://bitbucket.org/tutorials/markdowndemo)
 
 ### Introduction Video ###
 
