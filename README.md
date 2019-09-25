@@ -1,29 +1,17 @@
-# README #
+### Zumun Android Client ###
 
-This README would normally document whatever steps are necessary to get your application up and running.
-
-### What is this repository for? ###
-
-* Quick summary
-* Version
+* Mobile Kiosk for order
+* Open Platform for every one
+* Side Project of Mark Yun
 * [Learn Markdown](https://bitbucket.org/tutorials/markdowndemo)
 
-### How do I get set up? ###
+### Introduction Video ###
 
-* Summary of set up
-* Configuration
-* Dependencies
-* Database configuration
-* How to run tests
-* Deployment instructions
+* Introduction of Zumun
+https://youtu.be/ASJgKpP4S9o
 
-### Contribution guidelines ###
+* Usage Example
+https://www.youtube.com/watch?v=J4jIv-bOEUY
 
-* Writing tests
-* Code review
-* Other guidelines
-
-### Who do I talk to? ###
-
-* Repo owner or admin
-* Other community or team contact
+### System Architecture ###
+https://www.dropbox.com/s/0ud8cznknv0scz1/AchitectureDescription_Zumun.pptx?dl=0
